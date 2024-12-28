@@ -21,7 +21,7 @@
     "@vercel/style-guide": "^6.0.0",
     "concurrently": "^9.1.0",
     "eslint": "^8.57.0",
-    "husky": "^9.1.6",
+    "husky": "^9.1.7",
     "minimist": "^1.2.8",
     "prettier": "^3.4.2"
   },
