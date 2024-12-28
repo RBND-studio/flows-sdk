@@ -8,7 +8,7 @@ interface Props {
 
 export const useWebsocket = ({ url, onMessage, onOpen }: Props): void => {
   const [ws, setWs] = useState<WebSocket>();
-  const cleanupRef = useRef<() => void>();
+  const cleanupRef = useRef<(() => void) | undefined>(undefined);
   const [reconnectAttempts, setReconnectAttempts] = useState(0);
 
   const connect = useCallback(() => {
