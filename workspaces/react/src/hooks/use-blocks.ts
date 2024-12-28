@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { log } from "@flows/shared";
 import { type UserProperties, type Block, type TourStep } from "../types";
 import { getApi } from "../api";
-import { log } from "../lib/log";
 import { useWebsocket } from "./use-websocket";
 
 interface Props {
@@ -43,8 +43,7 @@ export const useBlocks = ({
         setBlocks(res.blocks);
       })
       .catch((err: unknown) => {
-        // eslint-disable-next-line no-console -- This is a debug message
-        console.log(err);
+        log.error("Failed to load blocks", err);
       });
   }, [apiUrl, params]);
 

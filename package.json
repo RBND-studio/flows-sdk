@@ -7,6 +7,7 @@
     "js": "pnpm --filter js",
     "react": "pnpm --filter react",
     "react-components": "pnpm --filter react-components",
+    "shared": "pnpm --filter shared",
     "tsc": "pnpm -r tsc",
     "test": "pnpm -r test",
     "lint": "pnpm -r lint",

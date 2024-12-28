@@ -12,6 +12,7 @@ import {
   autoUpdate,
 } from "@floating-ui/react-dom";
 import classNames from "classnames";
+import { log } from "@flows/shared";
 import { Text } from "../text/text";
 import { IconButton } from "../icon-button";
 import { Close16 } from "../../icons/close16";
@@ -80,9 +81,7 @@ export const BaseTooltip: FC<Props> = (props) => {
 
   useEffect(() => {
     if (!props.targetElement) {
-      // TODO: refactor the branded console log and use it in all packages
-      // eslint-disable-next-line no-console -- debug message
-      console.error("Flows: Cannot render tooltip without target element");
+      log.error("Cannot render tooltip without target element");
     }
   }, [props.targetElement]);
 
