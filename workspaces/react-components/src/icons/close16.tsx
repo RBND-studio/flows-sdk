@@ -1,4 +1,6 @@
-export function Close16(props: React.SVGProps<SVGSVGElement>): JSX.Element {
+import { type ReactElement } from "react";
+
+export function Close16(props: React.SVGProps<SVGSVGElement>): ReactElement {
   return (
     <svg
       height={16}

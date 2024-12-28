@@ -46,7 +46,7 @@ importers:
         specifier: ^1.48.1
         version: 1.48.1
       '@types/node':
-        specifier: ^20.17.10
+        specifier: ^20
         version: 20.17.10
       typescript:
         specifier: ^5.7.2
@@ -68,7 +68,7 @@ importers:
         specifier: ^29.5.14
         version: 29.5.14
       '@types/node':
-        specifier: ^20.17.10
+        specifier: ^20
         version: 20.17.10
       jest:
         specifier: ^29.7.0
@@ -99,10 +99,10 @@ importers:
         specifier: ^29.5.14
         version: 29.5.14
       '@types/node':
-        specifier: ^20.17.10
+        specifier: ^20
         version: 20.17.10
       '@types/react':
-        specifier: ^19.0.2
+        specifier: ^19
         version: 19.0.2
       jest:
         specifier: ^29.7.0
@@ -139,10 +139,10 @@ importers:
         specifier: ^29.5.14
         version: 29.5.14
       '@types/node':
-        specifier: ^20.17.10
+        specifier: ^20
         version: 20.17.10
       '@types/react':
-        specifier: ^19.0.2
+        specifier: ^19
         version: 19.0.2
       jest:
         specifier: ^29.7.0
