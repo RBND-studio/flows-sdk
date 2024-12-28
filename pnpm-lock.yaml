@@ -95,6 +95,9 @@ importers:
         specifier: '>=17.0.2'
         version: 18.3.1
     devDependencies:
+      '@flows/shared':
+        specifier: workspace:*
+        version: link:../shared
       '@types/jest':
         specifier: ^29.5.14
         version: 29.5.14
@@ -135,6 +138,9 @@ importers:
       '@flows/react':
         specifier: workspace:*
         version: link:../react
+      '@flows/shared':
+        specifier: workspace:*
+        version: link:../shared
       '@types/jest':
         specifier: ^29.5.14
         version: 29.5.14
@@ -156,6 +162,12 @@ importers:
       tsup:
         specifier: ^8.3.5
         version: 8.3.5(jiti@2.4.2)(postcss@8.4.49)(typescript@5.7.2)(yaml@2.4.5)
+      typescript:
+        specifier: ^5.7.2
+        version: 5.7.2
+
+  workspaces/shared:
+    devDependencies:
       typescript:
         specifier: ^5.7.2
         version: 5.7.2

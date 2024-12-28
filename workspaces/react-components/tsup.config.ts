@@ -7,6 +7,7 @@ export default defineConfig({
   minify: true,
   dts: true,
   platform: "browser",
+  noExternal: ["@flows/shared"],
   banner: {
     js: '"use client"',
   },

@@ -1,0 +1,14 @@
+{
+  "name": "@flows/shared",
+  "version": "1.0.0",
+  "private": true,
+  "sideEffects": false,
+  "main": "src/index.ts",
+  "scripts": {
+    "lint": "eslint src",
+    "tsc": "tsc -p tsconfig.json"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}

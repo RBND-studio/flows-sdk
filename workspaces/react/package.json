@@ -36,6 +36,7 @@
     "url": "git+https://github.com/RBND-studio/flows-sdk.git"
   },
   "devDependencies": {
+    "@flows/shared": "workspace:*",
     "@types/jest": "^29.5.14",
     "@types/node": "^20.17.10",
     "@types/react": "^18.3.12",
