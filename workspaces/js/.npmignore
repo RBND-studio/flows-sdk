@@ -1,5 +1,0 @@
-tsconfig*
-tsup.config.ts
-src
-jest.config.js
-.eslintrc.js

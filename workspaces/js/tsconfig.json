@@ -1,9 +1,0 @@
-{
-  "extends": "../../tsconfig.base.json",
-  "compilerOptions": {
-    "jsx": "react",
-    "jsxFactory": "_fjsx.el",
-    "jsxFragmentFactory": "_fjsx.frag"
-  },
-  "include": ["src/**/*"]
-}
