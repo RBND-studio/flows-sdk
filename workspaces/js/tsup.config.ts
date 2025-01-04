@@ -1,9 +1,10 @@
 import { defineConfig } from "tsup";
 
 export default defineConfig({
-  entry: ["src/index.ts", "src/tour.ts", "src/index.css"],
+  entry: ["src/index.ts"],
   clean: true,
   format: ["cjs", "esm"],
+
   minify: true,
   dts: {
     compilerOptions: {
@@ -13,7 +14,4 @@ export default defineConfig({
     },
   },
   platform: "browser",
-  banner: {
-    js: '"use client"',
-  },
 });

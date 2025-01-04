@@ -5,7 +5,13 @@ export default defineConfig({
   clean: true,
   format: ["cjs", "esm"],
   minify: true,
-  dts: true,
+  dts: {
+    compilerOptions: {
+      paths: {
+        "@flows/shared": ["../shared/src/index.ts"],
+      },
+    },
+  },
   platform: "browser",
   banner: {
     js: '"use client"',

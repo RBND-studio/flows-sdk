@@ -1,6 +1,6 @@
 import { useMemo, type FC } from "react";
 import { log } from "@flows/shared";
-import { type Block as IBlock } from "./types";
+import { type Block as IBlock } from "@flows/shared";
 import { useFlowsContext } from "./flows-context";
 import { usePathname } from "./contexts/pathname-context";
 import { pathnameMatch } from "./lib/matchers";

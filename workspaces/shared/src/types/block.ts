@@ -37,3 +37,8 @@ export interface TourStep {
 
   tourWait?: TourWait;
 }
+
+export interface BlockUpdatesPayload {
+  exitedBlockIds: string[];
+  updatedBlocks: Block[];
+}
