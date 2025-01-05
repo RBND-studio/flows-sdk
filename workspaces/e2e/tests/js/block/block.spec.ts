@@ -10,7 +10,10 @@ const mockBlock = {
 };
 
 test.beforeEach(async ({ page }) => {
-  await page.routeWebSocket("**/ws/sdk/block-updates?*", () => {});
+  await page.routeWebSocket(
+    (url) => url.pathname === "/ws/sdk/block-updates",
+    () => {},
+  );
 });
 
 test("return empty blocks", async ({ page }) => {
@@ -19,7 +22,7 @@ test("return empty blocks", async ({ page }) => {
   });
   await page.goto(`/js/block/block.html`);
   await expect(page.getByText("Floating blocks changed")).toHaveCount(2);
-  expect(page.locator(".current-blocks")).toHaveText(JSON.stringify([]));
+  await expect(page.locator(".current-blocks")).toHaveText(JSON.stringify([]));
 });
 
 test("return floating blocks", async ({ page }) => {
@@ -28,7 +31,7 @@ test("return floating blocks", async ({ page }) => {
   });
   await page.goto(`/js/block/block.html`);
   await expect(page.getByText("Floating blocks changed")).toHaveCount(2);
-  expect(page.locator(".current-blocks")).toHaveText(
+  await expect(page.locator(".current-blocks")).toHaveText(
     JSON.stringify([
       {
         id: "1",

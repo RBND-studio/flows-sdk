@@ -43,7 +43,8 @@
     "test:watch": "jest --watch",
     "lint": "eslint src",
     "tsc": "tsc -p tsconfig.json",
-    "version": "pnpm version"
+    "version": "pnpm version",
+    "prepare": "pnpm build"
   },
   "devDependencies": {
     "@flows/shared": "workspace:*",
