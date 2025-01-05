@@ -1,7 +1,6 @@
 import { type FC } from "react";
-import { log } from "@flows/shared";
+import { log, pathnameMatch } from "@flows/shared";
 import { type RunningTour, useFlowsContext } from "./flows-context";
-import { pathnameMatch } from "./lib/matchers";
 import { usePathname } from "./contexts/pathname-context";
 
 interface Props {

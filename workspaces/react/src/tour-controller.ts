@@ -1,7 +1,7 @@
 import { type FC, useEffect, useMemo } from "react";
+import { elementContains, pathnameMatch } from "@flows/shared";
 import { useFlowsContext } from "./flows-context";
 import { usePathname } from "./contexts/pathname-context";
-import { elementContains, pathnameMatch } from "./lib/matchers";
 
 export const TourController: FC = () => {
   const { runningTours } = useFlowsContext();
