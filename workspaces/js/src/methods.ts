@@ -1,7 +1,7 @@
 import { computed, effect, type ReadonlySignal } from "@preact/signals-core";
-import { pathnameMatch } from "@flows/shared";
+import { type Block, pathnameMatch } from "@flows/shared";
 import { type ActiveBlock } from "./types/active-block";
-import { blocks, pathname, runningTours } from "./store";
+import { blocks, pathname, type RunningTour, runningTours } from "./store";
 import { blockToActiveBlock, tourToActiveBlock } from "./lib/active-block";
 
 const visibleBlocks = computed(() =>
@@ -49,14 +49,27 @@ const floatingItems = computed(() => {
 
 const slotBlocks = computed(() => visibleBlocks.value.filter((b) => b.slottable));
 
+const isBlock = (item: Block | RunningTour): item is Block => "type" in item;
+const getSlotIndex = (item: Block | (RunningTour & { block: Block })): number => {
+  if (isBlock(item)) return item.slotIndex ?? 0;
+  const activeStep = item.block.tourBlocks?.at(item.currentBlockIndex);
+  return activeStep?.slotIndex ?? 0;
+};
+
 const computedActiveBlocksBySlotId = new Map<string, ReadonlySignal<ActiveBlock[]>>();
 const addActiveSlotBlocksComputed = (slotId: string): ReadonlySignal<ActiveBlock[]> => {
-  const newComputed = computed(() =>
-    slotBlocks.value
-      .filter((b) => b.slotId === slotId)
-      .sort((a, b) => (a.slotIndex ?? 0) - (b.slotIndex ?? 0))
-      .flatMap(blockToActiveBlock),
-  );
+  const newComputed = computed(() => {
+    const workflowBlocks = slotBlocks.value.filter((b) => b.slottable && b.slotId === slotId);
+    const tours = visibleTours.value.filter((t) => {
+      const activeStep = t.block.tourBlocks?.at(t.currentBlockIndex);
+      return activeStep?.slottable && activeStep.slotId === slotId;
+    });
+    const sorted = [...workflowBlocks, ...tours].sort((a, b) => getSlotIndex(a) - getSlotIndex(b));
+    return sorted.flatMap((item) => {
+      if (isBlock(item)) return blockToActiveBlock(item);
+      return tourToActiveBlock(item.block, item.currentBlockIndex);
+    });
+  });
   computedActiveBlocksBySlotId.set(slotId, newComputed);
   return newComputed;
 };

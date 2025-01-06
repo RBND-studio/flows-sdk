@@ -18,7 +18,9 @@ export interface RunningTour {
 export const runningTours = signal<RunningTour[]>([]);
 
 effect(() => {
-  const tourBlocks = blocks.value.filter((b) => b.type === "tour");
+  const blocksValue = blocks.value;
+
+  const tourBlocks = blocksValue.filter((b) => b.type === "tour");
   const prevTours = runningTours.peek();
   const prevTourMap = new Map(prevTours.map((tour) => [tour.blockId, tour]));
   const newRunningTours = tourBlocks.map((block): RunningTour => {

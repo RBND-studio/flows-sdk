@@ -1,4 +1,6 @@
+import { handleDocumentClick } from "./lib/click";
 import { connectToWebsocketAndFetchBlocks } from "./lib/blocks";
+import { addHandlers } from "./lib/handler";
 import { config, pathname } from "./store";
 import { type FlowsConfiguration } from "./types/configuration";
 
@@ -17,4 +19,6 @@ export const init = (configuration: FlowsConfiguration): void => {
       pathname.value = window.location.pathname;
     }
   }, 250);
+
+  addHandlers([{ type: "click", handler: handleDocumentClick }]);
 };
