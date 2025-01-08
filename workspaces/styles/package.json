@@ -1,0 +1,11 @@
+{
+  "name": "@flows/styles",
+  "version": "1.0.0",
+  "private": true,
+  "exports": {
+    "./index.css": {
+      "import": "./src/index.css",
+      "require": "./src/index.css"
+    }
+  }
+}

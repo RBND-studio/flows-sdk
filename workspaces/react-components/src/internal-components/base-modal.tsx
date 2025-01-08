@@ -1,8 +1,8 @@
 import { type FC, type ReactNode } from "react";
 import classNames from "classnames";
-import { Text } from "../text/text";
-import { IconButton } from "../icon-button";
-import { Close16 } from "../../icons/close16";
+import { Close16 } from "../icons/close16";
+import { Text } from "./text";
+import { IconButton } from "./icon-button";
 
 interface Props {
   title: string;

@@ -13,9 +13,9 @@ import {
 } from "@floating-ui/react-dom";
 import classNames from "classnames";
 import { log } from "@flows/shared";
-import { Text } from "../text/text";
-import { IconButton } from "../icon-button";
-import { Close16 } from "../../icons/close16";
+import { Close16 } from "../icons/close16";
+import { Text } from "./text";
+import { IconButton } from "./icon-button";
 
 const DISTANCE = 4;
 const ARROW_SIZE = 6;

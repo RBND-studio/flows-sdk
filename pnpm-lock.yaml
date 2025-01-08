@@ -98,6 +98,9 @@ importers:
       '@flows/shared':
         specifier: workspace:*
         version: link:../shared
+      '@flows/styles':
+        specifier: workspace:*
+        version: link:../styles
       '@types/jest':
         specifier: ^29.5.14
         version: 29.5.14
@@ -169,6 +172,9 @@ importers:
       '@flows/shared':
         specifier: workspace:*
         version: link:../shared
+      '@flows/styles':
+        specifier: workspace:*
+        version: link:../styles
       '@types/jest':
         specifier: ^29.5.14
         version: 29.5.14
@@ -211,6 +217,8 @@ importers:
       typescript:
         specifier: ^5.7.2
         version: 5.7.2
+
+  workspaces/styles: {}
 
 packages:
 

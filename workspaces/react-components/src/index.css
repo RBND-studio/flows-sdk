@@ -1,8 +1,0 @@
-@import "styles/vars.css";
-
-@import "internal-components/text/text.css";
-@import "internal-components/button/button.css";
-@import "internal-components/icon-button/icon-button.css";
-
-@import "internal-components/tooltip/tooltip.css";
-@import "internal-components/modal/modal.css";

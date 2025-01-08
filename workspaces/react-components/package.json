@@ -37,6 +37,7 @@
   },
   "devDependencies": {
     "@flows/shared": "workspace:*",
+    "@flows/styles": "workspace:*",
     "@types/jest": "^29.5.14",
     "@types/node": "^20",
     "@types/react": "^19",

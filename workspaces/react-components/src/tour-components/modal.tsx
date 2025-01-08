@@ -1,6 +1,6 @@
 import { type FC } from "react";
 import { type TourComponentProps } from "@flows/shared";
-import { BaseModal } from "../internal-components/modal";
+import { BaseModal } from "../internal-components/base-modal";
 import { Button } from "../internal-components/button";
 
 export type ModalProps = TourComponentProps<{
