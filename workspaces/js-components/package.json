@@ -35,7 +35,11 @@
     "tsc": "tsc -p tsconfig.json",
     "version": "pnpm version"
   },
+  "dependencies": {
+    "@floating-ui/dom": "^1.6.13"
+  },
   "devDependencies": {
+    "@flows/js": "workspace:*",
     "@flows/shared": "workspace:*",
     "@types/jest": "^29.5.14",
     "@types/node": "^20",
@@ -44,5 +48,15 @@
     "ts-jest": "^29.2.5",
     "tsup": "^8.3.5",
     "typescript": "^5.7.2"
+  },
+  "peerDependencies": {
+    "@flows/js": "*"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
   }
 }

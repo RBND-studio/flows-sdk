@@ -17,6 +17,7 @@ export const BaseModal: FC<Props> = (props) => {
     <>
       {props.overlay ? (
         <div
+          // TODO: fix flows_modal_clickable class, it should enable pointer events on the overlay
           className={classNames("flows_modal_overlay", props.onClose && "flows_modal_clickable")}
           onClick={props.onClose}
           aria-hidden="true"
