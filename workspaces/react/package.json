@@ -20,6 +20,7 @@
     "product-adoption",
     "product-tours"
   ],
+  "sideEffects": false,
   "scripts": {
     "dev": "tsup --watch --env.NODE_ENV development",
     "build": "tsup --env.NODE_ENV production",

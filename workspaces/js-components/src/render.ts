@@ -1,9 +1,10 @@
 import { type ActiveBlock } from "@flows/js";
-import { type Component } from "./types";
+import { type Components, type TourComponents } from "./types";
 
 interface Props {
   blocks: ActiveBlock[];
-  components: Record<string, Component>;
+  components: Components;
+  tourComponents: TourComponents;
 }
 
 interface MountedElement {
@@ -21,13 +22,17 @@ export const render = (props: Props): void => {
   mountedElements = [];
 
   props.blocks.forEach((block) => {
-    if (block.type === "component") {
-      const Cmp = props.components[block.component];
-      if (Cmp) {
-        const { cleanup, element: el } = Cmp(block.props);
-        mountedElements.push({ el, cleanup, blockId: block.id });
-        document.body.appendChild(el);
-      }
+    const Cmp = (() => {
+      if (block.type === "component") return props.components[block.component];
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- We need to check if the block is a tour component
+      if (block.type === "tour-component") return props.tourComponents[block.component];
+      return null;
+    })();
+
+    if (Cmp) {
+      const { cleanup, element: el } = Cmp(block.props as Parameters<typeof Cmp>[0]);
+      mountedElements.push({ el, cleanup, blockId: block.id });
+      document.body.appendChild(el);
     }
   });
 };

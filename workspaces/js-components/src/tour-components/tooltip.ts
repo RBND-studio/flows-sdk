@@ -1,17 +1,19 @@
-import { type TourComponentProps } from "@flows/shared";
+import { type Placement, type TourComponentProps } from "@flows/shared";
+import { BaseTooltip } from "../internal-components/base-tooltip";
 import { type Component } from "../types";
-import { BaseModal } from "../internal-components/base-modal";
 
-export type ModalProps = TourComponentProps<{
+export type TooltipProps = TourComponentProps<{
   title: string;
   body: string;
   continueText?: string;
   previousText?: string;
   showCloseButton: boolean;
-  hideOverlay: boolean;
+  targetElement: string;
+  placement?: Placement;
+  hideOverlay?: boolean;
 }>;
 
-export const Modal: Component<ModalProps> = (props) => {
+export const Tooltip: Component<TooltipProps> = (props) => {
   const buttons: HTMLElement[] = [];
 
   let previousButton: HTMLButtonElement | null = null;
@@ -21,6 +23,11 @@ export const Modal: Component<ModalProps> = (props) => {
     previousButton.className = "flows_button flows_button_secondary";
     previousButton.textContent = props.previousText;
     previousButton.addEventListener("click", props.previous);
+  } else {
+    const hiddenDiv = document.createElement("div");
+    hiddenDiv.ariaHidden = "true";
+    // This div ensures elements are aligned correctly when there is no previous button
+    buttons.push(hiddenDiv);
   }
 
   let continueButton: HTMLButtonElement | null = null;
@@ -30,23 +37,29 @@ export const Modal: Component<ModalProps> = (props) => {
     continueButton.className = "flows_button flows_button_primary";
     continueButton.textContent = props.continueText;
     continueButton.addEventListener("click", props.continue);
+  } else {
+    const hiddenDiv = document.createElement("div");
+    hiddenDiv.ariaHidden = "true";
+    // This div ensures elements are aligned correctly when there is no continue button
+    buttons.push(hiddenDiv);
   }
 
-  const result = BaseModal({
+  const result = BaseTooltip({
     title: props.title,
     body: props.body,
+    targetElement: props.targetElement,
+    placement: props.placement,
     overlay: !props.hideOverlay,
-    buttons,
     close: props.showCloseButton ? props.cancel : undefined,
+    buttons,
   });
 
   return {
     element: result.element,
     cleanup: () => {
-      if (props.previous) previousButton?.removeEventListener("click", props.previous);
-      continueButton?.removeEventListener("click", props.continue);
-
       result.cleanup();
+
+      if (props.previous) previousButton?.removeEventListener("click", props.previous);
     },
   };
 };

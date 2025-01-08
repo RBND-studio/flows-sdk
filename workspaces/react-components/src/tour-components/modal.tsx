@@ -1,5 +1,5 @@
 import { type FC } from "react";
-import { type TourComponentProps } from "@flows/react";
+import { type TourComponentProps } from "@flows/shared";
 import { BaseModal } from "../internal-components/modal";
 import { Button } from "../internal-components/button";
 

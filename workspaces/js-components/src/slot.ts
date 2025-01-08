@@ -1,13 +1,8 @@
 import { type ActiveBlock, addSlotBlocksChangeListener, getCurrentSlotBlocks } from "@flows/js";
-import { type Components } from "./types";
+import { type Components, type MountedElement, type TourComponents } from "./types";
 
 let components: Components = {};
-
-interface MountedElement {
-  el: HTMLElement;
-  blockId: string;
-  cleanup: () => void;
-}
+let tourComponents: TourComponents = {};
 
 class FlowsSlot extends HTMLElement {
   mountedElements: MountedElement[] = [];
@@ -37,13 +32,17 @@ class FlowsSlot extends HTMLElement {
     this.unmount();
 
     this.blocks.forEach((block) => {
-      if (block.type === "component") {
-        const Cmp = components[block.component];
-        if (Cmp) {
-          const { cleanup, element: el } = Cmp(block.props);
-          this.mountedElements.push({ el, cleanup, blockId: block.id });
-          this.appendChild(el);
-        }
+      const Cmp = (() => {
+        if (block.type === "component") return components[block.component];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- We need to check if the block is a tour component
+        if (block.type === "tour-component") return tourComponents[block.component];
+        return null;
+      })();
+
+      if (Cmp) {
+        const { cleanup, element: el } = Cmp(block.props as Parameters<typeof Cmp>[0]);
+        this.mountedElements.push({ el, cleanup, blockId: block.id });
+        this.appendChild(el);
       }
     });
   }
@@ -59,6 +58,7 @@ class FlowsSlot extends HTMLElement {
 
 interface Props {
   components: Components;
+  tourComponents: TourComponents;
 }
 /**
  * This method is used to register custom `<flows-slot>` element as well as updating the components that can be rendered inside the slot.
@@ -67,4 +67,5 @@ export const updateSlotComponents = (props: Props): void => {
   if (!customElements.get("flows-slot")) customElements.define("flows-slot", FlowsSlot);
 
   components = props.components;
+  tourComponents = props.tourComponents;
 };
