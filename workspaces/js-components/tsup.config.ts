@@ -1,7 +1,7 @@
 import { defineConfig } from "tsup";
 
 export default defineConfig({
-  entry: ["src/index.ts", "src/tour.ts"],
+  entry: ["src/index.ts", "src/components.ts", "src/tour-components.ts"],
   clean: true,
   format: ["cjs", "esm"],
   minify: true,

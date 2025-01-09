@@ -8,7 +8,7 @@ export interface ActiveBlock {
    */
   type: "component" | "tour-component";
   /**
-   * The UI Component that should be rendered.
+   * The UI Component used to render this block.
    */
   component: string;
   /**

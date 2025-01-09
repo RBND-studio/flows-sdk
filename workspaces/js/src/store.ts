@@ -1,8 +1,8 @@
 import { type Block } from "@flows/shared";
 import { effect, signal } from "@preact/signals-core";
-import { type FlowsConfiguration } from "./types/configuration";
+import { type FlowsOptions } from "./types/configuration";
 
-type Configuration = Omit<FlowsConfiguration, "apiUrl"> & { apiUrl: string };
+type Configuration = Omit<FlowsOptions, "apiUrl"> & { apiUrl: string };
 export const config = signal<Configuration>();
 
 // We're not setting default to avoid accessing window on the server

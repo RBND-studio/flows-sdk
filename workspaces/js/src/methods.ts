@@ -74,10 +74,39 @@ const addActiveSlotBlocksComputed = (slotId: string): ReadonlySignal<ActiveBlock
   return newComputed;
 };
 
+/**
+ * Get all the currently displayed workflow and tour blocks that are not slottable.
+ *
+ * @returns array of `ActiveBlock` objects
+ */
 export const getCurrentFloatingBlocks = (): ActiveBlock[] => floatingItems.value;
+/**
+ * Get all the currently displayed workflow and tour blocks for a specific slot.
+ *
+ * @param slotId - the slot id to get the blocks for
+ * @returns array of `ActiveBlock` objects
+ */
 export const getCurrentSlotBlocks = (slotId: string): ActiveBlock[] =>
   computedActiveBlocksBySlotId.get(slotId)?.value ?? addActiveSlotBlocksComputed(slotId).value;
 
+/**
+ * Add a listener that will be called every time the floating workflow and tour blocks (blocks that are not slottable) change.
+ *
+ * @param listener - callback function that receives all the current floating workflow and tour blocks
+ * @returns `dispose` function that should be called to stop listening to the changes to avoid memory leaks
+ *
+ * @example
+ * ```js
+ * import { addFloatingBlocksChangeListener } from "@flows/js";
+ *
+ * const dispose = addFloatingBlocksChangeListener((blocks) => {
+ *   // Update state in your application or render the blocks directly
+ * })
+ *
+ * // Call `dispose` when you want to stop listening to the changes to avoid memory leaks
+ * dispose();
+ * ```
+ */
 export const addFloatingBlocksChangeListener = (
   listener: (items: ActiveBlock[]) => void,
 ): (() => void) => {
@@ -85,6 +114,25 @@ export const addFloatingBlocksChangeListener = (
     listener(floatingItems.value);
   });
 };
+
+/**
+ * Add a listener that will be called every time the blocks for a specific slot change.
+ *
+ * @param listener - callback function that receives all the current blocks for the slot
+ * @returns `dispose` function that should be called to stop listening to the changes to avoid memory leaks
+ *
+ * @example
+ * ```js
+ * import { addSlotBlocksChangeListener } from "@flows/js";
+ *
+ * const dispose = addSlotBlocksChangeListener("my-slot-id", (blocks) => {
+ *   // Update state in your application or render the blocks directly
+ * })
+ *
+ * // Call `dispose` when you want to stop listening to the changes to avoid memory leaks
+ * dispose();
+ * ```
+ */
 export const addSlotBlocksChangeListener = (
   slotId: string,
   listener: (items: ActiveBlock[]) => void,

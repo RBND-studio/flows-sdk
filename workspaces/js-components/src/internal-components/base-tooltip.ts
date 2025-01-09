@@ -106,7 +106,7 @@ const OFFSET_DISTANCE = DISTANCE + ARROW_SIZE;
 const BOUNDARY_PADDING = 8;
 const ARROW_EDGE_PADDING = 8;
 
-export const updateTooltip = ({
+const updateTooltip = ({
   reference,
   tooltip,
   placement,

@@ -20,7 +20,7 @@
     "product-adoption",
     "product-tours"
   ],
-  "version": "1.0.0",
+  "version": "0.0.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/RBND-studio/flows-sdk.git"
@@ -60,10 +60,15 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
     },
-    "./tour": {
-      "types": "./dist/tour.d.ts",
-      "import": "./dist/tour.mjs",
-      "require": "./dist/tour.js"
+    "./components": {
+      "types": "./dist/components.d.ts",
+      "import": "./dist/components.mjs",
+      "require": "./dist/components.js"
+    },
+    "./tour-components": {
+      "types": "./dist/tour-components.d.ts",
+      "import": "./dist/tour-components.mjs",
+      "require": "./dist/tour-components.js"
     }
   }
 }

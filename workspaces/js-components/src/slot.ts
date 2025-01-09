@@ -56,16 +56,18 @@ class FlowsSlot extends HTMLElement {
   }
 }
 
-interface Props {
+export interface UpdateSlotComponentsOptions {
   components: Components;
   tourComponents: TourComponents;
 }
 /**
  * This method is used to register custom `<flows-slot>` element as well as updating the components that can be rendered inside the slot.
+ *
+ * @param options - with components and tourComponents available to be rendered inside the slot
  */
-export const updateSlotComponents = (props: Props): void => {
+export const updateSlotComponents = (options: UpdateSlotComponentsOptions): void => {
   if (!customElements.get("flows-slot")) customElements.define("flows-slot", FlowsSlot);
 
-  components = props.components;
-  tourComponents = props.tourComponents;
+  components = options.components;
+  tourComponents = options.tourComponents;
 };
