@@ -10,7 +10,11 @@ class FlowsSlot extends HTMLElement {
   changeListenerDispose: (() => void) | undefined;
 
   get slotId(): string {
-    return this.getAttribute("slot-id") ?? "";
+    return this.getAttribute("data-slot-id") ?? "";
+  }
+
+  get placeholderElement(): HTMLElement | null {
+    return this.querySelector("[data-placeholder]");
   }
 
   connectedCallback(): void {
@@ -30,6 +34,11 @@ class FlowsSlot extends HTMLElement {
 
   render(): void {
     this.unmount();
+
+    if (this.placeholderElement) {
+      if (this.blocks.length) this.placeholderElement.hidden = true;
+      else this.placeholderElement.hidden = false;
+    }
 
     this.blocks.forEach((block) => {
       const Cmp = (() => {

@@ -15,7 +15,7 @@ interface MountedElement {
 let mountedElements: MountedElement[] = [];
 
 /**
- * `render` method needs to be called every time the blocks change.
+ * Render floating blocks at the end of the body element. This function needs to be called every time the floating blocks change.
  *
  * @param options - active blocks to render and the components to render them with
  *

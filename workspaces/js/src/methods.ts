@@ -92,7 +92,7 @@ export const getCurrentSlotBlocks = (slotId: string): ActiveBlock[] =>
 /**
  * Add a listener that will be called every time the floating workflow and tour blocks (blocks that are not slottable) change.
  *
- * @param listener - callback function that receives all the current floating workflow and tour blocks
+ * @param listener - Callback function that receives array of `ActiveBlock` objects
  * @returns `dispose` function that should be called to stop listening to the changes to avoid memory leaks
  *
  * @example
@@ -118,7 +118,7 @@ export const addFloatingBlocksChangeListener = (
 /**
  * Add a listener that will be called every time the blocks for a specific slot change.
  *
- * @param listener - callback function that receives all the current blocks for the slot
+ * @param listener - Callback function that receives array of `ActiveBlock` objects
  * @returns `dispose` function that should be called to stop listening to the changes to avoid memory leaks
  *
  * @example
