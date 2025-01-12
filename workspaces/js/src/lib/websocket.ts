@@ -4,6 +4,7 @@ interface Props {
   onOpen: () => void;
 }
 
+// TODO: implement better automatic reconnection
 export const websocket = (props: Props): void => {
   const connect = (): void => {
     const socket = new WebSocket(props.url);

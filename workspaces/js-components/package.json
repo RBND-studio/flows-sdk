@@ -69,6 +69,10 @@
       "types": "./dist/tour-components.d.ts",
       "import": "./dist/tour-components.mjs",
       "require": "./dist/tour-components.js"
+    },
+    "./index.css": {
+      "import": "./dist/index.css",
+      "require": "./dist/index.css"
     }
   }
 }
