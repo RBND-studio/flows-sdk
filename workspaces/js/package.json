@@ -21,7 +21,7 @@
     "product-adoption",
     "product-tours"
   ],
-  "version": "0.0.0",
+  "version": "0.0.1-canary.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/RBND-studio/flows-sdk.git"
