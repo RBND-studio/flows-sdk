@@ -10,8 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@flows/react": "canary",
-    "@flows/react-components": "canary",
+    "@flows/react": "*",
+    "@flows/react-components": "*",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
