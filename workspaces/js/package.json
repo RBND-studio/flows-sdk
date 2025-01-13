@@ -55,7 +55,7 @@
     "version": "pnpm version"
   },
   "dependencies": {
-    "@floating-ui/dom": "^1.6.12",
+    "@floating-ui/dom": "^1.6.13",
     "superstruct": "^2.0.2"
   },
   "devDependencies": {
