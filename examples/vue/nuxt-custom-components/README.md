@@ -2,8 +2,7 @@
 
 An example project showcasing how to use Flows with Nuxt to build native product growth experiences.
 
-<!-- TODO: add cover -->
-<!-- ![Cover](./cover.png) -->
+![Cover](./cover.png)
 
 This example extends the Nuxt starter project with the [`@flows/js`](https://www.npmjs.com/package/@flows/js) package and shows custom Modal component that is using [`primevue`](https://primevue.org) Dialog under the hood.
 
