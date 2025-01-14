@@ -1,16 +1,18 @@
 <script lang="ts">
 import {
-  FlowsComponentsCard,
   FlowsComponentsModal,
+  FlowsComponentsTooltip,
   FlowsTourModal,
+  FlowsTourTooltip,
 } from "#components";
 
 export const components: Record<string, Component> = {
   Modal: FlowsComponentsModal,
-  Card: FlowsComponentsCard,
+  Tooltip: FlowsComponentsTooltip,
 };
 export const tourComponents: Record<string, Component> = {
   Modal: FlowsTourModal,
+  Tooltip: FlowsTourTooltip,
 };
 </script>
 
