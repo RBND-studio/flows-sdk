@@ -62,7 +62,7 @@ test("should wait for next step", async ({ page }) => {
   await page.route("**/v2/sdk/blocks", (route) => {
     route.fulfill({ json: { blocks: [tourWithWait] } });
   });
-  await page.goto(`/js/wait/wait.html?correct=true`);
+  await page.goto(`/js/index.html?correct=true`);
   await expect(page.getByText("Hello")).toBeVisible();
   await expect(page.getByText("World")).toBeHidden();
   await page.getByText("Continue").click();
@@ -76,7 +76,7 @@ test("should not trigger wait on incorrect page", async ({ page }) => {
   await page.route("**/v2/sdk/blocks", (route) => {
     route.fulfill({ json: { blocks: [tourWithWait] } });
   });
-  await page.goto(`/js/wait/wait.html`);
+  await page.goto(`/js/index.html`);
   await expect(page.getByText("Hello")).toBeVisible();
   await expect(page.getByText("World")).toBeHidden();
   await page.getByText("Continue").click();
@@ -90,7 +90,7 @@ test("should not trigger wait by clicking on incorrect element", async ({ page }
   await page.route("**/v2/sdk/blocks", (route) => {
     route.fulfill({ json: { blocks: [tourWithWait] } });
   });
-  await page.goto(`/js/wait/wait.html?correct=true`);
+  await page.goto(`/js/index.html?correct=true`);
   await expect(page.getByText("Hello")).toBeVisible();
   await expect(page.getByText("World")).toBeHidden();
   await page.getByText("Continue").click();
@@ -148,7 +148,7 @@ test("should wait for modal wait", async ({ page }) => {
   await page.route("**/v2/sdk/blocks", (route) => {
     route.fulfill({ json: { blocks: [tourWithModalWait] } });
   });
-  await page.goto(`/js/wait/wait.html?correct=true`);
+  await page.goto(`/js/index.html?correct=true`);
   await expect(page.getByText("Hello")).toBeVisible();
   await expect(page.getByText("World")).toBeHidden();
   await expect(page.getByText("Continue")).toBeHidden();
@@ -160,7 +160,7 @@ test("should not trigger modal wait on incorrect page", async ({ page }) => {
   await page.route("**/v2/sdk/blocks", (route) => {
     route.fulfill({ json: { blocks: [tourWithModalWait] } });
   });
-  await page.goto(`/js/wait/wait.html`);
+  await page.goto(`/js/index.html`);
   await expect(page.getByText("Hello")).toBeVisible();
   await expect(page.getByText("World")).toBeHidden();
   await expect(page.getByText("Continue")).toBeHidden();
@@ -172,7 +172,7 @@ test("should not trigger modal wait by clicking on incorrect element", async ({ 
   await page.route("**/v2/sdk/blocks", (route) => {
     route.fulfill({ json: { blocks: [tourWithModalWait] } });
   });
-  await page.goto(`/js/wait/wait.html?correct=true`);
+  await page.goto(`/js/index.html?correct=true`);
   await expect(page.getByText("Hello")).toBeVisible();
   await expect(page.getByText("World")).toBeHidden();
   await expect(page.getByText("Continue")).toBeHidden();

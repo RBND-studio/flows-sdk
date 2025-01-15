@@ -37,7 +37,7 @@ test("should show workflow block without page targeting", async ({ page }) => {
   await page.route("**/v2/sdk/blocks", (route) => {
     route.fulfill({ json: { blocks: [workflowBlock] } });
   });
-  await page.goto(`/js/page-targeting/page-targeting.html`);
+  await page.goto(`/js/index.html`);
   await expect(page.getByText("Workflow block")).toBeVisible();
 });
 
@@ -50,7 +50,7 @@ test("should not show workflow block with incorrect page targeting", async ({ pa
   await page.route("**/v2/sdk/blocks", (route) => {
     route.fulfill({ json: { blocks: [block] } });
   });
-  await page.goto(`/js/page-targeting/page-targeting.html`);
+  await page.goto(`/js/index.html`);
   await expect(page.getByText("Workflow block")).toBeHidden();
 });
 
@@ -58,12 +58,12 @@ test("should show workflow block with correct page targeting", async ({ page }) 
   const block: Block = {
     ...workflowBlock,
     page_targeting_operator: "contains",
-    page_targeting_values: ["/page-targeting"],
+    page_targeting_values: ["/js/index.html"],
   };
   await page.route("**/v2/sdk/blocks", (route) => {
     route.fulfill({ json: { blocks: [block] } });
   });
-  await page.goto(`/js/page-targeting/page-targeting.html`);
+  await page.goto(`/js/index.html`);
   await expect(page.getByText("Workflow block")).toBeVisible();
 });
 
@@ -71,7 +71,7 @@ test("should show tour block without page targeting", async ({ page }) => {
   await page.route("**/v2/sdk/blocks", (route) => {
     route.fulfill({ json: { blocks: [getTour([tourModalBlock])] } });
   });
-  await page.goto(`/js/page-targeting/page-targeting.html`);
+  await page.goto(`/js/index.html`);
   await expect(page.getByText("Tour block")).toBeVisible();
 });
 test("should not show tour block with incorrect page targeting", async ({ page }) => {
@@ -83,18 +83,18 @@ test("should not show tour block with incorrect page targeting", async ({ page }
   await page.route("**/v2/sdk/blocks", (route) => {
     route.fulfill({ json: { blocks: [getTour([block])] } });
   });
-  await page.goto(`/js/page-targeting/page-targeting.html`);
+  await page.goto(`/js/index.html`);
   await expect(page.getByText("Tour block")).toBeHidden();
 });
 test("should show tour block with correct page targeting", async ({ page }) => {
   const block: TourStep = {
     ...tourModalBlock,
     page_targeting_operator: "contains",
-    page_targeting_values: ["/page-targeting"],
+    page_targeting_values: ["/js/index.html"],
   };
   await page.route("**/v2/sdk/blocks", (route) => {
     route.fulfill({ json: { blocks: [getTour([block])] } });
   });
-  await page.goto(`/js/page-targeting/page-targeting.html`);
+  await page.goto(`/js/index.html`);
   await expect(page.getByText("Tour block")).toBeVisible();
 });

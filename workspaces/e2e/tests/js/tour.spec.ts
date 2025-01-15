@@ -48,7 +48,7 @@ test("should show tour first step without previous button", async ({ page }) => 
   await page.route("**/v2/sdk/blocks", (route) => {
     route.fulfill({ json: { blocks: [tour] } });
   });
-  await page.goto(`/js/tour/tour.html`);
+  await page.goto(`/js/index.html`);
   await expect(page.getByText("Hello")).toBeVisible();
   await expect(page.getByRole("button", { name: "Close" })).toBeVisible();
   await expect(page.getByText("Continue")).toBeVisible();
@@ -58,7 +58,7 @@ test("should be able to switch between tour steps", async ({ page }) => {
   await page.route("**/v2/sdk/blocks", (route) => {
     route.fulfill({ json: { blocks: [tour] } });
   });
-  await page.goto(`/js/tour/tour.html`);
+  await page.goto(`/js/index.html`);
   await expect(page.getByText("Hello")).toBeVisible();
   await expect(page.getByText("World")).toBeHidden();
   await page.getByText("Continue").click();
@@ -75,7 +75,7 @@ test("should be able to close the tour", async ({ page }) => {
   await page.route("**/v2/sdk/blocks", (route) => {
     route.fulfill({ json: { blocks: [tour] } });
   });
-  await page.goto(`/js/tour/tour.html`);
+  await page.goto(`/js/index.html`);
   await expect(page.getByText("Hello")).toBeVisible();
   await page.getByRole("button", { name: "Close" }).click();
   await expect(page.getByText("Hello")).toBeHidden();
@@ -84,7 +84,7 @@ test("should be able to complete the tour", async ({ page }) => {
   await page.route("**/v2/sdk/blocks", (route) => {
     route.fulfill({ json: { blocks: [tour] } });
   });
-  await page.goto(`/js/tour/tour.html`);
+  await page.goto(`/js/index.html`);
   await expect(page.getByText("Hello")).toBeVisible();
   await page.getByText("Continue").click();
   await expect(page.getByText("World")).toBeVisible();
@@ -96,7 +96,7 @@ test("should send current step event", async ({ page }) => {
   await page.route("**/v2/sdk/blocks", (route) => {
     route.fulfill({ json: { blocks: [tour] } });
   });
-  await page.goto(`/js/tour/tour.html`);
+  await page.goto(`/js/index.html`);
   const eventReq1 = page.waitForRequest(
     (req) =>
       req.url().includes("/v2/sdk/events") &&

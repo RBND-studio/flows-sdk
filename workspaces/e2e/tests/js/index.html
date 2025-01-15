@@ -6,6 +6,15 @@
     <link rel="stylesheet" href="/tests/reset.css" />
   </head>
   <body>
-    <script type="module" src="./page-targeting.ts"></script>
+    <h1>heading 1</h1>
+    <h2>Subtitle</h2>
+
+    <flows-slot data-slot-id="my-slot">
+      <div data-placeholder>
+        <p>Slot placeholder</p>
+      </div>
+    </flows-slot>
+
+    <script type="module" src="./script.ts"></script>
   </body>
 </html>

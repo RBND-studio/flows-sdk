@@ -4,9 +4,6 @@ init({
   environment: "production",
   organizationId: "orgId",
   userId: "testUserId",
-  userProperties: {
-    email: "test@flows.sh",
-  },
 });
 
 const updateCurrentBlocks = () => {
