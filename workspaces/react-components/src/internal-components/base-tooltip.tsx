@@ -110,7 +110,7 @@ export const BaseTooltip: FC<Props> = (props) => {
 
         <div className="flows_tooltip_footer">{props.buttons}</div>
         {props.onClose ? (
-          <IconButton className="flows_tooltip_close" onClick={props.onClose}>
+          <IconButton aria-label="Close" className="flows_tooltip_close" onClick={props.onClose}>
             <Close16 />
           </IconButton>
         ) : null}

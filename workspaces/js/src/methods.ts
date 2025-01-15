@@ -18,12 +18,13 @@ const visibleTours = computed(() => {
   return runningTours.value
     .filter((t) => {
       const block = blocksById.get(t.blockId);
+      const activeStep = block?.tourBlocks?.at(t.currentBlockIndex);
       return (
         !t.hidden &&
         pathnameMatch({
           pathname: pathname.value,
-          operator: block?.page_targeting_operator,
-          value: block?.page_targeting_values,
+          operator: activeStep?.page_targeting_operator,
+          value: activeStep?.page_targeting_values,
         })
       );
     })

@@ -41,6 +41,12 @@ importers:
       '@flows/js':
         specifier: workspace:*
         version: link:../js
+      '@flows/js-components':
+        specifier: workspace:*
+        version: link:../js-components
+      '@flows/shared':
+        specifier: workspace:*
+        version: link:../shared
     devDependencies:
       '@playwright/test':
         specifier: ^1.49.1

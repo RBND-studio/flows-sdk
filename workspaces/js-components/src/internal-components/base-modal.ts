@@ -50,6 +50,7 @@ export const BaseModal: Component<Props> = (props) => {
     closeButton = document.createElement("button");
     modal.appendChild(closeButton);
     closeButton.className = "flows_iconButton flows_modal_close";
+    closeButton.ariaLabel = "Close";
     closeButton.addEventListener("click", props.close);
     closeButton.appendChild(close16());
   }

@@ -27,6 +27,8 @@ export const tourToActiveBlock = (block: Block, currentIndex: number): ActiveBlo
   const activeStep = tourBlocks.at(currentIndex);
   if (!activeStep?.componentType) return [];
 
+  const isFirstStep = currentIndex === 0;
+
   const handlePrevious = (): void => {
     previousTourStep(block, currentIndex);
   };
@@ -43,7 +45,7 @@ export const tourToActiveBlock = (block: Block, currentIndex: number): ActiveBlo
     component: activeStep.componentType,
     props: {
       ...activeStep.data,
-      previous: handlePrevious,
+      previous: !isFirstStep ? handlePrevious : undefined,
       continue: handleContinue,
       cancel: handleCancel,
     },

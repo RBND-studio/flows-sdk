@@ -5,6 +5,7 @@ interface Props {
   className?: string;
   children?: ReactNode;
   onClick?: () => void;
+  "aria-label"?: string;
 }
 
 export const IconButton: FC<Props> = ({ className, ...props }) => {

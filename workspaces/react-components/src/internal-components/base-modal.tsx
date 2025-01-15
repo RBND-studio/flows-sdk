@@ -31,7 +31,7 @@ export const BaseModal: FC<Props> = (props) => {
 
           <div className="flows_modal_footer">{props.buttons}</div>
           {props.onClose ? (
-            <IconButton className="flows_modal_close" onClick={props.onClose}>
+            <IconButton aria-label="Close" className="flows_modal_close" onClick={props.onClose}>
               <Close16 />
             </IconButton>
           ) : null}
