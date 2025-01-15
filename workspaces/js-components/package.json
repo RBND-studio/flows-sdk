@@ -34,7 +34,8 @@
     "test:watch": "jest --watch",
     "lint": "eslint src",
     "tsc": "tsc -p tsconfig.json",
-    "version": "pnpm version"
+    "version": "pnpm version",
+    "prepare": "pnpm build"
   },
   "dependencies": {
     "@floating-ui/dom": "^1.6.13"
