@@ -1,7 +1,7 @@
 import { init, addFloatingBlocksChangeListener } from "@flows/js";
 import { Component, render, updateSlotComponents } from "@flows/js-components";
-import * as components from "@flows/js-components/components";
-import * as tourComponents from "@flows/js-components/tour-components";
+import * as _components from "@flows/js-components/components";
+import * as _tourComponents from "@flows/js-components/tour-components";
 import "@flows/js-components/index.css";
 
 const apiUrl = new URLSearchParams(window.location.search).get("apiUrl") ?? undefined;
@@ -33,7 +33,14 @@ init({
     age: 10,
   },
 });
+
+const components = { ..._components, Card };
+const tourComponents = { ..._tourComponents, Card };
+
 addFloatingBlocksChangeListener((blocks) => {
   render({ blocks, components, tourComponents });
 });
-updateSlotComponents({ components: { ...components, Card }, tourComponents });
+updateSlotComponents({
+  components,
+  tourComponents,
+});
