@@ -1,5 +1,6 @@
 "use client";
 
+import { getPathname } from "@flows/shared";
 import {
   createContext,
   useContext,
@@ -11,7 +12,6 @@ import {
 } from "react";
 
 const INTERVAL_MS = 250;
-const getPathname = (): string => window.location.pathname + window.location.search;
 
 const _usePathname = (): string | undefined => {
   const [pathname, setPathname] = useState<string>();

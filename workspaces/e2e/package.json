@@ -10,10 +10,12 @@
     "tsc": "tsc -p tsconfig.json"
   },
   "dependencies": {
-    "@flows/js": "workspace:*"
+    "@flows/js": "workspace:*",
+    "@flows/js-components": "workspace:*",
+    "@flows/shared": "workspace:*"
   },
   "devDependencies": {
-    "@playwright/test": "^1.48.1",
+    "@playwright/test": "^1.49.1",
     "@types/node": "^20",
     "typescript": "^5.7.2",
     "vite": "^6.0.6"

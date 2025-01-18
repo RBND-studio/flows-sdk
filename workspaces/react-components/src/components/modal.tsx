@@ -1,6 +1,6 @@
 import { type FC } from "react";
 import { Button } from "../internal-components/button";
-import { BaseModal } from "../internal-components/modal";
+import { BaseModal } from "../internal-components/base-modal";
 
 export interface ModalProps {
   title: string;

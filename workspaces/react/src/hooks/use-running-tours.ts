@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
+import { type Block } from "@flows/shared";
 import { type IFlowsContext, type RunningTour } from "../flows-context";
-import { type Block } from "../types";
 
 type StateItem = Pick<RunningTour, "currentBlockIndex" | "hidden"> & {
   blockId: string;

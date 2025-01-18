@@ -1,7 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { log } from "@flows/shared";
-import { type UserProperties, type Block, type TourStep } from "../types";
-import { getApi } from "../api";
+import {
+  getApi,
+  log,
+  type UserProperties,
+  type Block,
+  type TourStep,
+  type BlockUpdatesPayload,
+} from "@flows/shared";
 import { useWebsocket } from "./use-websocket";
 
 interface Props {
@@ -10,11 +15,6 @@ interface Props {
   organizationId: string;
   userId: string;
   userProperties?: UserProperties;
-}
-
-interface BlockUpdatesPayload {
-  exitedBlockIds: string[];
-  updatedBlocks: Block[];
 }
 
 export const useBlocks = ({

@@ -1,5 +1,6 @@
 import { createContext, useContext } from "react";
-import { type TourStep, type Block, type Components, type TourComponents } from "./types";
+import { type Block, type TourStep } from "@flows/shared";
+import { type Components, type TourComponents } from "./types";
 
 export interface RunningTour {
   block: Block;

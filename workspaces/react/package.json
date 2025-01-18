@@ -20,13 +20,14 @@
     "product-adoption",
     "product-tours"
   ],
+  "sideEffects": false,
   "scripts": {
     "dev": "tsup --watch --env.NODE_ENV development",
-    "build": "tsup --env.NODE_ENV production && pnpm tsc -p tsconfig.dist.json",
+    "build": "tsup --env.NODE_ENV production",
     "lint": "eslint src",
     "tsc": "tsc -p tsconfig.json",
     "version": "pnpm version",
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",
     "prepare": "pnpm build"
   },

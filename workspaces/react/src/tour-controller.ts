@@ -1,7 +1,7 @@
 import { type FC, useEffect, useMemo } from "react";
+import { elementContains, getPathname, pathnameMatch } from "@flows/shared";
 import { useFlowsContext } from "./flows-context";
 import { usePathname } from "./contexts/pathname-context";
-import { elementContains, pathnameMatch } from "./lib/matchers";
 
 export const TourController: FC = () => {
   const { runningTours } = useFlowsContext();
@@ -35,12 +35,14 @@ export const TourController: FC = () => {
       const eventTarget = event.target;
       if (!eventTarget || !(eventTarget instanceof Element)) return;
 
+      const currentPathname = getPathname();
+
       relevantTours.forEach((tour) => {
         const tourWait = tour.activeStep?.tourWait;
 
         if (tourWait?.interaction === "click") {
           const pageMatch = pathnameMatch({
-            pathname,
+            pathname: currentPathname,
             operator: tourWait.page?.operator,
             value: tourWait.page?.value,
           });

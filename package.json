@@ -5,6 +5,7 @@
   "scripts": {
     "e2e": "pnpm --filter e2e",
     "js": "pnpm --filter js",
+    "js-components": "pnpm --filter js-components",
     "react": "pnpm --filter react",
     "react-components": "pnpm --filter react-components",
     "shared": "pnpm --filter shared",
@@ -26,5 +27,5 @@
     "minimist": "^1.2.8",
     "prettier": "^3.4.2"
   },
-  "packageManager": "pnpm@9.15.0"
+  "packageManager": "pnpm@9.15.2"
 }
