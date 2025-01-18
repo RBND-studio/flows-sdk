@@ -1,6 +1,15 @@
-# Flows 1.0 JavaScript SDK
+<h1 align="center">Flows JavaScript SDK</h1>
 
-This SDK is no longer supported. Please use the [@flows/react](https://www.npmjs.com/package/@flows/react) SDK instead.
+## Getting started
+
+Build native product growth experiences, your way – Meet Flows, the flexible platform for building in-app experiences. Focus on your product, not creating one-off logic.
+
+- Build powerful in-app experiences to drive product growth
+- Embed components directly into your app
+- Create onboarding, product adoption, in-app messaging, growth experiments, and more
+- Bring your own UI components or use Flows' built-in components
+
+Visit our [website](https://flows.sh) to learn more about Flows
 
 ## Documentation
 

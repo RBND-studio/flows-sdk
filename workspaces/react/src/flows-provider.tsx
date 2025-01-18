@@ -1,6 +1,6 @@
 import { type FC, type ReactNode, useCallback, useMemo } from "react";
-import { getApi } from "./api";
-import { type TourComponents, type Components, type UserProperties } from "./types";
+import { getApi, type UserProperties } from "@flows/shared";
+import { type TourComponents, type Components } from "./types";
 import { Block } from "./block";
 import { FlowsContext, type IFlowsContext } from "./flows-context";
 import { useRunningTours } from "./hooks/use-running-tours";

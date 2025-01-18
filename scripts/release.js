@@ -9,7 +9,7 @@ const allowedReleases = ["canary", "patch", "minor", "major"];
 if (!allowedReleases.includes(release))
   throw new Error(`You must specify a release type (--release=...): ${allowedReleases.join(", ")}`);
 
-const allowedPackages = ["js", "react", "react-components"];
+const allowedPackages = ["js", "js-components", "react", "react-components"];
 if (!allowedPackages.includes(package))
   throw new Error(`You must specify a package (--package=...): ${allowedPackages.join(", ")}`);
 

@@ -15,7 +15,6 @@ jobs:
           node-version: 20
           cache: "pnpm"
       - run: pnpm install
-      - run: pnpm js build
       - run: pnpm tsc
 
   jest:
@@ -53,7 +52,6 @@ jobs:
           node-version: 20
           cache: "pnpm"
       - run: pnpm install
-      - run: pnpm js build
       - run: pnpm e2e playwright:docker
       - uses: actions/upload-artifact@v4
         if: always()

@@ -1,8 +1,8 @@
 import { useMemo, type FC, type ReactNode } from "react";
+import { type Block as IBlock } from "@flows/shared";
 import { Block } from "./block";
 import { type RunningTour, useFlowsContext } from "./flows-context";
 import { getSlot } from "./lib/selectors";
-import { type Block as IBlock } from "./types";
 import { TourBlock } from "./tour-block";
 
 export interface FlowsSlotProps {
@@ -23,7 +23,7 @@ export const FlowsSlot: FC<FlowsSlotProps> = ({ id, placeholder }) => {
   const sortedItems = useMemo(() => {
     const slotBlocks = blocks.filter((b) => b.slottable && getSlot(b) === id);
     const slotTourBlocks = runningTours.filter(
-      (b) => b.activeStep && b.activeStep.slottable && getSlot(b.activeStep) === id,
+      (b) => b.activeStep?.slottable && getSlot(b.activeStep) === id,
     );
     return [...slotBlocks, ...slotTourBlocks].sort((a, b) => getSlotIndex(a) - getSlotIndex(b));
   }, [blocks, id, runningTours]);
