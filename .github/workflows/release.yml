@@ -1,4 +1,4 @@
-name: Release
+name: Release @flows/${{ github.event.inputs.package }}@${{ github.event.inputs.type }}
 
 on:
   workflow_dispatch:

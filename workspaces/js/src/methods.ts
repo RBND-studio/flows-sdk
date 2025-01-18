@@ -119,6 +119,7 @@ export const addFloatingBlocksChangeListener = (
 /**
  * Add a listener that will be called every time the blocks for a specific slot change.
  *
+ * @param slotId - Slot id to listen for changes
  * @param listener - Callback function that receives array of `ActiveBlock` objects
  * @returns `dispose` function that should be called to stop listening to the changes to avoid memory leaks
  *
