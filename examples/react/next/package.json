@@ -9,8 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@flows/react": "canary",
-    "@flows/react-components": "canary",
+    "@flows/react": "*",
+    "@flows/react-components": "*",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "next": "15.1.0"
