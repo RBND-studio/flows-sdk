@@ -1,6 +1,5 @@
 import { type FC } from "react";
-import { type Placement } from "@floating-ui/react-dom";
-import { type TourComponentProps } from "@flows/shared";
+import { type Placement, type TourComponentProps } from "@flows/shared";
 import { BaseTooltip } from "../internal-components/base-tooltip";
 import { Button } from "../internal-components/button";
 

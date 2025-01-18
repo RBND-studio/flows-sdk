@@ -18,7 +18,7 @@ In [`blocks.vue`](./components/flows/blocks.vue) you can see a component that ta
 
 ### Flows slot
 
-The `<FlowsSlot>` component lets you render Flows UI elements dynamically within your application. You can add placeholder UI for empty states. Refer to [`slot.vue`](./components/flows/slot.vue) for implementation and to [`app.vue`] for example usage.
+The `<FlowsSlot>` component lets you render Flows UI elements dynamically within your application. You can add placeholder UI for empty states. Refer to [`slot.vue`](./components/flows/slot.vue) for implementation and to [`app.vue`](./app.vue) for example usage.
 
 ### Custom components
 

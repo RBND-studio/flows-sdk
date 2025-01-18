@@ -9,18 +9,40 @@ import { TourBlock } from "./tour-block";
 import { PathnameProvider } from "./contexts/pathname-context";
 import { TourController } from "./tour-controller";
 
-interface Props {
-  children: ReactNode;
+export interface FlowsProviderProps {
+  /**
+   * Your organization ID. Find this in Settings \> General.
+   */
   organizationId: string;
+  /**
+   * The environment key. Find this in Settings \> Environments.
+   */
   environment: string;
+  /**
+   * Unique user ID. If no ID is provided, all users will be treated as one.
+   */
   userId: string;
-  apiUrl?: string;
-  components: Components;
-  tourComponents: TourComponents;
+  /**
+   * Object with custom [user properties](https://flows.sh/docs/users/properties). Values can be string, number, boolean, or date.
+   */
   userProperties?: UserProperties;
+  /**
+   * Custom API URL useful when using proxy to send Flows requests through your own domain.
+   */
+  apiUrl?: string;
+  /**
+   * Components used for workflow blocks.
+   */
+  components: Components;
+  /**
+   * Components used for tour blocks.
+   */
+  tourComponents: TourComponents;
+
+  children: ReactNode;
 }
 
-export const FlowsProvider: FC<Props> = ({
+export const FlowsProvider: FC<FlowsProviderProps> = ({
   children,
   apiUrl = "https://api.flows-cloud.com",
   environment,
