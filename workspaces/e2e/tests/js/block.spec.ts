@@ -1,7 +1,8 @@
 import { expect, test } from "@playwright/test";
+import { randomUUID } from "crypto";
 
 const mockBlock = {
-  id: "1",
+  id: randomUUID(),
   type: "component",
   componentType: "Modal",
   data: {},
@@ -34,7 +35,7 @@ test("return floating blocks", async ({ page }) => {
   await expect(page.locator(".current-blocks")).toHaveText(
     JSON.stringify([
       {
-        id: "1",
+        id: mockBlock.id,
         type: "component",
         component: "Modal",
         props: {},

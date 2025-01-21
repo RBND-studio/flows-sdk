@@ -27,7 +27,8 @@
     "tsc": "tsc -p tsconfig.json",
     "version": "pnpm version",
     "test": "jest --passWithNoTests",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "prepare": "pnpm build"
   },
   "license": "MIT",
   "sideEffects": false,

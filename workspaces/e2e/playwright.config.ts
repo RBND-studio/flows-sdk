@@ -18,7 +18,7 @@ export default defineConfig({
     trace: "on-first-retry",
   },
   webServer: {
-    command: "npm run serve:test",
+    command: "npm run vite build && npm run vite preview",
     url: "http://localhost:3000",
   },
 
