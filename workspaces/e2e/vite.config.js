@@ -7,6 +7,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   plugins: [react()],
+  root: "./pages",
   build: {
     rollupOptions: {
       input: {
@@ -17,7 +18,6 @@ export default defineConfig({
       },
     },
   },
-
   appType: "mpa",
   server: {
     port: 3000,
@@ -25,5 +25,4 @@ export default defineConfig({
   preview: {
     port: 3000,
   },
-  root: "./pages",
 });

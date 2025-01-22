@@ -37,6 +37,8 @@ export default defineConfig({
     {
       name: "webkit",
       use: { ...devices["Desktop Safari"] },
+      // For some reason the webkit browser is flaky with the React package
+      // retries: 2,
     },
 
     /* Test against mobile viewports. */

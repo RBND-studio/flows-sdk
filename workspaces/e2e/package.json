@@ -3,10 +3,7 @@
   "private": true,
   "scripts": {
     "playwright": "playwright test",
-    "playwright:docker": "./docker_run_playwright.sh /app/workspaces/e2e/docker_playwright_script.sh",
-    "playwright:docker:update-snapshots": "./docker_run_playwright.sh /app/workspaces/e2e/docker_playwright_script_update_snapshots.sh",
     "playwright:install": "playwright install --with-deps",
-    "serve:test": "vite",
     "vite": "vite",
     "tsc": "tsc -p tsconfig.json"
   },
