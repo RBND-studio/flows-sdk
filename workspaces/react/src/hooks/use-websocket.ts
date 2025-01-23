@@ -11,6 +11,11 @@ export const useWebsocket = ({ url, onMessage, onOpen }: Props): void => {
   const cleanupRef = useRef<(() => void) | undefined>(undefined);
   const [reconnectAttempts, setReconnectAttempts] = useState(0);
 
+  const onOpenRef = useRef(onOpen);
+  useEffect(() => {
+    onOpenRef.current = onOpen;
+  }, [onOpen]);
+
   const connect = useCallback(() => {
     if (cleanupRef.current) {
       cleanupRef.current();
@@ -21,6 +26,7 @@ export const useWebsocket = ({ url, onMessage, onOpen }: Props): void => {
     setWs(socket);
 
     const handleOpen = (): void => {
+      onOpenRef.current?.();
       setReconnectAttempts(0);
     };
     const handleClose = (): void => {
@@ -68,15 +74,6 @@ export const useWebsocket = ({ url, onMessage, onOpen }: Props): void => {
       clearTimeout(timeout);
     };
   }, [reconnectAttempts, ws, connect]);
-
-  useEffect(() => {
-    if (!ws || !onOpen) return;
-
-    ws.addEventListener("open", onOpen);
-    return () => {
-      ws.removeEventListener("open", onOpen);
-    };
-  }, [onOpen, ws]);
 
   useEffect(() => {
     if (!ws) return;
