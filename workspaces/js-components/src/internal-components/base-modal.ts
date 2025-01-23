@@ -39,11 +39,13 @@ export const BaseModal: Component<Props> = (props) => {
   body.className = "flows_text flows_text_body";
   body.innerHTML = props.body;
 
-  const footer = document.createElement("div");
-  modal.appendChild(footer);
-  footer.className = "flows_modal_footer";
+  if (props.buttons.length) {
+    const footer = document.createElement("div");
+    modal.appendChild(footer);
+    footer.className = "flows_modal_footer";
 
-  props.buttons.forEach((button) => footer.appendChild(button));
+    props.buttons.forEach((button) => footer.appendChild(button));
+  }
 
   let closeButton: HTMLButtonElement | null = null;
   if (props.close) {

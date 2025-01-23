@@ -1,5 +1,5 @@
 export interface MountedElement {
-  el: HTMLElement;
+  el: HTMLElement | null;
   blockId: string;
   cleanup: () => void;
 }

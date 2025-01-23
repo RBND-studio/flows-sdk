@@ -15,6 +15,25 @@ export type TooltipProps = TourComponentProps<{
 }>;
 
 export const Tooltip: FC<TooltipProps> = (props) => {
+  const previousButton = props.previous && props.previousText && (
+    <Button variant="secondary" onClick={props.previous}>
+      {props.previousText}
+    </Button>
+  );
+  const continueButton = props.continueText && (
+    <Button variant="primary" onClick={props.continue}>
+      {props.continueText}
+    </Button>
+  );
+  const buttons =
+    Boolean(continueButton) || Boolean(previousButton) ? (
+      <>
+        {/* The empty div ensures elements are aligned correctly when there is no continue button */}
+        {previousButton ?? <div aria-hidden />}
+        {continueButton ?? <div aria-hidden />}
+      </>
+    ) : null;
+
   return (
     <BaseTooltip
       title={props.title}
@@ -23,26 +42,7 @@ export const Tooltip: FC<TooltipProps> = (props) => {
       placement={props.placement}
       overlay={!props.hideOverlay}
       onClose={props.showCloseButton ? props.cancel : undefined}
-      buttons={
-        <>
-          {props.previous && props.previousText ? (
-            <Button variant="secondary" onClick={props.previous}>
-              {props.previousText}
-            </Button>
-          ) : (
-            // This div ensures elements are aligned correctly when there is no previous button
-            <div aria-hidden />
-          )}
-          {props.continueText ? (
-            <Button variant="primary" onClick={props.continue}>
-              {props.continueText}
-            </Button>
-          ) : (
-            // This div ensures elements are aligned correctly when there is no continue button
-            <div aria-hidden />
-          )}
-        </>
-      }
+      buttons={buttons}
     />
   );
 };

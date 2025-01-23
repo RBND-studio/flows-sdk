@@ -3,7 +3,7 @@
 import { type TourComponentProps } from "@flows/shared";
 
 export type Component<T extends Record<string, any> = any> = (props: T) => {
-  element: HTMLElement;
+  element: HTMLElement | null;
   cleanup: () => void;
 };
 export type TourComponent<T extends Record<string, any> = any> = Component<TourComponentProps<T>>;

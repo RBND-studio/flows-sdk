@@ -14,17 +14,19 @@ export interface ModalProps {
 }
 
 export const Modal: FC<ModalProps> = (props) => {
+  const buttons = [];
+  if (props.continueText)
+    buttons.push(
+      <Button key="continue" variant="primary" onClick={props.continue}>
+        {props.continueText}
+      </Button>,
+    );
+
   return (
     <BaseModal
       title={props.title}
       body={props.body}
-      buttons={
-        props.continueText ? (
-          <Button variant="primary" onClick={props.continue}>
-            {props.continueText}
-          </Button>
-        ) : null
-      }
+      buttons={buttons.length ? buttons : undefined}
       overlay={!props.hideOverlay}
       onClose={props.showCloseButton ? props.close : undefined}
     />

@@ -17,6 +17,14 @@ export interface TooltipProps {
 }
 
 export const Tooltip: FC<TooltipProps> = (props) => {
+  const buttons = [];
+  if (props.continueText)
+    buttons.push(
+      <Button key="continue" variant="primary" onClick={props.continue}>
+        {props.continueText}
+      </Button>,
+    );
+
   return (
     <BaseTooltip
       title={props.title}
@@ -25,13 +33,7 @@ export const Tooltip: FC<TooltipProps> = (props) => {
       placement={props.placement}
       overlay={!props.hideOverlay}
       onClose={props.showCloseButton ? props.close : undefined}
-      buttons={
-        props.continueText ? (
-          <Button variant="primary" onClick={props.continue}>
-            {props.continueText}
-          </Button>
-        ) : null
-      }
+      buttons={buttons.length ? buttons : undefined}
     />
   );
 };

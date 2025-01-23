@@ -43,10 +43,10 @@ export const Modal: Component<ModalProps> = (props) => {
   return {
     element: result.element,
     cleanup: () => {
+      result.cleanup();
+
       if (props.previous) previousButton?.removeEventListener("click", props.previous);
       continueButton?.removeEventListener("click", props.continue);
-
-      result.cleanup();
     },
   };
 };

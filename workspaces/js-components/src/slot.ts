@@ -57,7 +57,7 @@ const defineFlowsSlot = (): void => {
         if (Cmp) {
           const { cleanup, element: el } = Cmp(block.props as Parameters<typeof Cmp>[0]);
           this.mountedElements.push({ el, cleanup, blockId: block.id });
-          this.appendChild(el);
+          if (el) this.appendChild(el);
         }
       });
     }
@@ -65,7 +65,7 @@ const defineFlowsSlot = (): void => {
     unmount(): void {
       this.mountedElements.forEach((mountedElement) => {
         mountedElement.cleanup();
-        mountedElement.el.remove();
+        if (mountedElement.el) mountedElement.el.remove();
       });
       this.mountedElements = [];
     }

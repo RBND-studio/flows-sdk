@@ -13,36 +13,37 @@ export type TooltipProps = TourComponentProps<{
   hideOverlay?: boolean;
 }>;
 
-export const Tooltip: Component<TooltipProps> = (props) => {
-  const buttons: HTMLElement[] = [];
+const hiddenDiv = (): HTMLElement => {
+  const div = document.createElement("div");
+  div.ariaHidden = "true";
+  return div;
+};
 
+export const Tooltip: Component<TooltipProps> = (props) => {
   let previousButton: HTMLButtonElement | null = null;
   if (props.previous && props.previousText) {
     previousButton = document.createElement("button");
-    buttons.push(previousButton);
     previousButton.className = "flows_button flows_button_secondary";
     previousButton.textContent = props.previousText;
     previousButton.addEventListener("click", props.previous);
-  } else {
-    const hiddenDiv = document.createElement("div");
-    hiddenDiv.ariaHidden = "true";
-    // This div ensures elements are aligned correctly when there is no previous button
-    buttons.push(hiddenDiv);
   }
 
   let continueButton: HTMLButtonElement | null = null;
   if (props.continueText) {
     continueButton = document.createElement("button");
-    buttons.push(continueButton);
     continueButton.className = "flows_button flows_button_primary";
     continueButton.textContent = props.continueText;
     continueButton.addEventListener("click", props.continue);
-  } else {
-    const hiddenDiv = document.createElement("div");
-    hiddenDiv.ariaHidden = "true";
-    // This div ensures elements are aligned correctly when there is no continue button
-    buttons.push(hiddenDiv);
   }
+
+  const buttons =
+    Boolean(continueButton) || Boolean(previousButton)
+      ? [
+          //  The empty div ensures elements are aligned correctly when there is no continue button
+          previousButton ?? hiddenDiv(),
+          continueButton ?? hiddenDiv(),
+        ]
+      : [];
 
   const result = BaseTooltip({
     title: props.title,
@@ -57,9 +58,10 @@ export const Tooltip: Component<TooltipProps> = (props) => {
   return {
     element: result.element,
     cleanup: () => {
-      result.cleanup();
-
+      continueButton?.removeEventListener("click", props.continue);
       if (props.previous) previousButton?.removeEventListener("click", props.previous);
+
+      result.cleanup();
     },
   };
 };
