@@ -91,9 +91,6 @@ importers:
       '@flows/shared':
         specifier: workspace:*
         version: link:../shared
-      '@microsoft/api-extractor':
-        specifier: ^7.48.1
-        version: 7.48.1(@types/node@20.17.14)
       '@types/jest':
         specifier: ^29.5.14
         version: 29.5.14
@@ -5060,6 +5057,7 @@ snapshots:
       '@rushstack/node-core-library': 5.10.1(@types/node@20.17.14)
     transitivePeerDependencies:
       - '@types/node'
+    optional: true
 
   '@microsoft/api-extractor@7.48.1(@types/node@20.17.14)':
     dependencies:
@@ -5078,6 +5076,7 @@ snapshots:
       typescript: 5.4.2
     transitivePeerDependencies:
       - '@types/node'
+    optional: true
 
   '@microsoft/tsdoc-config@0.16.2':
     dependencies:
@@ -5092,10 +5091,12 @@ snapshots:
       ajv: 8.12.0
       jju: 1.4.0
       resolve: 1.22.8
+    optional: true
 
   '@microsoft/tsdoc@0.14.2': {}
 
-  '@microsoft/tsdoc@0.15.1': {}
+  '@microsoft/tsdoc@0.15.1':
+    optional: true
 
   '@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1':
     dependencies:
@@ -5249,11 +5250,13 @@ snapshots:
       semver: 7.5.4
     optionalDependencies:
       '@types/node': 20.17.14
+    optional: true
 
   '@rushstack/rig-package@0.5.3':
     dependencies:
       resolve: 1.22.8
       strip-json-comments: 3.1.1
+    optional: true
 
   '@rushstack/terminal@0.14.4(@types/node@20.17.14)':
     dependencies:
@@ -5261,6 +5264,7 @@ snapshots:
       supports-color: 8.1.1
     optionalDependencies:
       '@types/node': 20.17.14
+    optional: true
 
   '@rushstack/ts-command-line@4.23.2(@types/node@20.17.14)':
     dependencies:
@@ -5270,6 +5274,7 @@ snapshots:
       string-argv: 0.3.2
     transitivePeerDependencies:
       - '@types/node'
+    optional: true
 
   '@sinclair/typebox@0.27.8': {}
 
@@ -5283,7 +5288,8 @@ snapshots:
 
   '@tootallnate/once@2.0.0': {}
 
-  '@types/argparse@1.0.38': {}
+  '@types/argparse@1.0.38':
+    optional: true
 
   '@types/babel__core@7.20.5':
     dependencies:
@@ -5574,10 +5580,12 @@ snapshots:
   ajv-draft-04@1.0.0(ajv@8.13.0):
     optionalDependencies:
       ajv: 8.13.0
+    optional: true
 
   ajv-formats@3.0.1(ajv@8.13.0):
     optionalDependencies:
       ajv: 8.13.0
+    optional: true
 
   ajv@6.12.6:
     dependencies:
@@ -5592,6 +5600,7 @@ snapshots:
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
       uri-js: 4.4.1
+    optional: true
 
   ajv@8.13.0:
     dependencies:
@@ -5599,6 +5608,7 @@ snapshots:
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
       uri-js: 4.4.1
+    optional: true
 
   ajv@8.16.0:
     dependencies:
@@ -6707,6 +6717,7 @@ snapshots:
       graceful-fs: 4.2.11
       jsonfile: 4.0.0
       universalify: 0.1.2
+    optional: true
 
   fs.realpath@1.0.0: {}
 
@@ -6897,7 +6908,8 @@ snapshots:
       parent-module: 1.0.1
       resolve-from: 4.0.0
 
-  import-lazy@4.0.0: {}
+  import-lazy@4.0.0:
+    optional: true
 
   import-local@3.1.0:
     dependencies:
@@ -7573,6 +7585,7 @@ snapshots:
   jsonfile@4.0.0:
     optionalDependencies:
       graceful-fs: 4.2.11
+    optional: true
 
   jsonparse@1.3.1: {}
 
@@ -7659,6 +7672,7 @@ snapshots:
   lru-cache@6.0.0:
     dependencies:
       yallist: 4.0.0
+    optional: true
 
   make-dir@4.0.0:
     dependencies:
@@ -7698,6 +7712,7 @@ snapshots:
   minimatch@3.0.8:
     dependencies:
       brace-expansion: 1.1.11
+    optional: true
 
   minimatch@3.1.2:
     dependencies:
@@ -8147,6 +8162,7 @@ snapshots:
   semver@7.5.4:
     dependencies:
       lru-cache: 6.0.0
+    optional: true
 
   semver@7.6.3: {}
 
@@ -8239,7 +8255,8 @@ snapshots:
     dependencies:
       escape-string-regexp: 2.0.0
 
-  string-argv@0.3.2: {}
+  string-argv@0.3.2:
+    optional: true
 
   string-length@4.0.2:
     dependencies:
@@ -8532,7 +8549,8 @@ snapshots:
       is-typed-array: 1.1.13
       possible-typed-array-names: 1.0.0
 
-  typescript@5.4.2: {}
+  typescript@5.4.2:
+    optional: true
 
   typescript@5.7.3: {}
 
@@ -8549,7 +8567,8 @@ snapshots:
 
   unicorn-magic@0.1.0: {}
 
-  universalify@0.1.2: {}
+  universalify@0.1.2:
+    optional: true
 
   universalify@0.2.0: {}
 
@@ -8698,7 +8717,8 @@ snapshots:
 
   yallist@3.1.1: {}
 
-  yallist@4.0.0: {}
+  yallist@4.0.0:
+    optional: true
 
   yaml@2.4.5:
     optional: true
