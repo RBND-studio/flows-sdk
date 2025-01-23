@@ -27,7 +27,7 @@ interface Props {
   title: string;
   body: string;
   targetElement: string;
-  buttons: ReactNode;
+  buttons?: ReactNode;
   onClose?: () => void;
   placement?: Placement;
   overlay?: boolean;
@@ -38,7 +38,7 @@ export const BaseTooltip: FC<Props> = (props) => {
   const bottomArrowRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
 
-  const reference = document.querySelector(props.targetElement);
+  const reference = props.targetElement ? document.querySelector(props.targetElement) : null;
   const { refs, middlewareData, placement, x, y } = useFloating({
     placement: props.placement,
     elements: { reference },
@@ -81,7 +81,7 @@ export const BaseTooltip: FC<Props> = (props) => {
 
   useEffect(() => {
     if (!props.targetElement) {
-      log.error("Cannot render tooltip without target element");
+      log.error("Cannot render Tooltip without target element");
     }
   }, [props.targetElement]);
 
@@ -108,7 +108,7 @@ export const BaseTooltip: FC<Props> = (props) => {
           dangerouslySetInnerHTML={{ __html: props.body }}
         />
 
-        <div className="flows_tooltip_footer">{props.buttons}</div>
+        {props.buttons ? <div className="flows_tooltip_footer">{props.buttons}</div> : null}
         {props.onClose ? (
           <IconButton aria-label="Close" className="flows_tooltip_close" onClick={props.onClose}>
             <Close16 />

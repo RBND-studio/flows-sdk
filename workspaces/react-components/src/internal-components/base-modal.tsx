@@ -8,7 +8,7 @@ interface Props {
   title: string;
   body: string;
   overlay: boolean;
-  buttons: ReactNode;
+  buttons?: ReactNode;
   onClose?: () => void;
 }
 
@@ -29,7 +29,7 @@ export const BaseModal: FC<Props> = (props) => {
           <Text variant="title">{props.title}</Text>
           <Text variant="body" dangerouslySetInnerHTML={{ __html: props.body }} />
 
-          <div className="flows_modal_footer">{props.buttons}</div>
+          {props.buttons ? <div className="flows_modal_footer">{props.buttons}</div> : null}
           {props.onClose ? (
             <IconButton aria-label="Close" className="flows_modal_close" onClick={props.onClose}>
               <Close16 />

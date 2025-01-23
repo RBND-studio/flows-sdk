@@ -22,6 +22,17 @@ interface Props {
 }
 
 export const BaseTooltip: Component<Props> = (props) => {
+  if (!props.targetElement) {
+    log.error("Cannot render Tooltip without target element");
+
+    return {
+      element: null,
+      cleanup: () => {
+        // Do nothing
+      },
+    };
+  }
+
   const root = document.createElement("div");
   root.className = "flows_tooltip_root";
 
@@ -47,11 +58,13 @@ export const BaseTooltip: Component<Props> = (props) => {
   body.className = "flows_text flows_text_body flows_tooltip_body";
   body.innerHTML = props.body;
 
-  const footer = document.createElement("div");
-  tooltip.appendChild(footer);
-  footer.className = "flows_tooltip_footer";
+  if (props.buttons.length) {
+    const footer = document.createElement("div");
+    tooltip.appendChild(footer);
+    footer.className = "flows_tooltip_footer";
 
-  props.buttons.forEach((button) => footer.appendChild(button));
+    props.buttons.forEach((button) => footer.appendChild(button));
+  }
 
   let closeButton: HTMLButtonElement | null = null;
   if (props.close) {

@@ -13,25 +13,26 @@ export type ModalProps = TourComponentProps<{
 }>;
 
 export const Modal: FC<ModalProps> = (props) => {
+  const buttons = [];
+  if (props.previous && props.previousText)
+    buttons.push(
+      <Button key="previous" variant="secondary" onClick={props.previous}>
+        {props.previousText}
+      </Button>,
+    );
+  if (props.continueText)
+    buttons.push(
+      <Button key="continue" variant="primary" onClick={props.continue}>
+        {props.continueText}
+      </Button>,
+    );
+
   return (
     <BaseModal
       title={props.title}
       body={props.body}
       overlay={!props.hideOverlay}
-      buttons={
-        <>
-          {props.previous && props.previousText ? (
-            <Button variant="secondary" onClick={props.previous}>
-              {props.previousText}
-            </Button>
-          ) : null}
-          {props.continueText ? (
-            <Button variant="primary" onClick={props.continue}>
-              {props.continueText}
-            </Button>
-          ) : null}
-        </>
-      }
+      buttons={buttons.length ? buttons : undefined}
       onClose={props.showCloseButton ? props.cancel : undefined}
     />
   );

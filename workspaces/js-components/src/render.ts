@@ -1,5 +1,5 @@
 import { type ActiveBlock } from "@flows/js";
-import { type Components, type TourComponents } from "./types";
+import { type MountedElement, type Components, type TourComponents } from "./types";
 
 export interface RenderOptions {
   blocks: ActiveBlock[];
@@ -7,11 +7,6 @@ export interface RenderOptions {
   tourComponents: TourComponents;
 }
 
-interface MountedElement {
-  el: HTMLElement;
-  blockId: string;
-  cleanup: () => void;
-}
 let mountedElements: MountedElement[] = [];
 
 /**
@@ -41,7 +36,7 @@ let mountedElements: MountedElement[] = [];
 export const render = (options: RenderOptions): void => {
   mountedElements.forEach((mountedElement) => {
     mountedElement.cleanup();
-    mountedElement.el.remove();
+    if (mountedElement.el) mountedElement.el.remove();
   });
   mountedElements = [];
 
@@ -56,7 +51,7 @@ export const render = (options: RenderOptions): void => {
     if (Cmp) {
       const { cleanup, element: el } = Cmp(block.props as Parameters<typeof Cmp>[0]);
       mountedElements.push({ el, cleanup, blockId: block.id });
-      document.body.appendChild(el);
+      if (el) document.body.appendChild(el);
     }
   });
 };
