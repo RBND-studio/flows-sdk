@@ -30,6 +30,7 @@ const run = (packageName: string) => {
       route.fulfill({ json: { blocks: [] } });
     });
     await page.goto(`/${packageName}.html`);
+    await expect(page.locator("h1")).toBeVisible();
     await expect(page.getByText("Hello world")).toBeHidden();
     const payload: BlockUpdatesPayload = {
       exitedBlockIds: [],

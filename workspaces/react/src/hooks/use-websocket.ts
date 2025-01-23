@@ -16,6 +16,14 @@ export const useWebsocket = ({ url, onMessage, onOpen }: Props): void => {
     onOpenRef.current = onOpen;
   }, [onOpen]);
 
+  const onMessageRef = useRef(onMessage);
+  useEffect(() => {
+    onMessageRef.current = onMessage;
+  }, [onMessage]);
+  const handleMessage = useCallback((event: MessageEvent<unknown>) => {
+    onMessageRef.current(event);
+  }, []);
+
   const connect = useCallback(() => {
     if (cleanupRef.current) {
       cleanupRef.current();
@@ -35,10 +43,12 @@ export const useWebsocket = ({ url, onMessage, onOpen }: Props): void => {
     };
     socket.addEventListener("open", handleOpen);
     socket.addEventListener("close", handleClose);
+    socket.addEventListener("message", handleMessage);
 
     const cleanup = (): void => {
       socket.removeEventListener("open", handleOpen);
       socket.removeEventListener("close", handleClose);
+      socket.removeEventListener("message", handleMessage);
 
       if (socket.readyState === WebSocket.CONNECTING) {
         socket.addEventListener("open", () => {
@@ -51,7 +61,7 @@ export const useWebsocket = ({ url, onMessage, onOpen }: Props): void => {
 
     cleanupRef.current = cleanup;
     return cleanup;
-  }, [url]);
+  }, [handleMessage, url]);
 
   useEffect(() => {
     const cleanup = connect();
@@ -74,15 +84,6 @@ export const useWebsocket = ({ url, onMessage, onOpen }: Props): void => {
       clearTimeout(timeout);
     };
   }, [reconnectAttempts, ws, connect]);
-
-  useEffect(() => {
-    if (!ws) return;
-
-    ws.addEventListener("message", onMessage);
-    return () => {
-      ws.removeEventListener("message", onMessage);
-    };
-  }, [onMessage, ws]);
 
   useEffect(() => {
     return () => {
