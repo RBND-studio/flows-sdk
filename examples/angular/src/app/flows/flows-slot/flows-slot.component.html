@@ -2,4 +2,4 @@
   <ng-container *ngComponentOutlet="getComponent(block); inputs: block.props" />
 }
 
-<ng-template [ngTemplateOutlet]="placeholder" *ngIf="blocks().length === 0"></ng-template>
+<ng-content *ngIf="blocks().length === 0"></ng-content>

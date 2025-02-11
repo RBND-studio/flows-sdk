@@ -231,13 +231,12 @@
       <p>Congratulations! Your app is running. 🎉</p>
 
       <!-- Slot with optional placeholder -->
-      <flows-slot slotId="my-slot" [placeholder]="mySlotPlaceholder" />
-      <ng-template #mySlotPlaceholder>
+      <flows-slot slotId="my-slot">
         <div style="border: 1px solid #ccc; padding: 16px; margin-top: 16px">
           <h2 style="margin-top: 0">Placeholder</h2>
           <p>This is a placeholder for the slot</p>
         </div>
-      </ng-template>
+      </flows-slot>
       <!--  -->
     </div>
     <div class="divider" role="separator" aria-label="Divider"></div>
