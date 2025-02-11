@@ -6,7 +6,7 @@
     <FlowsSlot slot-id="my-slot">
       <template #placeholder>
         <div>
-          <h1>Placeholder</h1>
+          <h2>Placeholder</h2>
           <p>This is a placeholder for the slot</p>
         </div>
       </template>
