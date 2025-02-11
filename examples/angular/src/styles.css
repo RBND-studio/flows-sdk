@@ -1,0 +1,250 @@
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+:root {
+  --flows-bg-default: #ffffff;
+  --flows-bg-subtle: #f9fafc;
+  --flows-bg-hover: #ebeef3;
+  --flows-bg-primary: #067efd;
+  --flows-bg-primary-hover: #3a90ff;
+  --flows-bg-overlay: rgba(21, 24, 28, 0.5);
+  --flows-fg-default: #15181c;
+  --flows-fg-onPrimary: #ffffff;
+  --flows-borderWidth: 1px;
+  --flows-border: var(--flows-borderWidth) solid #dfe3e8;
+  --flows-shadow: 0px 8px 12px rgba(28, 26, 39, 0.08), 0px 6px 8px rgba(28, 26, 39, 0.12),
+    0px 0px 1px rgba(28, 26, 39, 0.16);
+  --flows-borderRadius-xSmall: 3px;
+  --flows-borderRadius-small: 6px;
+  --flows-borderRadius-medium: 8px;
+  --flows-borderRadius-large: 12px;
+  --flows-size-xSmall: 4px;
+  --flows-size-small: 8px;
+  --flows-size-medium: 12px;
+  --flows-size-large: 20px;
+  --flows-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu,
+    Cantarell, "Helvetica Neue", sans-serif;
+  --flows-base-font-size: 14px;
+  --flows-base-line-height: 20px;
+  --flows-title-font-size: 16px;
+  --flows-title-line-height: 24px;
+  --flows-title-font-weight: 600;
+  --flows-zIndex: 1500;
+  --flows-target-zIndex: 5000;
+  --flows-tooltip-padding: var(--flows-size-large);
+  --flows-tooltip-overlayBackground: var(--flows-bg-overlay);
+  --flows-tooltip-overlayBorderRadius: var(--flows-borderRadius-medium);
+  --flows-tooltip-overlayPadding: 4px;
+  --flows-tooltip-minWidth: 200px;
+  --flows-tooltip-maxWidth: 320px;
+  --flows-modal-overlayBackground: var(--flows-bg-overlay);
+  --flows-modal-padding: var(--flows-size-large);
+  --flows-modal-minWidth: 320px;
+  --flows-modal-maxWidth: 640px;
+  --flows-banner-screenEdgePadding: var(--flows-size-large);
+  --flows-banner-padding: var(--flows-size-large);
+  --flows-banner-minWidth: 200px;
+  --flows-banner-maxWidth: 320px;
+}
+.dark {
+  --flows-bg-default: #15181c;
+  --flows-bg-subtle: #1c2026;
+  --flows-bg-hover: #22262d;
+  --flows-bg-primary: #468ff1;
+  --flows-bg-primary-hover: #357ddb;
+  --flows-bg-overlay: rgba(0, 0, 0, 0.6);
+  --flows-fg-default: #f9fafc;
+  --flows-fg-onPrimary: #15181c;
+  --flows-border: 1px solid #353c46;
+  --flows-shadow: 0px 8px 12px rgba(0, 0, 0, 0.2), 0px 6px 8px rgba(0, 0, 0, 0.25),
+    0px 0px 1px rgba(0, 0, 0, 0.3);
+}
+.flows_text {
+  font-family: var(--flows-font-family);
+  margin: 0;
+}
+.flows_text_body {
+  font-size: var(--flows-base-font-size);
+  line-height: var(--flows-base-line-height);
+}
+.flows_text_title {
+  font-size: var(--flows-title-font-size);
+  line-height: var(--flows-title-line-height);
+  font-weight: var(--flows-title-font-weight);
+}
+.flows_button {
+  border-radius: var(--flows-borderRadius-small);
+  cursor: pointer;
+  transition:
+    background-color 0.12s ease-in-out,
+    border-color 0.12s ease-in-out;
+  padding: 4px 8px;
+  font-family: var(--flows-font-family);
+  font-size: var(--flows-base-font-size);
+  line-height: var(--flows-base-line-height);
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.flows_button_primary {
+  background-color: var(--flows-bg-primary);
+  border: 1px solid var(--flows-bg-primary);
+  color: var(--flows-fg-onPrimary);
+}
+.flows_button_primary:hover {
+  background-color: var(--flows-bg-primary-hover);
+  border: 1px solid var(--flows-bg-primary-hover);
+}
+.flows_button_secondary {
+  background-color: var(--flows-bg-subtle);
+  border: var(--flows-border);
+  color: var(--flows-fg-default);
+}
+.flows_button_secondary:hover {
+  background-color: var(--flows-bg-hover);
+}
+.flows_iconButton {
+  border-radius: var(--flows-borderRadius-small);
+  cursor: pointer;
+  transition:
+    background-color 0.12s ease-in-out,
+    border-color 0.12s ease-in-out;
+  background-color: #0000;
+  border: none;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+}
+.flows_iconButton:hover {
+  background-color: var(--flows-bg-hover);
+}
+.flows_tooltip_root {
+  width: 100%;
+  top: 0;
+  left: 0;
+  position: absolute;
+  z-index: var(--flows-zIndex);
+}
+.flows_tooltip_overlay {
+  position: fixed;
+  z-index: -1;
+  pointer-events: none;
+}
+.flows_tooltip_overlay:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: calc(var(--flows-tooltip-overlayPadding) * -1);
+  box-shadow: var(--flows-tooltip-overlayBackground) 0 0 0 9999px;
+  border-radius: var(--flows-tooltip-overlayBorderRadius);
+}
+.flows_tooltip_tooltip {
+  background-color: var(--flows-bg-default);
+  border: var(--flows-border);
+  color: var(--flows-fg-default);
+  border-radius: var(--flows-borderRadius-medium);
+  position: absolute;
+  padding: var(--flows-tooltip-padding);
+  font-family: var(--flows-font-family);
+  font-size: var(--flows-base-font-size);
+  line-height: var(--flows-base-line-height);
+  box-sizing: border-box;
+  min-width: var(--flows-tooltip-minWidth);
+  max-width: min(var(--flows-tooltip-maxWidth), calc(100% - 16px));
+}
+.flows_tooltip_tooltip:before {
+  box-shadow: var(--flows-shadow);
+  border-radius: var(--flows-borderRadius-medium);
+  content: "";
+  position: absolute;
+  inset: calc(var(--flows-borderWidth) * -1);
+  z-index: -1;
+  pointer-events: none;
+}
+.flows_tooltip_title {
+  margin-right: 24px;
+}
+.flows_tooltip_body {
+  margin-top: var(--flows-size-medium);
+}
+.flows_tooltip_arrow {
+  position: absolute;
+  width: var(--flows-size-medium);
+  height: var(--flows-size-medium);
+  transform: rotate(45deg);
+  border-radius: var(--flows-borderRadius-xSmall);
+}
+.flows_tooltip_arrow-bottom {
+  border: var(--flows-border);
+  z-index: -1;
+  box-shadow: var(--flows-shadow);
+}
+.flows_tooltip_arrow-top {
+  background-color: var(--flows-bg-default);
+  border: var(--flows-border);
+  border-color: #0000;
+  background-clip: padding-box;
+}
+.flows_tooltip_footer {
+  margin-top: var(--flows-size-medium);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--flows-size-small);
+}
+.flows_tooltip_close {
+  position: absolute;
+  top: var(--flows-tooltip-padding);
+  right: var(--flows-tooltip-padding);
+}
+.flows_modal_overlay {
+  position: fixed;
+  inset: 0;
+  background-color: var(--flows-modal-overlayBackground);
+  pointer-events: none;
+}
+.flows_modal_wrapper {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: var(--flows-modal-padding);
+  overflow: auto;
+  pointer-events: none;
+  z-index: var(--flows-zIndex);
+}
+.flows_modal_modal {
+  pointer-events: auto;
+  background-color: var(--flows-bg-default);
+  border: var(--flows-border);
+  color: var(--flows-fg-default);
+  border-radius: var(--flows-borderRadius-medium);
+  box-shadow: var(--flows-shadow);
+  padding: var(--flows-modal-padding);
+  position: relative;
+  box-sizing: border-box;
+  min-width: var(--flows-modal-minWidth);
+  max-width: var(--flows-modal-maxWidth);
+}
+.flows_modal_footer {
+  margin-top: var(--flows-size-medium);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--flows-size-small);
+}
+.flows_modal_close {
+  position: absolute;
+  top: var(--flows-modal-padding);
+  right: var(--flows-modal-padding);
+}

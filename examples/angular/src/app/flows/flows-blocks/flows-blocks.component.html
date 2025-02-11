@@ -1,0 +1,3 @@
+@for (block of blocks(); track block.id) {
+  <ng-container *ngComponentOutlet="getComponent(block); inputs: block.props" />
+}
