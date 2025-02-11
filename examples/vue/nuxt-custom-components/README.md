@@ -14,7 +14,7 @@ In [`plugins/flows.ts`](./plugins/flows.ts) you can find Flows plugin that is ca
 
 ### Floating blocks
 
-In [`blocks.vue`](./components/flows/blocks.vue) you can see a component that takes care of rendering of floating blocks. The component needs to be added before the end of the body element in our case in [`app.vue`](./app.vue).
+In [`blocks.vue`](./components/flows/blocks.vue) you can see a component that takes care of rendering of floating blocks. The component needs to be added at the end of the body element in our case in [`app.vue`](./app.vue).
 
 ### Flows slot
 

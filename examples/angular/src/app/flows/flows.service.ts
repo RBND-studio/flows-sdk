@@ -1,7 +1,7 @@
 import { Injectable, Type } from "@angular/core";
 import { ActiveBlock, init } from "@flows/js";
-import { FlowsComponentsModalComponent } from "./flows/components/modal/flows-components-modal.component";
-import { FlowsTourComponentsModalComponent } from "./flows/tour-components/modal/flows-tour-components-modal.component";
+import { FlowsComponentsModalComponent } from "./components/modal/flows-components-modal.component";
+import { FlowsTourComponentsModalComponent } from "./tour-components/modal/flows-tour-components-modal.component";
 
 const components: Record<string, Type<any>> = {
   Modal: FlowsComponentsModalComponent,

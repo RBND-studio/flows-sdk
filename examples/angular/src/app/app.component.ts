@@ -1,8 +1,8 @@
 import { Component, inject } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
-import { FlowsBlocksComponent } from "./flows-blocks/flows-blocks.component";
-import { FlowsService } from "./flows.service";
-import { FlowsSlotComponent } from "./flows-slot/flows-slot.component";
+import { FlowsBlocksComponent } from "./flows/flows-blocks/flows-blocks.component";
+import { FlowsService } from "./flows/flows.service";
+import { FlowsSlotComponent } from "./flows/flows-slot/flows-slot.component";
 
 @Component({
   selector: "app-root",
