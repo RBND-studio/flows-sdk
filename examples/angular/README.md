@@ -10,7 +10,7 @@ This example extends the Angular starter project with the [`@flows/js`](https://
 
 ### Flows service
 
-In [`flows.service.ts`](./src/app/flows/flows.service.ts) you can find Flows service that is imported to [`app.component.ts](./src/app/app.component.ts) and initialized in the browser during the `ngOnInit()` lifecycle method.
+In [`flows.service.ts`](./src/app/flows/flows.service.ts) you can find Flows service that is imported to [`app.component.ts`](./src/app/app.component.ts) and initialized in the browser during the `ngOnInit()` lifecycle method.
 
 ### Floating blocks
 
