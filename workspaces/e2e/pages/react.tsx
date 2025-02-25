@@ -1,4 +1,4 @@
-import { FlowsProvider, FlowsSlot } from "@flows/react";
+import { FlowsProvider, FlowsSlot, resetAllProgress, resetWorkflowProgress } from "@flows/react";
 import { FC, StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
@@ -39,6 +39,9 @@ createRoot(document.getElementById("root")!).render(
       <h2>Subtitle</h2>
 
       <FlowsSlot id="my-slot" placeholder={<p>Slot placeholder</p>} />
+
+      <button onClick={() => resetAllProgress()}>resetAllProgress</button>
+      <button onClick={() => resetWorkflowProgress("my-workflow-id")}>resetWorkflowProgress</button>
     </FlowsProvider>
   </StrictMode>,
 );

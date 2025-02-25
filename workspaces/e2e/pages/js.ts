@@ -1,4 +1,9 @@
-import { init, addFloatingBlocksChangeListener } from "@flows/js";
+import {
+  init,
+  addFloatingBlocksChangeListener,
+  resetAllProgress,
+  resetWorkflowProgress,
+} from "@flows/js";
 import { Component, render, updateSlotComponents } from "@flows/js-components";
 import * as _components from "@flows/js-components/components";
 import * as _tourComponents from "@flows/js-components/tour-components";
@@ -44,3 +49,13 @@ updateSlotComponents({
   components,
   tourComponents,
 });
+
+(document.querySelector("#resetAllProgress") as HTMLButtonElement).addEventListener("click", () => {
+  resetAllProgress();
+});
+(document.querySelector("#resetWorkflowProgress") as HTMLButtonElement).addEventListener(
+  "click",
+  () => {
+    resetWorkflowProgress("my-workflow-id");
+  },
+);
