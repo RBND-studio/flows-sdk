@@ -3,13 +3,14 @@ import { log, pathnameMatch } from "@flows/shared";
 import { type Block as IBlock } from "@flows/shared";
 import { useFlowsContext } from "./flows-context";
 import { usePathname } from "./contexts/pathname-context";
+import { sendEvent } from "./lib/api";
 
 interface Props {
   block: IBlock;
 }
 
 export const Block: FC<Props> = ({ block }) => {
-  const { components, sendEvent } = useFlowsContext();
+  const { components } = useFlowsContext();
   const pathname = usePathname();
 
   const methods = useMemo(
@@ -17,11 +18,12 @@ export const Block: FC<Props> = ({ block }) => {
       block.exitNodes.reduce(
         (acc, exitNode) => ({
           ...acc,
-          [exitNode]: () => sendEvent({ name: "transition", exitNode, blockId: block.id }),
+          [exitNode]: () =>
+            sendEvent({ name: "transition", propertyKey: exitNode, blockId: block.id }),
         }),
         {},
       ),
-    [block.exitNodes, block.id, sendEvent],
+    [block.exitNodes, block.id],
   );
 
   const data = useMemo(() => {
@@ -55,7 +57,7 @@ export const Block: FC<Props> = ({ block }) => {
         _data[exitNode] = () =>
           sendEvent({
             name: "transition",
-            exitNode: [parentKey, exitNode].filter((x) => x !== undefined).join("."),
+            propertyKey: [parentKey, exitNode].filter((x) => x !== undefined).join("."),
             blockId: block.id,
           });
       });
@@ -64,7 +66,7 @@ export const Block: FC<Props> = ({ block }) => {
     };
 
     return processData({ properties: block.data });
-  }, [block.data, block.id, sendEvent]);
+  }, [block.data, block.id]);
 
   if (!block.componentType) return null;
 

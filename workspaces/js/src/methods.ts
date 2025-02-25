@@ -3,6 +3,7 @@ import { type Block, pathnameMatch } from "@flows/shared";
 import { type ActiveBlock } from "./types/active-block";
 import { blocks, pathname, type RunningTour, runningTours } from "./store";
 import { blockToActiveBlock, tourToActiveBlock } from "./lib/active-block";
+import { sendEvent } from "./lib/api";
 
 const visibleBlocks = computed(() =>
   blocks.value.filter((b) =>
@@ -143,3 +144,15 @@ export const addSlotBlocksChangeListener = (
     listener(getCurrentSlotBlocks(slotId));
   });
 };
+
+/**
+ * Reset progress for all workflows for the current user in the current environment.
+ */
+export const resetAllProgress = (): Promise<void> => sendEvent({ name: "reset-progress" });
+
+/**
+ * Reset progress of one workflow for the current user in the current environment.
+ * @param workflowId - UUID of the workflow to reset progress for
+ */
+export const resetWorkflowProgress = (workflowId: string): Promise<void> =>
+  sendEvent({ name: "reset-progress", workflowId });
