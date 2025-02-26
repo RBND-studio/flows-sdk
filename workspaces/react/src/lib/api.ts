@@ -1,5 +1,5 @@
-import { type EventRequest, getApi } from "@flows/shared";
-import { config } from "../store";
+import { getApi, type EventRequest } from "@flows/shared";
+import { globalConfig } from "./store";
 
 type SendEventProps = Pick<
   EventRequest,
@@ -7,9 +7,8 @@ type SendEventProps = Pick<
 >;
 
 export const sendEvent = async (props: SendEventProps): Promise<void> => {
-  const configuration = config.value;
-  if (!configuration) return;
-  const { environment, organizationId, userId, apiUrl } = configuration;
+  const { apiUrl, environment, organizationId, userId } = globalConfig;
+  if (!apiUrl || !environment || !organizationId || !userId) return;
   await getApi(apiUrl).sendEvent({
     ...props,
     environment,

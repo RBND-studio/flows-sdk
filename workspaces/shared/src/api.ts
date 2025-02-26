@@ -31,12 +31,13 @@ interface BlocksResponse {
   blocks: Block[];
 }
 
-interface EventRequest {
+export interface EventRequest {
   userId: string;
   environment: string;
   organizationId: string;
-  name: string;
-  blockId: string;
+  name: "transition" | "tour-update" | "reset-progress";
+  blockId?: string;
+  workflowId?: string;
   propertyKey?: string;
   properties?: Record<string, unknown>;
 }

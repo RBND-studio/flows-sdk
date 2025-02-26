@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { type Block } from "@flows/shared";
-import { type IFlowsContext, type RunningTour } from "../flows-context";
+import { type RunningTour } from "../flows-context";
+import { sendEvent } from "../lib/api";
 
 type StateItem = Pick<RunningTour, "currentBlockIndex" | "hidden"> & {
   blockId: string;
@@ -8,10 +9,9 @@ type StateItem = Pick<RunningTour, "currentBlockIndex" | "hidden"> & {
 
 interface Props {
   blocks: Block[];
-  sendEvent: IFlowsContext["sendEvent"];
 }
 
-export const useRunningTours = ({ blocks, sendEvent }: Props): RunningTour[] => {
+export const useRunningTours = ({ blocks }: Props): RunningTour[] => {
   const [runningTours, setRunningTours] = useState<StateItem[]>([]);
 
   useEffect(() => {
@@ -59,7 +59,7 @@ export const useRunningTours = ({ blocks, sendEvent }: Props): RunningTour[] => 
         const handleContinue = (): void => {
           if (isLastStep) {
             hide(blockId);
-            void sendEvent({ name: "transition", exitNode: "complete", blockId });
+            void sendEvent({ name: "transition", propertyKey: "complete", blockId });
           } else {
             const newIndex = currentBlockIndex + 1;
             setCurrentBlockIndex(blockId, newIndex);
@@ -75,7 +75,7 @@ export const useRunningTours = ({ blocks, sendEvent }: Props): RunningTour[] => 
         };
         const handleCancel = (): void => {
           hide(blockId);
-          void sendEvent({ name: "transition", blockId, exitNode: "cancel" });
+          void sendEvent({ name: "transition", blockId, propertyKey: "cancel" });
         };
 
         return {
@@ -92,7 +92,7 @@ export const useRunningTours = ({ blocks, sendEvent }: Props): RunningTour[] => 
         };
       })
       .filter((x): x is RunningTour => Boolean(x));
-  }, [blocks, runningTours, sendEvent]);
+  }, [blocks, runningTours]);
 
   return runningToursWithActiveBlock;
 };
