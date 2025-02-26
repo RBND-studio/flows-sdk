@@ -1,5 +1,4 @@
-import { type Block } from "@flows/shared";
-import { type ActiveBlock } from "../types/active-block";
+import { type Block, type ActiveBlock } from "@flows/shared";
 import { nextTourStep, previousTourStep, cancelTour } from "./tour";
 import { sendEvent } from "./api";
 

@@ -1,4 +1,4 @@
 export * from "./init";
 export * from "./methods";
-export type { ActiveBlock } from "./types/active-block";
+export type { ActiveBlock } from "@flows/shared";
 export type { FlowsOptions } from "./types/configuration";

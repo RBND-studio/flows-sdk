@@ -1,6 +1,5 @@
 import { computed, effect, type ReadonlySignal } from "@preact/signals-core";
-import { type Block, pathnameMatch } from "@flows/shared";
-import { type ActiveBlock } from "./types/active-block";
+import { type ActiveBlock, type Block, pathnameMatch } from "@flows/shared";
 import { blocks, pathname, type RunningTour, runningTours } from "./store";
 import { blockToActiveBlock, tourToActiveBlock } from "./lib/active-block";
 import { sendEvent } from "./lib/api";
