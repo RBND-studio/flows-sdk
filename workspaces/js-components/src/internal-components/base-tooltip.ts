@@ -22,8 +22,10 @@ interface Props {
 }
 
 export const BaseTooltip: Component<Props> = (props) => {
-  if (!props.targetElement) {
-    log.error("Cannot render Tooltip without target element");
+  // TODO: setup auto update based on reference element change
+  const reference = props.targetElement ? document.querySelector(props.targetElement) : null;
+  if (!reference) {
+    if (!props.targetElement) log.error("Cannot render Tooltip without target element");
 
     return {
       element: null,
@@ -84,28 +86,23 @@ export const BaseTooltip: Component<Props> = (props) => {
   tooltip.appendChild(topArrow);
   topArrow.className = "flows_tooltip_arrow flows_tooltip_arrow-top";
 
-  // TODO: setup auto update based on reference element change
-  const reference = document.querySelector(props.targetElement);
-  let positionCleanup: (() => void) | null = null;
-  if (reference) {
-    positionCleanup = autoUpdate(
-      reference,
-      tooltip,
-      () =>
-        void updateTooltip({
-          reference,
-          tooltip,
-          arrowEls: [bottomArrow, topArrow],
-          overlay,
-          placement: props.placement,
-        }),
-    );
-  }
+  const positionCleanup = autoUpdate(
+    reference,
+    tooltip,
+    () =>
+      void updateTooltip({
+        reference,
+        tooltip,
+        arrowEls: [bottomArrow, topArrow],
+        overlay,
+        placement: props.placement,
+      }),
+  );
 
   return {
     element: root,
     cleanup: () => {
-      positionCleanup?.();
+      positionCleanup();
 
       if (props.close) {
         closeButton?.removeEventListener("click", props.close);
