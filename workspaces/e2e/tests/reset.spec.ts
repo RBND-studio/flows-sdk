@@ -12,7 +12,9 @@ test.beforeEach(async ({ page }) => {
 });
 
 const run = (packageName: string) => {
-  test(`${packageName} - resetAllProgress should call event endpoint`, async ({ page }) => {
+  test(`${packageName} - resetAllWorkflowsProgress should call event endpoint`, async ({
+    page,
+  }) => {
     await page.goto(`/${packageName}.html`);
 
     let reqWasSent = false;
@@ -29,7 +31,7 @@ const run = (packageName: string) => {
         reqWasSent = true;
       }
     });
-    await page.getByRole("button", { name: "resetAllProgress" }).click();
+    await page.getByRole("button", { name: "resetAllWorkflowsProgress" }).click();
     expect(reqWasSent).toBe(false);
   });
   test(`${packageName} - resetWorkflowProgress should call event endpoint`, async ({ page }) => {
