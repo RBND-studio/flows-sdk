@@ -26,6 +26,24 @@ const Card: FC<{ text: string }> = (props) => (
   </div>
 );
 
+const BlockTrigger: FC<{
+  title: string;
+  trigger: () => void;
+  items: { text: string; trigger?: () => void }[];
+}> = (props) => (
+  <div className="flows-card">
+    <p>{props.title}</p>
+    <button onClick={props.trigger}>Trigger</button>
+    <ul>
+      {props.items.map((item) => (
+        <li key={item.text}>
+          <button onClick={item.trigger}>{item.text}</button>
+        </li>
+      ))}
+    </ul>
+  </div>
+);
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <FlowsProvider
@@ -37,7 +55,7 @@ createRoot(document.getElementById("root")!).render(
         age: 10,
       }}
       apiUrl={apiUrl}
-      components={{ ...components, Card }}
+      components={{ ...components, Card, BlockTrigger }}
       tourComponents={{ ...tourComponents, Card }}
     >
       <h1>heading 1</h1>

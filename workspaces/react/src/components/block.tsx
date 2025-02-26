@@ -15,5 +15,5 @@ export const Block: FC<Props> = ({ block }) => {
     return null;
   }
 
-  return <Component key={block.id} />;
+  return <Component {...block.props} />;
 };
