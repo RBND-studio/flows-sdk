@@ -35,6 +35,13 @@ const run = (packageName: string) => {
     await expect(page.locator("h1")).toBeVisible();
     expect(querySelectorError).toBe(false);
   });
+  test(`${packageName} - shouldn't render without reference element`, async ({ page }) => {
+    await page.route("**/v2/sdk/blocks", (route) => {
+      route.fulfill({ json: { blocks: [getBlock({ targetElement: "#invalid-element" })] } });
+    });
+    await page.goto(`/${packageName}.html`);
+    await expect(page.getByText("Tooltip title")).toBeHidden();
+  });
   test(`${packageName} - should render with target element`, async ({ page }) => {
     await page.route("**/v2/sdk/blocks", (route) => {
       route.fulfill({ json: { blocks: [getBlock({ targetElement: "h1" })] } });

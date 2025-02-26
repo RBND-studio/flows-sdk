@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type FC, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, type FC, type ReactNode } from "react";
 import {
   useFloating,
   shift,
@@ -14,6 +14,7 @@ import {
 import classNames from "classnames";
 import { log } from "@flows/shared";
 import { Close16 } from "../icons/close16";
+import { useQuerySelector } from "../hooks/use-query-selector";
 import { Text } from "./text";
 import { IconButton } from "./icon-button";
 
@@ -38,7 +39,7 @@ export const BaseTooltip: FC<Props> = (props) => {
   const bottomArrowRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
 
-  const reference = props.targetElement ? document.querySelector(props.targetElement) : null;
+  const reference = useQuerySelector(props.targetElement);
   const { refs, middlewareData, placement, x, y } = useFloating({
     placement: props.placement,
     elements: { reference },
@@ -51,33 +52,12 @@ export const BaseTooltip: FC<Props> = (props) => {
     ],
   });
 
-  useEffect(() => {
-    if (!refs.floating.current) return;
-    refs.floating.current.style.left = `${x}px`;
-    refs.floating.current.style.top = `${y}px`;
-  }, [refs.floating, x, y]);
-
-  useEffect(() => {
-    const staticSide = ((): Side => {
-      if (placement.includes("top")) return "bottom";
-      if (placement.includes("bottom")) return "top";
-      if (placement.includes("left")) return "right";
-      return "left";
-    })();
-    const arrowX = middlewareData.arrow?.x;
-    const arrowY = middlewareData.arrow?.y;
-
-    [bottomArrowRef, topArrowRef].forEach((arrowRef) => {
-      if (!arrowRef.current) return;
-      // eslint-disable-next-line eqeqeq -- null check is intended here
-      arrowRef.current.style.left = arrowX != null ? `${arrowX}px` : "";
-      // eslint-disable-next-line eqeqeq -- null check is intended here
-      arrowRef.current.style.top = arrowY != null ? `${arrowY}px` : "";
-      arrowRef.current.style.right = "";
-      arrowRef.current.style.bottom = "";
-      arrowRef.current.style[staticSide] = `${-ARROW_SIZE}px`;
-    });
-  }, [middlewareData.arrow?.x, middlewareData.arrow?.y, placement]);
+  const staticSide = useMemo((): Side => {
+    if (placement.includes("top")) return "bottom";
+    if (placement.includes("bottom")) return "top";
+    if (placement.includes("left")) return "right";
+    return "left";
+  }, [placement]);
 
   useEffect(() => {
     if (!props.targetElement) {
@@ -85,9 +65,27 @@ export const BaseTooltip: FC<Props> = (props) => {
     }
   }, [props.targetElement]);
 
-  if (!props.targetElement) return null;
+  if (!reference) return null;
 
-  if (overlayRef.current && reference) {
+  if (refs.floating.current) {
+    refs.floating.current.style.left = `${x}px`;
+    refs.floating.current.style.top = `${y}px`;
+  }
+
+  const arrowX = middlewareData.arrow?.x;
+  const arrowY = middlewareData.arrow?.y;
+  [bottomArrowRef, topArrowRef].forEach((arrowRef) => {
+    if (!arrowRef.current) return;
+    // eslint-disable-next-line eqeqeq -- null check is intended here
+    arrowRef.current.style.left = arrowX != null ? `${arrowX}px` : "";
+    // eslint-disable-next-line eqeqeq -- null check is intended here
+    arrowRef.current.style.top = arrowY != null ? `${arrowY}px` : "";
+    arrowRef.current.style.right = "";
+    arrowRef.current.style.bottom = "";
+    arrowRef.current.style[staticSide] = `${-ARROW_SIZE}px`;
+  });
+
+  if (overlayRef.current) {
     const targetPosition = reference.getBoundingClientRect();
     overlayRef.current.style.top = `${targetPosition.top}px`;
     overlayRef.current.style.left = `${targetPosition.left}px`;
