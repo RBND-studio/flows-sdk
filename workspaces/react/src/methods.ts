@@ -11,3 +11,5 @@ export const resetAllWorkflowsProgress = (): Promise<void> => sendEvent({ name: 
  */
 export const resetWorkflowProgress = (workflowId: string): Promise<void> =>
   sendEvent({ name: "reset-progress", workflowId });
+
+export { useCurrentFloatingBlocks, useCurrentSlotBlocks } from "./hooks/use-current-blocks";

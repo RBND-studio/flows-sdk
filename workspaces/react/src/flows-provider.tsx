@@ -1,14 +1,13 @@
-import { type FC, type ReactNode, useMemo } from "react";
+import { type FC, type ReactNode } from "react";
 import { type UserProperties } from "@flows/shared";
 import { type TourComponents, type Components } from "./types";
-import { Block } from "./block";
 import { FlowsContext } from "./flows-context";
 import { useRunningTours } from "./hooks/use-running-tours";
 import { useBlocks } from "./hooks/use-blocks";
-import { TourBlock } from "./tour-block";
 import { PathnameProvider } from "./contexts/pathname-context";
 import { TourController } from "./tour-controller";
 import { globalConfig } from "./lib/store";
+import { FloatingBlocks } from "./components/floating-blocks";
 
 export interface FlowsProviderProps {
   /**
@@ -62,31 +61,11 @@ export const FlowsProvider: FC<FlowsProviderProps> = ({
 
   const runningTours = useRunningTours({ blocks });
 
-  const floatingBlocks = useMemo(
-    () =>
-      blocks.filter(
-        (b) =>
-          !b.slottable &&
-          // tour block doesn't have componentType
-          b.componentType,
-      ),
-    [blocks],
-  );
-  const floatingTourBlocks = useMemo(
-    () => runningTours.filter((b) => b.activeStep && !b.activeStep.slottable),
-    [runningTours],
-  );
-
   return (
     <PathnameProvider>
       <FlowsContext.Provider value={{ blocks, components, runningTours, tourComponents }}>
         {children}
-        {floatingBlocks.map((block) => {
-          return <Block block={block} key={block.id} />;
-        })}
-        {floatingTourBlocks.map((tour) => {
-          return <TourBlock key={tour.block.id} tour={tour} />;
-        })}
+        <FloatingBlocks />
         <TourController />
       </FlowsContext.Provider>
     </PathnameProvider>
