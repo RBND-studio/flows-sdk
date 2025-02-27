@@ -14,7 +14,6 @@ export default defineConfig({
         main: resolve(__dirname, "pages/index.html"),
         js: resolve(__dirname, "pages/js.html"),
         react: resolve(__dirname, "pages/react.html"),
-        jsBlock: resolve(__dirname, "pages/js/block/block.html"),
       },
     },
   },

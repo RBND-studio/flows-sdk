@@ -4,6 +4,7 @@ import {
   FlowsSlot,
   resetAllWorkflowsProgress,
   resetWorkflowProgress,
+  useCurrentFloatingBlocks,
 } from "@flows/react";
 import { FC, StrictMode } from "react";
 import { createRoot } from "react-dom/client";
@@ -46,6 +47,24 @@ const BlockTrigger: FC<{
   </div>
 );
 
+const App: FC = () => {
+  const floatingBlocks = useCurrentFloatingBlocks();
+
+  return (
+    <>
+      <h1>heading 1</h1>
+      <h2>Subtitle</h2>
+
+      <FlowsSlot id="my-slot" placeholder={<p>Slot placeholder</p>} />
+
+      <p className="current-blocks">{JSON.stringify(floatingBlocks)}</p>
+
+      <button onClick={() => resetAllWorkflowsProgress()}>resetAllWorkflowsProgress</button>
+      <button onClick={() => resetWorkflowProgress("my-workflow-id")}>resetWorkflowProgress</button>
+    </>
+  );
+};
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <FlowsProvider
@@ -60,13 +79,7 @@ createRoot(document.getElementById("root")!).render(
       components={{ ...components, Card, BlockTrigger }}
       tourComponents={{ ...tourComponents, Card }}
     >
-      <h1>heading 1</h1>
-      <h2>Subtitle</h2>
-
-      <FlowsSlot id="my-slot" placeholder={<p>Slot placeholder</p>} />
-
-      <button onClick={() => resetAllWorkflowsProgress()}>resetAllWorkflowsProgress</button>
-      <button onClick={() => resetWorkflowProgress("my-workflow-id")}>resetWorkflowProgress</button>
+      <App />
     </FlowsProvider>
   </StrictMode>,
 );

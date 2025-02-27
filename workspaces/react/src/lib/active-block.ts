@@ -52,9 +52,10 @@ export const blockToActiveBlock = (block: Block): ActiveBlock | [] => {
   }, {});
 
   return {
-    component: block.componentType,
     id: block.id,
+    key: block.key,
     type: "component",
+    component: block.componentType,
     props: {
       __flows: {
         key: block.key,
@@ -72,9 +73,10 @@ export const tourBlockToActiveBlock = (tour: RunningTour): ActiveBlock | [] => {
   const isFirstStep = tour.currentBlockIndex === 0;
 
   return {
-    component: activeStep.componentType,
     id: activeStep.id,
+    key: activeStep.key,
     type: "tour-component",
+    component: activeStep.componentType,
     props: {
       __flows: {
         key: activeStep.key,

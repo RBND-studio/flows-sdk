@@ -49,6 +49,8 @@ const tourComponents = { ..._tourComponents, Card };
 
 addFloatingBlocksChangeListener((blocks) => {
   render({ blocks, components, tourComponents });
+
+  document.querySelector(".current-blocks")!.textContent = JSON.stringify(blocks);
 });
 updateSlotComponents({
   components,

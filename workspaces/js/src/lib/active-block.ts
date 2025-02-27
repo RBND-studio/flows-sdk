@@ -14,6 +14,7 @@ export const blockToActiveBlock = (block: Block): ActiveBlock | [] => {
 
   return {
     id: block.id,
+    key: block.key,
     type: "component",
     component: block.componentType,
     props: {
@@ -46,6 +47,7 @@ export const tourToActiveBlock = (block: Block, currentIndex: number): ActiveBlo
 
   return {
     id: activeStep.id,
+    key: activeStep.key,
     type: "tour-component",
     component: activeStep.componentType,
     props: {
