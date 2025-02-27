@@ -55,7 +55,13 @@ export const blockToActiveBlock = (block: Block): ActiveBlock | [] => {
     component: block.componentType,
     id: block.id,
     type: "component",
-    props: { ...data, ...methods },
+    props: {
+      __flows: {
+        key: block.key,
+      },
+      ...data,
+      ...methods,
+    },
   };
 };
 
@@ -70,6 +76,9 @@ export const tourBlockToActiveBlock = (tour: RunningTour): ActiveBlock | [] => {
     id: activeStep.id,
     type: "tour-component",
     props: {
+      __flows: {
+        key: activeStep.key,
+      },
       ...activeStep.data,
       continue: tour.continue,
       previous: !isFirstStep ? tour.previous : undefined,

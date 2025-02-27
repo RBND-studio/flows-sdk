@@ -22,6 +22,10 @@ const Card: Component<{ text: string }> = (props) => {
   card.appendChild(text);
   text.textContent = props.text;
 
+  const keyText = document.createElement("p");
+  card.appendChild(keyText);
+  keyText.textContent = `key: ${props.__flows.key}`;
+
   return {
     cleanup: () => {},
     element: card,

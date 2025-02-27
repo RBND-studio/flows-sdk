@@ -1,5 +1,5 @@
 import { close16 } from "../icons/close-16";
-import { type Component } from "../types";
+import { type _Component } from "../types";
 
 interface Props {
   title: string;
@@ -9,7 +9,7 @@ interface Props {
   close?: () => void;
 }
 
-export const BaseModal: Component<Props> = (props) => {
+export const BaseModal: _Component<Props> = (props) => {
   const root = document.createElement("div");
 
   let overlay: HTMLDivElement | null = null;

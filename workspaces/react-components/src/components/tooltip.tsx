@@ -1,9 +1,9 @@
 import { type FC } from "react";
-import { type Placement } from "@flows/shared";
+import { type ComponentProps, type Placement } from "@flows/shared";
 import { BaseTooltip } from "../internal-components/base-tooltip";
 import { Button } from "../internal-components/button";
 
-export interface TooltipProps {
+export type TooltipProps = ComponentProps<{
   title: string;
   body: string;
   continueText?: string;
@@ -14,7 +14,7 @@ export interface TooltipProps {
 
   continue: () => void;
   close: () => void;
-}
+}>;
 
 export const Tooltip: FC<TooltipProps> = (props) => {
   const buttons = [];

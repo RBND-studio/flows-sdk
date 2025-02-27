@@ -1,4 +1,5 @@
 import {
+  ComponentProps,
   FlowsProvider,
   FlowsSlot,
   resetAllWorkflowsProgress,
@@ -13,7 +14,7 @@ import "@flows/react-components/index.css";
 
 const apiUrl = new URLSearchParams(window.location.search).get("apiUrl") ?? undefined;
 
-const Card: FC<{ text: string }> = (props) => (
+const Card: FC<ComponentProps<{ text: string }>> = (props) => (
   <div
     className="flows-card"
     style={{
@@ -23,6 +24,7 @@ const Card: FC<{ text: string }> = (props) => (
     }}
   >
     <p>{props.text}</p>
+    <p>key: {props.__flows.key}</p>
   </div>
 );
 
