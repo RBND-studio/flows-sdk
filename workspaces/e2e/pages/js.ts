@@ -20,6 +20,7 @@ const Card: Component<{ text: string }> = (props) => {
 
   const text = document.createElement("p");
   card.appendChild(text);
+  text.classList.add("card-text");
   text.textContent = props.text;
 
   const keyText = document.createElement("p");

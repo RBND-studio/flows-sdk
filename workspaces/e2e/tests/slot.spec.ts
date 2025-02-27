@@ -46,8 +46,12 @@ const run = (packageName: string) => {
       });
     });
     await page.goto(`/${packageName}.html`);
-    await expect(page.locator(".flows-card").nth(0)).toHaveText("block number one");
-    await expect(page.locator(".flows-card").nth(1)).toHaveText("block number two");
+    await expect(page.locator(".flows-card").nth(0).locator(".card-text")).toHaveText(
+      "block number one",
+    );
+    await expect(page.locator(".flows-card").nth(1).locator(".card-text")).toHaveText(
+      "block number two",
+    );
 
     await page.route("**/v2/sdk/blocks", (route) => {
       route.fulfill({
@@ -60,8 +64,12 @@ const run = (packageName: string) => {
       });
     });
     await page.goto(`/${packageName}.html`);
-    await expect(page.locator(".flows-card").nth(0)).toHaveText("block number two");
-    await expect(page.locator(".flows-card").nth(1)).toHaveText("block number one");
+    await expect(page.locator(".flows-card").nth(0).locator(".card-text")).toHaveText(
+      "block number two",
+    );
+    await expect(page.locator(".flows-card").nth(1).locator(".card-text")).toHaveText(
+      "block number one",
+    );
 
     await page.route("**/v2/sdk/blocks", (route) => {
       route.fulfill({
@@ -74,8 +82,12 @@ const run = (packageName: string) => {
       });
     });
     await page.goto(`/${packageName}.html`);
-    await expect(page.locator(".flows-card").nth(0)).toHaveText("block number one");
-    await expect(page.locator(".flows-card").nth(1)).toHaveText("block number two");
+    await expect(page.locator(".flows-card").nth(0).locator(".card-text")).toHaveText(
+      "block number one",
+    );
+    await expect(page.locator(".flows-card").nth(1).locator(".card-text")).toHaveText(
+      "block number two",
+    );
   });
 };
 

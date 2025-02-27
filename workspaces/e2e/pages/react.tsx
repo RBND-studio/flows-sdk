@@ -23,7 +23,7 @@ const Card: FC<ComponentProps<{ text: string }>> = (props) => (
       borderRadius: "4px",
     }}
   >
-    <p>{props.text}</p>
+    <p className="card-text">{props.text}</p>
     <p>key: {props.__flows.key}</p>
   </div>
 );

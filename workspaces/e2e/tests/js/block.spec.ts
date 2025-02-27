@@ -38,7 +38,7 @@ test("return floating blocks", async ({ page }) => {
         id: mockBlock.id,
         type: "component",
         component: "Modal",
-        props: {},
+        props: { __flows: {} },
       },
     ]),
   );
