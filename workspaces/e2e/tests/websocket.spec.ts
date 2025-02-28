@@ -31,13 +31,13 @@ const run = (packageName: string) => {
     });
     await page.goto(`/${packageName}.html`);
     await expect(page.locator("h1")).toBeVisible();
-    await expect(page.getByText("Hello world")).toBeHidden();
+    await expect(page.getByText("Hello world", { exact: true })).toBeHidden();
     const payload: BlockUpdatesPayload = {
       exitedBlockIds: [],
       updatedBlocks: [block],
     };
     await (ws as unknown as WebSocketRoute).send(JSON.stringify(payload));
-    await expect(page.getByText("Hello world")).toBeVisible();
+    await expect(page.getByText("Hello world", { exact: true })).toBeVisible();
   });
   test(`${packageName} - should exit block that is received through websocket`, async ({
     page,
@@ -47,13 +47,13 @@ const run = (packageName: string) => {
       route.fulfill({ json: { blocks: [block] } });
     });
     await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("Hello world")).toBeVisible();
+    await expect(page.getByText("Hello world", { exact: true })).toBeVisible();
     const payload: BlockUpdatesPayload = {
       exitedBlockIds: [block.id],
       updatedBlocks: [],
     };
     await (ws as unknown as WebSocketRoute).send(JSON.stringify(payload));
-    await expect(page.getByText("Hello world")).toBeHidden();
+    await expect(page.getByText("Hello world", { exact: true })).toBeHidden();
   });
 };
 

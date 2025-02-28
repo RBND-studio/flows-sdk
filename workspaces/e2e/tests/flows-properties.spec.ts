@@ -26,7 +26,7 @@ const run = (packageName: string) => {
       route.fulfill({ json: { blocks: [getBlock({ key: "my-block-key" })] } });
     });
     await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("key: my-block-key")).toBeVisible();
+    await expect(page.getByText("key: my-block-key", { exact: true })).toBeVisible();
   });
 };
 

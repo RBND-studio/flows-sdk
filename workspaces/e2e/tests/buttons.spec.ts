@@ -57,7 +57,7 @@ const run = (packageName: string) => {
       });
     });
     await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("Workflow Tooltip")).toBeVisible();
+    await expect(page.getByText("Workflow Tooltip", { exact: true })).toBeVisible();
     await expect(page.locator(".flows_tooltip_footer")).toBeVisible();
     await expect(
       page.locator(".flows_tooltip_footer").locator(".flows_button_primary"),
@@ -70,7 +70,7 @@ const run = (packageName: string) => {
       });
     });
     await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("Workflow Tooltip")).toBeVisible();
+    await expect(page.getByText("Workflow Tooltip", { exact: true })).toBeVisible();
     await expect(page.locator(".flows_tooltip_footer")).toHaveCount(0);
   });
   test(`${packageName} - workflow modal footer with buttons`, async ({ page }) => {
@@ -80,7 +80,7 @@ const run = (packageName: string) => {
       });
     });
     await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("Workflow Modal")).toBeVisible();
+    await expect(page.getByText("Workflow Modal", { exact: true })).toBeVisible();
     await expect(page.locator(".flows_modal_footer")).toBeVisible();
     await expect(
       page.locator(".flows_modal_footer").locator(".flows_button_primary"),
@@ -93,7 +93,7 @@ const run = (packageName: string) => {
       });
     });
     await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("Workflow Modal")).toBeVisible();
+    await expect(page.getByText("Workflow Modal", { exact: true })).toBeVisible();
     await expect(page.locator(".flows_modal_footer")).toHaveCount(0);
   });
 
@@ -105,7 +105,7 @@ const run = (packageName: string) => {
       });
     });
     await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("Workflow Tooltip")).toBeVisible();
+    await expect(page.getByText("Workflow Tooltip", { exact: true })).toBeVisible();
     await expect(page.locator(".flows_tooltip_footer")).toBeVisible();
     await expect(
       page.locator(".flows_tooltip_footer").locator(".flows_button_primary"),
@@ -118,7 +118,7 @@ const run = (packageName: string) => {
       });
     });
     await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("Workflow Tooltip")).toBeVisible();
+    await expect(page.getByText("Workflow Tooltip", { exact: true })).toBeVisible();
     await expect(page.locator(".flows_tooltip_footer")).toHaveCount(0);
   });
   test(`${packageName} - tour modal footer with buttons`, async ({ page }) => {
@@ -128,7 +128,7 @@ const run = (packageName: string) => {
       });
     });
     await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("Workflow Modal")).toBeVisible();
+    await expect(page.getByText("Workflow Modal", { exact: true })).toBeVisible();
     await expect(page.locator(".flows_modal_footer")).toBeVisible();
     await expect(
       page.locator(".flows_modal_footer").locator(".flows_button_primary"),
@@ -141,7 +141,7 @@ const run = (packageName: string) => {
       });
     });
     await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("Workflow Modal")).toBeVisible();
+    await expect(page.getByText("Workflow Modal", { exact: true })).toBeVisible();
     await expect(page.locator(".flows_modal_footer")).toHaveCount(0);
   });
 };

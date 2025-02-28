@@ -30,7 +30,7 @@ const run = (packageName: string) => {
       }
     });
     await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("Tooltip title")).toBeHidden();
+    await expect(page.getByText("Tooltip title", { exact: true })).toBeHidden();
     // Check the React rendered H1 is still present
     await expect(page.locator("h1")).toBeVisible();
     expect(querySelectorError).toBe(false);
@@ -40,14 +40,14 @@ const run = (packageName: string) => {
       route.fulfill({ json: { blocks: [getBlock({ targetElement: "#invalid-element" })] } });
     });
     await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("Tooltip title")).toBeHidden();
+    await expect(page.getByText("Tooltip title", { exact: true })).toBeHidden();
   });
   test(`${packageName} - should render with target element`, async ({ page }) => {
     await page.route("**/v2/sdk/blocks", (route) => {
       route.fulfill({ json: { blocks: [getBlock({ targetElement: "h1" })] } });
     });
     await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("Tooltip title")).toBeVisible();
+    await expect(page.getByText("Tooltip title", { exact: true })).toBeVisible();
   });
 };
 
