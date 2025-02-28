@@ -58,14 +58,12 @@ const run = (packageName: string) => {
       JSON.stringify([
         {
           id: blocks[0]?.id,
-          key: "my-key",
           type: "component",
           component: "Modal",
           props: { __flows: { key: "my-key" } },
         },
         {
           id: blocks[1]?.tourBlocks?.[0]?.id,
-          key: "tour-block-key",
           type: "tour-component",
           component: "Modal",
           props: { __flows: { key: "tour-block-key" } },

@@ -53,7 +53,6 @@ export const blockToActiveBlock = (block: Block): ActiveBlock | [] => {
 
   return {
     id: block.id,
-    key: block.key,
     type: "component",
     component: block.componentType,
     props: {
@@ -74,7 +73,6 @@ export const tourBlockToActiveBlock = (tour: RunningTour): ActiveBlock | [] => {
 
   return {
     id: activeStep.id,
-    key: activeStep.key,
     type: "tour-component",
     component: activeStep.componentType,
     props: {

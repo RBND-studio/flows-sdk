@@ -10,10 +10,6 @@ export interface ActiveBlock {
    */
   id: string;
   /**
-   * User defined key for identifying the block.
-   */
-  key?: string;
-  /**
    * Type of the block, either "component" or "tour-component".
    */
   type: "component" | "tour-component";
