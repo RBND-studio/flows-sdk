@@ -108,28 +108,28 @@ const run = (packageName: string) => {
       route.fulfill({ json: { blocks: [getTourWithWait()] } });
     });
     await page.goto(`/${packageName}.html?correct=true`);
-    await expect(page.getByText("Hello")).toBeVisible();
-    await expect(page.getByText("World")).toBeHidden();
-    await page.getByText("Continue").click();
-    await expect(page.getByText("Hello")).toBeHidden();
-    await expect(page.getByText("World")).toBeHidden();
+    await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+    await expect(page.getByText("World", { exact: true })).toBeHidden();
+    await page.getByText("Continue", { exact: true }).click();
+    await expect(page.getByText("Hello", { exact: true })).toBeHidden();
+    await expect(page.getByText("World", { exact: true })).toBeHidden();
     await page.locator("h1").click();
-    await expect(page.getByText("Hello")).toBeHidden();
-    await expect(page.getByText("World")).toBeVisible();
+    await expect(page.getByText("Hello", { exact: true })).toBeHidden();
+    await expect(page.getByText("World", { exact: true })).toBeVisible();
   });
   test(`${packageName} - should not trigger wait on incorrect page`, async ({ page }) => {
     await page.route("**/v2/sdk/blocks", (route) => {
       route.fulfill({ json: { blocks: [getTourWithWait()] } });
     });
     await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("Hello")).toBeVisible();
-    await expect(page.getByText("World")).toBeHidden();
-    await page.getByText("Continue").click();
-    await expect(page.getByText("Hello")).toBeHidden();
-    await expect(page.getByText("World")).toBeHidden();
+    await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+    await expect(page.getByText("World", { exact: true })).toBeHidden();
+    await page.getByText("Continue", { exact: true }).click();
+    await expect(page.getByText("Hello", { exact: true })).toBeHidden();
+    await expect(page.getByText("World", { exact: true })).toBeHidden();
     await page.locator("h1").click();
-    await expect(page.getByText("Hello")).toBeHidden();
-    await expect(page.getByText("World")).toBeHidden();
+    await expect(page.getByText("Hello", { exact: true })).toBeHidden();
+    await expect(page.getByText("World", { exact: true })).toBeHidden();
   });
   test(`${packageName} - should not trigger wait by clicking on incorrect element`, async ({
     page,
@@ -138,14 +138,14 @@ const run = (packageName: string) => {
       route.fulfill({ json: { blocks: [getTourWithWait()] } });
     });
     await page.goto(`/${packageName}.html?correct=true`);
-    await expect(page.getByText("Hello")).toBeVisible();
-    await expect(page.getByText("World")).toBeHidden();
-    await page.getByText("Continue").click();
-    await expect(page.getByText("Hello")).toBeHidden();
-    await expect(page.getByText("World")).toBeHidden();
+    await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+    await expect(page.getByText("World", { exact: true })).toBeHidden();
+    await page.getByText("Continue", { exact: true }).click();
+    await expect(page.getByText("Hello", { exact: true })).toBeHidden();
+    await expect(page.getByText("World", { exact: true })).toBeHidden();
     await page.locator("h2").click();
-    await expect(page.getByText("Hello")).toBeHidden();
-    await expect(page.getByText("World")).toBeHidden();
+    await expect(page.getByText("Hello", { exact: true })).toBeHidden();
+    await expect(page.getByText("World", { exact: true })).toBeHidden();
   });
 
   test(`${packageName} - should wait for modal wait`, async ({ page }) => {
@@ -153,24 +153,24 @@ const run = (packageName: string) => {
       route.fulfill({ json: { blocks: [getTourWithModalWait()] } });
     });
     await page.goto(`/${packageName}.html?correct=true`);
-    await expect(page.getByText("Hello")).toBeVisible();
-    await expect(page.getByText("World")).toBeHidden();
-    await expect(page.getByText("Continue")).toBeHidden();
+    await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+    await expect(page.getByText("World", { exact: true })).toBeHidden();
+    await expect(page.getByText("Continue", { exact: true })).toBeHidden();
     await page.locator("h1").click();
-    await expect(page.getByText("Hello")).toBeHidden();
-    await expect(page.getByText("World")).toBeVisible();
+    await expect(page.getByText("Hello", { exact: true })).toBeHidden();
+    await expect(page.getByText("World", { exact: true })).toBeVisible();
   });
   test(`${packageName} - should not trigger modal wait on incorrect page`, async ({ page }) => {
     await page.route("**/v2/sdk/blocks", (route) => {
       route.fulfill({ json: { blocks: [getTourWithModalWait()] } });
     });
     await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("Hello")).toBeVisible();
-    await expect(page.getByText("World")).toBeHidden();
-    await expect(page.getByText("Continue")).toBeHidden();
+    await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+    await expect(page.getByText("World", { exact: true })).toBeHidden();
+    await expect(page.getByText("Continue", { exact: true })).toBeHidden();
     await page.locator("h1").click();
-    await expect(page.getByText("Hello")).toBeVisible();
-    await expect(page.getByText("World")).toBeHidden();
+    await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+    await expect(page.getByText("World", { exact: true })).toBeHidden();
   });
   test(`${packageName} - should not trigger modal wait by clicking on incorrect element`, async ({
     page,
@@ -179,12 +179,12 @@ const run = (packageName: string) => {
       route.fulfill({ json: { blocks: [getTourWithModalWait()] } });
     });
     await page.goto(`/${packageName}.html?correct=true`);
-    await expect(page.getByText("Hello")).toBeVisible();
-    await expect(page.getByText("World")).toBeHidden();
-    await expect(page.getByText("Continue")).toBeHidden();
+    await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+    await expect(page.getByText("World", { exact: true })).toBeHidden();
+    await expect(page.getByText("Continue", { exact: true })).toBeHidden();
     await page.locator("h2").click();
-    await expect(page.getByText("Hello")).toBeVisible();
-    await expect(page.getByText("World")).toBeHidden();
+    await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+    await expect(page.getByText("World", { exact: true })).toBeHidden();
   });
 };
 

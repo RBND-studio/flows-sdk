@@ -6,6 +6,7 @@ interface TourWait {
 
 export interface Block {
   id: string;
+  key?: string;
   type: string;
   componentType?: string;
   data: Record<string, unknown>;
@@ -24,6 +25,7 @@ export interface Block {
 
 export interface TourStep {
   id: string;
+  key?: string;
   type: string;
   componentType?: string;
   data: Record<string, unknown>;

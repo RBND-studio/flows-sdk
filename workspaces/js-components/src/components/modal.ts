@@ -1,7 +1,8 @@
+import { type ComponentProps } from "@flows/shared";
 import { BaseModal } from "../internal-components/base-modal";
 import { type Component } from "../types";
 
-export interface ModalProps {
+export type ModalProps = ComponentProps<{
   title: string;
   body: string;
   continueText?: string;
@@ -10,7 +11,7 @@ export interface ModalProps {
 
   continue: () => void;
   close: () => void;
-}
+}>;
 
 export const Modal: Component<ModalProps> = (props) => {
   const buttons: HTMLElement[] = [];

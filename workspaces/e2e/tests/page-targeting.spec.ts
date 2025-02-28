@@ -37,7 +37,7 @@ const getTour = (steps: TourStep[]): Block => ({
   tourBlocks: steps,
 });
 
-const floatingTourModalBlock: TourStep = {
+const floatingTourBlock: TourStep = {
   id: randomUUID(),
   type: "tour-component",
   componentType: "Modal",
@@ -45,7 +45,7 @@ const floatingTourModalBlock: TourStep = {
   slottable: false,
 };
 
-const slotTourModalBlock: TourStep = {
+const slotTourBlock: TourStep = {
   id: randomUUID(),
   type: "tour-component",
   componentType: "Card",
@@ -61,7 +61,7 @@ const run = (packageName: string) => {
       route.fulfill({ json: { blocks: [floatingWorkflowBlock] } });
     });
     await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("Workflow block")).toBeVisible();
+    await expect(page.getByText("Workflow block", { exact: true })).toBeVisible();
   });
 
   test(`${packageName} - should not show workflow block with incorrect page targeting`, async ({
@@ -76,7 +76,7 @@ const run = (packageName: string) => {
       route.fulfill({ json: { blocks: [block] } });
     });
     await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("Workflow block")).toBeHidden();
+    await expect(page.getByText("Workflow block", { exact: true })).toBeHidden();
   });
 
   test(`${packageName} - should show workflow block with correct page targeting`, async ({
@@ -91,7 +91,7 @@ const run = (packageName: string) => {
       route.fulfill({ json: { blocks: [block] } });
     });
     await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("Workflow block")).toBeVisible();
+    await expect(page.getByText("Workflow block", { exact: true })).toBeVisible();
   });
 
   // Workflow slot
@@ -107,7 +107,7 @@ const run = (packageName: string) => {
       route.fulfill({ json: { blocks: [block] } });
     });
     await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("slottable block")).toBeHidden();
+    await expect(page.getByText("slottable block", { exact: true })).toBeHidden();
   });
   test(`${packageName} - should show workflow block in slot with correct page targeting`, async ({
     page,
@@ -121,22 +121,22 @@ const run = (packageName: string) => {
       route.fulfill({ json: { blocks: [block] } });
     });
     await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("slottable block")).toBeVisible();
+    await expect(page.getByText("slottable block", { exact: true })).toBeVisible();
   });
 
   // Floating tour
   test(`${packageName} - should show tour block without page targeting`, async ({ page }) => {
     await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [getTour([floatingTourModalBlock])] } });
+      route.fulfill({ json: { blocks: [getTour([floatingTourBlock])] } });
     });
     await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("Tour block")).toBeVisible();
+    await expect(page.getByText("Tour block", { exact: true })).toBeVisible();
   });
   test(`${packageName} - should not show tour block with incorrect page targeting`, async ({
     page,
   }) => {
     const block: TourStep = {
-      ...floatingTourModalBlock,
+      ...floatingTourBlock,
       page_targeting_operator: "contains",
       page_targeting_values: ["/wrong"],
     };
@@ -144,11 +144,11 @@ const run = (packageName: string) => {
       route.fulfill({ json: { blocks: [getTour([block])] } });
     });
     await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("Tour block")).toBeHidden();
+    await expect(page.getByText("Tour block", { exact: true })).toBeHidden();
   });
   test(`${packageName} - should show tour block with correct page targeting`, async ({ page }) => {
     const block: TourStep = {
-      ...floatingTourModalBlock,
+      ...floatingTourBlock,
       page_targeting_operator: "contains",
       page_targeting_values: [`/${packageName}.html`],
     };
@@ -156,7 +156,7 @@ const run = (packageName: string) => {
       route.fulfill({ json: { blocks: [getTour([block])] } });
     });
     await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("Tour block")).toBeVisible();
+    await expect(page.getByText("Tour block", { exact: true })).toBeVisible();
   });
 
   // Tour slot
@@ -164,7 +164,7 @@ const run = (packageName: string) => {
     page,
   }) => {
     const block: TourStep = {
-      ...slotTourModalBlock,
+      ...slotTourBlock,
       page_targeting_operator: "contains",
       page_targeting_values: ["/wrong"],
     };
@@ -172,13 +172,13 @@ const run = (packageName: string) => {
       route.fulfill({ json: { blocks: [getTour([block])] } });
     });
     await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("Tour block")).toBeHidden();
+    await expect(page.getByText("slottable tour block", { exact: true })).toBeHidden();
   });
   test(`${packageName} - should show tour block in slot with correct page targeting`, async ({
     page,
   }) => {
     const block: TourStep = {
-      ...slotTourModalBlock,
+      ...slotTourBlock,
       page_targeting_operator: "contains",
       page_targeting_values: [`/${packageName}.html`],
     };
@@ -186,7 +186,7 @@ const run = (packageName: string) => {
       route.fulfill({ json: { blocks: [getTour([block])] } });
     });
     await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("Tour block")).toBeVisible();
+    await expect(page.getByText("slottable tour block", { exact: true })).toBeVisible();
   });
 };
 

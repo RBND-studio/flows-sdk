@@ -24,14 +24,14 @@ const run = (packageName: string) => {
       route.fulfill({ json: { blocks: [block] } });
     });
     await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("Workflow block")).toBeVisible();
+    await expect(page.getByText("Workflow block", { exact: true })).toBeVisible();
     let reqWasSent = false;
     page.on("request", (req) => {
       if (req.url().includes("v2/sdk/events")) {
         reqWasSent = true;
       }
     });
-    await page.getByText("continue").click();
+    await page.getByText("continue", { exact: true }).click();
     expect(reqWasSent).toBe(false);
   });
   test(`${packageName} - should pass methods with exit nodes`, async ({ page }) => {
@@ -43,7 +43,7 @@ const run = (packageName: string) => {
       route.fulfill({ json: { blocks: [b] } });
     });
     await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("Workflow block")).toBeVisible();
+    await expect(page.getByText("Workflow block", { exact: true })).toBeVisible();
     const req = page.waitForRequest((req) => {
       const body = req.postDataJSON();
       return (
@@ -55,7 +55,7 @@ const run = (packageName: string) => {
         body.propertyKey === "continue"
       );
     });
-    await page.getByText("continue").click();
+    await page.getByText("continue", { exact: true }).click();
     await req;
   });
 };

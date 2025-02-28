@@ -16,7 +16,13 @@ export const blockToActiveBlock = (block: Block): ActiveBlock | [] => {
     id: block.id,
     type: "component",
     component: block.componentType,
-    props: { ...data, ...methods },
+    props: {
+      __flows: {
+        key: block.key,
+      },
+      ...data,
+      ...methods,
+    },
   };
 };
 
@@ -43,6 +49,9 @@ export const tourToActiveBlock = (block: Block, currentIndex: number): ActiveBlo
     type: "tour-component",
     component: activeStep.componentType,
     props: {
+      __flows: {
+        key: activeStep.key,
+      },
       ...activeStep.data,
       previous: !isFirstStep ? handlePrevious : undefined,
       continue: handleContinue,

@@ -8,7 +8,7 @@ import {
   shift,
   type Side,
 } from "@floating-ui/dom";
-import { type Component } from "../types";
+import { type _Component } from "../types";
 import { close16 } from "../icons/close-16";
 
 interface Props {
@@ -21,7 +21,7 @@ interface Props {
   overlay?: boolean;
 }
 
-export const BaseTooltip: Component<Props> = (props) => {
+export const BaseTooltip: _Component<Props> = (props) => {
   // TODO: setup auto update based on reference element change
   const reference = props.targetElement ? document.querySelector(props.targetElement) : null;
   if (!reference) {

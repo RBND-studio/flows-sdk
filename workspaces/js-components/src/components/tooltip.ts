@@ -1,8 +1,8 @@
-import { type Placement } from "@flows/shared";
+import { type ComponentProps, type Placement } from "@flows/shared";
 import { type Component } from "../types";
 import { BaseTooltip } from "../internal-components/base-tooltip";
 
-export interface TooltipProps {
+export type TooltipProps = ComponentProps<{
   title: string;
   body: string;
   continueText?: string;
@@ -13,7 +13,7 @@ export interface TooltipProps {
 
   continue: () => void;
   close: () => void;
-}
+}>;
 
 export const Tooltip: Component<TooltipProps> = (props) => {
   const buttons: HTMLElement[] = [];

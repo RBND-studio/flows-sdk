@@ -34,7 +34,7 @@ const run = (packageName: string) => {
       route.fulfill({ json: { blocks: [getBlock()] } });
     });
     await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("Block Trigger title")).toBeVisible();
+    await expect(page.getByText("Block Trigger title", { exact: true })).toBeVisible();
     let reqWasSent = false;
     page.on("request", (req) => {
       if (req.url().includes("v2/sdk/events")) {
@@ -49,7 +49,7 @@ const run = (packageName: string) => {
       route.fulfill({ json: { blocks: [getBlock()] } });
     });
     await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("Block Trigger title")).toBeVisible();
+    await expect(page.getByText("Block Trigger title", { exact: true })).toBeVisible();
 
     const rootBlockTriggerReq = page.waitForRequest((req) => {
       const body = req.postDataJSON();

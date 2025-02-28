@@ -51,47 +51,47 @@ const run = (packageName: string) => {
       route.fulfill({ json: { blocks: [tour] } });
     });
     await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("Hello")).toBeVisible();
+    await expect(page.getByText("Hello", { exact: true })).toBeVisible();
     await expect(page.getByRole("button", { name: "Close" })).toBeVisible();
-    await expect(page.getByText("Continue")).toBeVisible();
-    await expect(page.getByText("Previous")).toBeHidden();
+    await expect(page.getByText("Continue", { exact: true })).toBeVisible();
+    await expect(page.getByText("Previous", { exact: true })).toBeHidden();
   });
   test(`${packageName} - should be able to switch between tour steps`, async ({ page }) => {
     await page.route("**/v2/sdk/blocks", (route) => {
       route.fulfill({ json: { blocks: [tour] } });
     });
     await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("Hello")).toBeVisible();
-    await expect(page.getByText("World")).toBeHidden();
-    await page.getByText("Continue").click();
-    await expect(page.getByText("Hello")).toBeHidden();
-    await expect(page.getByText("World")).toBeVisible();
+    await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+    await expect(page.getByText("World", { exact: true })).toBeHidden();
+    await page.getByText("Continue", { exact: true }).click();
+    await expect(page.getByText("Hello", { exact: true })).toBeHidden();
+    await expect(page.getByText("World", { exact: true })).toBeVisible();
     await expect(page.getByRole("button", { name: "Close" })).toBeHidden();
-    await expect(page.getByText("Continue")).toBeVisible();
-    await expect(page.getByText("Previous")).toBeVisible();
-    await page.getByText("Previous").click();
-    await expect(page.getByText("Hello")).toBeVisible();
-    await expect(page.getByText("World")).toBeHidden();
+    await expect(page.getByText("Continue", { exact: true })).toBeVisible();
+    await expect(page.getByText("Previous", { exact: true })).toBeVisible();
+    await page.getByText("Previous", { exact: true }).click();
+    await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+    await expect(page.getByText("World", { exact: true })).toBeHidden();
   });
   test(`${packageName} - should be able to close the tour`, async ({ page }) => {
     await page.route("**/v2/sdk/blocks", (route) => {
       route.fulfill({ json: { blocks: [tour] } });
     });
     await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("Hello")).toBeVisible();
+    await expect(page.getByText("Hello", { exact: true })).toBeVisible();
     await page.getByRole("button", { name: "Close" }).click();
-    await expect(page.getByText("Hello")).toBeHidden();
+    await expect(page.getByText("Hello", { exact: true })).toBeHidden();
   });
   test(`${packageName} - should be able to complete the tour`, async ({ page }) => {
     await page.route("**/v2/sdk/blocks", (route) => {
       route.fulfill({ json: { blocks: [tour] } });
     });
     await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("Hello")).toBeVisible();
-    await page.getByText("Continue").click();
-    await expect(page.getByText("World")).toBeVisible();
-    await page.getByText("Continue").click();
-    await expect(page.getByText("World")).toBeHidden();
+    await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+    await page.getByText("Continue", { exact: true }).click();
+    await expect(page.getByText("World", { exact: true })).toBeVisible();
+    await page.getByText("Continue", { exact: true }).click();
+    await expect(page.getByText("World", { exact: true })).toBeHidden();
   });
 
   test(`${packageName} - should send current step event`, async ({ page }) => {
@@ -105,7 +105,7 @@ const run = (packageName: string) => {
         req.postDataJSON().name === "tour-update" &&
         req.postDataJSON().properties.currentTourIndex === 1,
     );
-    await page.getByText("Continue").click();
+    await page.getByText("Continue", { exact: true }).click();
     await eventReq1;
     const eventReq2 = page.waitForRequest(
       (req) =>
@@ -113,7 +113,7 @@ const run = (packageName: string) => {
         req.postDataJSON().name === "tour-update" &&
         req.postDataJSON().properties.currentTourIndex === 0,
     );
-    await page.getByText("Previous").click();
+    await page.getByText("Previous", { exact: true }).click();
     await eventReq2;
   });
 };
