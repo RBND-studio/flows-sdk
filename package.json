@@ -27,5 +27,5 @@
     "minimist": "^1.2.8",
     "prettier": "^3.5.0"
   },
-  "packageManager": "pnpm@9.15.2"
+  "packageManager": "pnpm@9.15.6"
 }
