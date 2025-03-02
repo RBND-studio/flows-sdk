@@ -81,5 +81,5 @@ const run = (packageName: string) => {
   });
 };
 
-// run("js");
+run("js");
 run("react");

@@ -33,6 +33,49 @@ const Card: Component<{ text: string }> = (props) => {
   };
 };
 
+const BlockTrigger: Component<{
+  title: string;
+  trigger: () => void;
+  items: { text: string; trigger?: () => void }[];
+}> = (props) => {
+  const card = document.createElement("div");
+  card.className = "flows-card";
+
+  const title = document.createElement("p");
+  card.appendChild(title);
+  title.textContent = props.title;
+
+  const triggerButton = document.createElement("button");
+  card.appendChild(triggerButton);
+  triggerButton.textContent = "Trigger";
+  triggerButton.addEventListener("click", props.trigger);
+
+  const list = document.createElement("ul");
+  card.appendChild(list);
+  let listButtons: HTMLButtonElement[] = [];
+  props.items.forEach((item) => {
+    const listItem = document.createElement("li");
+    list.appendChild(listItem);
+
+    const button = document.createElement("button");
+    listButtons.push(button);
+    listItem.appendChild(button);
+    button.textContent = item.text;
+    if (item.trigger) button.addEventListener("click", item.trigger);
+  });
+
+  return {
+    cleanup: () => {
+      triggerButton.removeEventListener("click", props.trigger);
+      listButtons.forEach((button, i) => {
+        const trigger = props.items[i]?.trigger;
+        if (trigger) button.removeEventListener("click", trigger);
+      });
+    },
+    element: card,
+  };
+};
+
 init({
   environment: "prod",
   organizationId: "orgId",
@@ -44,7 +87,7 @@ init({
   },
 });
 
-const components = { ..._components, Card };
+const components = { ..._components, Card, BlockTrigger };
 const tourComponents = { ..._tourComponents, Card };
 
 addFloatingBlocksChangeListener((blocks) => {

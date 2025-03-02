@@ -29,11 +29,13 @@ const Card: FC<ComponentProps<{ text: string }>> = (props) => (
   </div>
 );
 
-const BlockTrigger: FC<{
-  title: string;
-  trigger: () => void;
-  items: { text: string; trigger?: () => void }[];
-}> = (props) => (
+const BlockTrigger: FC<
+  ComponentProps<{
+    title: string;
+    trigger: () => void;
+    items: { text: string; trigger?: () => void }[];
+  }>
+> = (props) => (
   <div className="flows-card">
     <p>{props.title}</p>
     <button onClick={props.trigger}>Trigger</button>
