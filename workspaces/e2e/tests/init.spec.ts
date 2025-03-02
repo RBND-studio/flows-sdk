@@ -14,8 +14,10 @@ const run = (packageName: string) => {
     });
     const blocksReq = page.waitForRequest((req) => {
       const body = req.postDataJSON();
+      const headers = req.headers();
       return (
         req.url() === "https://api.flows-cloud.com/v2/sdk/blocks" &&
+        /@flows\/[^@]*@\d+\.\d+.\d+/.test(headers["x-flows-version"] ?? "") &&
         body.organizationId === "orgId" &&
         body.userId === "testUserId" &&
         body.environment === "prod" &&
@@ -32,8 +34,10 @@ const run = (packageName: string) => {
     });
     const blocksReq = page.waitForRequest((req) => {
       const body = req.postDataJSON();
+      const headers = req.headers();
       return (
         req.url() === "https://custom.api.flows.com/v2/sdk/blocks" &&
+        (headers["x-flows-version"] ?? "").startsWith("@flows/") &&
         body.organizationId === "orgId" &&
         body.userId === "testUserId" &&
         body.environment === "prod" &&

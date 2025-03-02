@@ -7,6 +7,7 @@ import {
   type TourStep,
   type BlockUpdatesPayload,
 } from "@flows/shared";
+import { packageAndVersion } from "../lib/constants";
 import { useWebsocket } from "./use-websocket";
 
 interface Props {
@@ -37,7 +38,7 @@ export const useBlocks = ({
 
   // TODO: call fetchBlocks on reconnect
   const fetchBlocks = useCallback(() => {
-    void getApi(apiUrl)
+    void getApi(apiUrl, packageAndVersion)
       .getBlocks({ ...params, userProperties: userPropertiesRef.current })
       .then((res) => {
         setBlocks(res.blocks);

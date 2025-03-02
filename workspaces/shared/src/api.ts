@@ -2,12 +2,13 @@ import { type Block } from "./types";
 
 const f = <T>(
   url: string,
-  { body, method }: { method?: string; body?: unknown } = {},
+  { body, method, version }: { method?: string; body?: unknown; version: string },
 ): Promise<T> =>
   fetch(url, {
     method,
     headers: {
       "Content-Type": "application/json",
+      "x-flows-version": version,
     },
     body: body ? JSON.stringify(body) : undefined,
   }).then(async (res) => {
@@ -43,8 +44,9 @@ export interface EventRequest {
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- ignore
-export const getApi = (apiUrl: string) => ({
+export const getApi = (apiUrl: string, version: string) => ({
   getBlocks: (body: GetBlocksRequest) =>
-    f<BlocksResponse>(`${apiUrl}/v2/sdk/blocks`, { method: "POST", body }),
-  sendEvent: (body: EventRequest) => f(`${apiUrl}/v2/sdk/events`, { method: "POST", body }),
+    f<BlocksResponse>(`${apiUrl}/v2/sdk/blocks`, { method: "POST", body, version }),
+  sendEvent: (body: EventRequest) =>
+    f(`${apiUrl}/v2/sdk/events`, { method: "POST", body, version }),
 });
