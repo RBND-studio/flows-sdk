@@ -33,6 +33,8 @@ This repository contains the SDKs for Flows and accompanying built-in components
 
 - [React SDK](./workspaces/react)
 - [React components](./workspaces/react-components)
+- [JavaScript SDK](./workspaces/js)
+- [JavaScript components](./workspaces/js-components)
 
 ## Templates
 
@@ -50,7 +52,6 @@ The fastest and most reliable way to get started with Flows is [signing up for f
 ## Contributing
 
 We ❤️ contributions big and small, more info in [CONTRIBUTING.md](/CONTRIBUTING.md).
-
 
 ---
 
