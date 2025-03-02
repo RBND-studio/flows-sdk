@@ -1,6 +1,7 @@
 import { type BlockUpdatesPayload, getApi, log, type UserProperties } from "@flows/shared";
 import { blocks } from "../store";
 import { websocket } from "./websocket";
+import { packageAndVersion } from "./constants";
 
 interface Props {
   apiUrl: string;
@@ -19,7 +20,7 @@ export const connectToWebsocketAndFetchBlocks = (props: Props): void => {
   })();
 
   const fetchBlocks = (): void => {
-    void getApi(apiUrl)
+    void getApi(apiUrl, packageAndVersion)
       .getBlocks({ ...params, userProperties: props.userProperties })
       .then((res) => {
         blocks.value = res.blocks;

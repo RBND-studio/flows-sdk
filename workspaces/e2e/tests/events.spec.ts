@@ -46,8 +46,10 @@ const run = (packageName: string) => {
     await expect(page.getByText("Workflow block", { exact: true })).toBeVisible();
     const req = page.waitForRequest((req) => {
       const body = req.postDataJSON();
+      const headers = req.headers();
       return (
         req.url() === "https://api.flows-cloud.com/v2/sdk/events" &&
+        (headers["x-flows-version"] ?? "").startsWith("@flows/") &&
         body.organizationId === "orgId" &&
         body.userId === "testUserId" &&
         body.environment === "prod" &&
