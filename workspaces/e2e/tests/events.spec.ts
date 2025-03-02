@@ -49,7 +49,7 @@ const run = (packageName: string) => {
       const headers = req.headers();
       return (
         req.url() === "https://api.flows-cloud.com/v2/sdk/events" &&
-        (headers["x-flows-version"] ?? "").startsWith("@flows/") &&
+        /@flows\/[^@]*@\d+\.\d+.\d+/.test(headers["x-flows-version"] ?? "") &&
         body.organizationId === "orgId" &&
         body.userId === "testUserId" &&
         body.environment === "prod" &&
