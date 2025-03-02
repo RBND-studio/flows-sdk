@@ -1,3 +1,3 @@
-import { version } from "../../package.json";
+import { version, name } from "../../package.json";
 
-export const packageAndVersion = `@flows/js@${version}`;
+export const packageAndVersion = `${name}@${version}`;
