@@ -1,28 +1,20 @@
-import { type Block, type ActiveBlock } from "@flows/shared";
+import { type Block, type ActiveBlock, createComponentProps } from "@flows/shared";
 import { nextTourStep, previousTourStep, cancelTour } from "./tour";
 import { sendEvent } from "./api";
 
 export const blockToActiveBlock = (block: Block): ActiveBlock | [] => {
   if (!block.componentType) return [];
 
-  const data = block.data;
-  const methods = block.exitNodes.reduce<Record<string, () => Promise<void>>>((acc, exitNode) => {
-    acc[exitNode] = () =>
-      sendEvent({ name: "transition", blockId: block.id, propertyKey: exitNode });
-    return acc;
-  }, {});
+  const props = createComponentProps({
+    block,
+    exitNodeCb: (key) => sendEvent({ name: "transition", blockId: block.id, propertyKey: key }),
+  });
 
   return {
     id: block.id,
     type: "component",
     component: block.componentType,
-    props: {
-      __flows: {
-        key: block.key,
-      },
-      ...data,
-      ...methods,
-    },
+    props,
   };
 };
 
