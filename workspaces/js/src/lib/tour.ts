@@ -77,7 +77,7 @@ export const handleTourDocumentClick = (eventTarget: Element): void => {
   });
 };
 
-const timeoutByStepId = new Map<string, number>();
+const timeoutByTourId = new Map<string, { timeoutId: number; stepId: string }>();
 
 effect(() => {
   const pathnameValue = pathname.value;
@@ -91,6 +91,13 @@ effect(() => {
     if (!tourBlock) return;
     const activeStep = tourBlock.tourBlocks?.at(tour.currentBlockIndex);
     if (!activeStep) return;
+
+    const existingTimeout = timeoutByTourId.get(tour.blockId);
+    if (existingTimeout && existingTimeout.stepId !== activeStep.id) {
+      clearTimeout(existingTimeout.timeoutId);
+      timeoutByTourId.delete(tour.blockId);
+    }
+
     const tourWait = activeStep.tourWait;
     if (!tourWait) return;
 
@@ -103,12 +110,16 @@ effect(() => {
 
       if (match) nextTourStep(tourBlock, tour.currentBlockIndex);
     }
-    if (tourWait.interaction === "delay" && tourWait.ms !== undefined) {
+    if (
+      tourWait.interaction === "delay" &&
+      tourWait.ms !== undefined &&
+      !timeoutByTourId.has(tour.blockId)
+    ) {
       const timeoutId = window.setTimeout(() => {
         nextTourStep(tourBlock, tour.currentBlockIndex);
-        timeoutByStepId.delete(activeStep.id);
+        timeoutByTourId.delete(tour.blockId);
       }, tourWait.ms);
-      timeoutByStepId.set(activeStep.id, timeoutId);
+      timeoutByTourId.set(tour.blockId, { timeoutId, stepId: activeStep.id });
     }
   });
 });
