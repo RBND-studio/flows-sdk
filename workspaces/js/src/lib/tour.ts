@@ -92,6 +92,7 @@ effect(() => {
     const activeStep = tourBlock.tourBlocks?.at(tour.currentBlockIndex);
     if (!activeStep) return;
 
+    // Clear timeouts for tours that don't have active the wait step
     const existingTimeout = timeoutByTourId.get(tour.blockId);
     if (existingTimeout && existingTimeout.stepId !== activeStep.id) {
       clearTimeout(existingTimeout.timeoutId);
@@ -101,6 +102,7 @@ effect(() => {
     const tourWait = activeStep.tourWait;
     if (!tourWait) return;
 
+    // Handle navigation waits
     if (tourWait.interaction === "navigation") {
       const match = pathnameMatch({
         pathname: pathnameValue,
@@ -110,6 +112,8 @@ effect(() => {
 
       if (match) nextTourStep(tourBlock, tour.currentBlockIndex);
     }
+
+    // Handle delay waits
     if (
       tourWait.interaction === "delay" &&
       tourWait.ms !== undefined &&

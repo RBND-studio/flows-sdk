@@ -63,17 +63,24 @@ export const TourController: FC = () => {
     };
   }, [pathname, relevantTours]);
 
-  // Handle delay waits
+  // Clear timeouts for tours that don't have active the wait step
   useEffect(() => {
-    relevantTours.forEach((tour) => {
+    runningTours.forEach((tour) => {
       const activeStep = tour.activeStep;
-      const tourWait = activeStep?.tourWait;
       const existingTimeout = timeoutByTourId.get(tour.block.id);
 
       if (existingTimeout && existingTimeout.stepId !== activeStep?.id) {
         clearTimeout(existingTimeout.timeoutId);
         timeoutByTourId.delete(tour.block.id);
       }
+    });
+  }, [runningTours, timeoutByTourId]);
+
+  // Handle delay waits
+  useEffect(() => {
+    relevantTours.forEach((tour) => {
+      const activeStep = tour.activeStep;
+      const tourWait = activeStep?.tourWait;
 
       if (
         activeStep &&
