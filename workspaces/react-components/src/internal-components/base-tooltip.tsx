@@ -9,7 +9,7 @@ import {
   flip,
   type Side,
   type Placement,
-  autoUpdate,
+  autoUpdate as floatingAutoUpdate,
 } from "@floating-ui/react-dom";
 import classNames from "classnames";
 import { log } from "@flows/shared";
@@ -33,6 +33,9 @@ interface Props {
   placement?: Placement;
   overlay?: boolean;
 }
+
+const autoUpdate: typeof floatingAutoUpdate = (ref, floating, update) =>
+  floatingAutoUpdate(ref, floating, update, { animationFrame: true });
 
 export const BaseTooltip: FC<Props> = (props) => {
   const topArrowRef = useRef<HTMLDivElement>(null);
