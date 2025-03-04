@@ -82,7 +82,10 @@ effect(() => {
   const blocksValue = blocks.value;
   const runningToursValue = runningTours.value;
 
+  const timeouts: number[] = [];
+
   const blocksById = new Map(blocksValue.map((block) => [block.id, block]));
+
   runningToursValue.forEach((tour) => {
     const tourBlock = blocksById.get(tour.blockId);
     if (!tourBlock) return;
@@ -100,5 +103,16 @@ effect(() => {
 
       if (match) nextTourStep(tourBlock, tour.currentBlockIndex);
     }
+    if (tourWait.interaction === "delay" && tourWait.ms !== undefined) {
+      const timeoutId = window.setTimeout(() => {
+        nextTourStep(tourBlock, tour.currentBlockIndex);
+      }, tourWait.ms);
+
+      timeouts.push(timeoutId);
+    }
   });
+
+  return () => {
+    timeouts.forEach(clearTimeout);
+  };
 });

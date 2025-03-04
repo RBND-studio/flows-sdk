@@ -102,6 +102,52 @@ const getTourWithModalWait = (): Block => ({
   ],
 });
 
+const getTourWithDelayWait = (): Block => ({
+  id: randomUUID(),
+  type: "tour",
+  data: {},
+  exitNodes: ["complete", "cancel"],
+  slottable: false,
+  tourBlocks: [
+    {
+      id: randomUUID(),
+      type: "tour-component",
+      componentType: "Modal",
+      data: {
+        title: "Hello",
+        body: "",
+        continueText: "Continue",
+        previousText: "Previous",
+        showCloseButton: true,
+      },
+      slottable: false,
+    },
+    {
+      id: randomUUID(),
+      type: "wait",
+      slottable: false,
+      data: {},
+      tourWait: {
+        interaction: "delay",
+        ms: 1000,
+      },
+    },
+    {
+      id: randomUUID(),
+      type: "tour-component",
+      componentType: "Modal",
+      data: {
+        title: "World",
+        body: "",
+        continueText: "Continue",
+        previousText: "Previous",
+        showCloseButton: false,
+      },
+      slottable: false,
+    },
+  ],
+});
+
 const run = (packageName: string) => {
   test(`${packageName} - should wait for next step`, async ({ page }) => {
     await page.route("**/v2/sdk/blocks", (route) => {
@@ -185,6 +231,21 @@ const run = (packageName: string) => {
     await page.locator("h2").click();
     await expect(page.getByText("Hello", { exact: true })).toBeVisible();
     await expect(page.getByText("World", { exact: true })).toBeHidden();
+  });
+  test(`${packageName} - should wait for delay wait`, async ({ page }) => {
+    await page.route("**/v2/sdk/blocks", (route) => {
+      route.fulfill({ json: { blocks: [getTourWithDelayWait()] } });
+    });
+    await page.goto(`/${packageName}.html`);
+    await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+    await expect(page.getByText("World", { exact: true })).toBeHidden();
+    await page.getByText("Continue", { exact: true }).click();
+    await expect(page.getByText("Hello", { exact: true })).toBeHidden();
+    await expect(page.getByText("World", { exact: true })).toBeHidden();
+    await page.waitForTimeout(900);
+    await expect(page.getByText("World", { exact: true })).toBeHidden({ timeout: 0 });
+    await page.waitForTimeout(100);
+    await expect(page.getByText("World", { exact: true })).toBeVisible({ timeout: 0 });
   });
 };
 

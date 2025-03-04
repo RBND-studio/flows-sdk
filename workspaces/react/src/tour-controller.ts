@@ -60,5 +60,24 @@ export const TourController: FC = () => {
     };
   }, [pathname, relevantTours]);
 
+  // Handle delay waits
+  useEffect(() => {
+    const timeouts: number[] = [];
+
+    relevantTours.forEach((tour) => {
+      const tourWait = tour.activeStep?.tourWait;
+      if (tourWait?.interaction === "delay" && tourWait.ms !== undefined) {
+        const timeoutId = window.setTimeout(() => {
+          tour.continue();
+        }, tourWait.ms);
+        timeouts.push(timeoutId);
+      }
+    });
+
+    return () => {
+      timeouts.forEach(clearTimeout);
+    };
+  }, [relevantTours]);
+
   return null;
 };
