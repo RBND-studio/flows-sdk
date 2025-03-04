@@ -1,4 +1,4 @@
-import { Block } from "@flows/shared";
+import { Block, TourStep } from "@flows/shared";
 import { expect, test } from "@playwright/test";
 import { randomUUID } from "crypto";
 
@@ -9,103 +9,63 @@ test.beforeEach(async ({ page }) => {
   );
 });
 
-const getTourWithWait = (): Block => ({
+const getTour = (steps: TourStep[]): Block => ({
   id: randomUUID(),
   type: "tour",
   data: {},
   exitNodes: ["complete", "cancel"],
   slottable: false,
-  tourBlocks: [
-    {
-      id: randomUUID(),
-      type: "tour-component",
-      componentType: "Modal",
-      data: {
-        title: "Hello",
-        body: "",
-        continueText: "Continue",
-        previousText: "Previous",
-        showCloseButton: true,
-      },
-      slottable: false,
-    },
-    {
-      id: randomUUID(),
-      type: "wait",
-      slottable: false,
-      data: {},
-      tourWait: {
-        interaction: "click",
-        element: "h1",
-        page: {
-          operator: "contains",
-          value: ["?correct=true"],
-        },
-      },
-    },
-    {
-      id: randomUUID(),
-      type: "tour-component",
-      componentType: "Modal",
-      data: {
-        title: "World",
-        body: "",
-        continueText: "Continue",
-        previousText: "Previous",
-        showCloseButton: false,
-      },
-      slottable: false,
-    },
-  ],
+  tourBlocks: steps,
 });
 
-const getTourWithModalWait = (): Block => ({
+const getModalStep = ({
+  title,
+  wait,
+}: {
+  title: string;
+  wait?: TourStep["tourWait"];
+}): TourStep => ({
   id: randomUUID(),
-  type: "tour",
-  data: {},
-  exitNodes: ["complete", "cancel"],
+  type: "tour-component",
+  componentType: "Modal",
+  data: {
+    title,
+    body: "",
+    continueText: "Continue",
+    previousText: "Previous",
+    showCloseButton: false,
+    hideOverlay: true,
+  },
+  tourWait: wait,
   slottable: false,
-  tourBlocks: [
-    {
-      id: randomUUID(),
-      type: "tour-component",
-      componentType: "Modal",
-      data: {
-        title: "Hello",
-        body: "",
-        showCloseButton: true,
-        hideOverlay: true,
-      },
-      tourWait: {
-        interaction: "click",
-        element: "h1",
-        page: {
-          operator: "contains",
-          value: ["?correct=true"],
-        },
-      },
-      slottable: false,
-    },
-    {
-      id: randomUUID(),
-      type: "tour-component",
-      componentType: "Modal",
-      data: {
-        title: "World",
-        body: "",
-        continueText: "Continue",
-        previousText: "Previous",
-        showCloseButton: false,
-      },
-      slottable: false,
-    },
-  ],
+});
+
+const getWaitStep = (tourWait: TourStep["tourWait"]): TourStep => ({
+  id: randomUUID(),
+  type: "wait",
+  slottable: false,
+  data: {},
+  tourWait,
 });
 
 const run = (packageName: string) => {
   test(`${packageName} - should wait for next step`, async ({ page }) => {
     await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [getTourWithWait()] } });
+      route.fulfill({
+        json: {
+          blocks: [
+            getTour([
+              getModalStep({ title: "Hello" }),
+              getWaitStep({
+                interaction: "click",
+                element: "h1",
+                page: { operator: "contains", value: ["?correct=true"] },
+              }),
+              getModalStep({ title: "World" }),
+            ]),
+          ],
+        },
+      });
     });
     await page.goto(`/${packageName}.html?correct=true`);
     await expect(page.getByText("Hello", { exact: true })).toBeVisible();
@@ -119,7 +79,21 @@ const run = (packageName: string) => {
   });
   test(`${packageName} - should not trigger wait on incorrect page`, async ({ page }) => {
     await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [getTourWithWait()] } });
+      route.fulfill({
+        json: {
+          blocks: [
+            getTour([
+              getModalStep({ title: "Hello" }),
+              getWaitStep({
+                interaction: "click",
+                element: "h1",
+                page: { operator: "contains", value: ["?correct=true"] },
+              }),
+              getModalStep({ title: "World" }),
+            ]),
+          ],
+        },
+      });
     });
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Hello", { exact: true })).toBeVisible();
@@ -135,7 +109,21 @@ const run = (packageName: string) => {
     page,
   }) => {
     await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [getTourWithWait()] } });
+      route.fulfill({
+        json: {
+          blocks: [
+            getTour([
+              getModalStep({ title: "Hello" }),
+              getWaitStep({
+                interaction: "click",
+                element: "h1",
+                page: { operator: "contains", value: ["?correct=true"] },
+              }),
+              getModalStep({ title: "World" }),
+            ]),
+          ],
+        },
+      });
     });
     await page.goto(`/${packageName}.html?correct=true`);
     await expect(page.getByText("Hello", { exact: true })).toBeVisible();
@@ -150,24 +138,60 @@ const run = (packageName: string) => {
 
   test(`${packageName} - should wait for modal wait`, async ({ page }) => {
     await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [getTourWithModalWait()] } });
+      route.fulfill({
+        json: {
+          blocks: [
+            getTour([
+              getModalStep({
+                title: "Hello",
+                wait: {
+                  interaction: "click",
+                  element: "h1",
+                  page: {
+                    operator: "contains",
+                    value: ["?correct=true"],
+                  },
+                },
+              }),
+              getModalStep({ title: "World" }),
+            ]),
+          ],
+        },
+      });
     });
     await page.goto(`/${packageName}.html?correct=true`);
     await expect(page.getByText("Hello", { exact: true })).toBeVisible();
     await expect(page.getByText("World", { exact: true })).toBeHidden();
-    await expect(page.getByText("Continue", { exact: true })).toBeHidden();
     await page.locator("h1").click();
     await expect(page.getByText("Hello", { exact: true })).toBeHidden();
     await expect(page.getByText("World", { exact: true })).toBeVisible();
   });
   test(`${packageName} - should not trigger modal wait on incorrect page`, async ({ page }) => {
     await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [getTourWithModalWait()] } });
+      route.fulfill({
+        json: {
+          blocks: [
+            getTour([
+              getModalStep({
+                title: "Hello",
+                wait: {
+                  interaction: "click",
+                  element: "h1",
+                  page: {
+                    operator: "contains",
+                    value: ["?correct=true"],
+                  },
+                },
+              }),
+              getModalStep({ title: "World" }),
+            ]),
+          ],
+        },
+      });
     });
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Hello", { exact: true })).toBeVisible();
     await expect(page.getByText("World", { exact: true })).toBeHidden();
-    await expect(page.getByText("Continue", { exact: true })).toBeHidden();
     await page.locator("h1").click();
     await expect(page.getByText("Hello", { exact: true })).toBeVisible();
     await expect(page.getByText("World", { exact: true })).toBeHidden();
@@ -176,15 +200,83 @@ const run = (packageName: string) => {
     page,
   }) => {
     await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [getTourWithModalWait()] } });
+      route.fulfill({
+        json: {
+          blocks: [
+            getTour([
+              getModalStep({
+                title: "Hello",
+                wait: {
+                  interaction: "click",
+                  element: "h1",
+                  page: {
+                    operator: "contains",
+                    value: ["?correct=true"],
+                  },
+                },
+              }),
+              getModalStep({ title: "World" }),
+            ]),
+          ],
+        },
+      });
     });
     await page.goto(`/${packageName}.html?correct=true`);
     await expect(page.getByText("Hello", { exact: true })).toBeVisible();
     await expect(page.getByText("World", { exact: true })).toBeHidden();
-    await expect(page.getByText("Continue", { exact: true })).toBeHidden();
     await page.locator("h2").click();
     await expect(page.getByText("Hello", { exact: true })).toBeVisible();
     await expect(page.getByText("World", { exact: true })).toBeHidden();
+  });
+
+  test(`${packageName} - should wait for delay wait`, async ({ page }) => {
+    await page.route("**/v2/sdk/blocks", (route) => {
+      route.fulfill({
+        json: {
+          blocks: [
+            getTour([
+              getModalStep({ title: "Hello" }),
+              getWaitStep({ interaction: "delay", ms: 1000 }),
+              getModalStep({ title: "World" }),
+            ]),
+          ],
+        },
+      });
+    });
+    await page.goto(`/${packageName}.html`);
+    await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+    await expect(page.getByText("World", { exact: true })).toBeHidden();
+    await page.getByText("Continue", { exact: true }).click();
+    await expect(page.getByText("Hello", { exact: true })).toBeHidden();
+    await expect(page.getByText("World", { exact: true })).toBeHidden();
+    await page.waitForTimeout(900);
+    await expect(page.getByText("World", { exact: true })).toBeHidden({ timeout: 0 });
+    await page.waitForTimeout(100);
+    await expect(page.getByText("World", { exact: true })).toBeVisible({ timeout: 0 });
+  });
+  test(`${packageName} - should not trigger delay when step is not active`, async ({ page }) => {
+    await page.route("**/v2/sdk/blocks", (route) => {
+      route.fulfill({
+        json: {
+          blocks: [
+            getTour([
+              getModalStep({ title: "Hello" }),
+              getModalStep({ title: "Waiting 1000ms", wait: { interaction: "delay", ms: 1000 } }),
+              getModalStep({ title: "World" }),
+            ]),
+          ],
+        },
+      });
+    });
+    await page.goto(`/${packageName}.html`);
+    await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+    await expect(page.getByText("World", { exact: true })).toBeHidden();
+    await page.getByText("Continue", { exact: true }).click();
+    await expect(page.getByText("Waiting 1000ms", { exact: true })).toBeVisible();
+    await page.getByText("Previous", { exact: true }).click();
+    await page.waitForTimeout(1000);
+    await expect(page.getByText("Hello", { exact: true })).toBeVisible({ timeout: 0 });
+    await expect(page.getByText("World", { exact: true })).toBeHidden({ timeout: 0 });
   });
 };
 

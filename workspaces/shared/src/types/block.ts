@@ -2,6 +2,7 @@ interface TourWait {
   interaction: string;
   element?: string;
   page?: { operator: string; value: string[] };
+  ms?: number;
 }
 
 export interface Block {
