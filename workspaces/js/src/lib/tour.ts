@@ -77,12 +77,12 @@ export const handleTourDocumentClick = (eventTarget: Element): void => {
   });
 };
 
+const timeoutByStepId = new Map<string, number>();
+
 effect(() => {
   const pathnameValue = pathname.value;
   const blocksValue = blocks.value;
   const runningToursValue = runningTours.value;
-
-  const timeouts: number[] = [];
 
   const blocksById = new Map(blocksValue.map((block) => [block.id, block]));
 
@@ -106,13 +106,9 @@ effect(() => {
     if (tourWait.interaction === "delay" && tourWait.ms !== undefined) {
       const timeoutId = window.setTimeout(() => {
         nextTourStep(tourBlock, tour.currentBlockIndex);
+        timeoutByStepId.delete(activeStep.id);
       }, tourWait.ms);
-
-      timeouts.push(timeoutId);
+      timeoutByStepId.set(activeStep.id, timeoutId);
     }
   });
-
-  return () => {
-    timeouts.forEach(clearTimeout);
-  };
 });

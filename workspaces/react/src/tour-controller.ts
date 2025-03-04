@@ -1,11 +1,14 @@
 import { type FC, useEffect, useMemo } from "react";
 import { elementContains, getPathname, pathnameMatch } from "@flows/shared";
+import { useState } from "react";
 import { useFlowsContext } from "./flows-context";
 import { usePathname } from "./contexts/pathname-context";
 
 export const TourController: FC = () => {
   const { runningTours } = useFlowsContext();
   const pathname = usePathname();
+  // eslint-disable-next-line react/hook-use-state -- we need only the value
+  const [timeoutByStepId] = useState(new Map<string, number>());
 
   // Filter out tours that are not waiting for navigation or interaction
   const relevantTours = useMemo(
@@ -62,22 +65,24 @@ export const TourController: FC = () => {
 
   // Handle delay waits
   useEffect(() => {
-    const timeouts: number[] = [];
-
     relevantTours.forEach((tour) => {
-      const tourWait = tour.activeStep?.tourWait;
-      if (tourWait?.interaction === "delay" && tourWait.ms !== undefined) {
+      const activeStep = tour.activeStep;
+      const tourWait = activeStep?.tourWait;
+
+      if (
+        activeStep &&
+        tourWait?.interaction === "delay" &&
+        tourWait.ms !== undefined &&
+        !timeoutByStepId.has(activeStep.id)
+      ) {
         const timeoutId = window.setTimeout(() => {
           tour.continue();
+          timeoutByStepId.delete(activeStep.id);
         }, tourWait.ms);
-        timeouts.push(timeoutId);
+        timeoutByStepId.set(activeStep.id, timeoutId);
       }
     });
-
-    return () => {
-      timeouts.forEach(clearTimeout);
-    };
-  }, [relevantTours]);
+  }, [relevantTours, timeoutByStepId]);
 
   return null;
 };
