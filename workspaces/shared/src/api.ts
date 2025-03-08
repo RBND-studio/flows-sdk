@@ -36,7 +36,7 @@ export interface EventRequest {
   userId: string;
   environment: string;
   organizationId: string;
-  name: "transition" | "tour-update" | "reset-progress";
+  name: "transition" | "tour-update" | "reset-progress" | "start";
   blockId?: string;
   workflowId?: string;
   propertyKey?: string;

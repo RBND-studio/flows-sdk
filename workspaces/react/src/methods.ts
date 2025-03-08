@@ -12,4 +12,11 @@ export const resetAllWorkflowsProgress = (): Promise<void> => sendEvent({ name: 
 export const resetWorkflowProgress = (workflowId: string): Promise<void> =>
   sendEvent({ name: "reset-progress", workflowId });
 
+/**
+ * Start a workflow if it's published has a manual start block and respect its frequency setting.
+ * @param workflowId - UUID of the workflow to start
+ */
+export const startWorkflow = (workflowId: string): Promise<void> =>
+  sendEvent({ name: "start", workflowId });
+
 export { useCurrentFloatingBlocks, useCurrentSlotBlocks } from "./hooks/use-current-blocks";
