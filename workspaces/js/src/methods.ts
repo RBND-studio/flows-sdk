@@ -155,3 +155,10 @@ export const resetAllWorkflowsProgress = (): Promise<void> => sendEvent({ name: 
  */
 export const resetWorkflowProgress = (workflowId: string): Promise<void> =>
   sendEvent({ name: "reset-progress", workflowId });
+
+/**
+ * Start a workflow if it's published has a manual start block and respect its frequency setting.
+ * @param blockKey - block key of the manual start block
+ */
+export const startWorkflow = (blockKey: string): Promise<void> =>
+  sendEvent({ name: "workflow-start", blockKey });

@@ -4,6 +4,7 @@ import {
   FlowsSlot,
   resetAllWorkflowsProgress,
   resetWorkflowProgress,
+  startWorkflow,
   useCurrentFloatingBlocks,
 } from "@flows/react";
 import { FC, StrictMode } from "react";
@@ -63,6 +64,7 @@ const App: FC = () => {
 
       <button onClick={() => resetAllWorkflowsProgress()}>resetAllWorkflowsProgress</button>
       <button onClick={() => resetWorkflowProgress("my-workflow-id")}>resetWorkflowProgress</button>
+      <button onClick={() => startWorkflow("my-start-block")}>startWorkflow</button>
     </>
   );
 };

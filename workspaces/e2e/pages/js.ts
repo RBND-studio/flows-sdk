@@ -8,6 +8,7 @@ import { Component, render, updateSlotComponents } from "@flows/js-components";
 import * as _components from "@flows/js-components/components";
 import * as _tourComponents from "@flows/js-components/tour-components";
 import "@flows/js-components/index.css";
+import { startWorkflow } from "@flows/js";
 
 const apiUrl = new URLSearchParams(window.location.search).get("apiUrl") ?? undefined;
 
@@ -112,3 +113,6 @@ updateSlotComponents({
     resetWorkflowProgress("my-workflow-id");
   },
 );
+(document.querySelector("#startWorkflow") as HTMLButtonElement).addEventListener("click", () => {
+  startWorkflow("my-start-block");
+});
