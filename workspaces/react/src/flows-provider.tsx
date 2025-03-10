@@ -65,7 +65,7 @@ export const FlowsProvider: FC<FlowsProviderProps> = ({
     userProperties,
   });
 
-  const runningTours = useRunningTours({ blocks });
+  const runningTours = useRunningTours({ blocks, removeBlock });
 
   return (
     <PathnameProvider>

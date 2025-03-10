@@ -6,8 +6,6 @@ export interface RunningTour {
   block: Block;
   currentBlockIndex: number;
   activeStep?: TourStep;
-  hidden: boolean;
-  hide: () => void;
   previous: () => void;
   continue: () => void;
   cancel: () => void;

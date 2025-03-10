@@ -29,7 +29,6 @@ const useVisibleTours = (): RunningTour[] => {
       runningTours.filter((tour) => {
         const activeStep = tour.activeStep;
         return (
-          !tour.hidden &&
           activeStep &&
           pathnameMatch({
             pathname,

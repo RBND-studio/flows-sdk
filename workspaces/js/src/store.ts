@@ -16,7 +16,6 @@ export const removeBlock = (blockId: string): void => {
 export interface RunningTour {
   blockId: string;
   currentBlockIndex: number;
-  hidden: boolean;
 }
 export const runningTours = signal<RunningTour[]>([]);
 
@@ -29,11 +28,9 @@ effect(() => {
   const newRunningTours = tourBlocks.map((block): RunningTour => {
     const currentState = prevTourMap.get(block.id);
     const currentBlockIndex = currentState?.currentBlockIndex ?? block.currentTourIndex ?? 0;
-    const hidden = currentState?.hidden ?? false;
     return {
       blockId: block.id,
       currentBlockIndex,
-      hidden,
     };
   });
   runningTours.value = newRunningTours;
