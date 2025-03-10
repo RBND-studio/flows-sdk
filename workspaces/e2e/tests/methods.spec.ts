@@ -21,7 +21,7 @@ const run = (packageName: string) => {
       const body = req.postDataJSON();
       const headers = req.headers();
       return (
-        req.url().includes("https://api.flows-cloud.com/v2/sdk/events") &&
+        req.url() === "https://api.flows-cloud.com/v2/sdk/events" &&
         /@flows\/[^@]*@\d+\.\d+.\d+/.test(headers["x-flows-version"] ?? "") &&
         body.organizationId === "orgId" &&
         body.userId === "testUserId" &&
@@ -40,7 +40,7 @@ const run = (packageName: string) => {
       const body = req.postDataJSON();
       const headers = req.headers();
       return (
-        req.url().includes("https://api.flows-cloud.com/v2/sdk/events") &&
+        req.url() === "https://api.flows-cloud.com/v2/sdk/events" &&
         /@flows\/[^@]*@\d+\.\d+.\d+/.test(headers["x-flows-version"] ?? "") &&
         body.organizationId === "orgId" &&
         body.userId === "testUserId" &&
@@ -59,7 +59,7 @@ const run = (packageName: string) => {
       const body = req.postDataJSON();
       const headers = req.headers();
       return (
-        req.url().includes("v2/sdk/events") &&
+        req.url() === "https://api.flows-cloud.com/v2/sdk/events" &&
         /@flows\/[^@]*@\d+\.\d+.\d+/.test(headers["x-flows-version"] ?? "") &&
         body.organizationId === "orgId" &&
         body.userId === "testUserId" &&
