@@ -27,14 +27,16 @@ const run = (packageName: string) => {
     await expect(page.getByText("Workflow block", { exact: true })).toBeVisible();
     let reqWasSent = false;
     page.on("request", (req) => {
-      if (req.url().includes("v2/sdk/events")) {
+      if (req.url() === "https://api.flows-cloud.com/v2/sdk/events") {
         reqWasSent = true;
       }
     });
     await page.getByText("continue", { exact: true }).click();
     expect(reqWasSent).toBe(false);
   });
-  test(`${packageName} - should pass methods with exit nodes`, async ({ page }) => {
+  test(`${packageName} - should pass methods with exit nodes and hide the block`, async ({
+    page,
+  }) => {
     const b: Block = {
       ...block,
       exitNodes: ["continue"],
@@ -59,6 +61,7 @@ const run = (packageName: string) => {
     });
     await page.getByText("continue", { exact: true }).click();
     await req;
+    await expect(page.getByText("Workflow block", { exact: true })).toBeHidden({ timeout: 0 });
   });
 };
 

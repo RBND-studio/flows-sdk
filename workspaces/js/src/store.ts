@@ -9,6 +9,9 @@ export const config = signal<Configuration>();
 export const pathname = signal<string>();
 
 export const blocks = signal<Block[]>([]);
+export const removeBlock = (blockId: string): void => {
+  blocks.value = blocks.value.filter((b) => b.id !== blockId);
+};
 
 export interface RunningTour {
   blockId: string;

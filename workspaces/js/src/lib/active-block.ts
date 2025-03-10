@@ -1,4 +1,5 @@
 import { type Block, type ActiveBlock, createComponentProps } from "@flows/shared";
+import { removeBlock } from "../store";
 import { nextTourStep, previousTourStep, cancelTour } from "./tour";
 import { sendEvent } from "./api";
 
@@ -7,6 +8,7 @@ export const blockToActiveBlock = (block: Block): ActiveBlock | [] => {
 
   const props = createComponentProps({
     block,
+    removeBlock,
     exitNodeCb: (key) => sendEvent({ name: "transition", blockId: block.id, propertyKey: key }),
   });
 
