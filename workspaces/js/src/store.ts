@@ -9,11 +9,13 @@ export const config = signal<Configuration>();
 export const pathname = signal<string>();
 
 export const blocks = signal<Block[]>([]);
+export const removeBlock = (blockId: string): void => {
+  blocks.value = blocks.value.filter((b) => b.id !== blockId);
+};
 
 export interface RunningTour {
   blockId: string;
   currentBlockIndex: number;
-  hidden: boolean;
 }
 export const runningTours = signal<RunningTour[]>([]);
 
@@ -26,11 +28,9 @@ effect(() => {
   const newRunningTours = tourBlocks.map((block): RunningTour => {
     const currentState = prevTourMap.get(block.id);
     const currentBlockIndex = currentState?.currentBlockIndex ?? block.currentTourIndex ?? 0;
-    const hidden = currentState?.hidden ?? false;
     return {
       blockId: block.id,
       currentBlockIndex,
-      hidden,
     };
   });
   runningTours.value = newRunningTours;
