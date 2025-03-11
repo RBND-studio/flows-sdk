@@ -2,11 +2,18 @@ import { createComponentProps, type ActiveBlock, type Block } from "@flows/share
 import { type RunningTour } from "../flows-context";
 import { sendEvent } from "./api";
 
-export const blockToActiveBlock = (block: Block): ActiveBlock | [] => {
+export const blockToActiveBlock = ({
+  block,
+  removeBlock,
+}: {
+  block: Block;
+  removeBlock: (blockId: string) => void;
+}): ActiveBlock | [] => {
   if (!block.componentType) return [];
 
   const props = createComponentProps({
     block,
+    removeBlock,
     exitNodeCb: (key) => sendEvent({ name: "transition", blockId: block.id, propertyKey: key }),
   });
 

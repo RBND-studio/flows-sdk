@@ -57,13 +57,21 @@ export const FlowsProvider: FC<FlowsProviderProps> = ({
   globalConfig.organizationId = organizationId;
   globalConfig.userId = userId;
 
-  const blocks = useBlocks({ apiUrl, environment, organizationId, userId, userProperties });
+  const { blocks, removeBlock } = useBlocks({
+    apiUrl,
+    environment,
+    organizationId,
+    userId,
+    userProperties,
+  });
 
-  const runningTours = useRunningTours({ blocks });
+  const runningTours = useRunningTours({ blocks, removeBlock });
 
   return (
     <PathnameProvider>
-      <FlowsContext.Provider value={{ blocks, components, runningTours, tourComponents }}>
+      <FlowsContext.Provider
+        value={{ blocks, components, runningTours, tourComponents, removeBlock }}
+      >
         {children}
         <FloatingBlocks />
         <TourController />

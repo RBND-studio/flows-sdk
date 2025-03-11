@@ -18,13 +18,18 @@ interface Props {
   userProperties?: UserProperties;
 }
 
+interface Return {
+  blocks: Block[];
+  removeBlock: (blockId: string) => void;
+}
+
 export const useBlocks = ({
   apiUrl,
   environment,
   organizationId,
   userId,
   userProperties,
-}: Props): Block[] => {
+}: Props): Return => {
   const [blocks, setBlocks] = useState<Block[]>([]);
 
   const params = useMemo(
@@ -79,7 +84,11 @@ export const useBlocks = ({
     });
   }, [blocks]);
 
-  return blocks;
+  const removeBlock = useCallback((blockId: string) => {
+    setBlocks((prev) => prev.filter((b) => b.id !== blockId));
+  }, []);
+
+  return { blocks, removeBlock };
 };
 
 const logSlottableError = (b: Block | TourStep): void => {
