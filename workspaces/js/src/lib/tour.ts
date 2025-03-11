@@ -1,6 +1,6 @@
 import { elementContains, getPathname, pathnameMatch, type Block } from "@flows/shared";
 import { effect } from "@preact/signals-core";
-import { blocks, pathname, type RunningTour, runningTours } from "../store";
+import { blocks, pathname, removeBlock, type RunningTour, runningTours } from "../store";
 import { sendEvent } from "./api";
 
 export const updateTourState = (
@@ -10,10 +10,6 @@ export const updateTourState = (
   runningTours.value = runningTours.value.map((tour) =>
     tour.blockId === tourBlockId ? updateFn(tour) : tour,
   );
-};
-
-export const hideTour = (tourBlockId: string): void => {
-  updateTourState(tourBlockId, (t) => ({ ...t, hidden: true }));
 };
 
 export const previousTourStep = (tourBlock: Block, currentIndex: number): void => {
@@ -33,7 +29,7 @@ export const nextTourStep = (tourBlock: Block, currentIndex: number): void => {
   const isLastStep = currentIndex === (tourBlock.tourBlocks?.length ?? 1) - 1;
 
   if (isLastStep) {
-    hideTour(tourBlock.id);
+    removeBlock(tourBlock.id);
     void sendEvent({ name: "transition", blockId: tourBlock.id, propertyKey: "complete" });
   } else {
     const newIndex = currentIndex + 1;
@@ -47,7 +43,7 @@ export const nextTourStep = (tourBlock: Block, currentIndex: number): void => {
 };
 
 export const cancelTour = (tourBlockId: string): void => {
-  hideTour(tourBlockId);
+  removeBlock(tourBlockId);
   void sendEvent({ name: "transition", blockId: tourBlockId, propertyKey: "cancel" });
 };
 

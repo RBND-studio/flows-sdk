@@ -3,8 +3,10 @@ import { type ComponentProps, type Block } from "./types";
 export const createComponentProps = ({
   block,
   exitNodeCb,
+  removeBlock,
 }: {
   block: Block;
+  removeBlock: (blockId: string) => void;
   exitNodeCb: (key: string) => Promise<void>;
 }): ComponentProps<object> => {
   const processData = ({
@@ -45,7 +47,10 @@ export const createComponentProps = ({
   const data = processData({ properties: block.data });
 
   const methods = block.exitNodes.reduce<Record<string, () => Promise<void>>>((acc, exitNode) => {
-    const cb = (): Promise<void> => exitNodeCb(exitNode);
+    const cb = (): Promise<void> => {
+      removeBlock(block.id);
+      return exitNodeCb(exitNode);
+    };
     acc[exitNode] = cb;
     return acc;
   }, {});

@@ -64,6 +64,14 @@ const run = (packageName: string) => {
     });
     await page.getByRole("button", { name: "Trigger" }).click();
     await rootBlockTriggerReq;
+    await expect(page.getByText("Block Trigger title", { exact: true })).toBeVisible();
+  });
+  test(`${packageName} - should pass trigger to array item`, async ({ page }) => {
+    await page.route("**/v2/sdk/blocks", (route) => {
+      route.fulfill({ json: { blocks: [getBlock()] } });
+    });
+    await page.goto(`/${packageName}.html`);
+    await expect(page.getByText("Block Trigger title", { exact: true })).toBeVisible();
 
     const arrayBlockTriggerReq = page.waitForRequest((req) => {
       const body = req.postDataJSON();
@@ -78,6 +86,7 @@ const run = (packageName: string) => {
     });
     await page.getByRole("button", { name: "second item" }).click();
     await arrayBlockTriggerReq;
+    await expect(page.getByText("Block Trigger title", { exact: true })).toBeVisible();
   });
 };
 
