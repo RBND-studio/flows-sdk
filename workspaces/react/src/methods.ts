@@ -13,7 +13,11 @@ export const resetWorkflowProgress = (workflowId: string): Promise<void> =>
   sendEvent({ name: "reset-progress", workflowId });
 
 /**
- * Start a workflow if it's published has a manual start block and respect its frequency setting.
+ * Start a workflow from a manual start block. The workflow will only start if:
+ * - Workflow is published in the current environment
+ * - Workflow has a manual start block with a matching block key
+ * - The current user can access the workflow based on the frequency setting
+ * - The current user matches the start block's user property conditions
  * @param blockKey - block key of the manual start block
  */
 export const startWorkflow = (blockKey: string): Promise<void> =>
