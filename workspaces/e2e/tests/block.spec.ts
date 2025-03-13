@@ -61,7 +61,6 @@ const run = (packageName: string) => {
       JSON.stringify([
         {
           id: blocks[0]?.id,
-          workflowId: blocks[0]?.workflowId,
           type: "component",
           component: "Modal",
           props: {
@@ -73,7 +72,6 @@ const run = (packageName: string) => {
         },
         {
           id: blocks[1]?.tourBlocks?.[0]?.id,
-          workflowId: blocks[1]?.tourBlocks?.[0]?.workflowId,
           type: "tour-component",
           component: "Modal",
           props: {
