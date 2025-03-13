@@ -97,6 +97,7 @@ export const BaseTooltip: _Component<Props> = (props) => {
         overlay,
         placement: props.placement,
       }),
+    { animationFrame: true },
   );
 
   return {

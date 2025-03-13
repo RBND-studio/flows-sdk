@@ -1,4 +1,4 @@
-import { $contains, $notContains, $regex } from "../primitive-matchers";
+import { $contains, $eq, $ne, $notContains, $regex } from "../primitive-matchers";
 
 export const pathnameMatch = ({
   operator,
@@ -9,6 +9,8 @@ export const pathnameMatch = ({
   value?: string[];
   pathname?: string;
 }): boolean => {
+  if (operator === "eq") return $eq(pathname, value);
+  if (operator === "ne") return $ne(pathname, value);
   if (operator === "contains") return $contains(pathname, value);
   if (operator === "notContains") return $notContains(pathname, value);
   if (operator === "regex") return $regex(pathname, value);

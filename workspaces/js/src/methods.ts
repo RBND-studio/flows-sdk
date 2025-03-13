@@ -19,14 +19,11 @@ const visibleTours = computed(() => {
     .filter((t) => {
       const block = blocksById.get(t.blockId);
       const activeStep = block?.tourBlocks?.at(t.currentBlockIndex);
-      return (
-        !t.hidden &&
-        pathnameMatch({
-          pathname: pathname.value,
-          operator: activeStep?.page_targeting_operator,
-          value: activeStep?.page_targeting_values,
-        })
-      );
+      return pathnameMatch({
+        pathname: pathname.value,
+        operator: activeStep?.page_targeting_operator,
+        value: activeStep?.page_targeting_values,
+      });
     })
     .flatMap((t) => {
       const block = blocksById.get(t.blockId);
