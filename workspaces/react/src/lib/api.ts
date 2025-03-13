@@ -4,7 +4,7 @@ import { packageAndVersion } from "./constants";
 
 type SendEventProps = Pick<
   EventRequest,
-  "name" | "blockId" | "propertyKey" | "properties" | "workflowId"
+  "name" | "blockId" | "blockKey" | "propertyKey" | "properties" | "workflowId"
 >;
 
 export const sendEvent = async (props: SendEventProps): Promise<void> => {
