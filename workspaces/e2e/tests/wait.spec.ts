@@ -11,6 +11,7 @@ test.beforeEach(async ({ page }) => {
 
 const getTour = (steps: TourStep[]): Block => ({
   id: randomUUID(),
+  workflowId: randomUUID(),
   type: "tour",
   data: {},
   exitNodes: ["complete", "cancel"],
@@ -26,6 +27,7 @@ const getModalStep = ({
   wait?: TourStep["tourWait"];
 }): TourStep => ({
   id: randomUUID(),
+  workflowId: randomUUID(),
   type: "tour-component",
   componentType: "Modal",
   data: {
@@ -42,6 +44,7 @@ const getModalStep = ({
 
 const getWaitStep = (tourWait: TourStep["tourWait"]): TourStep => ({
   id: randomUUID(),
+  workflowId: randomUUID(),
   type: "wait",
   slottable: false,
   data: {},

@@ -11,6 +11,7 @@ test.beforeEach(async ({ page }) => {
 
 const floatingWorkflowBlock: Block = {
   id: randomUUID(),
+  workflowId: randomUUID(),
   type: "component",
   componentType: "Modal",
   data: { title: "Workflow block", body: "" },
@@ -20,6 +21,7 @@ const floatingWorkflowBlock: Block = {
 
 const slotBlock: Block = {
   id: randomUUID(),
+  workflowId: randomUUID(),
   type: "component",
   componentType: "Card",
   data: { text: "slottable block" },
@@ -30,6 +32,7 @@ const slotBlock: Block = {
 
 const getTour = (steps: TourStep[]): Block => ({
   id: randomUUID(),
+  workflowId: randomUUID(),
   type: "tour",
   data: {},
   exitNodes: ["complete", "cancel"],
@@ -39,6 +42,7 @@ const getTour = (steps: TourStep[]): Block => ({
 
 const floatingTourBlock: TourStep = {
   id: randomUUID(),
+  workflowId: randomUUID(),
   type: "tour-component",
   componentType: "Modal",
   data: { title: "Tour block", body: "" },
@@ -47,6 +51,7 @@ const floatingTourBlock: TourStep = {
 
 const slotTourBlock: TourStep = {
   id: randomUUID(),
+  workflowId: randomUUID(),
   type: "tour-component",
   componentType: "Card",
   data: { text: "slottable tour block" },

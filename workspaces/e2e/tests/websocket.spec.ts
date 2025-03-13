@@ -4,6 +4,7 @@ import { randomUUID } from "crypto";
 
 const getBlock = (): Block => ({
   id: randomUUID(),
+  workflowId: randomUUID(),
   type: "component",
   componentType: "Modal",
   data: { title: "Hello world", body: "" },

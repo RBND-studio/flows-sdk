@@ -6,6 +6,7 @@ const getBlocks = (): Block[] =>
   [
     {
       id: randomUUID(),
+      workflowId: randomUUID(),
       key: "my-key",
       type: "component",
       componentType: "Modal",
@@ -15,6 +16,7 @@ const getBlocks = (): Block[] =>
     },
     {
       id: randomUUID(),
+      workflowId: randomUUID(),
       data: {},
       exitNodes: [],
       slottable: false,
@@ -22,6 +24,7 @@ const getBlocks = (): Block[] =>
       tourBlocks: [
         {
           id: randomUUID(),
+          workflowId: randomUUID(),
           data: {},
           key: "tour-block-key",
           slottable: false,
@@ -58,15 +61,27 @@ const run = (packageName: string) => {
       JSON.stringify([
         {
           id: blocks[0]?.id,
+          workflowId: blocks[0]?.workflowId,
           type: "component",
           component: "Modal",
-          props: { __flows: { key: "my-key" } },
+          props: {
+            __flows: {
+              key: "my-key",
+              workflowId: blocks[0]?.workflowId,
+            },
+          },
         },
         {
           id: blocks[1]?.tourBlocks?.[0]?.id,
+          workflowId: blocks[1]?.tourBlocks?.[0]?.workflowId,
           type: "tour-component",
           component: "Modal",
-          props: { __flows: { key: "tour-block-key" } },
+          props: {
+            __flows: {
+              key: "tour-block-key",
+              workflowId: blocks[1]?.tourBlocks?.[0]?.workflowId,
+            },
+          },
         },
       ]),
     );

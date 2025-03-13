@@ -14,6 +14,7 @@ export const blockToActiveBlock = (block: Block): ActiveBlock | [] => {
 
   return {
     id: block.id,
+    workflowId: block.workflowId,
     type: "component",
     component: block.componentType,
     props,
@@ -40,11 +41,13 @@ export const tourToActiveBlock = (block: Block, currentIndex: number): ActiveBlo
 
   return {
     id: activeStep.id,
+    workflowId: activeStep.workflowId,
     type: "tour-component",
     component: activeStep.componentType,
     props: {
       __flows: {
         key: activeStep.key,
+        workflowId: activeStep.workflowId,
       },
       ...activeStep.data,
       previous: !isFirstStep ? handlePrevious : undefined,

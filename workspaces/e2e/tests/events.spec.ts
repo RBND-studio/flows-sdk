@@ -11,6 +11,7 @@ test.beforeEach(async ({ page }) => {
 
 const block: Block = {
   id: randomUUID(),
+  workflowId: randomUUID(),
   type: "component",
   componentType: "Modal",
   data: { title: "Workflow block", body: "", continueText: "continue" },
