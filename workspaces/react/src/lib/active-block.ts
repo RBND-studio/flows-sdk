@@ -38,6 +38,7 @@ export const tourBlockToActiveBlock = (tour: RunningTour): ActiveBlock | [] => {
     props: {
       __flows: {
         key: activeStep.key,
+        workflowId: activeStep.workflowId,
       },
       ...activeStep.data,
       continue: tour.continue,

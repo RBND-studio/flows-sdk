@@ -11,6 +11,7 @@ test.beforeEach(async ({ page }) => {
 
 const tour: Block = {
   id: randomUUID(),
+  workflowId: randomUUID(),
   type: "tour",
   data: {},
   exitNodes: ["complete", "cancel"],
@@ -18,6 +19,7 @@ const tour: Block = {
   tourBlocks: [
     {
       id: randomUUID(),
+      workflowId: randomUUID(),
       type: "tour-component",
       componentType: "Modal",
       data: {
@@ -31,6 +33,7 @@ const tour: Block = {
     },
     {
       id: randomUUID(),
+      workflowId: randomUUID(),
       type: "tour-component",
       componentType: "Modal",
       data: {

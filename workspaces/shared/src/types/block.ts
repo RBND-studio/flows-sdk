@@ -7,6 +7,7 @@ interface TourWait {
 
 export interface Block {
   id: string;
+  workflowId: string;
   key?: string;
   type: string;
   componentType?: string;
@@ -26,6 +27,7 @@ export interface Block {
 
 export interface TourStep {
   id: string;
+  workflowId: string;
   key?: string;
   type: string;
   componentType?: string;

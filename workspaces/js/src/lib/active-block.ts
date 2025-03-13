@@ -45,6 +45,7 @@ export const tourToActiveBlock = (block: Block, currentIndex: number): ActiveBlo
     props: {
       __flows: {
         key: activeStep.key,
+        workflowId: activeStep.workflowId,
       },
       ...activeStep.data,
       previous: !isFirstStep ? handlePrevious : undefined,

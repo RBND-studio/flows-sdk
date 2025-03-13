@@ -11,6 +11,7 @@ test.beforeEach(async ({ page }) => {
 
 const getBlock = ({ targetElement }: { targetElement: string }): Block => ({
   id: randomUUID(),
+  workflowId: randomUUID(),
   type: "component",
   componentType: "Tooltip",
   data: { title: "Tooltip title", body: "", continueText: "continue", targetElement },

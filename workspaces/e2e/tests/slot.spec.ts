@@ -11,6 +11,7 @@ test.beforeEach(async ({ page }) => {
 
 const getCard = (props: { slotIndex?: number; text: string }): Block => ({
   id: randomUUID(),
+  workflowId: randomUUID(),
   type: "component",
   componentType: "Card",
   data: { text: props.text },

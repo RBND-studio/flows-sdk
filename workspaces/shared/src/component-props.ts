@@ -58,6 +58,7 @@ export const createComponentProps = ({
   return {
     __flows: {
       key: block.key,
+      workflowId: block.workflowId,
     },
     ...data,
     ...methods,

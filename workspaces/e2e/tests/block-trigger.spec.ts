@@ -11,6 +11,7 @@ test.beforeEach(async ({ page }) => {
 
 const getBlock = (): Block => ({
   id: randomUUID(),
+  workflowId: randomUUID(),
   type: "component",
   componentType: "BlockTrigger",
   data: {

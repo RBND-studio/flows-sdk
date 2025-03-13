@@ -17,6 +17,7 @@ const getBlock = ({
   continueText?: string;
 }): Block => ({
   id: randomUUID(),
+  workflowId: randomUUID(),
   data: { title: `Workflow ${type}`, body: "", continueText, targetElement: "h1" },
   type: "component",
   componentType: type,
@@ -32,6 +33,7 @@ const getTourBlock = ({
   continueText?: string;
 }): Block => ({
   id: randomUUID(),
+  workflowId: randomUUID(),
   type: "tour",
   data: {},
   exitNodes: [],
@@ -40,6 +42,7 @@ const getTourBlock = ({
   tourBlocks: [
     {
       id: randomUUID(),
+      workflowId: randomUUID(),
       data: { title: `Workflow ${type}`, body: "", continueText, targetElement: "h1" },
       type: "tour-component",
       componentType: type,

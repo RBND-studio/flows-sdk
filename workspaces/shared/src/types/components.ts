@@ -8,6 +8,10 @@ export interface FlowsProperties {
    * User defined key for identifying the block.
    */
   key?: string;
+  /**
+   * Id of the workflow this block belongs to.
+   */
+  workflowId: string;
 }
 
 export type ComponentProps<T extends Record<string, any> = any> = {
