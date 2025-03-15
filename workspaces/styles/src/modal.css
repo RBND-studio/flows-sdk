@@ -3,6 +3,7 @@
   inset: 0;
   background-color: var(--flows-modal-overlayBackground);
   pointer-events: none;
+  animation: fadeIn 120ms ease-out;
 }
 
 .flows_modal_wrapper {
@@ -28,6 +29,7 @@
   box-sizing: border-box;
   min-width: var(--flows-modal-minWidth);
   max-width: var(--flows-modal-maxWidth);
+  animation: scaleIn 160ms ease-out;
 }
 
 .flows_modal_footer {
