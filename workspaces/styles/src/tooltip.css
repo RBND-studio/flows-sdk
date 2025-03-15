@@ -10,6 +10,7 @@
   position: fixed;
   z-index: -1;
   pointer-events: none;
+  animation: fadeIn 120ms ease-out;
 }
 .flows_tooltip_overlay:after {
   content: "";
@@ -35,6 +36,7 @@
   box-sizing: border-box;
   min-width: var(--flows-tooltip-minWidth);
   max-width: min(var(--flows-tooltip-maxWidth), calc(100% - 16px));
+  animation: fadeIn 160ms ease-out;
 }
 .flows_tooltip_tooltip:before {
   box-shadow: var(--flows-shadow);
@@ -60,6 +62,7 @@
   height: var(--flows-size-medium);
   transform: rotate(45deg);
   border-radius: var(--flows-borderRadius-xSmall);
+  animation: fadeIn 160ms ease-out;
 }
 .flows_tooltip_arrow-bottom {
   border: var(--flows-border);
