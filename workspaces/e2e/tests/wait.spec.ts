@@ -17,6 +17,7 @@ const getTour = (steps: TourStep[]): Block => ({
   exitNodes: ["complete", "cancel"],
   slottable: false,
   tourBlocks: steps,
+  specialProperties: [],
 });
 
 const getModalStep = ({

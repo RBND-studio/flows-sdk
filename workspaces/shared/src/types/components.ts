@@ -31,3 +31,8 @@ export type TourComponentProps<T extends Record<string, any> = any> = {
   previous?: () => void;
   cancel: () => void;
 } & T;
+
+export interface StateMemory {
+  value: boolean;
+  setValue: (value: boolean) => void;
+}

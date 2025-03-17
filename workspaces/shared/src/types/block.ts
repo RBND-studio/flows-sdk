@@ -5,6 +5,12 @@ interface TourWait {
   ms?: number;
 }
 
+export interface SpecialProperty {
+  key: string;
+  type: string;
+  value?: boolean;
+}
+
 export interface Block {
   id: string;
   workflowId: string;
@@ -12,6 +18,7 @@ export interface Block {
   type: string;
   componentType?: string;
   data: Record<string, unknown>;
+  specialProperties: SpecialProperty[];
   exitNodes: string[];
 
   slottable: boolean;

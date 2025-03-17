@@ -5,5 +5,6 @@ export type {
   ComponentProps,
   FlowsProperties,
   ActiveBlock,
+  StateMemory,
 } from "@flows/shared";
 export * from "./methods";

@@ -8,6 +8,7 @@ import {
   type BlockUpdatesPayload,
 } from "@flows/shared";
 import { packageAndVersion } from "../lib/constants";
+import { type RemoveBlock, type UpdateBlock } from "../flows-context";
 import { useWebsocket } from "./use-websocket";
 
 interface Props {
@@ -20,7 +21,8 @@ interface Props {
 
 interface Return {
   blocks: Block[];
-  removeBlock: (blockId: string) => void;
+  removeBlock: RemoveBlock;
+  updateBlock: UpdateBlock;
 }
 
 export const useBlocks = ({
@@ -84,11 +86,14 @@ export const useBlocks = ({
     });
   }, [blocks]);
 
-  const removeBlock = useCallback((blockId: string) => {
+  const removeBlock: RemoveBlock = useCallback((blockId) => {
     setBlocks((prev) => prev.filter((b) => b.id !== blockId));
   }, []);
+  const updateBlock: UpdateBlock = useCallback((blockId, updateFn) => {
+    setBlocks((prev) => prev.map((b) => (b.id === blockId ? updateFn(b) : b)));
+  }, []);
 
-  return { blocks, removeBlock };
+  return { blocks, removeBlock, updateBlock };
 };
 
 const logSlottableError = (b: Block | TourStep): void => {

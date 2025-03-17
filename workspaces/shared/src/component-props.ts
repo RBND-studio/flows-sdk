@@ -1,13 +1,18 @@
+import { set } from "es-toolkit/compat";
 import { type ComponentProps, type Block } from "./types";
+
+export type SetStateMemory = (key: string, value: boolean) => Promise<void>;
 
 export const createComponentProps = ({
   block,
   exitNodeCb,
   removeBlock,
+  setStateMemory,
 }: {
   block: Block;
   removeBlock: (blockId: string) => void;
   exitNodeCb: (key: string) => Promise<void>;
+  setStateMemory: (key: string, value: boolean) => Promise<void>;
 }): ComponentProps<object> => {
   const processData = ({
     properties,
@@ -45,6 +50,15 @@ export const createComponentProps = ({
   };
 
   const data = processData({ properties: block.data });
+
+  for (const specialProperty of block.specialProperties) {
+    if (specialProperty.type === "state-memory") {
+      set(data, specialProperty.key, {
+        value: specialProperty.value,
+        setValue: (value: boolean) => setStateMemory(specialProperty.key, value),
+      });
+    }
+  }
 
   const methods = block.exitNodes.reduce<Record<string, () => Promise<void>>>((acc, exitNode) => {
     const cb = (): Promise<void> => {
