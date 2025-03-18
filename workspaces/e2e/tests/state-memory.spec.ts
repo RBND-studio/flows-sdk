@@ -21,6 +21,11 @@ const getBlocks = (): Block[] => [
         key: "checked",
         type: "state-memory",
         value: false,
+        triggers: [{ type: "transition", blockId: "bId" }],
+      },
+      {
+        key: "checked2",
+        type: "state-memory",
       },
     ],
     slottable: false,
@@ -37,6 +42,29 @@ const run = (packageName: string) => {
       route.fulfill({ json: { blocks } });
     });
     await page.goto(`/${packageName}.html`);
+    await expect(page.locator(".current-blocks")).toHaveText(
+      JSON.stringify([
+        {
+          id: blocks[0]?.id,
+          type: "component",
+          component: "StateMemory",
+          props: {
+            __flows: {
+              workflowId: blocks[0]?.workflowId,
+            },
+            title: "State Memory Title",
+            checked: {
+              value: false,
+              triggers: [{ type: "transition", blockId: "bId" }],
+            },
+            checked2: {
+              value: false,
+              triggers: [],
+            },
+          },
+        },
+      ]),
+    );
     await expect(page.getByText("State Memory Title", { exact: true })).toBeVisible();
     await expect(page.getByText("checked: false", { exact: true })).toBeVisible();
     const trueRequest = page.waitForRequest((req) => {

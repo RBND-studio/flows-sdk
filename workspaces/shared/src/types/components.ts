@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any -- needed for loose types */
 
+import { type StateMemoryTrigger } from "./block";
+
 /**
  * Properties provided by Flows based on block and block template setup.
  */
@@ -35,4 +37,5 @@ export type TourComponentProps<T extends Record<string, any> = any> = {
 export interface StateMemory {
   value: boolean;
   setValue: (value: boolean) => void;
+  triggers: StateMemoryTrigger[];
 }

@@ -5,10 +5,16 @@ interface TourWait {
   ms?: number;
 }
 
+export interface StateMemoryTrigger {
+  type: string;
+  blockId?: string;
+}
+
 export interface SpecialProperty {
   key: string;
   type: string;
   value?: boolean;
+  triggers?: StateMemoryTrigger[];
 }
 
 export interface Block {

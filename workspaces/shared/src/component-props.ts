@@ -1,5 +1,5 @@
 import { set } from "es-toolkit/compat";
-import { type ComponentProps, type Block } from "./types";
+import { type ComponentProps, type Block, type StateMemory } from "./types";
 
 export type SetStateMemory = (key: string, value: boolean) => Promise<void>;
 
@@ -53,10 +53,14 @@ export const createComponentProps = ({
 
   for (const specialProperty of block.specialProperties) {
     if (specialProperty.type === "state-memory") {
-      set(data, specialProperty.key, {
-        value: specialProperty.value,
-        setValue: (value: boolean) => setStateMemory(specialProperty.key, value),
-      });
+      const stateMemoryValue: StateMemory = {
+        value: specialProperty.value ?? false,
+        setValue: (value: boolean) => {
+          void setStateMemory(specialProperty.key, value);
+        },
+        triggers: specialProperty.triggers ?? [],
+      };
+      set(data, specialProperty.key, stateMemoryValue);
     }
   }
 
