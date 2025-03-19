@@ -27,7 +27,7 @@ const getBlock = (): Block => ({
   },
   slottable: false,
   exitNodes: [],
-  specialProperties: [],
+  propertyMeta: [],
 });
 
 const run = (packageName: string) => {

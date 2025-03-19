@@ -16,7 +16,7 @@ const tour: Block = {
   data: {},
   exitNodes: ["complete", "cancel"],
   slottable: false,
-  specialProperties: [],
+  propertyMeta: [],
   tourBlocks: [
     {
       id: randomUUID(),

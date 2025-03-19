@@ -17,7 +17,7 @@ const block: Block = {
   data: { title: "Workflow block", body: "", continueText: "continue" },
   exitNodes: [],
   slottable: false,
-  specialProperties: [],
+  propertyMeta: [],
 };
 
 const run = (packageName: string) => {

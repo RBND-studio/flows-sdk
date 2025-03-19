@@ -21,7 +21,7 @@ export const blockToActiveBlock = ({
   const setStateMemory: SetStateMemory = async (key, value) => {
     updateBlock(block.id, (b) => ({
       ...b,
-      specialProperties: b.specialProperties.map((sp) => {
+      propertyMeta: b.propertyMeta.map((sp) => {
         if (sp.type === "state-memory" && sp.key === key) return { ...sp, value };
         return sp;
       }),

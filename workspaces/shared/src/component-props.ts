@@ -51,16 +51,16 @@ export const createComponentProps = ({
 
   const data = processData({ properties: block.data });
 
-  for (const specialProperty of block.specialProperties) {
-    if (specialProperty.type === "state-memory") {
+  for (const propMeta of block.propertyMeta) {
+    if (propMeta.type === "state-memory") {
       const stateMemoryValue: StateMemory = {
-        value: specialProperty.value ?? false,
+        value: propMeta.value ?? false,
         setValue: (value: boolean) => {
-          void setStateMemory(specialProperty.key, value);
+          void setStateMemory(propMeta.key, value);
         },
-        triggers: specialProperty.triggers ?? [],
+        triggers: propMeta.triggers ?? [],
       };
-      set(data, specialProperty.key, stateMemoryValue);
+      set(data, propMeta.key, stateMemoryValue);
     }
   }
 

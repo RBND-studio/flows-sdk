@@ -23,7 +23,7 @@ const getBlock = ({
   componentType: type,
   exitNodes: ["continue"],
   slottable: false,
-  specialProperties: [],
+  propertyMeta: [],
 });
 
 const getTourBlock = ({
@@ -39,7 +39,7 @@ const getTourBlock = ({
   data: {},
   exitNodes: [],
   slottable: false,
-  specialProperties: [],
+  propertyMeta: [],
   tourBlocks: [
     {
       id: randomUUID(),

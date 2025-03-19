@@ -16,7 +16,7 @@ const getBlocks = (): Block[] => [
     data: {
       title: "State Memory Title",
     },
-    specialProperties: [
+    propertyMeta: [
       {
         key: "checked",
         type: "state-memory",

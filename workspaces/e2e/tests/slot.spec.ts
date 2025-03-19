@@ -19,7 +19,7 @@ const getCard = (props: { slotIndex?: number; text: string }): Block => ({
   slottable: true,
   slotId: "my-slot",
   slotIndex: props.slotIndex,
-  specialProperties: [],
+  propertyMeta: [],
 });
 
 const run = (packageName: string) => {

@@ -17,7 +17,7 @@ const floatingWorkflowBlock: Block = {
   data: { title: "Workflow block", body: "" },
   exitNodes: [],
   slottable: false,
-  specialProperties: [],
+  propertyMeta: [],
 };
 
 const slotBlock: Block = {
@@ -29,7 +29,7 @@ const slotBlock: Block = {
   exitNodes: [],
   slottable: true,
   slotId: "my-slot",
-  specialProperties: [],
+  propertyMeta: [],
 };
 
 const getTour = (steps: TourStep[]): Block => ({
@@ -40,7 +40,7 @@ const getTour = (steps: TourStep[]): Block => ({
   exitNodes: ["complete", "cancel"],
   slottable: false,
   tourBlocks: steps,
-  specialProperties: [],
+  propertyMeta: [],
 });
 
 const floatingTourBlock: TourStep = {

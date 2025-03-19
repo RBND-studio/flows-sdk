@@ -19,7 +19,7 @@ const getBlock = (props: { key: string }): Block => ({
   slottable: true,
   slotId: "my-slot",
   key: props.key,
-  specialProperties: [],
+  propertyMeta: [],
 });
 
 const run = (packageName: string) => {
