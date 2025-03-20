@@ -21,7 +21,7 @@ export interface Block {
   type: string;
   componentType?: string;
   data: Record<string, unknown>;
-  propertyMeta: PropertyMeta[];
+  propertyMeta?: PropertyMeta[];
   exitNodes: string[];
 
   slottable: boolean;
