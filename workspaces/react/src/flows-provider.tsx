@@ -57,7 +57,7 @@ export const FlowsProvider: FC<FlowsProviderProps> = ({
   globalConfig.organizationId = organizationId;
   globalConfig.userId = userId;
 
-  const { blocks, removeBlock } = useBlocks({
+  const { blocks, removeBlock, updateBlock } = useBlocks({
     apiUrl,
     environment,
     organizationId,
@@ -70,7 +70,14 @@ export const FlowsProvider: FC<FlowsProviderProps> = ({
   return (
     <PathnameProvider>
       <FlowsContext.Provider
-        value={{ blocks, components, runningTours, tourComponents, removeBlock }}
+        value={{
+          blocks,
+          components,
+          runningTours,
+          tourComponents,
+          removeBlock,
+          updateBlock,
+        }}
       >
         {children}
         <FloatingBlocks />

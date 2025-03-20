@@ -13,6 +13,7 @@ const getBlocks = (): Block[] =>
       data: {},
       exitNodes: [],
       slottable: false,
+      propertyMeta: [],
     },
     {
       id: randomUUID(),
@@ -21,6 +22,7 @@ const getBlocks = (): Block[] =>
       exitNodes: [],
       slottable: false,
       type: "tour",
+      propertyMeta: [],
       tourBlocks: [
         {
           id: randomUUID(),

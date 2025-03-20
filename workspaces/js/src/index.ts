@@ -5,5 +5,6 @@ export type {
   FlowsProperties,
   TourComponentProps,
   ComponentProps,
+  StateMemory,
 } from "@flows/shared";
 export type { FlowsOptions } from "./types/configuration";

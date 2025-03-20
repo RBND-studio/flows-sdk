@@ -8,7 +8,7 @@ import { Component, render, updateSlotComponents } from "@flows/js-components";
 import * as _components from "@flows/js-components/components";
 import * as _tourComponents from "@flows/js-components/tour-components";
 import "@flows/js-components/index.css";
-import { startWorkflow } from "@flows/js";
+import { startWorkflow, StateMemory as IStateMemory } from "@flows/js";
 
 const apiUrl = new URLSearchParams(window.location.search).get("apiUrl") ?? undefined;
 
@@ -77,6 +77,39 @@ const BlockTrigger: Component<{
   };
 };
 
+const StateMemory: Component<{ title: string; checked: IStateMemory }> = (props) => {
+  const card = document.createElement("div");
+  card.className = "flows-card";
+
+  const title = document.createElement("p");
+  card.appendChild(title);
+  title.textContent = props.title;
+
+  const checkedText = document.createElement("p");
+  card.appendChild(checkedText);
+  checkedText.textContent = `checked: ${props.checked.value}`;
+
+  const handleTrue = () => props.checked.setValue(true);
+  const trueButton = document.createElement("button");
+  card.appendChild(trueButton);
+  trueButton.textContent = "true";
+  trueButton.addEventListener("click", handleTrue);
+
+  const handleFalse = () => props.checked.setValue(false);
+  const falseButton = document.createElement("button");
+  card.appendChild(falseButton);
+  falseButton.textContent = "false";
+  falseButton.addEventListener("click", handleFalse);
+
+  return {
+    cleanup: () => {
+      trueButton.removeEventListener("click", handleTrue);
+      falseButton.removeEventListener("click", handleFalse);
+    },
+    element: card,
+  };
+};
+
 init({
   environment: "prod",
   organizationId: "orgId",
@@ -88,7 +121,7 @@ init({
   },
 });
 
-const components = { ..._components, Card, BlockTrigger };
+const components = { ..._components, Card, BlockTrigger, StateMemory };
 const tourComponents = { ..._tourComponents, Card };
 
 addFloatingBlocksChangeListener((blocks) => {
