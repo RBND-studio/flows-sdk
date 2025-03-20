@@ -51,7 +51,7 @@ export const createComponentProps = ({
 
   const data = processData({ properties: block.data });
 
-  for (const propMeta of block.propertyMeta) {
+  for (const propMeta of block.propertyMeta ?? []) {
     if (propMeta.type === "state-memory") {
       const stateMemoryValue: StateMemory = {
         value: propMeta.value ?? false,
