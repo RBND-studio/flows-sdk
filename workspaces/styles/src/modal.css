@@ -4,6 +4,7 @@
   background-color: var(--flows-modal-overlayBackground);
   pointer-events: none;
   animation: fadeIn 120ms ease-out;
+  z-index: var(--flows-zIndex);
 }
 
 .flows_modal_wrapper {

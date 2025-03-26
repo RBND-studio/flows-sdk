@@ -17,6 +17,7 @@ const getBlock = ({ targetElement }: { targetElement: string }): Block => ({
   data: { title: "Tooltip title", body: "", continueText: "continue", targetElement },
   exitNodes: ["continue"],
   slottable: false,
+  propertyMeta: [],
 });
 
 const run = (packageName: string) => {

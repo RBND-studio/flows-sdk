@@ -1,8 +1,17 @@
+import { type StateMemoryTrigger } from "./components";
+
 interface TourWait {
   interaction: string;
   element?: string;
   page?: { operator: string; value: string[] };
   ms?: number;
+}
+
+export interface PropertyMeta {
+  key: string;
+  type: string;
+  value?: boolean;
+  triggers?: StateMemoryTrigger[];
 }
 
 export interface Block {
@@ -12,6 +21,7 @@ export interface Block {
   type: string;
   componentType?: string;
   data: Record<string, unknown>;
+  propertyMeta?: PropertyMeta[];
   exitNodes: string[];
 
   slottable: boolean;

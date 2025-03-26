@@ -10,6 +10,7 @@ const getBlock = (): Block => ({
   data: { title: "Hello world", body: "" },
   exitNodes: [],
   slottable: false,
+  propertyMeta: [],
 });
 
 let ws: WebSocketRoute | null = null;

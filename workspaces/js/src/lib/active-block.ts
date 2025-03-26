@@ -1,15 +1,38 @@
-import { type Block, type ActiveBlock, createComponentProps } from "@flows/shared";
-import { removeBlock } from "../store";
+import {
+  type Block,
+  type ActiveBlock,
+  createComponentProps,
+  type SetStateMemory,
+} from "@flows/shared";
+import { removeBlock, updateBlock } from "../store";
 import { nextTourStep, previousTourStep, cancelTour } from "./tour";
 import { sendEvent } from "./api";
 
 export const blockToActiveBlock = (block: Block): ActiveBlock | [] => {
   if (!block.componentType) return [];
 
+  const setStateMemory: SetStateMemory = async (key, value) => {
+    updateBlock(block.id, (b) => ({
+      ...b,
+      propertyMeta: b.propertyMeta?.map((sp) => {
+        if (sp.type === "state-memory" && sp.key === key) return { ...sp, value };
+        return sp;
+      }),
+    }));
+
+    await sendEvent({
+      name: "set-state-memory",
+      blockId: block.id,
+      propertyKey: key,
+      properties: { value },
+    });
+  };
+
   const props = createComponentProps({
     block,
     removeBlock,
     exitNodeCb: (key) => sendEvent({ name: "transition", blockId: block.id, propertyKey: key }),
+    setStateMemory,
   });
 
   return {

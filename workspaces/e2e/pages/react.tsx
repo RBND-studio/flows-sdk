@@ -5,6 +5,7 @@ import {
   resetAllWorkflowsProgress,
   resetWorkflowProgress,
   startWorkflow,
+  StateMemory as IStateMemory,
   useCurrentFloatingBlocks,
 } from "@flows/react";
 import { FC, StrictMode } from "react";
@@ -50,6 +51,20 @@ const BlockTrigger: FC<
   </div>
 );
 
+const StateMemory: FC<
+  ComponentProps<{
+    title: string;
+    checked: IStateMemory;
+  }>
+> = (props) => (
+  <div className="flows-card">
+    <p>{props.title}</p>
+    <p>checked: {props.checked.value.toString()}</p>
+    <button onClick={() => props.checked.setValue(true)}>true</button>
+    <button onClick={() => props.checked.setValue(false)}>false</button>
+  </div>
+);
+
 const App: FC = () => {
   const floatingBlocks = useCurrentFloatingBlocks();
 
@@ -80,7 +95,7 @@ createRoot(document.getElementById("root")!).render(
         age: 10,
       }}
       apiUrl={apiUrl}
-      components={{ ...components, Card, BlockTrigger }}
+      components={{ ...components, Card, BlockTrigger, StateMemory }}
       tourComponents={{ ...tourComponents, Card }}
     >
       <App />
