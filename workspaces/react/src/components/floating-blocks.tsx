@@ -12,7 +12,7 @@ export const FloatingBlocks: FC = () => {
         if (item.type === "component") return <Block key={item.id} block={item} />;
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- it's better to be safe
         if (item.type === "tour-component")
-          return <TourBlock key={item.props.__flows.workflowId} block={item} />;
+          return <TourBlock key={item.tourBlockId} block={item} />;
         return null;
       })}
     </>

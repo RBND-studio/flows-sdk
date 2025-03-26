@@ -6,6 +6,10 @@ export interface ActiveBlock {
    */
   id: string;
   /**
+   * Unique identifier of the tour block this tour-component belongs to. Keep in mind each workflow version will have a different id for each block.
+   */
+  tourBlockId?: string;
+  /**
    * Type of the block, either "component" or "tour-component".
    */
   type: "component" | "tour-component";

@@ -63,6 +63,7 @@ export const tourToActiveBlock = (block: Block, currentIndex: number): ActiveBlo
 
   return {
     id: activeStep.id,
+    tourBlockId: block.id,
     type: "tour-component",
     component: activeStep.componentType,
     props: {
