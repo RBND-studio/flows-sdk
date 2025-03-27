@@ -10,7 +10,7 @@
   position: fixed;
   z-index: -1;
   pointer-events: none;
-  animation: fadeIn 100ms ease-out;
+  animation: flows-fadeIn 100ms ease-out;
 }
 .flows_tooltip_overlay:after {
   content: "";
@@ -36,7 +36,7 @@
   box-sizing: border-box;
   min-width: var(--flows-tooltip-minWidth);
   max-width: min(var(--flows-tooltip-maxWidth), calc(100% - 16px));
-  animation: scaleIn 150ms ease-out;
+  animation: flows-scaleIn 150ms ease-out;
 }
 .flows_tooltip_tooltip[data-open="true"] {
   transition: all 150ms ease-out;

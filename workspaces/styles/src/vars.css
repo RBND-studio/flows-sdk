@@ -94,7 +94,7 @@
 }
 
 /* Animation */
-@keyframes scaleIn {
+@keyframes flows-scaleIn {
   from {
     opacity: 0;
     transform: scale(0.95);
@@ -105,7 +105,7 @@
   }
 }
 
-@keyframes fadeIn {
+@keyframes flows-fadeIn {
   from {
     opacity: 0;
   }
