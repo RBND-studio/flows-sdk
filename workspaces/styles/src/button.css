@@ -15,7 +15,7 @@
 
 .flows_button_primary {
   background-color: var(--flows-bg-primary);
-  border: 1px solid var(--flows-bg-primary);
+  border: var(--flows-border-primary);
   color: var(--flows-fg-onPrimary);
 }
 .flows_button_primary:hover {
@@ -25,9 +25,10 @@
 
 .flows_button_secondary {
   background-color: var(--flows-bg-subtle);
-  border: var(--flows-border);
+  border: var(--flows-border-strong);
   color: var(--flows-fg-default);
 }
 .flows_button_secondary:hover {
   background-color: var(--flows-bg-hover);
+  border: var(--flows-border-strong-hover);
 }

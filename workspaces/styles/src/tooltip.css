@@ -10,7 +10,7 @@
   position: fixed;
   z-index: -1;
   pointer-events: none;
-  animation: fadeIn 120ms ease-out;
+  animation: fadeIn 100ms ease-out;
 }
 .flows_tooltip_overlay:after {
   content: "";
@@ -36,10 +36,10 @@
   box-sizing: border-box;
   min-width: var(--flows-tooltip-minWidth);
   max-width: min(var(--flows-tooltip-maxWidth), calc(100% - 16px));
-  animation: fadeIn 160ms ease-out;
+  animation: scaleIn 150ms ease-out;
 }
-.flows_tooltip_tooltip[data-positioned="true"] {
-  transition: all 160ms ease-out;
+.flows_tooltip_tooltip[data-open="true"] {
+  transition: all 150ms ease-out;
 }
 .flows_tooltip_tooltip:before {
   box-shadow: var(--flows-shadow);
@@ -56,7 +56,7 @@
   margin-right: 24px;
 }
 .flows_tooltip_body {
-  margin-top: var(--flows-size-medium);
+  margin-top: var(--flows-size-small);
 }
 
 .flows_tooltip_arrow {

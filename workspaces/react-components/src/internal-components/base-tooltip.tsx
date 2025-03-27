@@ -43,7 +43,7 @@ export const BaseTooltip: FC<Props> = (props) => {
   const overlayRef = useRef<HTMLDivElement>(null);
 
   const reference = useQuerySelector(props.targetElement);
-  const { refs, middlewareData, placement, x, y, isPositioned } = useFloating({
+  const { refs, middlewareData, placement, x, y } = useFloating({
     placement: props.placement,
     elements: { reference },
     whileElementsMounted: autoUpdate,
@@ -122,7 +122,6 @@ export const BaseTooltip: FC<Props> = (props) => {
       <div
         className="flows_tooltip_tooltip"
         ref={refs.setFloating}
-        data-positioned={isPositioned ? "true" : "false"}
         data-open={enterAnimationEnded ? "true" : "false"}
       >
         <Text className="flows_tooltip_title" variant="title">
