@@ -1,20 +1,28 @@
 :root {
   /* Colors */
   --flows-bg-default: #ffffff;
-  --flows-bg-subtle: #f9fafc;
-  --flows-bg-hover: #ebeef3;
+  --flows-bg-subtle: #fafafa;
+  --flows-bg-hover: #f0f0f0;
   --flows-bg-primary: #067efd;
-  --flows-bg-primary-hover: #3a90ff;
-  --flows-bg-overlay: rgba(21, 24, 28, 0.5);
+  --flows-bg-primary-hover: #0d67ec;
+  --flows-bg-overlay: rgba(0, 0, 0, 0.4);
 
-  --flows-fg-default: #15181c;
+  --flows-fg-default: #1a1a1a;
   --flows-fg-onPrimary: #ffffff;
 
   --flows-borderWidth: 1px;
-  --flows-border: var(--flows-borderWidth) solid #dfe3e8;
+  --flows-border: var(--flows-borderWidth) solid #d6d6d6;
+  --flows-border-strong: var(--flows-borderWidth) solid #ccc;
+  --flows-border-strong-hover: var(--flows-borderWidth) solid #bababa;
+  --flows-border-primary: var(--flows-borderWidth) solid #0d67ec;
 
-  --flows-shadow: 0px 8px 12px rgba(28, 26, 39, 0.08), 0px 6px 8px rgba(28, 26, 39, 0.12),
-    0px 0px 1px rgba(28, 26, 39, 0.16);
+  --flows-shadow:
+    0px 6px 18px rgba(0, 0, 0, 0.15), 0px 3px 8px rgba(0, 0, 0, 0.03),
+    0px 0px 1px rgba(0, 0, 0, 0.05);
+
+  --flows-shadow-large:
+    0px 10px 48px rgba(0, 0, 0, 0.1), 0px 4px 24px rgba(0, 0, 0, 0.12),
+    0px 0px 1px rgba(0, 0, 0, 0.05);
 
   /* Sizes */
   --flows-borderRadius-xSmall: 3px;
@@ -28,8 +36,9 @@
   --flows-size-large: 20px;
 
   /* Typography */
-  --flows-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu,
-    Cantarell, "Helvetica Neue", sans-serif;
+  --flows-font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell,
+    "Helvetica Neue", sans-serif;
 
   --flows-base-font-size: 14px;
   --flows-base-line-height: 20px;
@@ -62,18 +71,45 @@
 
 /* Dark mode */
 .dark {
-  --flows-bg-default: #15181c;
-  --flows-bg-subtle: #1c2026;
-  --flows-bg-hover: #22262d;
-  --flows-bg-primary: #468ff1;
-  --flows-bg-primary-hover: #357ddb;
+  --flows-bg-default: #1e1e1e;
+  --flows-bg-subtle: #262626;
+  --flows-bg-hover: #333333;
+  --flows-bg-primary: #357ddb;
+  --flows-bg-primary-hover: #3382e7;
   --flows-bg-overlay: rgba(0, 0, 0, 0.6);
 
-  --flows-fg-default: #f9fafc;
-  --flows-fg-onPrimary: #15181c;
+  --flows-fg-default: #fafafa;
+  --flows-fg-onPrimary: #ffffff;
 
-  --flows-border: 1px solid #353c46;
+  --flows-border: 1px solid #3d3d3d;
+  --flows-border-strong: 1px solid #4a4a4a;
+  --flows-border-strong-hover: 1px solid #616161;
+  --flows-border-primary: 1px solid #468ff1;
 
-  --flows-shadow: 0px 8px 12px rgba(0, 0, 0, 0.2), 0px 6px 8px rgba(0, 0, 0, 0.25),
-    0px 0px 1px rgba(0, 0, 0, 0.3);
+  --flows-shadow:
+    0px 4px 12px rgba(0, 0, 0, 0.2), 0px 2px 6px rgba(0, 0, 0, 0.25), 0px 1px 1px rgba(0, 0, 0, 0.2);
+  --flows-shadow-large:
+    0px 1px 1px rgba(0, 0, 0, 0.2), 0px 2px 8px rgba(0, 0, 0, 0.2), 0px 4px 12px rgba(0, 0, 0, 0.2),
+    0px 4px 20px rgba(0, 0, 0, 0.2), 0px 4px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Animation */
+@keyframes flows-scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes flows-fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

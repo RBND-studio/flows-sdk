@@ -74,6 +74,7 @@ const run = (packageName: string) => {
         },
         {
           id: blocks[1]?.tourBlocks?.[0]?.id,
+          tourBlockId: blocks[1]?.id,
           type: "tour-component",
           component: "Modal",
           props: {

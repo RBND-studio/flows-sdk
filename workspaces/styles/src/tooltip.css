@@ -10,6 +10,7 @@
   position: fixed;
   z-index: -1;
   pointer-events: none;
+  animation: flows-fadeIn 100ms ease-out;
 }
 .flows_tooltip_overlay:after {
   content: "";
@@ -35,6 +36,10 @@
   box-sizing: border-box;
   min-width: var(--flows-tooltip-minWidth);
   max-width: min(var(--flows-tooltip-maxWidth), calc(100% - 16px));
+  animation: flows-scaleIn 150ms ease-out;
+}
+.flows_tooltip_tooltip[data-open="true"] {
+  transition: all 150ms ease-out;
 }
 .flows_tooltip_tooltip:before {
   box-shadow: var(--flows-shadow);
@@ -51,7 +56,7 @@
   margin-right: 24px;
 }
 .flows_tooltip_body {
-  margin-top: var(--flows-size-medium);
+  margin-top: var(--flows-size-small);
 }
 
 .flows_tooltip_arrow {
@@ -60,6 +65,10 @@
   height: var(--flows-size-medium);
   transform: rotate(45deg);
   border-radius: var(--flows-borderRadius-xSmall);
+}
+.flows_tooltip_tooltip[data-open="false"] .flows_tooltip_arrow {
+  border-color: var(--flows-bg-default);
+  box-shadow: none;
 }
 .flows_tooltip_arrow-bottom {
   border: var(--flows-border);

@@ -3,6 +3,7 @@
   inset: 0;
   background-color: var(--flows-modal-overlayBackground);
   pointer-events: none;
+  animation: flows-fadeIn 100ms ease-out;
   z-index: var(--flows-zIndex);
 }
 
@@ -23,12 +24,13 @@
   border: var(--flows-border);
   color: var(--flows-fg-default);
   border-radius: var(--flows-borderRadius-medium);
-  box-shadow: var(--flows-shadow);
+  box-shadow: var(--flows-shadow-large);
   padding: var(--flows-modal-padding);
   position: relative;
   box-sizing: border-box;
   min-width: var(--flows-modal-minWidth);
   max-width: var(--flows-modal-maxWidth);
+  animation: flows-scaleIn 150ms ease-out;
 }
 
 .flows_modal_footer {

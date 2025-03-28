@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, type FC, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type FC, type ReactNode } from "react";
 import {
   useFloating,
   shift,
@@ -55,6 +55,26 @@ export const BaseTooltip: FC<Props> = (props) => {
     ],
   });
 
+  const [enterAnimationEnded, setEnterAnimationEnded] = useState(false);
+  useEffect(() => {
+    if (enterAnimationEnded) return;
+    const el = refs.floating.current;
+    if (!el) return;
+    const handleAnimationEnd = (): void => {
+      setEnterAnimationEnded(true);
+    };
+    const hasAnimation = window.getComputedStyle(el).animationName !== "none";
+    if (!hasAnimation) {
+      setEnterAnimationEnded(true);
+      return;
+    }
+
+    el.addEventListener("animationend", handleAnimationEnd);
+    return () => {
+      el.removeEventListener("animationend", handleAnimationEnd);
+    };
+  }, [enterAnimationEnded, refs.floating]);
+
   const staticSide = useMemo((): Side => {
     if (placement.includes("top")) return "bottom";
     if (placement.includes("bottom")) return "top";
@@ -99,7 +119,11 @@ export const BaseTooltip: FC<Props> = (props) => {
   return (
     <div className="flows_tooltip_root">
       {props.overlay ? <div className="flows_tooltip_overlay" ref={overlayRef} /> : null}
-      <div className="flows_tooltip_tooltip" ref={refs.setFloating}>
+      <div
+        className="flows_tooltip_tooltip"
+        ref={refs.setFloating}
+        data-open={enterAnimationEnded ? "true" : "false"}
+      >
         <Text className="flows_tooltip_title" variant="title">
           {props.title}
         </Text>
