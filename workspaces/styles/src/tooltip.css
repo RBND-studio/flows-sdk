@@ -41,6 +41,10 @@
 .flows_tooltip_tooltip[data-open="true"] {
   transition: all 150ms ease-out;
 }
+.flows_tooltip_tooltip[data-open="false"] {
+  animation: flows-scaleOut 150ms ease-out;
+  opacity: 0;
+}
 .flows_tooltip_tooltip:before {
   box-shadow: var(--flows-shadow);
   border-radius: var(--flows-borderRadius-medium);
