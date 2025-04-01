@@ -36,7 +36,13 @@ export interface EventRequest {
   userId: string;
   environment: string;
   organizationId: string;
-  name: "transition" | "tour-update" | "reset-progress" | "workflow-start" | "set-state-memory";
+  name:
+    | "transition"
+    | "tour-update"
+    | "reset-progress"
+    | "workflow-start"
+    | "set-state-memory"
+    | "activate";
   workflowId?: string;
   blockId?: string;
   blockKey?: string;
