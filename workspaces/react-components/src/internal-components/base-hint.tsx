@@ -44,7 +44,6 @@ export const BaseHint: FC<Props> = (props) => {
     elements: { reference: targetFloating.refs.floating.current },
     whileElementsMounted: autoUpdate,
     transform: false,
-    open: tooltipOpen,
     middleware: [
       flip({ fallbackPlacements: ["top", "bottom", "left", "right"] }),
       shift({ crossAxis: true, padding: BOUNDARY_PADDING }),
@@ -100,7 +99,7 @@ export const BaseHint: FC<Props> = (props) => {
       {tooltipOpen ? (
         <div
           className="flows_tooltip_tooltip flows_hint_tooltip"
-          data-open={!tooltipClosing && tooltipFloating.isPositioned ? "true" : "false"}
+          data-open={!tooltipClosing ? "true" : "false"}
           ref={tooltipFloating.refs.setFloating}
           style={{ left: tooltipFloating.x, top: tooltipFloating.y }}
         >
