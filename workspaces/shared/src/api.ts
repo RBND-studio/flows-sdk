@@ -42,7 +42,7 @@ export interface EventRequest {
     | "reset-progress"
     | "workflow-start"
     | "set-state-memory"
-    | "activate";
+    | "block-activated";
   workflowId?: string;
   blockId?: string;
   blockKey?: string;

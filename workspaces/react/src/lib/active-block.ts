@@ -3,9 +3,10 @@ import {
   type SetStateMemory,
   type ActiveBlock,
   type Block,
+  createActiveBlockProxy,
 } from "@flows/shared";
 import { type RemoveBlock, type UpdateBlock, type RunningTour } from "../flows-context";
-import { sendEvent } from "./api";
+import { sendActivate, sendEvent } from "./api";
 
 export const blockToActiveBlock = ({
   block,
@@ -42,12 +43,14 @@ export const blockToActiveBlock = ({
     setStateMemory,
   });
 
-  return {
+  const activeBlock: ActiveBlock = {
     id: block.id,
     type: "component",
     component: block.componentType,
     props,
   };
+
+  return createActiveBlockProxy(activeBlock, sendActivate);
 };
 
 export const tourBlockToActiveBlock = (tour: RunningTour): ActiveBlock | [] => {
@@ -56,7 +59,7 @@ export const tourBlockToActiveBlock = (tour: RunningTour): ActiveBlock | [] => {
 
   const isFirstStep = tour.currentBlockIndex === 0;
 
-  return {
+  const activeBlock: ActiveBlock = {
     id: activeStep.id,
     tourBlockId: tour.block.id,
     type: "tour-component",
@@ -72,4 +75,6 @@ export const tourBlockToActiveBlock = (tour: RunningTour): ActiveBlock | [] => {
       cancel: tour.cancel,
     },
   };
+
+  return createActiveBlockProxy(activeBlock, sendActivate);
 };

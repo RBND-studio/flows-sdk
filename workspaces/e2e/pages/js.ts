@@ -11,6 +11,8 @@ import "@flows/js-components/index.css";
 import { startWorkflow, StateMemory as IStateMemory } from "@flows/js";
 
 const apiUrl = new URLSearchParams(window.location.search).get("apiUrl") ?? undefined;
+const noCurrentBlocks =
+  new URLSearchParams(window.location.search).get("noCurrentBlocks") === "true";
 
 const Card: Component<{ text: string }> = (props) => {
   const card = document.createElement("div");
@@ -127,7 +129,8 @@ const tourComponents = { ..._tourComponents, Card };
 addFloatingBlocksChangeListener((blocks) => {
   render({ blocks, components, tourComponents });
 
-  document.querySelector(".current-blocks")!.textContent = JSON.stringify(blocks);
+  if (!noCurrentBlocks)
+    document.querySelector(".current-blocks")!.textContent = JSON.stringify(blocks);
 });
 updateSlotComponents({
   components,
