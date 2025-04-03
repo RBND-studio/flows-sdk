@@ -16,6 +16,8 @@ import * as tourComponents from "@flows/react-components/tour";
 import "@flows/react-components/index.css";
 
 const apiUrl = new URLSearchParams(window.location.search).get("apiUrl") ?? undefined;
+const noCurrentBlocks =
+  new URLSearchParams(window.location.search).get("noCurrentBlocks") === "true";
 
 const Card: FC<ComponentProps<{ text: string }>> = (props) => (
   <div
@@ -75,7 +77,7 @@ const App: FC = () => {
 
       <FlowsSlot id="my-slot" placeholder={<p>Slot placeholder</p>} />
 
-      <p className="current-blocks">{JSON.stringify(floatingBlocks)}</p>
+      {!noCurrentBlocks && <p className="current-blocks">{JSON.stringify(floatingBlocks)}</p>}
 
       <button onClick={() => resetAllWorkflowsProgress()}>resetAllWorkflowsProgress</button>
       <button onClick={() => resetWorkflowProgress("my-workflow-id")}>resetWorkflowProgress</button>

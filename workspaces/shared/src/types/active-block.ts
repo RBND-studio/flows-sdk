@@ -22,3 +22,17 @@ export interface ActiveBlock {
    */
   props: { __flows: FlowsProperties } & Record<string, unknown>;
 }
+
+export const createActiveBlockProxy = (
+  block: ActiveBlock,
+  sendActivate: (blockId: string) => Promise<void>,
+): ActiveBlock => {
+  return new Proxy<ActiveBlock>(block, {
+    get(target, prop, receiver) {
+      if (prop === "props") void sendActivate(block.id);
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- it's needed for the proxy to work
+      return Reflect.get(target, prop, receiver);
+    },
+  });
+};
