@@ -67,10 +67,11 @@ const run = (packageName: string) => {
       await page.route("**/v2/sdk/blocks", (route) => {
         route.fulfill({ json: { blocks: [], meta: { usage_limited: true } } });
       });
+      const wsPromise = page.waitForEvent("websocket");
       await page.goto(`/${packageName}.html`);
+      const websocket = await wsPromise;
 
       let wsWasClosed = false;
-      const websocket = await page.waitForEvent("websocket");
       websocket.on("close", () => {
         wsWasClosed = true;
       });
@@ -80,25 +81,26 @@ const run = (packageName: string) => {
 
       await expect(() => expect(wsWasClosed).toBe(true)).toPass();
     });
-  });
-  test(`${packageName} - should keep websocket connection alive`, async ({ page }) => {
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [] } });
-    });
-    await page.goto(`/${packageName}.html`);
+    test(`${packageName} - should keep websocket connection alive`, async ({ page }) => {
+      await page.route("**/v2/sdk/blocks", (route) => {
+        route.fulfill({ json: { blocks: [] } });
+      });
+      const wsPromise = page.waitForEvent("websocket");
+      await page.goto(`/${packageName}.html`);
+      const websocket = await wsPromise;
 
-    let wsWasClosed = false;
-    const websocket = await page.waitForEvent("websocket");
-    websocket.on("close", () => {
-      wsWasClosed = true;
-    });
-    await page.waitForRequest((req) => {
-      return req.url() === "https://api.flows-cloud.com/v2/sdk/blocks";
-    });
+      let wsWasClosed = false;
+      websocket.on("close", () => {
+        wsWasClosed = true;
+      });
+      await page.waitForRequest((req) => {
+        return req.url() === "https://api.flows-cloud.com/v2/sdk/blocks";
+      });
 
-    await new Promise((res) => setTimeout(res, 500));
+      await new Promise((res) => setTimeout(res, 500));
 
-    await expect(() => expect(wsWasClosed).toBe(false)).toPass();
+      await expect(() => expect(wsWasClosed).toBe(false)).toPass();
+    });
   });
 };
 
