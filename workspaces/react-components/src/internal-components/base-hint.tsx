@@ -1,6 +1,6 @@
 import { autoUpdate, flip, offset, shift, useFloating } from "@floating-ui/react-dom";
-import { type Placement } from "@flows/shared";
-import { useCallback, useEffect, useState, type FC } from "react";
+import { log, type Placement } from "@flows/shared";
+import { type ReactNode, useCallback, useEffect, useState, type FC } from "react";
 import { useQuerySelector } from "../hooks/use-query-selector";
 import { Close16 } from "../icons/close16";
 import { Text } from "./text";
@@ -15,6 +15,7 @@ interface Props {
   offsetX?: number;
   offsetY?: number;
 
+  buttons?: ReactNode;
   onClose?: () => void;
 }
 
@@ -35,7 +36,7 @@ export const BaseHint: FC<Props> = (props) => {
     placement: props.placement,
     elements: { reference },
     whileElementsMounted: autoUpdate,
-    transform: true,
+    transform: false,
   });
   const dotRef = targetFloating.refs.floating;
 
@@ -79,6 +80,12 @@ export const BaseHint: FC<Props> = (props) => {
     };
   }, [handleClose, dotRef, tooltipRef]);
 
+  useEffect(() => {
+    if (!props.targetElement) {
+      log.error("Cannot render Hint without target element");
+    }
+  }, [props.targetElement]);
+
   if (!reference) return null;
 
   return (
@@ -86,11 +93,12 @@ export const BaseHint: FC<Props> = (props) => {
       <button
         ref={targetFloating.refs.setFloating}
         style={{
-          ...targetFloating.floatingStyles,
+          left: targetFloating.x + (props.offsetX ?? 0),
+          top: targetFloating.y + (props.offsetY ?? 0),
           width: WIDTH,
           height: HEIGHT,
         }}
-        aria-label={props.title}
+        aria-label="Open hint"
         type="button"
         className="flows_hint_target"
         onClick={tooltipOpen ? handleClose : handleOpen}
@@ -111,6 +119,7 @@ export const BaseHint: FC<Props> = (props) => {
             className="flows_tooltip_body"
             dangerouslySetInnerHTML={{ __html: props.body }}
           />
+          {props.buttons ? <div className="flows_tooltip_footer">{props.buttons}</div> : null}
           {props.onClose ? (
             <IconButton aria-label="Close" className="flows_tooltip_close" onClick={props.onClose}>
               <Close16 />

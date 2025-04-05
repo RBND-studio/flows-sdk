@@ -3,6 +3,9 @@
   background-color: var(--flows-bg-primary);
   border-radius: 50%;
 }
+.flows_hint_target:hover {
+  background-color: var(--flows-bg-primary-hover);
+}
 
 .flows_hint_target::after {
   content: "";
@@ -18,4 +21,8 @@
 
 .flows_hint_tooltip.flows_hint_tooltip {
   transition: none;
+}
+.flows_hint_tooltip[data-open="false"] {
+  animation: flows-scaleOut 150ms ease-out;
+  opacity: 0;
 }
