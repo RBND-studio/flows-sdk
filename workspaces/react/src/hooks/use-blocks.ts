@@ -33,6 +33,7 @@ export const useBlocks = ({
   userProperties,
 }: Props): Return => {
   const [blocks, setBlocks] = useState<Block[]>([]);
+  const [usageLimited, setUsageLimited] = useState(false);
 
   const params = useMemo(
     () => ({ environment, organizationId, userId }),
@@ -49,16 +50,18 @@ export const useBlocks = ({
       .getBlocks({ ...params, userProperties: userPropertiesRef.current })
       .then((res) => {
         setBlocks(res.blocks);
+        if (res.meta?.usage_limited) setUsageLimited(true);
       })
       .catch((err: unknown) => {
         log.error("Failed to load blocks", err);
       });
   }, [apiUrl, params]);
 
-  const url = useMemo(() => {
+  const websocketUrl = useMemo(() => {
+    if (usageLimited) return;
     const baseUrl = apiUrl.replace("https://", "wss://").replace("http://", "ws://");
     return `${baseUrl}/ws/sdk/block-updates?${new URLSearchParams(params).toString()}`;
-  }, [apiUrl, params]);
+  }, [apiUrl, params, usageLimited]);
 
   const onMessage = useCallback((event: MessageEvent<unknown>) => {
     // TODO: add debug logging
@@ -73,7 +76,7 @@ export const useBlocks = ({
       ...data.updatedBlocks,
     ]);
   }, []);
-  useWebsocket({ url, onMessage, onOpen: fetchBlocks });
+  useWebsocket({ url: websocketUrl, onMessage, onOpen: fetchBlocks });
 
   // Log error about slottable blocks without slotId
   useEffect(() => {

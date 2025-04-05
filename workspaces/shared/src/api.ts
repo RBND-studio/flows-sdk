@@ -28,8 +28,13 @@ interface GetBlocksRequest {
   userProperties?: Record<string, unknown>;
 }
 
+interface BlockResponseMeta {
+  usage_limited?: boolean;
+}
+
 interface BlocksResponse {
   blocks: Block[];
+  meta?: BlockResponseMeta;
 }
 
 export interface EventRequest {

@@ -1,6 +1,6 @@
 import { type BlockUpdatesPayload, getApi, log, type UserProperties } from "@flows/shared";
 import { blocks } from "../store";
-import { websocket } from "./websocket";
+import { type Disconnect, websocket } from "./websocket";
 import { packageAndVersion } from "./constants";
 
 interface Props {
@@ -10,6 +10,8 @@ interface Props {
   userId: string;
   userProperties?: UserProperties;
 }
+
+let disconnect: Disconnect | null = null;
 
 export const connectToWebsocketAndFetchBlocks = (props: Props): void => {
   const { environment, organizationId, userId, apiUrl } = props;
@@ -24,6 +26,8 @@ export const connectToWebsocketAndFetchBlocks = (props: Props): void => {
       .getBlocks({ ...params, userProperties: props.userProperties })
       .then((res) => {
         blocks.value = res.blocks;
+        // Disconnect if the user is usage limited
+        if (res.meta?.usage_limited) disconnect?.();
       })
       .catch((err: unknown) => {
         log.error("Failed to load blocks", err);
@@ -41,5 +45,9 @@ export const connectToWebsocketAndFetchBlocks = (props: Props): void => {
     ];
   };
 
-  websocket({ url: wsUrl, onMessage, onOpen: fetchBlocks });
+  // Disconnect previous connection if it exists
+  disconnect?.();
+
+  const websocketResult = websocket({ url: wsUrl, onMessage, onOpen: fetchBlocks });
+  disconnect = websocketResult.disconnect;
 };
