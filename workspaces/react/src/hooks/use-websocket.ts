@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 interface Props {
-  url: string;
+  url?: string;
   onMessage: (event: MessageEvent<unknown>) => void;
   onOpen?: () => void;
 }
@@ -24,11 +24,13 @@ export const useWebsocket = ({ url, onMessage, onOpen }: Props): void => {
     onMessageRef.current(event);
   }, []);
 
-  const connect = useCallback(() => {
+  const connect = useCallback((): (() => void) | undefined => {
     if (cleanupRef.current) {
       cleanupRef.current();
       cleanupRef.current = undefined;
     }
+
+    if (!url) return;
 
     const socket = new WebSocket(url);
     setWs(socket);
@@ -66,7 +68,7 @@ export const useWebsocket = ({ url, onMessage, onOpen }: Props): void => {
   useEffect(() => {
     const cleanup = connect();
     return () => {
-      cleanup();
+      cleanup?.();
     };
   }, [connect]);
 
