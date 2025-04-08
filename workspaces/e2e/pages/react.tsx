@@ -16,6 +16,7 @@ import * as tourComponents from "@flows/react-components/tour";
 import "@flows/react-components/index.css";
 
 const apiUrl = new URLSearchParams(window.location.search).get("apiUrl") ?? undefined;
+const noUserId = new URLSearchParams(window.location.search).get("noUserId") === "true";
 
 const Card: FC<ComponentProps<{ text: string }>> = (props) => (
   <div
@@ -89,7 +90,7 @@ createRoot(document.getElementById("root")!).render(
     <FlowsProvider
       organizationId="orgId"
       environment="prod"
-      userId="testUserId"
+      userId={noUserId ? null : "testUserId"}
       userProperties={{
         email: "test@flows.sh",
         age: 10,
