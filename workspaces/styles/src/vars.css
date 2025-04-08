@@ -49,7 +49,6 @@
 
   /* Elements */
   --flows-zIndex: 1500;
-  --flows-target-zIndex: 5000;
 
   --flows-tooltip-padding: var(--flows-size-large);
   --flows-tooltip-overlayBackground: var(--flows-bg-overlay);

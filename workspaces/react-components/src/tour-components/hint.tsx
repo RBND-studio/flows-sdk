@@ -38,6 +38,8 @@ export const Hint: FC<Props> = (props) => {
 
   return (
     <BaseHint
+      // FIXME: This is a hack to make sure the state is not shared between hints
+      key={props.title}
       title={props.title}
       body={props.body}
       targetElement={props.targetElement}

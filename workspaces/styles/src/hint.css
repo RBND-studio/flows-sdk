@@ -2,7 +2,10 @@
   position: absolute;
   background-color: var(--flows-bg-primary);
   border-radius: 50%;
+  transition: background-color 120ms ease-in-out;
+  z-index: var(--flows-zIndex);
 }
+
 .flows_hint_target:hover {
   background-color: var(--flows-bg-primary-hover);
 }
@@ -22,6 +25,11 @@
 .flows_hint_tooltip.flows_hint_tooltip {
   transition: none;
 }
+
+.flows_hint_tooltip {
+  z-index: var(--flows-zIndex);
+}
+
 .flows_hint_tooltip[data-open="false"] {
   animation: flows-scaleOut 150ms ease-out;
   opacity: 0;
