@@ -18,3 +18,11 @@ export const sendEvent = async (props: SendEventProps): Promise<void> => {
     userId,
   });
 };
+
+const activatedBlockIds = new Set<string>();
+export const sendActivate = async (blockId: string): Promise<void> => {
+  if (activatedBlockIds.has(blockId)) return;
+
+  activatedBlockIds.add(blockId);
+  await sendEvent({ name: "block-activated", blockId });
+};
