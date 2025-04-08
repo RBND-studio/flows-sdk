@@ -38,8 +38,6 @@ export const Hint: FC<Props> = (props) => {
 
   return (
     <BaseHint
-      // FIXME: This is a hack to make sure the state is not shared between hints
-      key={props.title}
       title={props.title}
       body={props.body}
       targetElement={props.targetElement}
@@ -48,6 +46,8 @@ export const Hint: FC<Props> = (props) => {
       placement={props.placement}
       onClose={props.showCloseButton ? props.cancel : undefined}
       buttons={buttons}
+      // Needed to avoid reusing html elements between tour steps. Otherwise the tooltip exit animation is triggered.
+      key={props.__flows.id}
     />
   );
 };

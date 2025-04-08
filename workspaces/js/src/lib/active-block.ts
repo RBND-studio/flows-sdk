@@ -68,6 +68,7 @@ export const tourToActiveBlock = (block: Block, currentIndex: number): ActiveBlo
     component: activeStep.componentType,
     props: {
       __flows: {
+        id: activeStep.id,
         key: activeStep.key,
         workflowId: activeStep.workflowId,
       },
