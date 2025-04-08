@@ -45,7 +45,7 @@
     "jest-environment-jsdom": "^29.7.0",
     "ts-jest": "^29.3.0",
     "tsup": "^8.4.0",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.3"
   },
   "peerDependencies": {
     "react": ">=17.0.2"
