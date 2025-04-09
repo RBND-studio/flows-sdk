@@ -3,7 +3,7 @@ import { type FC } from "react";
 import { BaseHint } from "../internal-components/base-hint";
 import { Button } from "../internal-components/button";
 
-type Props = ComponentProps<{
+export type HintProps = ComponentProps<{
   title: string;
   body: string;
   continueText?: string;
@@ -18,7 +18,7 @@ type Props = ComponentProps<{
   close: () => void;
 }>;
 
-export const Hint: FC<Props> = (props) => {
+export const Hint: FC<HintProps> = (props) => {
   const buttons = [];
   if (props.continueText)
     buttons.push(

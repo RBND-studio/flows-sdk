@@ -3,7 +3,7 @@ import { type FC } from "react";
 import { BaseHint } from "../internal-components/base-hint";
 import { Button } from "../internal-components/button";
 
-type Props = TourComponentProps<{
+export type HintProps = TourComponentProps<{
   title: string;
   body: string;
   continueText?: string;
@@ -16,7 +16,7 @@ type Props = TourComponentProps<{
   offsetY?: number;
 }>;
 
-export const Hint: FC<Props> = (props) => {
+export const Hint: FC<HintProps> = (props) => {
   const previousButton = props.previous && props.previousText && (
     <Button variant="secondary" onClick={props.previous}>
       {props.previousText}

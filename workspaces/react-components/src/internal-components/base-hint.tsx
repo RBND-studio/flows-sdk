@@ -1,4 +1,10 @@
-import { autoUpdate, flip, offset, shift, useFloating } from "@floating-ui/react-dom";
+import {
+  flip,
+  offset,
+  shift,
+  useFloating,
+  autoUpdate as floatingAutoUpdate,
+} from "@floating-ui/react-dom";
 import { log, type Placement } from "@flows/shared";
 import { type ReactNode, useCallback, useEffect, useState, type FC } from "react";
 import { useQuerySelector } from "../hooks/use-query-selector";
@@ -19,11 +25,12 @@ interface Props {
   onClose?: () => void;
 }
 
-const WIDTH = 16;
-const HEIGHT = 16;
 const CLOSE_TIMEOUT = 300;
 const BOUNDARY_PADDING = 8;
 const DISTANCE = 4;
+
+const autoUpdate: typeof floatingAutoUpdate = (ref, floating, update) =>
+  floatingAutoUpdate(ref, floating, update, { animationFrame: true });
 
 export const BaseHint: FC<Props> = (props) => {
   const [tooltipOpen, setTooltipOpen] = useState(false);
@@ -95,8 +102,6 @@ export const BaseHint: FC<Props> = (props) => {
         style={{
           left: targetFloating.x + (props.offsetX ?? 0),
           top: targetFloating.y + (props.offsetY ?? 0),
-          width: WIDTH,
-          height: HEIGHT,
         }}
         aria-label="Open hint"
         type="button"

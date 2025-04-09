@@ -4,6 +4,8 @@
   border-radius: 50%;
   transition: background-color 120ms ease-in-out;
   z-index: var(--flows-zIndex);
+  width: 16px;
+  height: 16px;
 }
 
 .flows_hint_target:hover {
