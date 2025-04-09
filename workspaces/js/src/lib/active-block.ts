@@ -3,10 +3,11 @@ import {
   type ActiveBlock,
   createComponentProps,
   type SetStateMemory,
+  createActiveBlockProxy,
 } from "@flows/shared";
 import { removeBlock, updateBlock } from "../store";
 import { nextTourStep, previousTourStep, cancelTour } from "./tour";
-import { sendEvent } from "./api";
+import { sendActivate, sendEvent } from "./api";
 
 export const blockToActiveBlock = (block: Block): ActiveBlock | [] => {
   if (!block.componentType) return [];
@@ -35,12 +36,14 @@ export const blockToActiveBlock = (block: Block): ActiveBlock | [] => {
     setStateMemory,
   });
 
-  return {
+  const activeBlock: ActiveBlock = {
     id: block.id,
     type: "component",
     component: block.componentType,
     props,
   };
+
+  return createActiveBlockProxy(activeBlock, sendActivate);
 };
 
 export const tourToActiveBlock = (block: Block, currentIndex: number): ActiveBlock | [] => {
@@ -61,7 +64,7 @@ export const tourToActiveBlock = (block: Block, currentIndex: number): ActiveBlo
     cancelTour(block.id);
   };
 
-  return {
+  const activeBlock: ActiveBlock = {
     id: activeStep.id,
     tourBlockId: block.id,
     type: "tour-component",
@@ -78,4 +81,6 @@ export const tourToActiveBlock = (block: Block, currentIndex: number): ActiveBlo
       cancel: handleCancel,
     },
   };
+
+  return createActiveBlockProxy(activeBlock, sendActivate);
 };
