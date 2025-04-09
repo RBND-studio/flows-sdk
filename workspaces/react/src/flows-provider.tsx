@@ -19,9 +19,11 @@ export interface FlowsProviderProps {
    */
   environment: string;
   /**
-   * Unique user ID. If no ID is provided, all users will be treated as one.
+   * Unique ID used to identify the user.
+   *
+   * If set to `null`, the SDK will be disabled and `children` will render while waiting for the `userId`. This is useful when loading the ID asynchronously.
    */
-  userId: string;
+  userId: string | null;
   /**
    * Object with custom [user properties](https://flows.sh/docs/users/properties). Values can be string, number, boolean, or date.
    */
@@ -42,7 +44,18 @@ export interface FlowsProviderProps {
   children: ReactNode;
 }
 
-export const FlowsProvider: FC<FlowsProviderProps> = ({
+export const FlowsProvider: FC<FlowsProviderProps> = (props) => {
+  if (!isProps(props)) return props.children;
+
+  return <FlowsProviderInner {...props} />;
+};
+
+type Props = Omit<FlowsProviderProps, "userId"> & { userId: string };
+const isProps = (props: FlowsProviderProps): props is Props => {
+  return typeof props.userId === "string";
+};
+
+const FlowsProviderInner: FC<Props> = ({
   children,
   apiUrl = "https://api.flows-cloud.com",
   environment,

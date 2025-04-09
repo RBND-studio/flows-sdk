@@ -10,7 +10,7 @@ export interface FlowsOptions {
    */
   environment: string;
   /**
-   * Unique user ID. If no ID is provided, all users will be treated as one.
+   * Unique ID used to identify the user.
    */
   userId: string;
   /**
