@@ -19,9 +19,9 @@ export interface FlowsProviderProps {
    */
   environment: string;
   /**
-   * Unique user ID.
+   * Unique ID used to identify the user.
    *
-   * When `null` is passed the SDK is disabled. This is useful when you need to load the User ID asynchronously.
+   * If set to `null`, the SDK will be disabled and `children` will render while waiting for the `userId`. This is useful when loading the ID asynchronously.
    */
   userId: string | null;
   /**
