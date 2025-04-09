@@ -12,8 +12,8 @@ interface Props {
   offsetX?: number;
   offsetY?: number;
 
-  onClose?: () => void;
   buttons: HTMLElement[];
+  onClose?: () => void;
 }
 
 const BOUNDARY_PADDING = 8;
@@ -42,7 +42,6 @@ export const BaseHint: _Component<Props> = (props) => {
   targetButton.type = "button";
 
   let tooltipCleanup: (() => void) | null = null;
-  let closeButton: HTMLButtonElement | null = null;
 
   const handleTargetButtonClick = (): void => {
     if (tooltipCleanup) {
@@ -72,6 +71,7 @@ export const BaseHint: _Component<Props> = (props) => {
       props.buttons.forEach((button) => footer.appendChild(button));
     }
 
+    let closeButton: HTMLButtonElement | null = null;
     if (props.onClose) {
       closeButton = document.createElement("button");
       tooltip.appendChild(closeButton);
@@ -103,6 +103,7 @@ export const BaseHint: _Component<Props> = (props) => {
     window.addEventListener("click", handleWindowClick);
 
     tooltipCleanup = () => {
+      if (props.onClose) closeButton?.removeEventListener("click", props.onClose);
       window.removeEventListener("click", handleWindowClick);
       tooltipPositionCleanup();
       tooltip.remove();
@@ -123,11 +124,7 @@ export const BaseHint: _Component<Props> = (props) => {
     element: root,
     cleanup: () => {
       tooltipCleanup?.();
-
       buttonPositionCleanup();
-
-      if (props.onClose) closeButton?.removeEventListener("click", props.onClose);
-
       targetButton.removeEventListener("click", handleTargetButtonClick);
     },
   };
