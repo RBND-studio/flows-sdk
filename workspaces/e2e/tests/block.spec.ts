@@ -67,6 +67,7 @@ const run = (packageName: string) => {
           component: "Modal",
           props: {
             __flows: {
+              id: blocks[0]?.id,
               key: "my-key",
               workflowId: blocks[0]?.workflowId,
             },
@@ -79,6 +80,7 @@ const run = (packageName: string) => {
           component: "Modal",
           props: {
             __flows: {
+              id: blocks[1]?.tourBlocks?.[0]?.id,
               key: "tour-block-key",
               workflowId: blocks[1]?.tourBlocks?.[0]?.workflowId,
             },
