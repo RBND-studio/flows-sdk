@@ -23,7 +23,7 @@ Extend Flows by creating your own components for workflows and tours:
 - **Workflow block:** The [`banner.tsx`](./components/banner.tsx) file demonstrates a custom `Banner` component with `title`, `body`, and a `close` prop connected to an exit node.
 - **Tour block:** The [`tour-banner.tsx`](./components/tour-banner.tsx) file shows how to build a `TourBanner` component. It accepts `title` and `body` props, as well as `continue`, `previous` and `cancel` for navigation between tour steps.
 
-For detailed instructions on building custom components, see the [custom components documentation](https://flows.sh/docs/blocks/create-custom-components).
+For detailed instructions on building custom components, see the [custom components documentation](https://flows.sh/docs/components/custom).
 
 ### Flows slots
 
