@@ -20,7 +20,7 @@
     "product-adoption",
     "product-tours"
   ],
-  "version": "1.1.0",
+  "version": "1.1.1-canary.1",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/RBND-studio/flows-sdk.git"
@@ -29,7 +29,7 @@
   "sideEffects": false,
   "scripts": {
     "dev": "tsup --watch --env.NODE_ENV development",
-    "build": "tsup --env.NODE_ENV production",
+    "build": "tsup --env.NODE_ENV production && node scripts/rename-global-modules.js",
     "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",
     "lint": "eslint src",

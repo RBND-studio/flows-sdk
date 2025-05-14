@@ -26,6 +26,8 @@ Modal [`component`](./src/app/flows/components/modal/flows-components-modal.comp
 
 In [`styles.css`](./src/styles.css) you can find all the styles copy-pasted from `@flows/js-components` stylesheet needed for the Modal and Tooltip component.
 
+For detailed instructions on building custom components, see the [custom components documentation](https://flows.sh/docs/components/custom).
+
 ## Documentation
 
 Learn more about Flows and how to use its features in the [official Flows documentation](https://flows.sh/docs).

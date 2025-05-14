@@ -24,7 +24,7 @@ The `<FlowsSlot>` component lets you render Flows UI elements dynamically within
 
 Modal [`component`](./components/flows/components/modal.vue) and [`tour component`](./components/flows/tour/modal.vue) demonstrates how to implement default block template.
 
-For detailed instructions on building custom components, see the [custom components documentation](https://flows.sh/docs/blocks/create-custom-components).
+For detailed instructions on building custom components, see the [custom components documentation](https://flows.sh/docs/components/custom).
 
 ## Documentation
 

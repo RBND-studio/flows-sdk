@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flows JavaScript CDN example</title>
+
+    <!-- @flows/js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/@flows/js@1.9.1/dist/index.global.js"></script>
+
+    <!-- @flows/js-components -->
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/@flows/js-components@1.1.1/dist/index.global.js"
+    ></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/@flows/js-components@1.1.1/dist/components.global.js"
+    ></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/@flows/js-components@1.1.1/dist/tour-components.global.js"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@flows/js-components@1.1.1/dist/index.css"
+    />
+
+    <!-- Setup script -->
+    <script defer src="./flows.js"></script>
+  </head>
+  <body>
+    <h1>Flows JavaScript CDN example</h1>
+    <flows-slot data-slot-id="my-slot">
+      <div data-placeholder>
+        <p>I will be displayed if there's no content in slot with id "my-slot"</p>
+      </div>
+    </flows-slot>
+  </body>
+</html>
