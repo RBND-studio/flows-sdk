@@ -1,5 +1,3 @@
-import { Card } from "./card";
-
 // @flows/js
 const { init, addFloatingBlocksChangeListener, addSlotBlocksChangeListener } = flows_js;
 
@@ -7,6 +5,31 @@ const { init, addFloatingBlocksChangeListener, addSlotBlocksChangeListener } = f
 const { render, updateSlotComponents } = flows_js_components;
 const providedComponents = flows_js_components_components;
 const providedTourComponents = flows_js_components_tour_components;
+
+/**
+ * Custom Card component definition
+ * @param {{ text: string, continue: () => void }} props
+ * @returns {{ element: HTMLElement, cleanup: () => void }}
+ */
+const Card = (props) => {
+  const card = document.createElement("div");
+
+  const text = document.createElement("p");
+  text.innerText = props.text;
+  card.appendChild(text);
+
+  const closeButton = document.createElement("button");
+  closeButton.innerText = "Close";
+  closeButton.addEventListener("click", props.close);
+  card.appendChild(closeButton);
+
+  return {
+    element: card,
+    cleanup: () => {
+      closeButton.removeEventListener("click", props.close);
+    },
+  };
+};
 
 // Define your components, we're using pre-built components and a custom Card component
 const components = { ...providedComponents, Card };
