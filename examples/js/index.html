@@ -6,21 +6,38 @@
     <title>Flows JS example</title>
 
     <!-- @flows/js -->
-    <script src="https://cdn.jsdelivr.net/npm/@flows/js@1.9.0/dist/index.global.js"></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/@flows/js@1.9.1-canary.0/dist/index.global.js"
+    ></script>
 
     <!-- @flows/js-components -->
-    <script src="https://cdn.jsdelivr.net/npm/@flows/js-components@1.1.0/dist/index.global.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@flows/js-components@1.1.0/dist/components.global.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@flows/js-components@1.1.0/dist/tour-components.global.js"></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/@flows/js-components@1.1.1-canary.0/dist/index.global.js"
+    ></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/@flows/js-components@1.1.1-canary.0/dist/components.global.js"
+    ></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/@flows/js-components@1.1.1-canary.0/dist/tour-components.global.js"
+    ></script>
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@flows/js-components@1.1.0/dist/index.css"
+      href="https://cdn.jsdelivr.net/npm/@flows/js-components@1.1.1-canary.0/dist/index.css"
     />
 
-    <!-- My initialization script -->
-    <script src="./flows.js" type="module"></script>
+    <!-- Setup script -->
+    <script defer src="./flows.js"></script>
   </head>
   <body>
     <h1>Flows JS</h1>
+    <flows-slot data-slot-id="my-slot">
+      <div data-placeholder>
+        <p>I will be displayed if there's no content in slot with id "my-slot"</p>
+      </div>
+    </flows-slot>
   </body>
 </html>
