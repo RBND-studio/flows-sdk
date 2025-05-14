@@ -4,7 +4,7 @@ An example project showcasing how to use Flows with JavaScript loaded from CDN t
 
 ![Cover](./cover.png)
 
-This example is basic HTML page extended with the [`@flows/js`](https://www.npmjs.com/package/@flows/js) and [`@flows/js-components`](https://www.npmjs.com/package/@flows/js-components) packages to demonstrate how to integrate Flows into your website.
+This example is basic HTML page extended with the [`@flows/js`](https://www.npmjs.com/package/@flows/js) and [`@flows/js-components`](https://www.npmjs.com/package/@flows/js-components) packages loaded from a CDN to demonstrate how to integrate Flows into your app without using npm.
 
 ## Features
 
