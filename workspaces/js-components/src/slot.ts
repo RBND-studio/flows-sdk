@@ -4,7 +4,14 @@ import { type Components, type MountedElement, type TourComponents } from "./typ
 let components: Components = {};
 let tourComponents: TourComponents = {};
 
-const defineFlowsSlot = (): void => {
+type AddSlotBlocksChangeListener = (
+  slotId: string,
+  callback: (items: ActiveBlock[]) => void,
+) => () => void;
+
+const defineFlowsSlot = (options: {
+  addSlotBlocksChangeListener?: AddSlotBlocksChangeListener;
+}): void => {
   // Don't run on server to prevent error because of missing browser APIs
   if (typeof window === "undefined") return;
   // Don't run if the element is already defined
@@ -25,7 +32,8 @@ const defineFlowsSlot = (): void => {
 
     connectedCallback(): void {
       this.blocks = getCurrentSlotBlocks(this.slotId);
-      this.changeListenerDispose = addSlotBlocksChangeListener(this.slotId, (blocks) => {
+      const addListener = options.addSlotBlocksChangeListener ?? addSlotBlocksChangeListener;
+      this.changeListenerDispose = addListener(this.slotId, (blocks) => {
         this.blocks = blocks;
         this.render();
       });
@@ -77,6 +85,7 @@ const defineFlowsSlot = (): void => {
 export interface UpdateSlotComponentsOptions {
   components: Components;
   tourComponents: TourComponents;
+  addSlotBlocksChangeListener?: AddSlotBlocksChangeListener;
 }
 /**
  * This method is used to register custom `<flows-slot>` element as well as updating the components that can be rendered inside the slot.
@@ -84,7 +93,7 @@ export interface UpdateSlotComponentsOptions {
  * @param options - with components and tourComponents available to be rendered inside the slot
  */
 export const updateSlotComponents = (options: UpdateSlotComponentsOptions): void => {
-  defineFlowsSlot();
+  defineFlowsSlot({ addSlotBlocksChangeListener: options.addSlotBlocksChangeListener });
 
   components = options.components;
   tourComponents = options.tourComponents;
