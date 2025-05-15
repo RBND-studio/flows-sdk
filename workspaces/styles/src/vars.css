@@ -49,7 +49,6 @@
 
   /* Elements */
   --flows-zIndex: 1500;
-  --flows-target-zIndex: 5000;
 
   --flows-tooltip-padding: var(--flows-size-large);
   --flows-tooltip-overlayBackground: var(--flows-bg-overlay);
@@ -104,6 +103,16 @@
     transform: scale(1);
   }
 }
+@keyframes flows-scaleOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
 
 @keyframes flows-fadeIn {
   from {
@@ -111,5 +120,17 @@
   }
   to {
     opacity: 1;
+  }
+}
+
+@keyframes flows-ping {
+  0% {
+    transform: scale(1);
+    opacity: 0.75;
+  }
+  75%,
+  to {
+    transform: scale(2);
+    opacity: 0;
   }
 }

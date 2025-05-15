@@ -50,7 +50,6 @@ const run = (packageName: string) => {
     let modalReqWasSent = false;
     page.on("request", (req) => {
       const body = req.postDataJSON();
-      console.log(req.url(), body.name, body.blockId);
       if (
         req.url() === "https://api.flows-cloud.com/v2/sdk/events" &&
         body.name === "block-activated" &&
@@ -67,7 +66,6 @@ const run = (packageName: string) => {
     });
 
     await expect(page.locator(".flows_modal_modal")).toBeVisible();
-    console.log("modal displayed");
     expect(wrongCmpReqWasSent).toBe(false);
     expect(modalReqWasSent).toBe(true);
   });

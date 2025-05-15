@@ -1,0 +1,38 @@
+.flows_hint_hotspot {
+  position: absolute;
+  background-color: var(--flows-bg-primary);
+  border-radius: 50%;
+  transition: background-color 120ms ease-in-out;
+  z-index: var(--flows-zIndex);
+  width: 16px;
+  height: 16px;
+}
+
+.flows_hint_hotspot:hover {
+  background-color: var(--flows-bg-primary-hover);
+}
+
+.flows_hint_hotspot::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  background-color: var(--flows-bg-primary);
+  animation: flows-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.flows_hint_tooltip.flows_hint_tooltip {
+  transition: none;
+}
+
+.flows_hint_tooltip {
+  z-index: var(--flows-zIndex);
+}
+
+.flows_hint_tooltip[data-open="false"] {
+  animation: flows-scaleOut 150ms ease-out;
+  opacity: 0;
+}
