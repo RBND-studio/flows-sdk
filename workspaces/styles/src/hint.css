@@ -1,4 +1,4 @@
-.flows_hint_target {
+.flows_hint_hotspot {
   position: absolute;
   background-color: var(--flows-bg-primary);
   border-radius: 50%;
@@ -8,11 +8,11 @@
   height: 16px;
 }
 
-.flows_hint_target:hover {
+.flows_hint_hotspot:hover {
   background-color: var(--flows-bg-primary-hover);
 }
 
-.flows_hint_target::after {
+.flows_hint_hotspot::after {
   content: "";
   position: absolute;
   width: 100%;

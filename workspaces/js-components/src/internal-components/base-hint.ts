@@ -37,7 +37,7 @@ export const BaseHint: _Component<Props> = (props) => {
 
   const targetButton = document.createElement("button");
   root.appendChild(targetButton);
-  targetButton.className = "flows_hint_target";
+  targetButton.className = "flows_hint_hotspot";
   targetButton.setAttribute("aria-label", "Open hint");
   targetButton.type = "button";
 

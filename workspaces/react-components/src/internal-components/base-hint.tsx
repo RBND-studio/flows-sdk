@@ -105,7 +105,7 @@ export const BaseHint: FC<Props> = (props) => {
         }}
         aria-label="Open hint"
         type="button"
-        className="flows_hint_target"
+        className="flows_hint_hotspot"
         onClick={tooltipOpen ? handleClose : handleOpen}
       />
 
