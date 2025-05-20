@@ -1,5 +1,5 @@
 import { type FC, type ReactNode } from "react";
-import { type UserProperties } from "@flows/shared";
+import { type LocaleOption, type UserProperties } from "@flows/shared";
 import { type TourComponents, type Components } from "./types";
 import { FlowsContext } from "./flows-context";
 import { useRunningTours } from "./hooks/use-running-tours";
@@ -40,6 +40,14 @@ export interface FlowsProviderProps {
    * Components used for tour blocks.
    */
   tourComponents: TourComponents;
+  /**
+   * Locale used to select the correct translation for the block data.
+   * - `disabled` - the default language will be served. (default)
+   * - `automatic` - the locale will be detected from the browser settings.
+   * - specific locale (e.g. `en`, `en-US`) - The whole list of supported locales can be found: TODO:
+   * @defaultValue `disabled`
+   */
+  locale?: LocaleOption;
 
   children: ReactNode;
 }
@@ -64,6 +72,7 @@ const FlowsProviderInner: FC<Props> = ({
   components,
   tourComponents,
   userProperties,
+  locale,
 }) => {
   globalConfig.apiUrl = apiUrl;
   globalConfig.environment = environment;
@@ -76,6 +85,7 @@ const FlowsProviderInner: FC<Props> = ({
     organizationId,
     userId,
     userProperties,
+    locale,
   });
 
   const runningTours = useRunningTours({ blocks, removeBlock });

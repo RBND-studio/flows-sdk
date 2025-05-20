@@ -6,6 +6,8 @@ import {
   type Block,
   type TourStep,
   type BlockUpdatesPayload,
+  type LocaleOption,
+  getUserLocale,
 } from "@flows/shared";
 import { packageAndVersion } from "../lib/constants";
 import { type RemoveBlock, type UpdateBlock } from "../flows-context";
@@ -17,6 +19,7 @@ interface Props {
   organizationId: string;
   userId: string;
   userProperties?: UserProperties;
+  locale?: LocaleOption;
 }
 
 interface Return {
@@ -31,6 +34,7 @@ export const useBlocks = ({
   organizationId,
   userId,
   userProperties,
+  locale,
 }: Props): Return => {
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [usageLimited, setUsageLimited] = useState(false);
@@ -44,10 +48,13 @@ export const useBlocks = ({
     userPropertiesRef.current = userProperties;
   }, [userProperties]);
 
-  // TODO: call fetchBlocks on reconnect
   const fetchBlocks = useCallback(() => {
     void getApi(apiUrl, packageAndVersion)
-      .getBlocks({ ...params, userProperties: userPropertiesRef.current })
+      .getBlocks({
+        ...params,
+        locale: getUserLocale(locale),
+        userProperties: userPropertiesRef.current,
+      })
       .then((res) => {
         setBlocks(res.blocks);
         if (res.meta?.usage_limited) setUsageLimited(true);
@@ -55,7 +62,7 @@ export const useBlocks = ({
       .catch((err: unknown) => {
         log.error("Failed to load blocks", err);
       });
-  }, [apiUrl, params]);
+  }, [apiUrl, locale, params]);
 
   const websocketUrl = useMemo(() => {
     if (usageLimited) return;
