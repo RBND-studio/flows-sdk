@@ -5,6 +5,10 @@
  */
 export interface FlowsProperties {
   /**
+   * Unique identifier of the block, useful for stable key during rendering. Keep in mind each workflow version will have a different id for each block.
+   */
+  id: string;
+  /**
    * User defined key for identifying the block.
    */
   key?: string;

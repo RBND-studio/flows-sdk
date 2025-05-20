@@ -50,6 +50,7 @@ const run = (packageName: string) => {
           component: "StateMemory",
           props: {
             __flows: {
+              id: blocks[0]?.id,
               workflowId: blocks[0]?.workflowId,
             },
             title: "State Memory Title",

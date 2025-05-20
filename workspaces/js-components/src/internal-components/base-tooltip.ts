@@ -43,7 +43,7 @@ export const BaseTooltip: _Component<Props> = (props) => {
     overlay = document.createElement("div");
     root.appendChild(overlay);
     overlay.className = "flows_tooltip_overlay";
-    overlay.ariaHidden = "true";
+    overlay.setAttribute("aria-hidden", "true");
   }
 
   const tooltip = document.createElement("div");
@@ -73,7 +73,7 @@ export const BaseTooltip: _Component<Props> = (props) => {
     closeButton = document.createElement("button");
     tooltip.appendChild(closeButton);
     closeButton.className = "flows_iconButton flows_tooltip_close";
-    closeButton.ariaLabel = "Close";
+    closeButton.setAttribute("aria-label", "Close");
     closeButton.appendChild(close16());
     closeButton.addEventListener("click", props.close);
   }
