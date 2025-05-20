@@ -17,7 +17,7 @@ export const BaseModal: _Component<Props> = (props) => {
     overlay = document.createElement("div");
     root.appendChild(overlay);
     overlay.className = `flows_modal_overlay${props.close ? " flows_modal_clickable" : ""}`;
-    overlay.ariaHidden = "true";
+    overlay.setAttribute("aria-hidden", "true");
     if (props.close) overlay.addEventListener("click", props.close);
   }
 
@@ -52,7 +52,7 @@ export const BaseModal: _Component<Props> = (props) => {
     closeButton = document.createElement("button");
     modal.appendChild(closeButton);
     closeButton.className = "flows_iconButton flows_modal_close";
-    closeButton.ariaLabel = "Close";
+    closeButton.setAttribute("aria-label", "Close");
     closeButton.addEventListener("click", props.close);
     closeButton.appendChild(close16());
   }

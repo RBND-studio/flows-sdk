@@ -17,7 +17,7 @@ export type HintProps = TourComponentProps<{
 
 const hiddenDiv = (): HTMLElement => {
   const div = document.createElement("div");
-  div.ariaHidden = "true";
+  div.setAttribute("aria-hidden", "true");
   return div;
 };
 

@@ -76,7 +76,7 @@ export const BaseHint: _Component<Props> = (props) => {
       closeButton = document.createElement("button");
       tooltip.appendChild(closeButton);
       closeButton.className = "flows_iconButton flows_tooltip_close";
-      closeButton.ariaLabel = "Close";
+      closeButton.setAttribute("aria-label", "Close");
       closeButton.appendChild(close16());
       closeButton.addEventListener("click", props.onClose);
     }
