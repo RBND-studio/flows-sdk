@@ -29,7 +29,7 @@
 }
 
 .flows_hint_tooltip {
-  z-index: var(--flows-zIndex);
+  z-index: calc(var(--flows-zIndex) + 1);
 }
 
 .flows_hint_tooltip[data-open="false"] {
