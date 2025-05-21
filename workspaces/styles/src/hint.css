@@ -29,7 +29,8 @@
 }
 
 .flows_hint_tooltip {
-  z-index: var(--flows-zIndex);
+  /* Increment z-index by 1 to ensure the tooltip appears above the other hint hotspot buttons. */
+  z-index: calc(var(--flows-zIndex) + 1);
 }
 
 .flows_hint_tooltip[data-open="false"] {
