@@ -1,16 +1,18 @@
 import { type Placement, type TourComponentProps } from "@flows/shared";
-import { BaseTooltip } from "../internal-components/base-tooltip";
 import { type Component } from "../types";
+import { BaseHint } from "../internal-components/base-hint";
 
-export type TooltipProps = TourComponentProps<{
+export type HintProps = TourComponentProps<{
   title: string;
   body: string;
   continueText?: string;
   previousText?: string;
   showCloseButton: boolean;
+
   targetElement: string;
   placement?: Placement;
-  hideOverlay?: boolean;
+  offsetX?: number;
+  offsetY?: number;
 }>;
 
 const hiddenDiv = (): HTMLElement => {
@@ -19,7 +21,7 @@ const hiddenDiv = (): HTMLElement => {
   return div;
 };
 
-export const Tooltip: Component<TooltipProps> = (props) => {
+export const Hint: Component<HintProps> = (props) => {
   let previousButton: HTMLButtonElement | null = null;
   if (props.previous && props.previousText) {
     previousButton = document.createElement("button");
@@ -45,13 +47,14 @@ export const Tooltip: Component<TooltipProps> = (props) => {
         ]
       : [];
 
-  const result = BaseTooltip({
+  const result = BaseHint({
     title: props.title,
     body: props.body,
     targetElement: props.targetElement,
+    offsetX: props.offsetX,
+    offsetY: props.offsetY,
     placement: props.placement,
-    overlay: !props.hideOverlay,
-    close: props.showCloseButton ? props.cancel : undefined,
+    onClose: props.showCloseButton ? props.cancel : undefined,
     buttons,
   });
 
