@@ -1,4 +1,11 @@
-import { type BlockUpdatesPayload, getApi, log, type UserProperties } from "@flows/shared";
+import {
+  type BlockUpdatesPayload,
+  getApi,
+  getUserLocale,
+  type LocaleOption,
+  log,
+  type UserProperties,
+} from "@flows/shared";
 import { blocks } from "../store";
 import { type Disconnect, websocket } from "./websocket";
 import { packageAndVersion } from "./constants";
@@ -9,6 +16,7 @@ interface Props {
   organizationId: string;
   userId: string;
   userProperties?: UserProperties;
+  locale?: LocaleOption;
 }
 
 let disconnect: Disconnect | null = null;
@@ -23,7 +31,11 @@ export const connectToWebsocketAndFetchBlocks = (props: Props): void => {
 
   const fetchBlocks = (): void => {
     void getApi(apiUrl, packageAndVersion)
-      .getBlocks({ ...params, userProperties: props.userProperties })
+      .getBlocks({
+        ...params,
+        locale: getUserLocale(props.locale),
+        userProperties: props.userProperties,
+      })
       .then((res) => {
         blocks.value = res.blocks;
         // Disconnect if the user is usage limited

@@ -9,10 +9,12 @@ import * as _components from "@flows/js-components/components";
 import * as _tourComponents from "@flows/js-components/tour-components";
 import "@flows/js-components/index.css";
 import { startWorkflow, StateMemory as IStateMemory } from "@flows/js";
+import { LocaleOption } from "@flows/shared";
 
 const apiUrl = new URLSearchParams(window.location.search).get("apiUrl") ?? undefined;
 const noCurrentBlocks =
   new URLSearchParams(window.location.search).get("noCurrentBlocks") === "true";
+const locale = new URLSearchParams(window.location.search).get("locale") as LocaleOption;
 
 const Card: Component<{ text: string }> = (props) => {
   const card = document.createElement("div");
@@ -116,6 +118,7 @@ init({
   environment: "prod",
   organizationId: "orgId",
   userId: "testUserId",
+  locale,
   apiUrl,
   userProperties: {
     email: "test@flows.sh",
