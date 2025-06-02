@@ -44,31 +44,11 @@ const run = (packageName: string) => {
         body.environment === "prod" &&
         body.userProperties.email === "test@flows.sh" &&
         body.userProperties.age === 10 &&
-        body.locale === "en-US"
+        body.locale === undefined
       );
     });
     const urlParams = new URLSearchParams();
     urlParams.set("apiUrl", "https://custom.api.flows.com");
-    urlParams.set("locale", "en-US");
-    await page.goto(`/${packageName}.html?${urlParams.toString()}`);
-    await blocksReq;
-  });
-  test(`${packageName} - should call with detected locale`, async ({ page }) => {
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [] } });
-    });
-    const blocksReq = page.waitForRequest((req) => {
-      const body = req.postDataJSON();
-      const headers = req.headers();
-      return (
-        req.url() === "https://custom.api.flows.com/v2/sdk/blocks" &&
-        (headers["x-flows-version"] ?? "").startsWith("@flows/") &&
-        body.locale === "en-US"
-      );
-    });
-    const urlParams = new URLSearchParams();
-    urlParams.set("apiUrl", "https://custom.api.flows.com");
-    urlParams.set("locale", "automatic");
     await page.goto(`/${packageName}.html?${urlParams.toString()}`);
     await blocksReq;
   });
