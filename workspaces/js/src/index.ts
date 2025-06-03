@@ -6,5 +6,7 @@ export type {
   TourComponentProps,
   ComponentProps,
   StateMemory,
+  LanguageOption,
+  Locale,
 } from "@flows/shared";
 export type { FlowsOptions } from "./types/configuration";
