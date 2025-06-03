@@ -22,10 +22,10 @@ export interface FlowsOptions {
    */
   apiUrl?: string;
   /**
-   * Locale used to select the correct translation for the block data.
-   * - `disabled` - the default language will be served. (default)
-   * - `automatic` - the locale will be detected from the browser settings.
-   * - specific locale (e.g. `en`, `en-US`) - The whole list of supported locales can be found: TODO:
+   * Language used to enable [localization](https://flows.sh/docs/localization). Based on the set language, the correct translation for the block data will be selected.
+   * - `disabled` (default) - The user will be served content in the default language group of your organization.
+   * - `automatic` - Automatically detect the user's language and use the matching language group. The language is determined by the `Navigator.language` property in the browser.
+   * - Manual - A specific language string, e.g. `en-US`, `fr-FR`, etc. This will use the matching language group for the specified language. See [https://www.localeplanet.com/icu/](https://www.localeplanet.com/icu/) for a full list of supported languages.
    * @defaultValue `disabled`
    */
   language?: LanguageOption;
