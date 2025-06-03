@@ -1,4 +1,4 @@
-import { type LocaleOption, type UserProperties } from "@flows/shared";
+import { type LanguageOption, type UserProperties } from "@flows/shared";
 
 export interface FlowsOptions {
   /**
@@ -28,5 +28,5 @@ export interface FlowsOptions {
    * - specific locale (e.g. `en`, `en-US`) - The whole list of supported locales can be found: TODO:
    * @defaultValue `disabled`
    */
-  locale?: LocaleOption;
+  language?: LanguageOption;
 }

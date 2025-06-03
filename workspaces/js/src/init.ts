@@ -14,7 +14,7 @@ let locationChangeInterval: number | null = null;
 export const init = (options: FlowsOptions): void => {
   const apiUrl = options.apiUrl ?? "https://api.flows-cloud.com";
   config.value = { ...options, apiUrl };
-  const { environment, organizationId, userId, userProperties, locale } = options;
+  const { environment, organizationId, userId, userProperties, language } = options;
 
   connectToWebsocketAndFetchBlocks({
     apiUrl,
@@ -22,7 +22,7 @@ export const init = (options: FlowsOptions): void => {
     organizationId,
     userId,
     userProperties,
-    locale,
+    language,
   });
 
   if (locationChangeInterval !== null) clearInterval(locationChangeInterval);

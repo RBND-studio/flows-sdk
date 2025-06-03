@@ -6,8 +6,8 @@ import {
   type Block,
   type TourStep,
   type BlockUpdatesPayload,
-  type LocaleOption,
-  getUserLocale,
+  type LanguageOption,
+  getUserLanguage,
 } from "@flows/shared";
 import { packageAndVersion } from "../lib/constants";
 import { type RemoveBlock, type UpdateBlock } from "../flows-context";
@@ -19,7 +19,7 @@ interface Props {
   organizationId: string;
   userId: string;
   userProperties?: UserProperties;
-  locale?: LocaleOption;
+  language?: LanguageOption;
 }
 
 interface Return {
@@ -34,7 +34,7 @@ export const useBlocks = ({
   organizationId,
   userId,
   userProperties,
-  locale,
+  language,
 }: Props): Return => {
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [usageLimited, setUsageLimited] = useState(false);
@@ -52,7 +52,7 @@ export const useBlocks = ({
     void getApi(apiUrl, packageAndVersion)
       .getBlocks({
         ...params,
-        locale: getUserLocale(locale),
+        language: getUserLanguage(language),
         userProperties: userPropertiesRef.current,
       })
       .then((res) => {
@@ -62,7 +62,7 @@ export const useBlocks = ({
       .catch((err: unknown) => {
         log.error("Failed to load blocks", err);
       });
-  }, [apiUrl, locale, params]);
+  }, [apiUrl, language, params]);
 
   const websocketUrl = useMemo(() => {
     if (usageLimited) return;

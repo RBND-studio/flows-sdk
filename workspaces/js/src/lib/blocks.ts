@@ -1,8 +1,8 @@
 import {
   type BlockUpdatesPayload,
   getApi,
-  getUserLocale,
-  type LocaleOption,
+  getUserLanguage,
+  type LanguageOption,
   log,
   type UserProperties,
 } from "@flows/shared";
@@ -16,7 +16,7 @@ interface Props {
   organizationId: string;
   userId: string;
   userProperties?: UserProperties;
-  locale?: LocaleOption;
+  language?: LanguageOption;
 }
 
 let disconnect: Disconnect | null = null;
@@ -33,7 +33,7 @@ export const connectToWebsocketAndFetchBlocks = (props: Props): void => {
     void getApi(apiUrl, packageAndVersion)
       .getBlocks({
         ...params,
-        locale: getUserLocale(props.locale),
+        language: getUserLanguage(props.language),
         userProperties: props.userProperties,
       })
       .then((res) => {

@@ -7,30 +7,32 @@ test.beforeEach(async ({ page }) => {
   );
 });
 
-const run = (packageName: string, locale: string) => {
-  test(`${packageName} (${locale}) - should call custom apiUrl`, async ({ page }) => {
+const run = (packageName: string, language: string) => {
+  test(`${packageName} (${language}) - should call custom apiUrl`, async ({ page }) => {
     await page.route("**/v2/sdk/blocks", (route) => {
       route.fulfill({ json: { blocks: [] } });
     });
     const blocksReq = page.waitForRequest((req) => {
       const body = req.postDataJSON();
-      return req.url() === "https://api.flows-cloud.com/v2/sdk/blocks" && body.locale === "en-GB";
+      return req.url() === "https://api.flows-cloud.com/v2/sdk/blocks" && body.language === "en-GB";
     });
     const urlParams = new URLSearchParams();
-    urlParams.set("locale", "en-GB");
+    urlParams.set("language", "en-GB");
     await page.goto(`/${packageName}.html?${urlParams.toString()}`);
     await blocksReq;
   });
-  test(`${packageName} (${locale}) - should call with detected locale`, async ({ page }) => {
+  test(`${packageName} (${language}) - should call with detected language`, async ({ page }) => {
     await page.route("**/v2/sdk/blocks", (route) => {
       route.fulfill({ json: { blocks: [] } });
     });
     const blocksReq = page.waitForRequest((req) => {
       const body = req.postDataJSON();
-      return req.url() === "https://api.flows-cloud.com/v2/sdk/blocks" && body.locale === locale;
+      return (
+        req.url() === "https://api.flows-cloud.com/v2/sdk/blocks" && body.language === language
+      );
     });
     const urlParams = new URLSearchParams();
-    urlParams.set("locale", "automatic");
+    urlParams.set("language", "automatic");
     await page.goto(`/${packageName}.html?${urlParams.toString()}`);
     await blocksReq;
   });

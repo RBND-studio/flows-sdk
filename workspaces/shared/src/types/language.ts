@@ -1,4 +1,4 @@
-export type LocaleOption = "disabled" | "automatic" | Locale;
+export type LanguageOption = "disabled" | "automatic" | Locale;
 
 export type Locale =
   | "af"

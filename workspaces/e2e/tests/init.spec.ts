@@ -23,7 +23,7 @@ const run = (packageName: string) => {
         body.environment === "prod" &&
         body.userProperties.email === "test@flows.sh" &&
         body.userProperties.age === 10 &&
-        body.locale === undefined
+        body.language === undefined
       );
     });
     await page.goto(`/${packageName}.html`);
@@ -44,7 +44,7 @@ const run = (packageName: string) => {
         body.environment === "prod" &&
         body.userProperties.email === "test@flows.sh" &&
         body.userProperties.age === 10 &&
-        body.locale === undefined
+        body.language === undefined
       );
     });
     const urlParams = new URLSearchParams();
