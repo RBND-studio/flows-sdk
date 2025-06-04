@@ -1,10 +1,26 @@
-import { test } from "@playwright/test";
+import { Block, BlockUpdatesPayload } from "@flows/shared";
+import { expect, Route, test, WebSocketRoute } from "@playwright/test";
+import { randomUUID } from "crypto";
 
+let ws: WebSocketRoute | null = null;
 test.beforeEach(async ({ page }) => {
   await page.routeWebSocket(
     (url) => url.pathname === "/ws/sdk/block-updates",
-    () => {},
+    (_ws) => {
+      ws = _ws;
+    },
   );
+});
+
+const getBlock = (): Block => ({
+  id: randomUUID(),
+  workflowId: randomUUID(),
+  type: "component",
+  componentType: "Modal",
+  data: { title: "Hello world", body: "" },
+  exitNodes: [],
+  slottable: false,
+  propertyMeta: [],
 });
 
 const run = (packageName: string) => {
@@ -49,6 +65,23 @@ const run = (packageName: string) => {
       `/${packageName}.html?apiUrl=${encodeURIComponent("https://custom.api.flows.com")}`,
     );
     await blocksReq;
+  });
+  test(`${packageName} - shouldn't overwrite blocks state by /blocks result`, async ({ page }) => {
+    let blocksRoute: Route | null = null;
+    await page.route("**/v2/sdk/blocks", (route) => {
+      blocksRoute = route;
+    });
+    await page.goto(`/${packageName}.html`);
+    await expect(page.locator(".current-blocks")).toHaveText(JSON.stringify([]));
+    const block = getBlock();
+    const payload: BlockUpdatesPayload = {
+      exitedBlockIds: [],
+      updatedBlocks: [block],
+    };
+    ws?.send(JSON.stringify(payload));
+    await expect(page.getByText("Hello world", { exact: true })).toBeVisible();
+    (blocksRoute as Route | null)?.fulfill({ json: { blocks: [] } });
+    await expect(page.getByText("Hello world", { exact: true })).toBeVisible();
   });
 };
 
