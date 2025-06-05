@@ -6,5 +6,7 @@ export type {
   FlowsProperties,
   ActiveBlock,
   StateMemory,
+  LanguageOption,
+  Locale,
 } from "@flows/shared";
 export * from "./methods";

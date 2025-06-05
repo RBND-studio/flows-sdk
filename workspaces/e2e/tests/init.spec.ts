@@ -38,7 +38,8 @@ const run = (packageName: string) => {
         body.userId === "testUserId" &&
         body.environment === "prod" &&
         body.userProperties.email === "test@flows.sh" &&
-        body.userProperties.age === 10
+        body.userProperties.age === 10 &&
+        body.language === undefined
       );
     });
     await page.goto(`/${packageName}.html`);
@@ -58,12 +59,13 @@ const run = (packageName: string) => {
         body.userId === "testUserId" &&
         body.environment === "prod" &&
         body.userProperties.email === "test@flows.sh" &&
-        body.userProperties.age === 10
+        body.userProperties.age === 10 &&
+        body.language === undefined
       );
     });
-    await page.goto(
-      `/${packageName}.html?apiUrl=${encodeURIComponent("https://custom.api.flows.com")}`,
-    );
+    const urlParams = new URLSearchParams();
+    urlParams.set("apiUrl", "https://custom.api.flows.com");
+    await page.goto(`/${packageName}.html?${urlParams.toString()}`);
     await blocksReq;
   });
   test(`${packageName} - shouldn't overwrite blocks state by /blocks result`, async ({ page }) => {

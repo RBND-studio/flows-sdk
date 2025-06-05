@@ -14,11 +14,13 @@ import { createRoot } from "react-dom/client";
 import * as components from "@flows/react-components";
 import * as tourComponents from "@flows/react-components/tour";
 import "@flows/react-components/index.css";
+import { LanguageOption } from "@flows/shared";
 
 const apiUrl = new URLSearchParams(window.location.search).get("apiUrl") ?? undefined;
 const noUserId = new URLSearchParams(window.location.search).get("noUserId") === "true";
 const noCurrentBlocks =
   new URLSearchParams(window.location.search).get("noCurrentBlocks") === "true";
+const language = new URLSearchParams(window.location.search).get("language") as LanguageOption;
 
 const Card: FC<ComponentProps<{ text: string }>> = (props) => (
   <div
@@ -93,6 +95,7 @@ createRoot(document.getElementById("root")!).render(
       organizationId="orgId"
       environment="prod"
       userId={noUserId ? null : "testUserId"}
+      language={language}
       userProperties={{
         email: "test@flows.sh",
         age: 10,

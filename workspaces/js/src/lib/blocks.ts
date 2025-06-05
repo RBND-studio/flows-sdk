@@ -1,6 +1,8 @@
 import {
   type BlockUpdatesPayload,
   getApi,
+  getUserLanguage,
+  type LanguageOption,
   log,
   deduplicateBlocks,
   type UserProperties,
@@ -15,6 +17,7 @@ interface Props {
   organizationId: string;
   userId: string;
   userProperties?: UserProperties;
+  language?: LanguageOption;
 }
 
 let disconnect: Disconnect | null = null;
@@ -29,7 +32,11 @@ export const connectToWebsocketAndFetchBlocks = (props: Props): void => {
 
   const fetchBlocks = (): void => {
     void getApi(apiUrl, packageAndVersion)
-      .getBlocks({ ...params, userProperties: props.userProperties })
+      .getBlocks({
+        ...params,
+        language: getUserLanguage(props.language),
+        userProperties: props.userProperties,
+      })
       .then((res) => {
         blocks.value = deduplicateBlocks(blocks.value, res.blocks);
         // Disconnect if the user is usage limited
