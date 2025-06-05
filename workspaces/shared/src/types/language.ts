@@ -1,5 +1,8 @@
 export type LanguageOption = "disabled" | "automatic" | Locale;
 
+/**
+ * Full list of supported locales coming from the browser `navigator.language`. Source: [https://www.localeplanet.com/icu/](https://www.localeplanet.com/icu/).
+ */
 export type Locale =
   | "af"
   | "af-NA"
