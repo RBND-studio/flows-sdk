@@ -4,6 +4,7 @@ import {
   getUserLanguage,
   type LanguageOption,
   log,
+  deduplicateBlocks,
   type UserProperties,
 } from "@flows/shared";
 import { blocks } from "../store";
@@ -37,7 +38,7 @@ export const connectToWebsocketAndFetchBlocks = (props: Props): void => {
         userProperties: props.userProperties,
       })
       .then((res) => {
-        blocks.value = res.blocks;
+        blocks.value = deduplicateBlocks(blocks.value, res.blocks);
         // Disconnect if the user is usage limited
         if (res.meta?.usage_limited) disconnect?.();
       })
@@ -47,14 +48,9 @@ export const connectToWebsocketAndFetchBlocks = (props: Props): void => {
   };
   const onMessage = (event: MessageEvent<unknown>): void => {
     const data = JSON.parse(event.data as string) as BlockUpdatesPayload;
-    const exitedOrUpdatedBlockIdsSet = new Set([
-      ...data.exitedBlockIds,
-      ...data.updatedBlocks.map((b) => b.id),
-    ]);
-    blocks.value = [
-      ...blocks.value.filter((block) => !exitedOrUpdatedBlockIdsSet.has(block.id)),
-      ...data.updatedBlocks,
-    ];
+    const exitedBlockIdsSet = new Set(data.exitedBlockIds);
+    const filteredBlocks = blocks.value.filter((b) => !exitedBlockIdsSet.has(b.id));
+    blocks.value = deduplicateBlocks(filteredBlocks, data.updatedBlocks);
   };
 
   // Disconnect previous connection if it exists

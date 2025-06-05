@@ -8,6 +8,7 @@ import {
   type BlockUpdatesPayload,
   type LanguageOption,
   getUserLanguage,
+  deduplicateBlocks,
 } from "@flows/shared";
 import { packageAndVersion } from "../lib/constants";
 import { type RemoveBlock, type UpdateBlock } from "../flows-context";
@@ -56,7 +57,7 @@ export const useBlocks = ({
         userProperties: userPropertiesRef.current,
       })
       .then((res) => {
-        setBlocks(res.blocks);
+        setBlocks((prevBlocks) => deduplicateBlocks(prevBlocks, res.blocks));
         if (res.meta?.usage_limited) setUsageLimited(true);
       })
       .catch((err: unknown) => {
@@ -74,14 +75,11 @@ export const useBlocks = ({
     // TODO: add debug logging
     // console.log("Message from server", event.data);
     const data = JSON.parse(event.data as string) as BlockUpdatesPayload;
-    const exitedOrUpdatedBlockIdsSet = new Set([
-      ...data.exitedBlockIds,
-      ...data.updatedBlocks.map((b) => b.id),
-    ]);
-    setBlocks((prevBlocks) => [
-      ...prevBlocks.filter((block) => !exitedOrUpdatedBlockIdsSet.has(block.id)),
-      ...data.updatedBlocks,
-    ]);
+    const exitedBlockIdsSet = new Set(data.exitedBlockIds);
+    setBlocks((prevBlocks) => {
+      const filteredBlocks = prevBlocks.filter((b) => !exitedBlockIdsSet.has(b.id));
+      return deduplicateBlocks(filteredBlocks, data.updatedBlocks);
+    });
   }, []);
   useWebsocket({ url: websocketUrl, onMessage, onOpen: fetchBlocks });
 
