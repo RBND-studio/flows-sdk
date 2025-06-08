@@ -8,7 +8,7 @@ import {
   type BlockUpdatesPayload,
   type LanguageOption,
   getUserLanguage,
-  deduplicateBlocks,
+  applyUpdateMessageToBlocksState,
 } from "@flows/shared";
 import { packageAndVersion } from "../lib/constants";
 import { type RemoveBlock, type UpdateBlock } from "../flows-context";
@@ -37,8 +37,11 @@ export const useBlocks = ({
   userProperties,
   language,
 }: Props): Return => {
-  const [blocks, setBlocks] = useState<Block[]>([]);
+  const [blocksState, setBlocksState] = useState<Block[] | null>(null);
+  const blocks = useMemo(() => blocksState ?? [], [blocksState]);
+
   const [usageLimited, setUsageLimited] = useState(false);
+  const pendingMessages = useRef<BlockUpdatesPayload[]>([]);
 
   const params = useMemo(
     () => ({ environment, organizationId, userId }),
@@ -57,7 +60,13 @@ export const useBlocks = ({
         userProperties: userPropertiesRef.current,
       })
       .then((res) => {
-        setBlocks((prevBlocks) => deduplicateBlocks(prevBlocks, res.blocks));
+        const blocksWithUpdates = pendingMessages.current.reduce(
+          applyUpdateMessageToBlocksState,
+          res.blocks,
+        );
+        setBlocksState(blocksWithUpdates);
+        pendingMessages.current = [];
+
         if (res.meta?.usage_limited) setUsageLimited(true);
       })
       .catch((err: unknown) => {
@@ -75,10 +84,12 @@ export const useBlocks = ({
     // TODO: add debug logging
     // console.log("Message from server", event.data);
     const data = JSON.parse(event.data as string) as BlockUpdatesPayload;
-    const exitedBlockIdsSet = new Set(data.exitedBlockIds);
-    setBlocks((prevBlocks) => {
-      const filteredBlocks = prevBlocks.filter((b) => !exitedBlockIdsSet.has(b.id));
-      return deduplicateBlocks(filteredBlocks, data.updatedBlocks);
+    setBlocksState((prev) => {
+      if (!prev) {
+        pendingMessages.current.push(data);
+        return prev;
+      }
+      return applyUpdateMessageToBlocksState(prev, data);
     });
   }, []);
   useWebsocket({ url: websocketUrl, onMessage, onOpen: fetchBlocks });
@@ -95,10 +106,16 @@ export const useBlocks = ({
   }, [blocks]);
 
   const removeBlock: RemoveBlock = useCallback((blockId) => {
-    setBlocks((prev) => prev.filter((b) => b.id !== blockId));
+    setBlocksState((prev) => {
+      if (!prev) return prev;
+      return prev.filter((b) => b.id !== blockId);
+    });
   }, []);
   const updateBlock: UpdateBlock = useCallback((blockId, updateFn) => {
-    setBlocks((prev) => prev.map((b) => (b.id === blockId ? updateFn(b) : b)));
+    setBlocksState((prev) => {
+      if (!prev) return prev;
+      return prev.map((b) => (b.id === blockId ? updateFn(b) : b));
+    });
   }, []);
 
   return { blocks, removeBlock, updateBlock };

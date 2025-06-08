@@ -1,13 +1,13 @@
 import {
+  applyUpdateMessageToBlocksState,
   type BlockUpdatesPayload,
   getApi,
   getUserLanguage,
   type LanguageOption,
   log,
-  deduplicateBlocks,
   type UserProperties,
 } from "@flows/shared";
-import { blocks } from "../store";
+import { blocks, blocksState, pendingMessages } from "../store";
 import { type Disconnect, websocket } from "./websocket";
 import { packageAndVersion } from "./constants";
 
@@ -38,7 +38,13 @@ export const connectToWebsocketAndFetchBlocks = (props: Props): void => {
         userProperties: props.userProperties,
       })
       .then((res) => {
-        blocks.value = deduplicateBlocks(blocks.value, res.blocks);
+        const blocksWithUpdates = pendingMessages.value.reduce(
+          applyUpdateMessageToBlocksState,
+          res.blocks,
+        );
+        blocksState.value = blocksWithUpdates;
+        pendingMessages.value = [];
+
         // Disconnect if the user is usage limited
         if (res.meta?.usage_limited) disconnect?.();
       })
@@ -48,9 +54,8 @@ export const connectToWebsocketAndFetchBlocks = (props: Props): void => {
   };
   const onMessage = (event: MessageEvent<unknown>): void => {
     const data = JSON.parse(event.data as string) as BlockUpdatesPayload;
-    const exitedBlockIdsSet = new Set(data.exitedBlockIds);
-    const filteredBlocks = blocks.value.filter((b) => !exitedBlockIdsSet.has(b.id));
-    blocks.value = deduplicateBlocks(filteredBlocks, data.updatedBlocks);
+    if (!blocksState.value) pendingMessages.value = [...pendingMessages.value, data];
+    else blocksState.value = applyUpdateMessageToBlocksState(blocks.value, data);
   };
 
   // Disconnect previous connection if it exists

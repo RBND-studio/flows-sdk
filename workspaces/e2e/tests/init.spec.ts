@@ -68,7 +68,9 @@ const run = (packageName: string) => {
     await page.goto(`/${packageName}.html?${urlParams.toString()}`);
     await blocksReq;
   });
-  test(`${packageName} - shouldn't overwrite blocks state by /blocks result`, async ({ page }) => {
+  test(`${packageName} - should apply update messages after /blocks is received`, async ({
+    page,
+  }) => {
     let blocksRoute: Route | null = null;
     await page.route("**/v2/sdk/blocks", (route) => {
       blocksRoute = route;
@@ -81,7 +83,7 @@ const run = (packageName: string) => {
       updatedBlocks: [block],
     };
     ws?.send(JSON.stringify(payload));
-    await expect(page.getByText("Hello world", { exact: true })).toBeVisible();
+    await expect(page.getByText("Hello world", { exact: true })).toBeHidden();
     (blocksRoute as Route | null)?.fulfill({ json: { blocks: [] } });
     await expect(page.getByText("Hello world", { exact: true })).toBeVisible();
   });

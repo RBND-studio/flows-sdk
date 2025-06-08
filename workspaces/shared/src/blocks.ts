@@ -1,9 +1,9 @@
-import { type Block } from "./types";
+import { type BlockUpdatesPayload, type Block } from "./types";
 
-export const deduplicateBlocks = (prevBlocks: Block[], updatedBlocks: Block[]): Block[] => {
-  const blocksById = new Map(prevBlocks.map((b) => [b.id, b]));
-  updatedBlocks.forEach((updatedBlock) => {
-    blocksById.set(updatedBlock.id, updatedBlock);
-  });
-  return Array.from(blocksById.values());
+export const applyUpdateMessageToBlocksState = (
+  blocks: Block[],
+  message: BlockUpdatesPayload,
+): Block[] => {
+  const exitedBlockIdsSet = new Set(message.exitedBlockIds);
+  return [...blocks.filter((b) => !exitedBlockIdsSet.has(b.id)), ...message.updatedBlocks];
 };
