@@ -66,8 +66,8 @@ const run = (packageName: string) => {
     });
 
     await expect(page.locator(".flows_modal_modal")).toBeVisible();
-    expect(wrongCmpReqWasSent).toBe(false);
-    expect(modalReqWasSent).toBe(true);
+    await expect(wrongCmpReqWasSent).toBe(false);
+    await expect(modalReqWasSent).toBe(true);
   });
   test(`${packageName} - should call activate for workflow block`, async ({ page }) => {
     const block = getBlock({ componentType: "Modal" });

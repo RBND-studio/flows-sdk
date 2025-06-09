@@ -1,5 +1,13 @@
-import { type BlockUpdatesPayload, getApi, log, type UserProperties } from "@flows/shared";
-import { blocks } from "../store";
+import {
+  applyUpdateMessageToBlocksState,
+  type BlockUpdatesPayload,
+  getApi,
+  getUserLanguage,
+  type LanguageOption,
+  log,
+  type UserProperties,
+} from "@flows/shared";
+import { blocks, blocksState, pendingMessages } from "../store";
 import { type Disconnect, websocket } from "./websocket";
 import { packageAndVersion } from "./constants";
 
@@ -9,6 +17,7 @@ interface Props {
   organizationId: string;
   userId: string;
   userProperties?: UserProperties;
+  language?: LanguageOption;
 }
 
 let disconnect: Disconnect | null = null;
@@ -23,9 +32,19 @@ export const connectToWebsocketAndFetchBlocks = (props: Props): void => {
 
   const fetchBlocks = (): void => {
     void getApi(apiUrl, packageAndVersion)
-      .getBlocks({ ...params, userProperties: props.userProperties })
+      .getBlocks({
+        ...params,
+        language: getUserLanguage(props.language),
+        userProperties: props.userProperties,
+      })
       .then((res) => {
-        blocks.value = res.blocks;
+        const blocksWithUpdates = pendingMessages.value.reduce(
+          applyUpdateMessageToBlocksState,
+          res.blocks,
+        );
+        blocksState.value = blocksWithUpdates;
+        pendingMessages.value = [];
+
         // Disconnect if the user is usage limited
         if (res.meta?.usage_limited) disconnect?.();
       })
@@ -35,14 +54,8 @@ export const connectToWebsocketAndFetchBlocks = (props: Props): void => {
   };
   const onMessage = (event: MessageEvent<unknown>): void => {
     const data = JSON.parse(event.data as string) as BlockUpdatesPayload;
-    const exitedOrUpdatedBlockIdsSet = new Set([
-      ...data.exitedBlockIds,
-      ...data.updatedBlocks.map((b) => b.id),
-    ]);
-    blocks.value = [
-      ...blocks.value.filter((block) => !exitedOrUpdatedBlockIdsSet.has(block.id)),
-      ...data.updatedBlocks,
-    ];
+    if (!blocksState.value) pendingMessages.value = [...pendingMessages.value, data];
+    else blocksState.value = applyUpdateMessageToBlocksState(blocks.value, data);
   };
 
   // Disconnect previous connection if it exists

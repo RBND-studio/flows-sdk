@@ -26,6 +26,7 @@ interface GetBlocksRequest {
   environment: string;
   organizationId: string;
   userProperties?: Record<string, unknown>;
+  language?: string;
 }
 
 interface BlockResponseMeta {
