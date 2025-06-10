@@ -71,3 +71,8 @@ export interface StateMemory {
    */
   triggers: StateMemoryTrigger[];
 }
+
+/**
+ * The object representing block state property in your component properties.
+ */
+export type BlockState<T extends Record<string, any> = any> = ComponentProps<T>;

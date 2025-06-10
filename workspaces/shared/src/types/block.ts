@@ -10,7 +10,7 @@ interface TourWait {
 export interface PropertyMeta {
   key: string;
   type: string;
-  value?: boolean;
+  value?: unknown;
   triggers?: StateMemoryTrigger[];
 }
 
