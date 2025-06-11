@@ -4,6 +4,9 @@ export const applyUpdateMessageToBlocksState = (
   blocks: Block[],
   message: BlockUpdatesPayload,
 ): Block[] => {
-  const exitedBlockIdsSet = new Set(message.exitedBlockIds);
-  return [...blocks.filter((b) => !exitedBlockIdsSet.has(b.id)), ...message.updatedBlocks];
+  const exitedOrUpdatedBlockIdsSet = new Set([
+    ...message.exitedBlockIds,
+    ...message.updatedBlocks.map((b) => b.id),
+  ]);
+  return [...blocks.filter((b) => !exitedOrUpdatedBlockIdsSet.has(b.id)), ...message.updatedBlocks];
 };
