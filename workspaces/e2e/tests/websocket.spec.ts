@@ -58,6 +58,22 @@ const run = (packageName: string) => {
       await (ws as unknown as WebSocketRoute).send(JSON.stringify(payload));
       await expect(page.getByText("Hello world", { exact: true })).toBeHidden();
     });
+    test(`${packageName} - should update block`, async ({ page }) => {
+      const block = getBlock();
+      await page.route("**/v2/sdk/blocks", (route) => {
+        route.fulfill({ json: { blocks: [block] } });
+      });
+      await page.goto(`/${packageName}.html`);
+      await expect(page.getByText("Hello world", { exact: true })).toBeVisible();
+      await expect(page.getByText("Updated body", { exact: true })).toBeHidden();
+      const payload: BlockUpdatesPayload = {
+        exitedBlockIds: [],
+        updatedBlocks: [{ ...block, data: { ...block.data, body: "Updated body" } }],
+      };
+      await (ws as unknown as WebSocketRoute).send(JSON.stringify(payload));
+      await expect(page.getByText("Hello world", { exact: true })).toHaveCount(1);
+      await expect(page.getByText("Updated body", { exact: true })).toBeVisible();
+    });
   });
 
   test.describe(`real websocket`, () => {
