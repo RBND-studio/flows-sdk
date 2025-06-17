@@ -79,7 +79,7 @@ export const useWebsocket = ({ url, onMessage, onOpen }: Props): void => {
       () => {
         connect();
       },
-      Math.min(1000 * 2 ** reconnectAttempts, 10000),
+      1000 * 4 ** reconnectAttempts,
     );
 
     return () => {
