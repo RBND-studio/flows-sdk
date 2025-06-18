@@ -1,6 +1,6 @@
 {
   "name": "@flows/react",
-  "version": "1.10.2",
+  "version": "1.10.3-canary.0",
   "description": "Flows React SDK – Build native product growth experiences, your way",
   "keywords": [
     "react",

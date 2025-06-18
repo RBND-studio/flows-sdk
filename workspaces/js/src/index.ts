@@ -1,12 +1,13 @@
-export * from "./init";
-export * from "./methods";
 export type {
   ActiveBlock,
-  FlowsProperties,
-  TourComponentProps,
+  BlockState,
   ComponentProps,
-  StateMemory,
+  FlowsProperties,
   LanguageOption,
   Locale,
+  StateMemory,
+  TourComponentProps,
 } from "@flows/shared";
+export * from "./init";
+export * from "./methods";
 export type { FlowsOptions } from "./types/configuration";

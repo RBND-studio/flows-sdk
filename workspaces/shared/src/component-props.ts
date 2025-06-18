@@ -1,19 +1,21 @@
 import { set } from "es-toolkit/compat";
 import { type ComponentProps, type Block, type StateMemory } from "./types";
 
-export type SetStateMemory = (key: string, value: boolean) => Promise<void>;
+export type SetStateMemory = (props: {
+  key: string;
+  value: boolean;
+  blockId: string;
+}) => Promise<void>;
+export type ExitNodeCb = (props: { key: string; blockId: string }) => Promise<void>;
 
-export const createComponentProps = ({
-  block,
-  exitNodeCb,
-  removeBlock,
-  setStateMemory,
-}: {
+export const createComponentProps = (props: {
   block: Block;
   removeBlock: (blockId: string) => void;
-  exitNodeCb: (key: string) => Promise<void>;
-  setStateMemory: (key: string, value: boolean) => Promise<void>;
+  exitNodeCb: ExitNodeCb;
+  setStateMemory: SetStateMemory;
 }): ComponentProps<object> => {
+  const { block, exitNodeCb, removeBlock, setStateMemory } = props;
+
   const processData = ({
     properties,
     parentKey,
@@ -42,7 +44,10 @@ export const createComponentProps = ({
     delete _data.f__exit_nodes;
     (properties.f__exit_nodes as string[] | undefined)?.forEach((exitNode) => {
       const cb = (): Promise<void> =>
-        exitNodeCb([parentKey, exitNode].filter((x) => x !== undefined).join("."));
+        exitNodeCb({
+          key: [parentKey, exitNode].filter((x) => x !== undefined).join("."),
+          blockId: block.id,
+        });
       _data[exitNode] = cb;
     });
 
@@ -54,20 +59,28 @@ export const createComponentProps = ({
   for (const propMeta of block.propertyMeta ?? []) {
     if (propMeta.type === "state-memory") {
       const stateMemoryValue: StateMemory = {
-        value: propMeta.value ?? false,
+        value: (propMeta.value as boolean | undefined) ?? false,
         setValue: (value: boolean) => {
-          void setStateMemory(propMeta.key, value);
+          void setStateMemory({ key: propMeta.key, value, blockId: block.id });
         },
         triggers: propMeta.triggers ?? [],
       };
       set(data, propMeta.key, stateMemoryValue);
+    }
+    if (propMeta.type === "block-state") {
+      const value = propMeta.value as Block;
+      const blockStateProps = createComponentProps({
+        ...props,
+        block: value,
+      });
+      set(data, propMeta.key, blockStateProps);
     }
   }
 
   const methods = block.exitNodes.reduce<Record<string, () => Promise<void>>>((acc, exitNode) => {
     const cb = (): Promise<void> => {
       removeBlock(block.id);
-      return exitNodeCb(exitNode);
+      return exitNodeCb({ key: exitNode, blockId: block.id });
     };
     acc[exitNode] = cb;
     return acc;
