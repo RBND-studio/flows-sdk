@@ -6,24 +6,33 @@ interface Props {
 
 export type Disconnect = () => void;
 
-// TODO: implement better automatic reconnection
+let reconnectAttempts = 0;
+
 export const websocket = (props: Props): { disconnect: Disconnect } => {
   const connect = (): { disconnect: Disconnect } => {
     const socket = new WebSocket(props.url);
 
+    const handleOpen = (): void => {
+      props.onOpen();
+      reconnectAttempts = 0;
+    };
     const handleClose = (): void => {
-      setTimeout(() => {
-        connect();
-      }, 2000);
+      setTimeout(
+        () => {
+          connect();
+        },
+        Math.min(1000 * 4 ** reconnectAttempts, 120_000),
+      );
+      reconnectAttempts += 1;
     };
 
     socket.addEventListener("message", props.onMessage);
-    socket.addEventListener("open", props.onOpen);
+    socket.addEventListener("open", handleOpen);
     socket.addEventListener("close", handleClose);
 
     const disconnect = (): void => {
       socket.removeEventListener("message", props.onMessage);
-      socket.removeEventListener("open", props.onOpen);
+      socket.removeEventListener("open", handleOpen);
       socket.removeEventListener("close", handleClose);
 
       if (socket.readyState === WebSocket.CONNECTING) {
