@@ -227,8 +227,8 @@ importers:
   workspaces/shared:
     dependencies:
       es-toolkit:
-        specifier: ^1.38.0
-        version: 1.38.0
+        specifier: ^1.39.3
+        version: 1.39.3
     devDependencies:
       '@types/jest':
         specifier: ^30.0.0
@@ -2299,8 +2299,8 @@ packages:
     resolution: {integrity: sha512-QCOllgZJtaUo9miYBcLChTUaHNjJF3PYs1VidD7AwiEj1kYxKeQTctLAezAOH5ZKRH0g2IgPn6KwB4IT8iRpvA==}
     engines: {node: '>= 0.4'}
 
-  es-toolkit@1.38.0:
-    resolution: {integrity: sha512-OT3AxczYYd3W50bCj4V0hKoOAfqIy9tof0leNQYekEDxVKir3RTVTJOLij7VAe6fsCNsGhC0JqIkURpMXTCSEA==}
+  es-toolkit@1.39.3:
+    resolution: {integrity: sha512-Qb/TCFCldgOy8lZ5uC7nLGdqJwSabkQiYQShmw4jyiPk1pZzaYWTwaYKYP7EgLccWYgZocMrtItrwh683voaww==}
 
   esbuild@0.25.3:
     resolution: {integrity: sha512-qKA6Pvai73+M2FtftpNKRxJ78GIjmFXFxd/1DVBqGo/qNhLSfv+G12n9pNoWdytJC8U00TrViOwpjT0zgqQS8Q==}
@@ -6615,7 +6615,7 @@ snapshots:
       is-date-object: 1.0.5
       is-symbol: 1.0.4
 
-  es-toolkit@1.38.0: {}
+  es-toolkit@1.39.3: {}
 
   esbuild@0.25.3:
     optionalDependencies:
