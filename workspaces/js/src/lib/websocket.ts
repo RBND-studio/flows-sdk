@@ -21,7 +21,7 @@ export const websocket = (props: Props): { disconnect: Disconnect } => {
         () => {
           connect();
         },
-        1000 * 4 ** reconnectAttempts,
+        Math.min(1000 * 4 ** reconnectAttempts, 120_000),
       );
       reconnectAttempts += 1;
     };
