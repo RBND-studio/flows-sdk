@@ -71,3 +71,9 @@ export interface StateMemory {
    */
   triggers: StateMemoryTrigger[];
 }
+
+/**
+ * The object representing block state of the selected block in the workflow.
+ * The properties of this object are the same as the properties of the block.
+ */
+export type BlockState<T extends Record<string, any> = any> = ComponentProps<T>;

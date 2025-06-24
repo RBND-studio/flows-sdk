@@ -19,8 +19,8 @@ export const blockToActiveBlock = ({
 }): ActiveBlock | [] => {
   if (!block.componentType) return [];
 
-  const setStateMemory: SetStateMemory = async (key, value) => {
-    updateBlock(block.id, (b) => ({
+  const setStateMemory: SetStateMemory = async ({ blockId, key, value }) => {
+    updateBlock(blockId, (b) => ({
       ...b,
       propertyMeta: b.propertyMeta?.map((sp) => {
         if (sp.type === "state-memory" && sp.key === key) return { ...sp, value };
@@ -30,7 +30,7 @@ export const blockToActiveBlock = ({
 
     await sendEvent({
       name: "set-state-memory",
-      blockId: block.id,
+      blockId,
       propertyKey: key,
       properties: { value },
     });
@@ -39,7 +39,7 @@ export const blockToActiveBlock = ({
   const props = createComponentProps({
     block,
     removeBlock,
-    exitNodeCb: (key) => sendEvent({ name: "transition", blockId: block.id, propertyKey: key }),
+    exitNodeCb: ({ key, blockId }) => sendEvent({ name: "transition", blockId, propertyKey: key }),
     setStateMemory,
   });
 
