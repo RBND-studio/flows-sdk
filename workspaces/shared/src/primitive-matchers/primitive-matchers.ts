@@ -79,3 +79,15 @@ export const $notContains = (value?: unknown, expected?: string | string[]): boo
   if (typeof value !== "string") return false;
   return !value.includes(expected);
 };
+export const $startsWith = (value?: unknown, expected?: string | string[]): boolean => {
+  if (!expected) return true;
+  if (Array.isArray(expected)) return expected.some((v) => $startsWith(value, v));
+  if (typeof value !== "string") return false;
+  return value.startsWith(expected);
+};
+export const $endsWith = (value?: unknown, expected?: string | string[]): boolean => {
+  if (!expected) return true;
+  if (Array.isArray(expected)) return expected.some((v) => $endsWith(value, v));
+  if (typeof value !== "string") return false;
+  return value.endsWith(expected);
+};

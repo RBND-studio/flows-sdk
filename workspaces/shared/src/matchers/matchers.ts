@@ -1,4 +1,12 @@
-import { $contains, $eq, $ne, $notContains, $regex } from "../primitive-matchers";
+import {
+  $contains,
+  $endsWith,
+  $eq,
+  $ne,
+  $notContains,
+  $regex,
+  $startsWith,
+} from "../primitive-matchers";
 
 export const pathnameMatch = ({
   operator,
@@ -13,6 +21,8 @@ export const pathnameMatch = ({
   if (operator === "ne") return $ne(pathname, value);
   if (operator === "contains") return $contains(pathname, value);
   if (operator === "notContains") return $notContains(pathname, value);
+  if (operator === "startsWith") return $startsWith(pathname, value);
+  if (operator === "endsWith") return $endsWith(pathname, value);
   if (operator === "regex") return $regex(pathname, value);
 
   return true;
