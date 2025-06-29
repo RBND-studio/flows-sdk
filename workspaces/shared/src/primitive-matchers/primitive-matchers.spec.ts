@@ -326,3 +326,57 @@ describe("$endsWith", () => {
     expect(spy).toHaveBeenNthCalledWith(3, "foo bar", "bar");
   });
 });
+
+describe("$notStartsWith", () => {
+  it("should return true if expected is undefined", () => {
+    expect(matchers.$notStartsWith("foo")).toBe(true);
+  });
+  it("should return false if value is undefined", () => {
+    expect(matchers.$notStartsWith(undefined, "foo")).toBe(false);
+  });
+  it("should return false if value is not a string", () => {
+    expect(matchers.$notStartsWith(123, "foo")).toBe(false);
+  });
+  it("should return true if value does not start with expected", () => {
+    expect(matchers.$notStartsWith("bar", "foo")).toBe(true);
+    expect(matchers.$notStartsWith("bar foo", "barr")).toBe(true);
+  });
+  it("should return false if value starts with expected", () => {
+    expect(matchers.$notStartsWith("foo", "foo")).toBe(false);
+    expect(matchers.$notStartsWith("foo bar", "foo")).toBe(false);
+  });
+  it("should call itself recursively if expected is an array", () => {
+    const spy = jest.spyOn(matchers, "$notStartsWith");
+    expect(matchers.$notStartsWith("foo bar", ["baz", "foo"])).toBe(false);
+    expect(spy).toHaveBeenNthCalledWith(1, "foo bar", ["baz", "foo"]);
+    expect(spy).toHaveBeenNthCalledWith(2, "foo bar", "baz");
+    expect(spy).toHaveBeenNthCalledWith(3, "foo bar", "foo");
+  });
+});
+
+describe("$notEndsWith", () => {
+  it("should return true if expected is undefined", () => {
+    expect(matchers.$notEndsWith("foo")).toBe(true);
+  });
+  it("should return false if value is undefined", () => {
+    expect(matchers.$notEndsWith(undefined, "foo")).toBe(false);
+  });
+  it("should return false if value is not a string", () => {
+    expect(matchers.$notEndsWith(123, "foo")).toBe(false);
+  });
+  it("should return true if value does not end with expected", () => {
+    expect(matchers.$notEndsWith("bar", "foo")).toBe(true);
+    expect(matchers.$notEndsWith("bar foo", "barr")).toBe(true);
+  });
+  it("should return false if value ends with expected", () => {
+    expect(matchers.$notEndsWith("foo", "foo")).toBe(false);
+    expect(matchers.$notEndsWith("bar foo", "foo")).toBe(false);
+  });
+  it("should call itself recursively if expected is an array", () => {
+    const spy = jest.spyOn(matchers, "$notEndsWith");
+    expect(matchers.$notEndsWith("foo bar", ["baz", "bar"])).toBe(false);
+    expect(spy).toHaveBeenNthCalledWith(1, "foo bar", ["baz", "bar"]);
+    expect(spy).toHaveBeenNthCalledWith(2, "foo bar", "baz");
+    expect(spy).toHaveBeenNthCalledWith(3, "foo bar", "bar");
+  });
+});
