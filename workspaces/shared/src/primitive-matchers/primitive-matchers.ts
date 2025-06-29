@@ -91,3 +91,15 @@ export const $endsWith = (value?: unknown, expected?: string | string[]): boolea
   if (typeof value !== "string") return false;
   return value.endsWith(expected);
 };
+export const $notStartsWith = (value?: unknown, expected?: string | string[]): boolean => {
+  if (!expected) return true;
+  if (Array.isArray(expected)) return expected.every((v) => $notStartsWith(value, v));
+  if (typeof value !== "string") return false;
+  return !value.startsWith(expected);
+};
+export const $notEndsWith = (value?: unknown, expected?: string | string[]): boolean => {
+  if (!expected) return true;
+  if (Array.isArray(expected)) return expected.every((v) => $notEndsWith(value, v));
+  if (typeof value !== "string") return false;
+  return !value.endsWith(expected);
+};

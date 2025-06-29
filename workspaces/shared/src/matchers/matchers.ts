@@ -4,6 +4,8 @@ import {
   $eq,
   $ne,
   $notContains,
+  $notEndsWith,
+  $notStartsWith,
   $regex,
   $startsWith,
 } from "../primitive-matchers";
@@ -23,6 +25,8 @@ export const pathnameMatch = ({
   if (operator === "notContains") return $notContains(pathname, value);
   if (operator === "startsWith") return $startsWith(pathname, value);
   if (operator === "endsWith") return $endsWith(pathname, value);
+  if (operator === "notStartsWith") return $notStartsWith(pathname, value);
+  if (operator === "notEndsWith") return $notEndsWith(pathname, value);
   if (operator === "regex") return $regex(pathname, value);
 
   return true;
