@@ -55,7 +55,11 @@ export interface FlowsProviderProps {
 export const FlowsProvider: FC<FlowsProviderProps> = (props) => {
   if (!isProps(props)) return props.children;
 
-  return <FlowsProviderInner {...props} />;
+  return (
+    <PathnameProvider>
+      <FlowsProviderInner {...props} />
+    </PathnameProvider>
+  );
 };
 
 type Props = Omit<FlowsProviderProps, "userId"> & { userId: string };
@@ -91,21 +95,19 @@ const FlowsProviderInner: FC<Props> = ({
   const runningTours = useRunningTours({ blocks, removeBlock });
 
   return (
-    <PathnameProvider>
-      <FlowsContext.Provider
-        value={{
-          blocks,
-          components,
-          runningTours,
-          tourComponents,
-          removeBlock,
-          updateBlock,
-        }}
-      >
-        {children}
-        <FloatingBlocks />
-        <TourController />
-      </FlowsContext.Provider>
-    </PathnameProvider>
+    <FlowsContext.Provider
+      value={{
+        blocks,
+        components,
+        runningTours,
+        tourComponents,
+        removeBlock,
+        updateBlock,
+      }}
+    >
+      {children}
+      <FloatingBlocks />
+      <TourController />
+    </FlowsContext.Provider>
   );
 };

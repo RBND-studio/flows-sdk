@@ -1,5 +1,6 @@
-import { handleDocumentClick } from "./lib/click";
+import { getPathname } from "@flows/shared";
 import { connectToWebsocketAndFetchBlocks } from "./lib/blocks";
+import { handleDocumentClick } from "./lib/click";
 import { addHandlers } from "./lib/handler";
 import { config, pathname } from "./store";
 import { type FlowsOptions } from "./types/configuration";
@@ -27,8 +28,9 @@ export const init = (options: FlowsOptions): void => {
 
   if (locationChangeInterval !== null) clearInterval(locationChangeInterval);
   locationChangeInterval = window.setInterval(() => {
-    if (pathname.value !== window.location.pathname) {
-      pathname.value = window.location.pathname;
+    const newPathname = getPathname();
+    if (pathname.value !== newPathname) {
+      pathname.value = newPathname;
     }
   }, 250);
 

@@ -1,5 +1,5 @@
 import { type BlockUpdatesPayload, type Block } from "@flows/shared";
-import { computed, effect, signal } from "@preact/signals-core";
+import { computed, signal } from "@preact/signals-core";
 import { type FlowsOptions } from "./types/configuration";
 
 type Configuration = Omit<FlowsOptions, "apiUrl"> & { apiUrl: string };
@@ -26,21 +26,5 @@ export interface RunningTour {
   blockId: string;
   currentBlockIndex: number;
 }
+export const tourBlocks = computed(() => blocks.value.filter((b) => b.type === "tour"));
 export const runningTours = signal<RunningTour[]>([]);
-
-effect(() => {
-  const blocksValue = blocks.value;
-
-  const tourBlocks = blocksValue.filter((b) => b.type === "tour");
-  const prevTours = runningTours.peek();
-  const prevTourMap = new Map(prevTours.map((tour) => [tour.blockId, tour]));
-  const newRunningTours = tourBlocks.map((block): RunningTour => {
-    const currentState = prevTourMap.get(block.id);
-    const currentBlockIndex = currentState?.currentBlockIndex ?? block.currentTourIndex ?? 0;
-    return {
-      blockId: block.id,
-      currentBlockIndex,
-    };
-  });
-  runningTours.value = newRunningTours;
-});

@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import { type Block } from "@flows/shared";
+import { pathnameMatch, type Block } from "@flows/shared";
 import { type RunningTour } from "../flows-context";
 import { sendEvent } from "../lib/api";
+import { usePathname } from "../contexts/pathname-context";
 
 type StateItem = Pick<RunningTour, "currentBlockIndex"> & {
   blockId: string;
@@ -14,23 +15,37 @@ interface Props {
 
 export const useRunningTours = ({ blocks, removeBlock }: Props): RunningTour[] => {
   const [runningTours, setRunningTours] = useState<StateItem[]>([]);
+  const pathname = usePathname();
 
   useEffect(() => {
     setRunningTours((prev) => {
-      const tourBlocks = blocks.filter((block) => block.type === "tour");
-      const previousTourMap = new Map(prev.map((tour) => [tour.blockId, tour]));
-      const newRunningTours = tourBlocks.map((block): StateItem => {
-        const currentState = previousTourMap.get(block.id);
-        const currentBlockIndex = currentState?.currentBlockIndex ?? block.currentTourIndex ?? 0;
+      const tourBlocks = blocks.filter((b) => b.type === "tour");
+      const tourBlockIds = new Set(tourBlocks.map((b) => b.id));
+      const runningTourBlockIds = new Set(prev.map((t) => t.blockId));
+
+      // Find newly started tours
+      const newRunningTours = tourBlocks.flatMap((block): StateItem | never[] => {
+        if (runningTourBlockIds.has(block.id)) return [];
+
+        const pageTargetingMatch = pathnameMatch({
+          pathname,
+          operator: block.page_targeting_operator,
+          value: block.page_targeting_values,
+        });
+        if (!pageTargetingMatch) return [];
 
         return {
           blockId: block.id,
-          currentBlockIndex,
+          currentBlockIndex: block.currentTourIndex ?? 0,
         };
       });
-      return newRunningTours;
+
+      // Filter out stopped tours
+      const updatedRunningTours = prev.filter((tour) => tourBlockIds.has(tour.blockId));
+
+      return [...updatedRunningTours, ...newRunningTours];
     });
-  }, [blocks]);
+  }, [pathname, blocks]);
 
   const runningToursWithActiveBlock = useMemo(() => {
     const updateState = (blockId: string, updateFn: (tour: StateItem) => StateItem): void => {

@@ -97,6 +97,59 @@ const run = (packageName: string) => {
     await page.getByText("Continue", { exact: true }).click();
     await expect(page.getByText("World", { exact: true })).toBeHidden();
   });
+  test(`${packageName} - should show tour based on page targeting`, async ({ page }) => {
+    const tourWithTargeting: Block = {
+      ...tour,
+      page_targeting_operator: "eq",
+      page_targeting_values: [`/${packageName}.html`],
+    };
+    await page.route("**/v2/sdk/blocks", (route) => {
+      route.fulfill({ json: { blocks: [tourWithTargeting] } });
+    });
+    await page.goto(`/${packageName}.html`);
+    await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+  });
+  test(`${packageName} - should not show tour based on page targeting`, async ({ page }) => {
+    const tourWithTargeting: Block = {
+      ...tour,
+      page_targeting_operator: "eq",
+      page_targeting_values: ["/wrong"],
+    };
+    await page.route("**/v2/sdk/blocks", (route) => {
+      route.fulfill({ json: { blocks: [tourWithTargeting] } });
+    });
+    await page.goto(`/${packageName}.html`);
+    await expect(page.getByText("Hello", { exact: true })).toBeHidden();
+  });
+  test(`${packageName} - should not exit tour by targeting by default`, async ({ page }) => {
+    const tourWithTargeting: Block = {
+      ...tour,
+      page_targeting_operator: "eq",
+      page_targeting_values: [`/${packageName}.html`],
+    };
+    await page.route("**/v2/sdk/blocks", (route) => {
+      route.fulfill({ json: { blocks: [tourWithTargeting] } });
+    });
+    await page.goto(`/${packageName}.html`);
+    await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+    await page.getByText("changeLocation", { exact: true }).click();
+    await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+  });
+  test(`${packageName} - should exit tour by targeting with option`, async ({ page }) => {
+    const tourWithTargeting: Block = {
+      ...tour,
+      page_targeting_operator: "eq",
+      page_targeting_values: [`/${packageName}.html`],
+      tour_exit_by_targeting: true,
+    };
+    await page.route("**/v2/sdk/blocks", (route) => {
+      route.fulfill({ json: { blocks: [tourWithTargeting] } });
+    });
+    await page.goto(`/${packageName}.html`);
+    await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+    await page.getByText("changeLocation", { exact: true }).click();
+    await expect(page.getByText("Hello", { exact: true })).toBeHidden();
+  });
 
   test(`${packageName} - should send current step event`, async ({ page }) => {
     await page.route("**/v2/sdk/blocks", (route) => {
@@ -105,6 +158,7 @@ const run = (packageName: string) => {
     await page.goto(`/${packageName}.html`);
     const eventReq1 = page.waitForRequest(
       (req) =>
+        req.method() === "POST" &&
         req.url().includes("/v2/sdk/events") &&
         req.postDataJSON().name === "tour-update" &&
         req.postDataJSON().properties.currentTourIndex === 1,
@@ -113,6 +167,7 @@ const run = (packageName: string) => {
     await eventReq1;
     const eventReq2 = page.waitForRequest(
       (req) =>
+        req.method() === "POST" &&
         req.url().includes("/v2/sdk/events") &&
         req.postDataJSON().name === "tour-update" &&
         req.postDataJSON().properties.currentTourIndex === 0,

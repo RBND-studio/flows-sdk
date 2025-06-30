@@ -155,3 +155,6 @@ updateSlotComponents({
 (document.querySelector("#startWorkflow") as HTMLButtonElement).addEventListener("click", () => {
   startWorkflow("my-start-block");
 });
+(document.querySelector("#changeLocation") as HTMLButtonElement).addEventListener("click", () => {
+  window.history.pushState({}, "", window.location.pathname + "?v=1");
+});
