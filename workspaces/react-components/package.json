@@ -40,7 +40,7 @@
     "@flows/shared": "workspace:*",
     "@flows/styles": "workspace:*",
     "@types/jest": "^30.0.0",
-    "@types/node": "^22",
+    "@types/node": "^24",
     "@types/react": "^19",
     "jest": "^30.0.0",
     "jest-environment-jsdom": "^30.0.0",
