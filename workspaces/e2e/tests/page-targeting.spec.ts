@@ -348,6 +348,66 @@ const run = (packageName: string) => {
     await expect(page.getByText("Workflow block", { exact: true })).toBeHidden();
   });
 
+  // Doesn't start with
+  test(`${packageName} - should show block with page targeting not starting with the current pathname`, async ({
+    page,
+  }) => {
+    const block: Block = {
+      ...floatingWorkflowBlock,
+      page_targeting_operator: "notStartsWith",
+      page_targeting_values: [`/wrong`],
+    };
+    await page.route("**/v2/sdk/blocks", (route) => {
+      route.fulfill({ json: { blocks: [block] } });
+    });
+    await page.goto(`/${packageName}.html`);
+    await expect(page.getByText("Workflow block", { exact: true })).toBeVisible();
+  });
+  test(`${packageName} - should not show block with page targeting starting with the current pathname`, async ({
+    page,
+  }) => {
+    const block: Block = {
+      ...floatingWorkflowBlock,
+      page_targeting_operator: "notStartsWith",
+      page_targeting_values: [`/${packageName}`],
+    };
+    await page.route("**/v2/sdk/blocks", (route) => {
+      route.fulfill({ json: { blocks: [block] } });
+    });
+    await page.goto(`/${packageName}.html`);
+    await expect(page.getByText("Workflow block", { exact: true })).toBeHidden();
+  });
+
+  // Doesn't end with
+  test(`${packageName} - should show block with page targeting not ending with the current pathname`, async ({
+    page,
+  }) => {
+    const block: Block = {
+      ...floatingWorkflowBlock,
+      page_targeting_operator: "notEndsWith",
+      page_targeting_values: [`/wrong`],
+    };
+    await page.route("**/v2/sdk/blocks", (route) => {
+      route.fulfill({ json: { blocks: [block] } });
+    });
+    await page.goto(`/${packageName}.html`);
+    await expect(page.getByText("Workflow block", { exact: true })).toBeVisible();
+  });
+  test(`${packageName} - should not show block with page targeting ending with the current pathname`, async ({
+    page,
+  }) => {
+    const block: Block = {
+      ...floatingWorkflowBlock,
+      page_targeting_operator: "notEndsWith",
+      page_targeting_values: [`.html`],
+    };
+    await page.route("**/v2/sdk/blocks", (route) => {
+      route.fulfill({ json: { blocks: [block] } });
+    });
+    await page.goto(`/${packageName}.html`);
+    await expect(page.getByText("Workflow block", { exact: true })).toBeHidden();
+  });
+
   // Regex
   test(`${packageName} - should show block with page targeting matching the current pathname`, async ({
     page,
