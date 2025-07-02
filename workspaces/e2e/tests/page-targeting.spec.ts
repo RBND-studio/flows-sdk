@@ -63,6 +63,21 @@ const slotTourBlock: TourStep = {
 };
 
 const run = (packageName: string) => {
+  test(`${packageName} - should work with query params`, async ({ page }) => {
+    const block: Block = {
+      ...floatingWorkflowBlock,
+      page_targeting_operator: "contains",
+      page_targeting_values: [`/${packageName}.html?param=value`],
+    };
+    await page.route("**/v2/sdk/blocks", (route) => {
+      route.fulfill({ json: { blocks: [block] } });
+    });
+    await page.goto(`/${packageName}.html`);
+    await expect(page.getByText("Workflow block", { exact: true })).toBeHidden();
+    await page.goto(`/${packageName}.html?param=value`);
+    await expect(page.getByText("Workflow block", { exact: true })).toBeVisible();
+  });
+
   // Floating workflow
   test(`${packageName} - should show workflow block without page targeting`, async ({ page }) => {
     await page.route("**/v2/sdk/blocks", (route) => {
