@@ -30,6 +30,7 @@ export interface Block {
 
   page_targeting_operator?: string;
   page_targeting_values?: string[];
+  tour_exit_by_targeting?: boolean;
 
   tourBlocks?: TourStep[];
   currentTourIndex?: number;
