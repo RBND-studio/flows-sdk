@@ -15,7 +15,7 @@
     "@flows/shared": "workspace:*"
   },
   "devDependencies": {
-    "@playwright/test": "^1.51.1",
+    "@playwright/test": "^1.53.2",
     "@types/node": "^22",
     "@types/react": "19.0.7",
     "@types/react-dom": "19.0.3",
