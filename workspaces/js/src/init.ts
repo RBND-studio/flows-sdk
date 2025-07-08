@@ -1,6 +1,6 @@
 import { getPathname } from "@flows/shared";
-import { connectToWebsocketAndFetchBlocks } from "./lib/blocks";
 import { handleDocumentClick } from "./lib/click";
+import { connectToWebsocketAndFetchBlocks } from "./lib/blocks";
 import { addHandlers } from "./lib/handler";
 import { config, pathname } from "./store";
 import { type FlowsOptions } from "./types/configuration";
