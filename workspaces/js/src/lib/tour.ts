@@ -102,20 +102,6 @@ effect(() => {
       timeoutByTourId.delete(tour.blockId);
     }
 
-    // Handle tour exit by targeting
-    if (tourBlock.tour_exit_by_targeting) {
-      const pageTargetingMatch = pathnameMatch({
-        pathname: pathnameValue,
-        operator: tourBlock.page_targeting_operator,
-        value: tourBlock.page_targeting_values,
-      });
-
-      if (!pageTargetingMatch) {
-        cancelTour(tour.blockId);
-        return;
-      }
-    }
-
     const tourWait = activeStep.tourWait;
     if (!tourWait) return;
 
@@ -145,6 +131,7 @@ effect(() => {
   });
 });
 
+// TODO: implement tour trigger
 effect(() => {
   const pathnameValue = pathname.value;
   const tourBlocksValue = tourBlocks.value;

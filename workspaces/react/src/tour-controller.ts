@@ -97,20 +97,5 @@ export const TourController: FC = () => {
     });
   }, [relevantTours, timeoutByTourId]);
 
-  // Handle tour exit by targeting
-  useEffect(() => {
-    runningTours.forEach((tour) => {
-      if (tour.block.tour_exit_by_targeting) {
-        const pageTargetingMatch = pathnameMatch({
-          pathname,
-          operator: tour.block.page_targeting_operator,
-          value: tour.block.page_targeting_values,
-        });
-
-        if (!pageTargetingMatch) tour.cancel();
-      }
-    });
-  }, [pathname, runningTours]);
-
   return null;
 };

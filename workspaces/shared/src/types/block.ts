@@ -14,6 +14,18 @@ export interface PropertyMeta {
   triggers?: StateMemoryTrigger[];
 }
 
+export type TourTriggerType = "navigation" | "click" | "dom-element" | "not-dom-element";
+export interface TourTriggerExpression {
+  type: TourTriggerType;
+  value?: string;
+  values?: string[];
+  operator?: string;
+}
+
+export interface TourTrigger {
+  $and?: TourTriggerExpression[];
+}
+
 export interface Block {
   id: string;
   workflowId: string;
@@ -30,8 +42,8 @@ export interface Block {
 
   page_targeting_operator?: string;
   page_targeting_values?: string[];
-  tour_exit_by_targeting?: boolean;
 
+  tour_trigger?: TourTrigger;
   tourBlocks?: TourStep[];
   currentTourIndex?: number;
 }

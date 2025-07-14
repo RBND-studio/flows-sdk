@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { pathnameMatch, type Block } from "@flows/shared";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { tourTriggerMatch, type Block } from "@flows/shared";
 import { type RunningTour } from "../flows-context";
 import { sendEvent } from "../lib/api";
 import { usePathname } from "../contexts/pathname-context";
@@ -15,37 +15,79 @@ interface Props {
 
 export const useRunningTours = ({ blocks, removeBlock }: Props): RunningTour[] => {
   const [runningTours, setRunningTours] = useState<StateItem[]>([]);
+  const runningToursRef = useRef<StateItem[]>(runningTours);
+  runningToursRef.current = runningTours;
   const pathname = usePathname();
+  const pathnameRef = useRef<string>(undefined);
+  pathnameRef.current = pathname;
 
+  // Stop tours that are no longer running
   useEffect(() => {
     setRunningTours((prev) => {
-      const tourBlocks = blocks.filter((b) => b.type === "tour");
-      const tourBlockIds = new Set(tourBlocks.map((b) => b.id));
-      const runningTourBlockIds = new Set(prev.map((t) => t.blockId));
-
-      // Find newly started tours
-      const newRunningTours = tourBlocks.flatMap((block): StateItem | never[] => {
-        if (runningTourBlockIds.has(block.id)) return [];
-
-        const pageTargetingMatch = pathnameMatch({
-          pathname,
-          operator: block.page_targeting_operator,
-          value: block.page_targeting_values,
-        });
-        if (!pageTargetingMatch) return [];
-
-        return {
-          blockId: block.id,
-          currentBlockIndex: block.currentTourIndex ?? 0,
-        };
-      });
-
+      const tourBlockIds = new Set(blocks.filter((b) => b.type === "tour").map((b) => b.id));
       // Filter out stopped tours
-      const updatedRunningTours = prev.filter((tour) => tourBlockIds.has(tour.blockId));
-
-      return [...updatedRunningTours, ...newRunningTours];
+      return prev.filter((tour) => tourBlockIds.has(tour.blockId));
     });
-  }, [pathname, blocks]);
+  }, [blocks]);
+
+  const startToursIfNeeded = useCallback(
+    (ctx: { pathname: string; event?: MouseEvent }): void => {
+      const tourBlocks = blocks.filter((b) => b.type === "tour");
+      const runningTourBlockIds = new Set(runningToursRef.current.map((t) => t.blockId));
+      tourBlocks.forEach((block) => {
+        if (runningTourBlockIds.has(block.id)) return;
+        const triggerMatch = tourTriggerMatch(block.tour_trigger, ctx);
+        if (!triggerMatch) return;
+
+        setRunningTours((prev) => {
+          const hasTour = prev.some((tour) => tour.blockId === block.id);
+          if (hasTour) return prev; // Tour is already running
+          const runningTour: StateItem = {
+            blockId: block.id,
+            currentBlockIndex: block.currentTourIndex ?? 0,
+          };
+          return [...prev, runningTour];
+        });
+      });
+    },
+    [blocks],
+  );
+
+  // Handle trigger by navigation
+  useEffect(() => {
+    if (!pathname) return;
+
+    startToursIfNeeded({ pathname });
+  }, [pathname, startToursIfNeeded]);
+
+  // Handle trigger by DOM element
+  useEffect(() => {
+    const observer = new MutationObserver((): void => {
+      const currentPathname = pathnameRef.current;
+      if (!currentPathname) return;
+
+      startToursIfNeeded({ pathname: currentPathname });
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true, attributes: true });
+    return () => {
+      observer.disconnect();
+    };
+  }, [startToursIfNeeded]);
+
+  // Handle trigger by click
+  useEffect(() => {
+    if (!pathname) return;
+
+    const handleClick = (event: MouseEvent): void => {
+      startToursIfNeeded({ pathname, event });
+    };
+
+    document.addEventListener("click", handleClick);
+    return () => {
+      document.removeEventListener("click", handleClick);
+    };
+  }, [pathname, startToursIfNeeded]);
 
   const runningToursWithActiveBlock = useMemo(() => {
     const updateState = (blockId: string, updateFn: (tour: StateItem) => StateItem): void => {
