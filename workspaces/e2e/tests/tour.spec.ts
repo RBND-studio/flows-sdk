@@ -97,59 +97,6 @@ const run = (packageName: string) => {
     await page.getByText("Continue", { exact: true }).click();
     await expect(page.getByText("World", { exact: true })).toBeHidden();
   });
-  test(`${packageName} - should show tour based on page targeting`, async ({ page }) => {
-    const tourWithTargeting: Block = {
-      ...tour,
-      page_targeting_operator: "eq",
-      page_targeting_values: [`/${packageName}.html`],
-    };
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [tourWithTargeting] } });
-    });
-    await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("Hello", { exact: true })).toBeVisible();
-  });
-  test(`${packageName} - should not show tour based on page targeting`, async ({ page }) => {
-    const tourWithTargeting: Block = {
-      ...tour,
-      page_targeting_operator: "eq",
-      page_targeting_values: ["/wrong"],
-    };
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [tourWithTargeting] } });
-    });
-    await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("Hello", { exact: true })).toBeHidden();
-  });
-  test(`${packageName} - should not exit tour by targeting by default`, async ({ page }) => {
-    const tourWithTargeting: Block = {
-      ...tour,
-      page_targeting_operator: "eq",
-      page_targeting_values: [`/${packageName}.html`],
-    };
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [tourWithTargeting] } });
-    });
-    await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("Hello", { exact: true })).toBeVisible();
-    await page.getByText("changeLocation", { exact: true }).click();
-    await expect(page.getByText("Hello", { exact: true })).toBeVisible();
-  });
-  // test(`${packageName} - should exit tour by targeting with option`, async ({ page }) => {
-  //   const tourWithTargeting: Block = {
-  //     ...tour,
-  //     page_targeting_operator: "eq",
-  //     page_targeting_values: [`/${packageName}.html`],
-  //     tour_exit_by_targeting: true,
-  //   };
-  //   await page.route("**/v2/sdk/blocks", (route) => {
-  //     route.fulfill({ json: { blocks: [tourWithTargeting] } });
-  //   });
-  //   await page.goto(`/${packageName}.html`);
-  //   await expect(page.getByText("Hello", { exact: true })).toBeVisible();
-  //   await page.getByText("changeLocation", { exact: true }).click();
-  //   await expect(page.getByText("Hello", { exact: true })).toBeHidden();
-  // });
 
   test(`${packageName} - should send current step event`, async ({ page }) => {
     await page.route("**/v2/sdk/blocks", (route) => {
@@ -174,6 +121,124 @@ const run = (packageName: string) => {
     );
     await page.getByText("Previous", { exact: true }).click();
     await eventReq2;
+  });
+
+  test.describe("tour trigger", () => {
+    test(`${packageName} - should start tour`, async ({ page }) => {
+      const tourWithTargeting: Block = {
+        ...tour,
+        tour_trigger: {
+          $and: [{ type: "navigation", operator: "eq", values: [`/${packageName}.html`] }],
+        },
+      };
+      await page.route("**/v2/sdk/blocks", (route) => {
+        route.fulfill({ json: { blocks: [tourWithTargeting] } });
+      });
+      await page.goto(`/${packageName}.html`);
+      await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+    });
+    test(`${packageName} - should not start tour`, async ({ page }) => {
+      const tourWithTargeting: Block = {
+        ...tour,
+        tour_trigger: {
+          $and: [{ type: "navigation", operator: "eq", values: [`/wrong`] }],
+        },
+      };
+      await page.route("**/v2/sdk/blocks", (route) => {
+        route.fulfill({ json: { blocks: [tourWithTargeting] } });
+      });
+      await page.goto(`/${packageName}.html`);
+      await expect(page.getByText("Hello", { exact: true })).toBeHidden();
+    });
+    test(`${packageName} - should not exit tour`, async ({ page }) => {
+      const tourWithTargeting: Block = {
+        ...tour,
+        tour_trigger: {
+          $and: [{ type: "navigation", operator: "eq", values: [`/${packageName}.html`] }],
+        },
+      };
+      await page.route("**/v2/sdk/blocks", (route) => {
+        route.fulfill({ json: { blocks: [tourWithTargeting] } });
+      });
+      await page.goto(`/${packageName}.html`);
+      await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+      await page.getByText("changeLocation", { exact: true }).click();
+      await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+    });
+
+    test(`${packageName} - click`, async ({ page }) => {
+      const tourWithTargeting: Block = {
+        ...tour,
+        tour_trigger: { $and: [{ type: "click", value: "h1" }] },
+      };
+      await page.route("**/v2/sdk/blocks", (route) => {
+        route.fulfill({ json: { blocks: [tourWithTargeting] } });
+      });
+      await page.goto(`/${packageName}.html`);
+      await expect(page.getByText("Hello", { exact: true })).toBeHidden();
+      await page.locator("h1").click();
+      await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+    });
+    test(`${packageName} - dom element`, async ({ page }) => {
+      const incorrectDomEl: Block = {
+        ...tour,
+        tour_trigger: { $and: [{ type: "dom-element", value: "h5" }] },
+      };
+      await page.route("**/v2/sdk/blocks", (route) => {
+        route.fulfill({ json: { blocks: [incorrectDomEl] } });
+      });
+      await page.goto(`/${packageName}.html`);
+      await expect(page.getByText("Hello", { exact: true })).toBeHidden();
+      const correctDomEl: Block = {
+        ...tour,
+        tour_trigger: { $and: [{ type: "dom-element", value: "h1" }] },
+      };
+      await page.route("**/v2/sdk/blocks", (route) => {
+        route.fulfill({ json: { blocks: [correctDomEl] } });
+      });
+      await page.goto(`/${packageName}.html`);
+      await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+    });
+    test(`${packageName} - not dom element`, async ({ page }) => {
+      const incorrectDomEl: Block = {
+        ...tour,
+        tour_trigger: { $and: [{ type: "not-dom-element", value: "h1" }] },
+      };
+      await page.route("**/v2/sdk/blocks", (route) => {
+        route.fulfill({ json: { blocks: [incorrectDomEl] } });
+      });
+      await page.goto(`/${packageName}.html`);
+      await expect(page.getByText("Hello", { exact: true })).toBeHidden();
+      const correctDomEl: Block = {
+        ...tour,
+        tour_trigger: { $and: [{ type: "not-dom-element", value: "h5" }] },
+      };
+      await page.route("**/v2/sdk/blocks", (route) => {
+        route.fulfill({ json: { blocks: [correctDomEl] } });
+      });
+      await page.goto(`/${packageName}.html`);
+      await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+    });
+    test(`${packageName} - multiple expressions`, async ({ page }) => {
+      const tourWithTargeting: Block = {
+        ...tour,
+        tour_trigger: {
+          $and: [
+            { type: "click", value: "h1" },
+            { type: "dom-element", value: "h1" },
+            { type: "not-dom-element", value: "h5" },
+            { type: "navigation", operator: "eq", values: [`/${packageName}.html`] },
+          ],
+        },
+      };
+      await page.route("**/v2/sdk/blocks", (route) => {
+        route.fulfill({ json: { blocks: [tourWithTargeting] } });
+      });
+      await page.goto(`/${packageName}.html`);
+      await expect(page.getByText("Hello", { exact: true })).toBeHidden();
+      await page.locator("h1").click();
+      await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+    });
   });
 };
 

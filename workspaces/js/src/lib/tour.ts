@@ -1,4 +1,10 @@
-import { elementContains, getPathname, pathnameMatch, type Block } from "@flows/shared";
+import {
+  elementContains,
+  getPathname,
+  pathnameMatch,
+  tourTriggerMatch,
+  type Block,
+} from "@flows/shared";
 import { effect } from "@preact/signals-core";
 import {
   blocks,
@@ -9,6 +15,27 @@ import {
   tourBlocks,
 } from "../store";
 import { sendEvent } from "./api";
+
+const startToursIfNeeded = (
+  tourBlocksValue: Block[],
+  ctx: { pathname: string; event?: MouseEvent },
+): void => {
+  const runningTourBlockIds = new Set(runningTours.peek().map((t) => t.blockId));
+
+  tourBlocksValue.forEach((block) => {
+    if (runningTourBlockIds.has(block.id)) return;
+    const triggerMatch = tourTriggerMatch(block.tour_trigger, ctx);
+    if (!triggerMatch) return;
+
+    runningTours.value = [
+      ...runningTours.peek(),
+      {
+        blockId: block.id,
+        currentBlockIndex: block.currentTourIndex ?? 0,
+      },
+    ];
+  });
+};
 
 export const updateTourState = (
   tourBlockId: string,
@@ -54,10 +81,9 @@ export const cancelTour = (tourBlockId: string): void => {
   void sendEvent({ name: "transition", blockId: tourBlockId, propertyKey: "cancel" });
 };
 
-export const handleTourDocumentClick = (eventTarget: Element): void => {
-  const currentPathname = getPathname();
+const handleTourClickWaits = (eventTarget: Element): void => {
+  const blocksById = new Map(blocks.peek().map((block) => [block.id, block]));
 
-  const blocksById = new Map(blocks.value.map((block) => [block.id, block]));
   runningTours.value.forEach((tour) => {
     const tourBlock = blocksById.get(tour.blockId);
     if (!tourBlock) return;
@@ -68,7 +94,7 @@ export const handleTourDocumentClick = (eventTarget: Element): void => {
 
     if (tourWait.interaction === "click") {
       const pageMatch = pathnameMatch({
-        pathname: currentPathname,
+        pathname: getPathname(),
         operator: tourWait.page?.operator,
         value: tourWait.page?.value,
       });
@@ -77,6 +103,21 @@ export const handleTourDocumentClick = (eventTarget: Element): void => {
         nextTourStep(tourBlock, tour.currentBlockIndex);
       }
     }
+  });
+};
+
+export const handleTourDocumentClick = (event: MouseEvent): void => {
+  const eventTarget = event.target;
+  // Handle running tours click waits
+  // The order here is important, otherwise the tour could be started and proceeded with wait by the same click event
+  if (eventTarget instanceof Element) {
+    handleTourClickWaits(eventTarget);
+  }
+
+  // Handle trigger by click
+  startToursIfNeeded(blocks.peek(), {
+    pathname: getPathname(),
+    event,
   });
 };
 
@@ -131,34 +172,39 @@ effect(() => {
   });
 });
 
-// TODO: implement tour trigger
+// Stop tours that are no longer running
 effect(() => {
-  const pathnameValue = pathname.value;
   const tourBlocksValue = tourBlocks.value;
-  const runningToursValue = runningTours.peek();
-
   const tourBlockIds = new Set(tourBlocksValue.map((b) => b.id));
-  const runningTourBlockIds = new Set(runningToursValue.map((t) => t.blockId));
-
-  // Find newly started tours
-  const newRunningTours = tourBlocksValue.flatMap((block): RunningTour | never[] => {
-    if (runningTourBlockIds.has(block.id)) return [];
-
-    const pageTargetingMatch = pathnameMatch({
-      pathname: pathnameValue,
-      operator: block.page_targeting_operator,
-      value: block.page_targeting_values,
-    });
-    if (!pageTargetingMatch) return [];
-
-    return {
-      blockId: block.id,
-      currentBlockIndex: block.currentTourIndex ?? 0,
-    };
-  });
 
   // Filter out stopped tours
-  const updatedRunningTours = runningToursValue.filter((tour) => tourBlockIds.has(tour.blockId));
+  runningTours.value = runningTours.peek().filter((tour) => {
+    return tourBlockIds.has(tour.blockId);
+  });
+});
 
-  runningTours.value = [...updatedRunningTours, ...newRunningTours];
+// Handle trigger by navigation
+effect(() => {
+  const tourBlocksValue = tourBlocks.value;
+  const pathnameValue = pathname.value;
+
+  if (!pathnameValue) return;
+
+  startToursIfNeeded(tourBlocksValue, { pathname: pathnameValue });
+});
+
+// Handle trigger by DOM element
+effect(() => {
+  const tourBlocksValue = tourBlocks.value;
+
+  const observer = new MutationObserver((): void => {
+    const currentPathname = getPathname();
+
+    startToursIfNeeded(tourBlocksValue, { pathname: currentPathname });
+  });
+
+  observer.observe(document.body, { childList: true, subtree: true, attributes: true });
+  return () => {
+    observer.disconnect();
+  };
 });

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { tourTriggerMatch, type Block } from "@flows/shared";
+import { getPathname, tourTriggerMatch, type Block } from "@flows/shared";
 import { type RunningTour } from "../flows-context";
 import { sendEvent } from "../lib/api";
 import { usePathname } from "../contexts/pathname-context";
@@ -18,8 +18,6 @@ export const useRunningTours = ({ blocks, removeBlock }: Props): RunningTour[] =
   const runningToursRef = useRef<StateItem[]>(runningTours);
   runningToursRef.current = runningTours;
   const pathname = usePathname();
-  const pathnameRef = useRef<string>(undefined);
-  pathnameRef.current = pathname;
 
   // Stop tours that are no longer running
   useEffect(() => {
@@ -40,8 +38,6 @@ export const useRunningTours = ({ blocks, removeBlock }: Props): RunningTour[] =
         if (!triggerMatch) return;
 
         setRunningTours((prev) => {
-          const hasTour = prev.some((tour) => tour.blockId === block.id);
-          if (hasTour) return prev; // Tour is already running
           const runningTour: StateItem = {
             blockId: block.id,
             currentBlockIndex: block.currentTourIndex ?? 0,
@@ -63,10 +59,7 @@ export const useRunningTours = ({ blocks, removeBlock }: Props): RunningTour[] =
   // Handle trigger by DOM element
   useEffect(() => {
     const observer = new MutationObserver((): void => {
-      const currentPathname = pathnameRef.current;
-      if (!currentPathname) return;
-
-      startToursIfNeeded({ pathname: currentPathname });
+      startToursIfNeeded({ pathname: getPathname() });
     });
 
     observer.observe(document.body, { childList: true, subtree: true, attributes: true });
@@ -77,17 +70,15 @@ export const useRunningTours = ({ blocks, removeBlock }: Props): RunningTour[] =
 
   // Handle trigger by click
   useEffect(() => {
-    if (!pathname) return;
-
     const handleClick = (event: MouseEvent): void => {
-      startToursIfNeeded({ pathname, event });
+      startToursIfNeeded({ pathname: getPathname(), event });
     };
 
     document.addEventListener("click", handleClick);
     return () => {
       document.removeEventListener("click", handleClick);
     };
-  }, [pathname, startToursIfNeeded]);
+  }, [startToursIfNeeded]);
 
   const runningToursWithActiveBlock = useMemo(() => {
     const updateState = (blockId: string, updateFn: (tour: StateItem) => StateItem): void => {
