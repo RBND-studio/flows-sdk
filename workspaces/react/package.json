@@ -42,7 +42,7 @@
     "@types/node": "^22",
     "@types/react": "^19",
     "jest": "^30.0.0",
-    "jest-environment-jsdom": "^30.0.0",
+    "jest-environment-jsdom": "^30.0.4",
     "ts-jest": "^29.4.0",
     "tsup": "^8.5.0",
     "typescript": "^5.8.3"
