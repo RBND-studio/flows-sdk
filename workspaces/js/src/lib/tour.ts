@@ -115,7 +115,7 @@ export const handleTourDocumentClick = (event: MouseEvent): void => {
   }
 
   // Handle trigger by click
-  startToursIfNeeded(blocks.peek(), {
+  startToursIfNeeded(tourBlocks.value, {
     pathname: getPathname(),
     event,
   });
