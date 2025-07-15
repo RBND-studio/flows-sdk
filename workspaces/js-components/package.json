@@ -38,7 +38,7 @@
     "prepare": "pnpm build"
   },
   "dependencies": {
-    "@floating-ui/dom": "^1.7.1"
+    "@floating-ui/dom": "^1.7.2"
   },
   "devDependencies": {
     "@flows/js": "workspace:*",
@@ -46,7 +46,7 @@
     "@flows/styles": "workspace:*",
     "@types/jest": "^30.0.0",
     "@types/node": "^22",
-    "jest": "^30.0.0",
+    "jest": "^30.0.4",
     "rimraf": "^6.0.1",
     "ts-jest": "^29.4.0",
     "tsup": "^8.5.0",
