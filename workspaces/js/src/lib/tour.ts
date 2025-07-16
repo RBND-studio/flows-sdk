@@ -6,6 +6,7 @@ import {
   type Block,
 } from "@flows/shared";
 import { effect } from "@preact/signals-core";
+import { debounce } from "es-toolkit";
 import {
   blocks,
   pathname,
@@ -15,7 +16,6 @@ import {
   tourBlocks,
 } from "../store";
 import { sendEvent } from "./api";
-import { debounce } from "es-toolkit";
 
 const startToursIfNeeded = (
   tourBlocksValue: Block[],

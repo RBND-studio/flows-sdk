@@ -52,7 +52,7 @@ export const tourTriggerMatch = (
     }
     if (type === "not-dom-element") {
       const value = exp.value;
-      // The dom-element type needs a value to match the selector
+      // The not-dom-element type needs a value to ensure no matching selector exists
       if (typeof value !== "string") return false;
       if (!value) return true;
 
@@ -73,7 +73,7 @@ export const tourTriggerMatch = (
     log.error(
       `Aborting tour start due to an unrecognized tour trigger type: ${type}. Try updating the SDK or changing the tour trigger configuration.`,
     );
-    // When the expression isn't recognized, we assume it matches
+    // When the expression isn't recognized, we treat it as non-matching and abort the tour start
     return false;
   });
 };

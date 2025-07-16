@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { getPathname, tourTriggerMatch, type Block } from "@flows/shared";
+import { debounce } from "es-toolkit";
 import { type RunningTour } from "../flows-context";
 import { sendEvent } from "../lib/api";
 import { usePathname } from "../contexts/pathname-context";
-import { debounce } from "es-toolkit";
 
 type StateItem = Pick<RunningTour, "currentBlockIndex"> & {
   blockId: string;
