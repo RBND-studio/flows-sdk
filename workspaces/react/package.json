@@ -56,5 +56,8 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
     }
+  },
+  "dependencies": {
+    "es-toolkit": "^1.39.7"
   }
 }

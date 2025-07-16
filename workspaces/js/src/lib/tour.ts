@@ -15,6 +15,7 @@ import {
   tourBlocks,
 } from "../store";
 import { sendEvent } from "./api";
+import { debounce } from "es-toolkit";
 
 const startToursIfNeeded = (
   tourBlocksValue: Block[],
@@ -197,12 +198,11 @@ effect(() => {
 effect(() => {
   const tourBlocksValue = tourBlocks.value;
 
-  const observer = new MutationObserver((): void => {
-    const currentPathname = getPathname();
+  const debouncedCallback = debounce(() => {
+    startToursIfNeeded(tourBlocksValue, { pathname: getPathname() });
+  }, 32);
 
-    startToursIfNeeded(tourBlocksValue, { pathname: currentPathname });
-  });
-
+  const observer = new MutationObserver(debouncedCallback);
   observer.observe(document.body, { childList: true, subtree: true, attributes: true });
   return () => {
     observer.disconnect();

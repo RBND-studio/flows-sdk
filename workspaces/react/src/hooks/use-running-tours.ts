@@ -3,6 +3,7 @@ import { getPathname, tourTriggerMatch, type Block } from "@flows/shared";
 import { type RunningTour } from "../flows-context";
 import { sendEvent } from "../lib/api";
 import { usePathname } from "../contexts/pathname-context";
+import { debounce } from "es-toolkit";
 
 type StateItem = Pick<RunningTour, "currentBlockIndex"> & {
   blockId: string;
@@ -58,10 +59,11 @@ export const useRunningTours = ({ blocks, removeBlock }: Props): RunningTour[] =
 
   // Handle trigger by DOM element
   useEffect(() => {
-    const observer = new MutationObserver((): void => {
+    const debouncedCallback = debounce(() => {
       startToursIfNeeded({ pathname: getPathname() });
-    });
+    }, 32);
 
+    const observer = new MutationObserver(debouncedCallback);
     observer.observe(document.body, { childList: true, subtree: true, attributes: true });
     return () => {
       observer.disconnect();

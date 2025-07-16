@@ -87,6 +87,9 @@ importers:
       '@preact/signals-core':
         specifier: ^1.11.0
         version: 1.11.0
+      es-toolkit:
+        specifier: ^1.39.7
+        version: 1.39.7
     devDependencies:
       '@flows/shared':
         specifier: workspace:*
@@ -149,6 +152,9 @@ importers:
 
   workspaces/react:
     dependencies:
+      es-toolkit:
+        specifier: ^1.39.7
+        version: 1.39.7
       react:
         specifier: '>=17.0.2'
         version: 18.3.1
