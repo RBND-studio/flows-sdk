@@ -1,6 +1,7 @@
-import { Block } from "@flows/shared";
+import { Block, TourTrigger, TourTriggerExpression, TourTriggerType } from "@flows/shared";
 import { expect, test } from "@playwright/test";
 import { randomUUID } from "crypto";
+import { mockBlocksEndpoint } from "./utils";
 
 test.beforeEach(async ({ page }) => {
   await page.routeWebSocket(
@@ -9,7 +10,7 @@ test.beforeEach(async ({ page }) => {
   );
 });
 
-const tour: Block = {
+const getTour = (tour_trigger?: TourTriggerExpression[]): Block => ({
   id: randomUUID(),
   workflowId: randomUUID(),
   type: "tour",
@@ -17,6 +18,7 @@ const tour: Block = {
   exitNodes: ["complete", "cancel"],
   slottable: false,
   propertyMeta: [],
+  tour_trigger: tour_trigger ? { $and: tour_trigger } : undefined,
   tourBlocks: [
     {
       id: randomUUID(),
@@ -47,13 +49,11 @@ const tour: Block = {
       slottable: false,
     },
   ],
-};
+});
 
 const run = (packageName: string) => {
   test(`${packageName} - should show tour first step without previous button`, async ({ page }) => {
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [tour] } });
-    });
+    await mockBlocksEndpoint(page, [getTour()]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Hello", { exact: true })).toBeVisible();
     await expect(page.getByRole("button", { name: "Close" })).toBeVisible();
@@ -61,9 +61,7 @@ const run = (packageName: string) => {
     await expect(page.getByText("Previous", { exact: true })).toBeHidden();
   });
   test(`${packageName} - should be able to switch between tour steps`, async ({ page }) => {
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [tour] } });
-    });
+    await mockBlocksEndpoint(page, [getTour()]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Hello", { exact: true })).toBeVisible();
     await expect(page.getByText("World", { exact: true })).toBeHidden();
@@ -78,18 +76,14 @@ const run = (packageName: string) => {
     await expect(page.getByText("World", { exact: true })).toBeHidden();
   });
   test(`${packageName} - should be able to close the tour`, async ({ page }) => {
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [tour] } });
-    });
+    await mockBlocksEndpoint(page, [getTour()]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Hello", { exact: true })).toBeVisible();
     await page.getByRole("button", { name: "Close" }).click();
     await expect(page.getByText("Hello", { exact: true })).toBeHidden();
   });
   test(`${packageName} - should be able to complete the tour`, async ({ page }) => {
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [tour] } });
-    });
+    await mockBlocksEndpoint(page, [getTour()]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Hello", { exact: true })).toBeVisible();
     await page.getByText("Continue", { exact: true }).click();
@@ -99,9 +93,7 @@ const run = (packageName: string) => {
   });
 
   test(`${packageName} - should send current step event`, async ({ page }) => {
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [tour] } });
-    });
+    await mockBlocksEndpoint(page, [getTour()]);
     await page.goto(`/${packageName}.html`);
     const eventReq1 = page.waitForRequest(
       (req) =>
@@ -125,119 +117,94 @@ const run = (packageName: string) => {
 
   test.describe("tour trigger", () => {
     test(`${packageName} - should start tour`, async ({ page }) => {
-      const tourWithTargeting: Block = {
-        ...tour,
-        tour_trigger: {
-          $and: [{ type: "navigation", operator: "eq", values: [`/${packageName}.html`] }],
-        },
-      };
-      await page.route("**/v2/sdk/blocks", (route) => {
-        route.fulfill({ json: { blocks: [tourWithTargeting] } });
-      });
+      await mockBlocksEndpoint(page, [
+        getTour([{ type: "navigation", operator: "eq", values: [`/wrong`] }]),
+      ]);
+      await page.goto(`/${packageName}.html`);
+      await expect(page.getByText("Hello", { exact: true })).toBeHidden();
+      await mockBlocksEndpoint(page, [
+        getTour([{ type: "navigation", operator: "eq", values: [`/${packageName}.html`] }]),
+      ]);
       await page.goto(`/${packageName}.html`);
       await expect(page.getByText("Hello", { exact: true })).toBeVisible();
     });
-    test(`${packageName} - should not start tour`, async ({ page }) => {
-      const tourWithTargeting: Block = {
-        ...tour,
-        tour_trigger: {
-          $and: [{ type: "navigation", operator: "eq", values: [`/wrong`] }],
-        },
-      };
-      await page.route("**/v2/sdk/blocks", (route) => {
-        route.fulfill({ json: { blocks: [tourWithTargeting] } });
-      });
-      await page.goto(`/${packageName}.html`);
-      await expect(page.getByText("Hello", { exact: true })).toBeHidden();
-    });
     test(`${packageName} - should not exit tour`, async ({ page }) => {
-      const tourWithTargeting: Block = {
-        ...tour,
-        tour_trigger: {
-          $and: [{ type: "navigation", operator: "eq", values: [`/${packageName}.html`] }],
-        },
-      };
-      await page.route("**/v2/sdk/blocks", (route) => {
-        route.fulfill({ json: { blocks: [tourWithTargeting] } });
-      });
+      const tour = getTour([
+        { type: "navigation", operator: "eq", values: [`/${packageName}.html`] },
+      ]);
+      await mockBlocksEndpoint(page, [tour]);
       await page.goto(`/${packageName}.html`);
       await expect(page.getByText("Hello", { exact: true })).toBeVisible();
       await page.getByText("changeLocation", { exact: true }).click();
       await expect(page.getByText("Hello", { exact: true })).toBeVisible();
     });
-
     test(`${packageName} - click`, async ({ page }) => {
-      const tourWithTargeting: Block = {
-        ...tour,
-        tour_trigger: { $and: [{ type: "click", value: "h1" }] },
-      };
-      await page.route("**/v2/sdk/blocks", (route) => {
-        route.fulfill({ json: { blocks: [tourWithTargeting] } });
-      });
+      const tour = getTour([{ type: "click", value: "h1" }]);
+      await mockBlocksEndpoint(page, [tour]);
       await page.goto(`/${packageName}.html`);
       await expect(page.getByText("Hello", { exact: true })).toBeHidden();
       await page.locator("h1").click();
       await expect(page.getByText("Hello", { exact: true })).toBeVisible();
     });
     test(`${packageName} - dom element`, async ({ page }) => {
-      const incorrectDomEl: Block = {
-        ...tour,
-        tour_trigger: { $and: [{ type: "dom-element", value: "h5" }] },
-      };
-      await page.route("**/v2/sdk/blocks", (route) => {
-        route.fulfill({ json: { blocks: [incorrectDomEl] } });
-      });
+      await mockBlocksEndpoint(page, [getTour([{ type: "dom-element", value: "h5" }])]);
       await page.goto(`/${packageName}.html`);
       await expect(page.getByText("Hello", { exact: true })).toBeHidden();
-      const correctDomEl: Block = {
-        ...tour,
-        tour_trigger: { $and: [{ type: "dom-element", value: "h1" }] },
-      };
-      await page.route("**/v2/sdk/blocks", (route) => {
-        route.fulfill({ json: { blocks: [correctDomEl] } });
-      });
+      await mockBlocksEndpoint(page, [getTour([{ type: "dom-element", value: "h1" }])]);
       await page.goto(`/${packageName}.html`);
       await expect(page.getByText("Hello", { exact: true })).toBeVisible();
     });
     test(`${packageName} - not dom element`, async ({ page }) => {
-      const incorrectDomEl: Block = {
-        ...tour,
-        tour_trigger: { $and: [{ type: "not-dom-element", value: "h1" }] },
-      };
-      await page.route("**/v2/sdk/blocks", (route) => {
-        route.fulfill({ json: { blocks: [incorrectDomEl] } });
-      });
+      await mockBlocksEndpoint(page, [getTour([{ type: "not-dom-element", value: "h1" }])]);
       await page.goto(`/${packageName}.html`);
       await expect(page.getByText("Hello", { exact: true })).toBeHidden();
-      const correctDomEl: Block = {
-        ...tour,
-        tour_trigger: { $and: [{ type: "not-dom-element", value: "h5" }] },
-      };
-      await page.route("**/v2/sdk/blocks", (route) => {
-        route.fulfill({ json: { blocks: [correctDomEl] } });
-      });
+      await mockBlocksEndpoint(page, [getTour([{ type: "not-dom-element", value: "h5" }])]);
       await page.goto(`/${packageName}.html`);
       await expect(page.getByText("Hello", { exact: true })).toBeVisible();
     });
     test(`${packageName} - multiple expressions`, async ({ page }) => {
-      const tourWithTargeting: Block = {
-        ...tour,
-        tour_trigger: {
-          $and: [
-            { type: "click", value: "h1" },
-            { type: "dom-element", value: "h1" },
-            { type: "not-dom-element", value: "h5" },
-            { type: "navigation", operator: "eq", values: [`/${packageName}.html`] },
-          ],
-        },
-      };
-      await page.route("**/v2/sdk/blocks", (route) => {
-        route.fulfill({ json: { blocks: [tourWithTargeting] } });
-      });
+      await mockBlocksEndpoint(page, [
+        getTour([
+          { type: "click", value: "h1" },
+          { type: "dom-element", value: "h1" },
+          { type: "not-dom-element", value: "h5" },
+          { type: "navigation", operator: "eq", values: [`/${packageName}.html`] },
+        ]),
+      ]);
       await page.goto(`/${packageName}.html`);
       await expect(page.getByText("Hello", { exact: true })).toBeHidden();
       await page.locator("h1").click();
       await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+    });
+    test(`${packageName} - shouldn't start tour with invalid tour trigger config`, async ({
+      page,
+    }) => {
+      const tour: Block = {
+        ...getTour(),
+        tour_trigger: { $or: [{ type: "dom-element", value: "h1" }] } as TourTrigger,
+      };
+      await mockBlocksEndpoint(page, [tour]);
+      await page.goto(`/${packageName}.html`);
+      const consoleMessagePromise = page.waitForEvent("console", (msg) => {
+        return msg
+          .text()
+          .includes("Aborting tour start due to an unsupported tour trigger format.");
+      });
+      await expect(page.getByText("Hello", { exact: true })).toBeHidden();
+      await consoleMessagePromise;
+    });
+    test(`${packageName} - should not start tour with invalid expression`, async ({ page }) => {
+      await mockBlocksEndpoint(page, [
+        getTour([{ type: "unknown" as TourTriggerType, value: "..." }]),
+      ]);
+      await page.goto(`/${packageName}.html`);
+      const consoleMessagePromise = page.waitForEvent("console", (msg) => {
+        return msg
+          .text()
+          .includes("Aborting tour start due to an unrecognized tour trigger type: unknown.");
+      });
+      await expect(page.getByText("Hello", { exact: true })).toBeHidden();
+      await consoleMessagePromise;
     });
   });
 };

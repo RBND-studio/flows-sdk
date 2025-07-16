@@ -1,3 +1,4 @@
+import { log } from "./log";
 import { elementContains, pathnameMatch } from "./matchers";
 import { type TourTrigger, type TourTriggerType } from "./types";
 
@@ -12,8 +13,16 @@ export const tourTriggerMatch = (
   tourTrigger: TourTrigger | undefined,
   context: Context,
 ): boolean => {
-  // If the tour trigger doesn't match what current SDK supports, we assume it matches
-  if (!tourTrigger?.$and?.length) return true;
+  // Undefined tour trigger means the tour should start
+  if (!tourTrigger) return true;
+
+  // If the tour trigger doesn't match what current SDK supports, we never match it
+  if (!tourTrigger.$and) {
+    log.error(
+      "Aborting tour start due to an unsupported tour trigger format. Try updating the SDK or changing the tour trigger configuration.",
+    );
+    return false;
+  }
 
   if (!context.event) {
     const needsEvent = tourTrigger.$and.some((exp) => requiresEventTypes.includes(exp.type));
@@ -61,7 +70,10 @@ export const tourTriggerMatch = (
       return elementContains({ eventTarget, value });
     }
 
+    log.error(
+      `Aborting tour start due to an unrecognized tour trigger type: ${type}. Try updating the SDK or changing the tour trigger configuration.`,
+    );
     // When the expression isn't recognized, we assume it matches
-    return true;
+    return false;
   });
 };
