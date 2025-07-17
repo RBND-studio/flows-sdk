@@ -176,6 +176,21 @@ const run = (packageName: string) => {
       await page.locator("h1").click();
       await expect(page.getByText("Hello", { exact: true })).toBeVisible();
     });
+    test(`${packageName} - should start with empty expressions`, async ({ page }) => {
+      await mockBlocksEndpoint(page, [
+        getTour([
+          { type: "click", value: "" },
+          { type: "dom-element", value: "" },
+          { type: "not-dom-element", value: "" },
+          { type: "navigation", operator: "eq", values: [""] },
+          { type: "navigation", operator: "ne", values: [""] },
+          { type: "navigation", operator: "eq", values: [] },
+          { type: "navigation", values: [] },
+        ]),
+      ]);
+      await page.goto(`/${packageName}.html`);
+      await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+    });
     test(`${packageName} - shouldn't start tour with invalid tour trigger config`, async ({
       page,
     }) => {

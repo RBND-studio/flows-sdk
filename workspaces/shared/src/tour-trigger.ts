@@ -7,8 +7,6 @@ interface Context {
   pathname: string;
 }
 
-const requiresEventTypes: TourTriggerType[] = ["click"];
-
 export const tourTriggerMatch = (
   tourTrigger: TourTrigger | undefined,
   context: Context,
@@ -24,17 +22,14 @@ export const tourTriggerMatch = (
     return false;
   }
 
-  if (!context.event) {
-    const needsEvent = tourTrigger.$and.some((exp) => requiresEventTypes.includes(exp.type));
-    if (needsEvent) return false;
-  }
-
   return tourTrigger.$and.every((exp): boolean => {
     const type: TourTriggerType | undefined = exp.type;
     if (type === "navigation") {
-      // The navigation type needs operator to match the value
-      if (!exp.operator) return false;
+      // If the user doesn't fill in the operator, we treat it as a match
+      if (!exp.operator) return true;
       const value = exp.values;
+      // If the array is only list of empty strings, we treat it as a match
+      if (value?.every((v) => !v)) return true;
 
       return pathnameMatch({
         operator: exp.operator,
@@ -60,11 +55,13 @@ export const tourTriggerMatch = (
     }
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- we may add more types in the future
     if (type === "click") {
+      const value = exp.value;
+      if (typeof value !== "string") return false;
+      // if the value is empty, we treat it as a match, even without an event to start the tour immediately
+      if (!value) return true;
       // The click type needs an event to match the event target
       if (!context.event || !(context.event instanceof MouseEvent)) return false;
-      const value = exp.value;
       // The click type needs a value to match the selector
-      if (typeof value !== "string") return false;
       const eventTarget = context.event.target;
       if (!eventTarget || !(eventTarget instanceof Element)) return false;
       return elementContains({ eventTarget, value });
