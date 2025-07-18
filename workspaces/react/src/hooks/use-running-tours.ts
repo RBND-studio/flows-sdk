@@ -1,7 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
-import { type Block } from "@flows/shared";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { getPathname, tourTriggerMatch, type Block } from "@flows/shared";
+import { debounce } from "es-toolkit";
 import { type RunningTour } from "../flows-context";
 import { sendEvent } from "../lib/api";
+import { usePathname } from "../contexts/pathname-context";
 
 type StateItem = Pick<RunningTour, "currentBlockIndex"> & {
   blockId: string;
@@ -14,23 +16,71 @@ interface Props {
 
 export const useRunningTours = ({ blocks, removeBlock }: Props): RunningTour[] => {
   const [runningTours, setRunningTours] = useState<StateItem[]>([]);
+  const runningToursRef = useRef<StateItem[]>(runningTours);
+  runningToursRef.current = runningTours;
+  const pathname = usePathname();
 
+  // Stop tours that are no longer running
   useEffect(() => {
     setRunningTours((prev) => {
-      const tourBlocks = blocks.filter((block) => block.type === "tour");
-      const previousTourMap = new Map(prev.map((tour) => [tour.blockId, tour]));
-      const newRunningTours = tourBlocks.map((block): StateItem => {
-        const currentState = previousTourMap.get(block.id);
-        const currentBlockIndex = currentState?.currentBlockIndex ?? block.currentTourIndex ?? 0;
-
-        return {
-          blockId: block.id,
-          currentBlockIndex,
-        };
-      });
-      return newRunningTours;
+      const tourBlockIds = new Set(blocks.filter((b) => b.type === "tour").map((b) => b.id));
+      // Filter out stopped tours
+      return prev.filter((tour) => tourBlockIds.has(tour.blockId));
     });
   }, [blocks]);
+
+  const startToursIfNeeded = useCallback(
+    (ctx: { pathname: string; event?: MouseEvent }): void => {
+      const tourBlocks = blocks.filter((b) => b.type === "tour");
+      const runningTourBlockIds = new Set(runningToursRef.current.map((t) => t.blockId));
+      tourBlocks.forEach((block) => {
+        if (runningTourBlockIds.has(block.id)) return;
+        const triggerMatch = tourTriggerMatch(block.tour_trigger, ctx);
+        if (!triggerMatch) return;
+
+        setRunningTours((prev) => {
+          const runningTour: StateItem = {
+            blockId: block.id,
+            currentBlockIndex: block.currentTourIndex ?? 0,
+          };
+          return [...prev, runningTour];
+        });
+      });
+    },
+    [blocks],
+  );
+
+  // Handle trigger by navigation
+  useEffect(() => {
+    if (!pathname) return;
+
+    startToursIfNeeded({ pathname });
+  }, [pathname, startToursIfNeeded]);
+
+  // Handle trigger by DOM element
+  useEffect(() => {
+    const debouncedCallback = debounce(() => {
+      startToursIfNeeded({ pathname: getPathname() });
+    }, 32);
+
+    const observer = new MutationObserver(debouncedCallback);
+    observer.observe(document.body, { childList: true, subtree: true, attributes: true });
+    return () => {
+      observer.disconnect();
+    };
+  }, [startToursIfNeeded]);
+
+  // Handle trigger by click
+  useEffect(() => {
+    const handleClick = (event: MouseEvent): void => {
+      startToursIfNeeded({ pathname: getPathname(), event });
+    };
+
+    document.addEventListener("click", handleClick);
+    return () => {
+      document.removeEventListener("click", handleClick);
+    };
+  }, [startToursIfNeeded]);
 
   const runningToursWithActiveBlock = useMemo(() => {
     const updateState = (blockId: string, updateFn: (tour: StateItem) => StateItem): void => {

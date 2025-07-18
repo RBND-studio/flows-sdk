@@ -73,6 +73,10 @@ const StateMemory: FC<
 const App: FC = () => {
   const floatingBlocks = useCurrentFloatingBlocks();
 
+  const handleChangeLocation = () => {
+    window.history.pushState({}, "", window.location.pathname + "?v=1");
+  };
+
   return (
     <>
       <h1>heading 1</h1>
@@ -85,6 +89,7 @@ const App: FC = () => {
       <button onClick={() => resetAllWorkflowsProgress()}>resetAllWorkflowsProgress</button>
       <button onClick={() => resetWorkflowProgress("my-workflow-id")}>resetWorkflowProgress</button>
       <button onClick={() => startWorkflow("my-start-block")}>startWorkflow</button>
+      <button onClick={handleChangeLocation}>changeLocation</button>
     </>
   );
 };

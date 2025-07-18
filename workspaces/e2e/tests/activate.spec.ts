@@ -47,7 +47,6 @@ const run = (packageName: string) => {
     });
     await page.goto(`/${packageName}.html?noCurrentBlocks=true`);
     let wrongCmpReqWasSent = false;
-    let modalReqWasSent = false;
     page.on("request", (req) => {
       const body = req.postDataJSON();
       if (
@@ -56,18 +55,19 @@ const run = (packageName: string) => {
         body.blockId === wrongCmpBlock.id
       )
         wrongCmpReqWasSent = true;
-
-      if (
+    });
+    const modalReqPromise = page.waitForRequest((req) => {
+      const body = req.postDataJSON();
+      return (
         req.url() === "https://api.flows-cloud.com/v2/sdk/events" &&
         body.name === "block-activated" &&
         body.blockId === modalBlock.id
-      )
-        modalReqWasSent = true;
+      );
     });
 
     await expect(page.locator(".flows_modal_modal")).toBeVisible();
+    await modalReqPromise;
     await expect(wrongCmpReqWasSent).toBe(false);
-    await expect(modalReqWasSent).toBe(true);
   });
   test(`${packageName} - should call activate for workflow block`, async ({ page }) => {
     const block = getBlock({ componentType: "Modal" });

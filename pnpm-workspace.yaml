@@ -1,2 +1,6 @@
 packages:
-  - "workspaces/*"
+  - workspaces/*
+
+onlyBuiltDependencies:
+  - esbuild
+  - unrs-resolver
