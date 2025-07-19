@@ -12,6 +12,9 @@ export default defineConfig({
       },
     },
   },
+  loader: {
+    ".css": "text",
+  },
   platform: "browser",
   banner: {
     js: '"use client"',

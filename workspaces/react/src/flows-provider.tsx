@@ -8,6 +8,7 @@ import { PathnameProvider } from "./contexts/pathname-context";
 import { TourController } from "./tour-controller";
 import { globalConfig } from "./lib/store";
 import { FloatingBlocks } from "./components/floating-blocks";
+import { Debug } from "./components/debug";
 
 export interface FlowsProviderProps {
   /**
@@ -48,6 +49,11 @@ export interface FlowsProviderProps {
    * @defaultValue `disabled`
    */
   language?: LanguageOption;
+  /**
+   * Enable debug mode.
+   * @defaultValue `false`
+   */
+  debug?: boolean;
 
   children: ReactNode;
 }
@@ -77,13 +83,14 @@ const FlowsProviderInner: FC<Props> = ({
   tourComponents,
   userProperties,
   language,
+  debug,
 }) => {
   globalConfig.apiUrl = apiUrl;
   globalConfig.environment = environment;
   globalConfig.organizationId = organizationId;
   globalConfig.userId = userId;
 
-  const { blocks, removeBlock, updateBlock } = useBlocks({
+  const { blocks, error, wsError, removeBlock, updateBlock } = useBlocks({
     apiUrl,
     environment,
     organizationId,
@@ -108,6 +115,16 @@ const FlowsProviderInner: FC<Props> = ({
       {children}
       <FloatingBlocks />
       <TourController />
+
+      <Debug
+        enabled={debug}
+        blocksError={error}
+        wsError={wsError}
+        environment={environment}
+        organizationId={organizationId}
+        userId={userId}
+        userProperties={userProperties}
+      />
     </FlowsContext.Provider>
   );
 };

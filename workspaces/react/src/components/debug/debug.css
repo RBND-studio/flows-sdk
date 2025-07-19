@@ -1,0 +1,56 @@
+.flows-debug {
+  position: fixed;
+  color: #000;
+}
+.flows-debug-top-left {
+  top: 16px;
+  left: 16px;
+}
+.flows-debug-bottom-right {
+  bottom: 16px;
+  right: 16px;
+}
+.flows-debug-bottom-left {
+  bottom: 16px;
+  left: 16px;
+}
+.flows-debug-top-right {
+  top: 16px;
+  right: 16px;
+}
+.flows-debug-menu {
+  background: #fff;
+  padding: 8px;
+  border-radius: 99px;
+}
+.flows-debug-popover {
+  position: absolute;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  width: 250px;
+  font-size: 13px;
+}
+.flows-debug-top-right .flows-debug-popover {
+  right: 0;
+  top: 100%;
+}
+.flows-debug-bottom-right .flows-debug-popover {
+  right: 0;
+  bottom: 100%;
+}
+.flows-debug-top-left .flows-debug-popover {
+  left: 0;
+  top: 100%;
+}
+.flows-debug-bottom-left .flows-debug-popover {
+  left: 0;
+  bottom: 100%;
+}
+.flows-debug-top .mono {
+  font-family: monospace;
+}
