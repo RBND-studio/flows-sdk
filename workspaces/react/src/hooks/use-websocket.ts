@@ -6,8 +6,13 @@ interface Props {
   onOpen?: () => void;
 }
 
-export const useWebsocket = ({ url, onMessage, onOpen }: Props): void => {
+interface Return {
+  error: boolean;
+}
+
+export const useWebsocket = ({ url, onMessage, onOpen }: Props): Return => {
   const [ws, setWs] = useState<WebSocket>();
+  const [error, setError] = useState(false);
   const cleanupRef = useRef<(() => void) | undefined>(undefined);
   const [reconnectAttempts, setReconnectAttempts] = useState(0);
 
@@ -33,6 +38,7 @@ export const useWebsocket = ({ url, onMessage, onOpen }: Props): void => {
     if (!url) return;
 
     const socket = new WebSocket(url);
+    setError(false);
     setWs(socket);
 
     const handleOpen = (): void => {
@@ -43,13 +49,18 @@ export const useWebsocket = ({ url, onMessage, onOpen }: Props): void => {
       setWs(undefined);
       setReconnectAttempts((p) => p + 1);
     };
+    const handleError = (): void => {
+      setError(true);
+    };
     socket.addEventListener("open", handleOpen);
     socket.addEventListener("close", handleClose);
+    socket.addEventListener("error", handleError);
     socket.addEventListener("message", handleMessage);
 
     const cleanup = (): void => {
       socket.removeEventListener("open", handleOpen);
       socket.removeEventListener("close", handleClose);
+      socket.removeEventListener("error", handleError);
       socket.removeEventListener("message", handleMessage);
 
       if (socket.readyState === WebSocket.CONNECTING) {
@@ -94,4 +105,6 @@ export const useWebsocket = ({ url, onMessage, onOpen }: Props): void => {
       }
     };
   }, []);
+
+  return { error };
 };
