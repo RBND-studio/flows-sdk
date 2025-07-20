@@ -21,7 +21,7 @@
     "product-adoption",
     "product-tours"
   ],
-  "version": "1.14.0",
+  "version": "1.14.1",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/RBND-studio/flows-sdk.git"
