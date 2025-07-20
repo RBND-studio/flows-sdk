@@ -50,8 +50,9 @@ export interface FlowsProviderProps {
    */
   language?: LanguageOption;
   /**
-   * Enable debug mode.
-   * @defaultValue `false`
+   * Show debug panel. Can be also invoked by pressing `Ctrl + Shift + F`.
+   *
+   * Disabled by default. Defaults to `true` when you're on localhost.
    */
   debug?: boolean;
 

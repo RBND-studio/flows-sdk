@@ -1,6 +1,7 @@
 import { type ChangeEvent, useState, type FC, useMemo } from "react";
 import { type UserProperties } from "@flows/shared";
 import { useFlowsContext } from "../../flows-context";
+import { useVisibleBlocks } from "../../hooks/use-current-blocks";
 import debugStyles from "./debug.css";
 import { LogoPillSvg } from "./logo";
 
@@ -68,12 +69,12 @@ const DebugPanel: FC<DebugPanelProps> = ({
     localStorage.setItem(lsPositionKey, value);
   };
   const { runningTours, blocks } = useFlowsContext();
+  const visibleBlocks = useVisibleBlocks();
   const activeBlockCount = useMemo(() => {
-    // TODO:
-    const activeWorkflowBlockCount = 0;
+    const activeWorkflowBlockCount = visibleBlocks.filter((b) => b.type === "component").length;
     const activeTourCount = runningTours.filter((tour) => Boolean(tour.activeStep)).length;
     return activeWorkflowBlockCount + activeTourCount;
-  }, [runningTours]);
+  }, [runningTours, visibleBlocks]);
 
   const statusItems = [
     {
