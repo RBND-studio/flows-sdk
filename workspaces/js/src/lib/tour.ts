@@ -196,6 +196,9 @@ effect(() => {
 
 // Handle trigger by DOM element
 effect(() => {
+  // Ensure this effect runs only in the browser environment because of the MutationObserver
+  if (typeof window === "undefined") return;
+
   const tourBlocksValue = tourBlocks.value;
 
   const debouncedCallback = debounce(() => {
