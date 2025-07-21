@@ -39,7 +39,7 @@
   "devDependencies": {
     "@flows/shared": "workspace:*",
     "@types/jest": "^30.0.0",
-    "@types/node": "^22",
+    "@types/node": "^24",
     "@types/react": "^19.1.8",
     "jest": "^30.0.4",
     "jest-environment-jsdom": "^30.0.4",

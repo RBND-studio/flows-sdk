@@ -45,7 +45,7 @@
     "@flows/shared": "workspace:*",
     "@flows/styles": "workspace:*",
     "@types/jest": "^30.0.0",
-    "@types/node": "^22",
+    "@types/node": "^24",
     "jest": "^30.0.4",
     "rimraf": "^6.0.1",
     "ts-jest": "^29.4.0",
