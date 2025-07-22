@@ -4,6 +4,7 @@ import { connectToWebsocketAndFetchBlocks } from "./lib/blocks";
 import { addHandlers } from "./lib/handler";
 import { config, pathname } from "./store";
 import { type FlowsOptions } from "./types/configuration";
+import { initDebugPanel, keydownDebugListener } from "./lib/debug";
 
 let locationChangeInterval: number | null = null;
 
@@ -34,5 +35,10 @@ export const init = (options: FlowsOptions): void => {
     }
   }, 250);
 
-  addHandlers([{ type: "click", handler: handleDocumentClick }]);
+  addHandlers([
+    { type: "click", handler: handleDocumentClick },
+    { type: "keydown", handler: keydownDebugListener },
+  ]);
+
+  initDebugPanel(options.debug);
 };

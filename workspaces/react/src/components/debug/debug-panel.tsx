@@ -1,20 +1,16 @@
 import { type ChangeEvent, useState, type FC, useMemo } from "react";
-import { type UserProperties } from "@flows/shared";
+import {
+  type DebugPanelPosition,
+  debugPanelPositionLocalStorageKey,
+  debugPanelPositionOptions,
+  getDefaultDebugPanelPosition,
+  type UserProperties,
+} from "@flows/shared";
+import debugStyles from "@flows/styles/debug.css";
 import { useFlowsContext } from "../../flows-context";
 import { useVisibleBlocks } from "../../hooks/use-current-blocks";
-import debugStyles from "./debug.css";
 import { LogoPillSvg } from "./logo";
 
-type Position = "top-left" | "top-right" | "bottom-left" | "bottom-right";
-const positionOptions: Position[] = ["top-left", "top-right", "bottom-left", "bottom-right"];
-const lsPositionKey = "flows-debug-position";
-const getDefaultPosition = (): Position => {
-  const lsValue = localStorage.getItem(lsPositionKey);
-  if (lsValue && positionOptions.includes(lsValue as Position)) {
-    return lsValue as Position;
-  }
-  return "bottom-right";
-};
 const uuidv4Regex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 const booleanToString = (value: unknown): "true" | "false" => (value ? "true" : "false");
 
@@ -34,12 +30,6 @@ const t = {
   apiError: {
     true: "API working correctly.",
     false: "API is not working correctly. Check the browser console for more details.",
-  },
-  position: {
-    "top-left": "Top Left",
-    "top-right": "Top Right",
-    "bottom-left": "Bottom Left",
-    "bottom-right": "Bottom Right",
   },
 };
 
@@ -62,11 +52,11 @@ const DebugPanel: FC<DebugPanelProps> = ({
   userProperties,
 }) => {
   const [open, setOpen] = useState(false);
-  const [position, setPosition] = useState<Position>(getDefaultPosition());
+  const [position, setPosition] = useState<DebugPanelPosition>(getDefaultDebugPanelPosition());
   const handleChangePosition = (e: ChangeEvent<HTMLSelectElement>): void => {
-    const value = e.target.value as Position;
+    const value = e.target.value as DebugPanelPosition;
     setPosition(value);
-    localStorage.setItem(lsPositionKey, value);
+    localStorage.setItem(debugPanelPositionLocalStorageKey, value);
   };
   const { runningTours, blocks } = useFlowsContext();
   const visibleBlocks = useVisibleBlocks();
@@ -132,9 +122,9 @@ const DebugPanel: FC<DebugPanelProps> = ({
           <label>
             Position
             <select value={position} onChange={handleChangePosition}>
-              {positionOptions.map((v) => (
-                <option value={v} key={v}>
-                  {t.position[v]}
+              {debugPanelPositionOptions.map((opt) => (
+                <option value={opt.value} key={opt.value}>
+                  {opt.label}
                 </option>
               ))}
             </select>
