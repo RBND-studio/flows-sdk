@@ -5,7 +5,7 @@ import { usePathname } from "../contexts/pathname-context";
 import { blockToActiveBlock, tourBlockToActiveBlock } from "../lib/active-block";
 import { getSlot } from "../lib/selectors";
 
-const useVisibleBlocks = (): Block[] => {
+export const useVisibleBlocks = (): Block[] => {
   const { blocks } = useFlowsContext();
   const pathname = usePathname();
   return useMemo(

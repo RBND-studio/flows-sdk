@@ -49,6 +49,8 @@
   },
   "devDependencies": {
     "@flows/shared": "workspace:*",
+    "@flows/styles": "workspace:*",
+    "@swc/core": "^1.13.1",
     "@types/jest": "^30.0.0",
     "@types/node": "^22",
     "jest": "^30.0.4",
@@ -58,6 +60,7 @@
   },
   "dependencies": {
     "@preact/signals-core": "^1.11.0",
-    "es-toolkit": "^1.39.7"
+    "es-toolkit": "^1.39.7",
+    "lit": "^3.3.1"
   }
 }

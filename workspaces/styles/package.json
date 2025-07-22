@@ -6,6 +6,10 @@
     "./index.css": {
       "import": "./src/index.css",
       "require": "./src/index.css"
+    },
+    "./debug.css": {
+      "import": "./src/debug.css",
+      "require": "./src/debug.css"
     }
   }
 }

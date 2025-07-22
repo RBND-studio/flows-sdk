@@ -29,4 +29,10 @@ export interface FlowsOptions {
    * @defaultValue `disabled`
    */
   language?: LanguageOption;
+  /**
+   * Show debug panel. Can be also invoked by pressing `Ctrl + Shift + F`.
+   *
+   * Disabled by default. Defaults to `true` when you're on localhost.
+   */
+  debug?: boolean;
 }
