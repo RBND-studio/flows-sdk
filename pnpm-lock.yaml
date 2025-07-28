@@ -70,11 +70,11 @@ importers:
         specifier: ^4.6.0
         version: 4.6.0(vite@7.0.4(@types/node@22.15.24)(jiti@2.4.2)(yaml@2.4.5))
       react:
-        specifier: 19.1.0
-        version: 19.1.0
+        specifier: 19.1.1
+        version: 19.1.1
       react-dom:
         specifier: 19.1.0
-        version: 19.1.0(react@19.1.0)
+        version: 19.1.0(react@19.1.1)
       typescript:
         specifier: ^5.8.3
         version: 5.8.3
@@ -191,13 +191,13 @@ importers:
     dependencies:
       '@floating-ui/react-dom':
         specifier: ^2.1.4
-        version: 2.1.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        version: 2.1.4(react-dom@19.1.0(react@19.1.1))(react@19.1.1)
       classnames:
         specifier: ^2.5.1
         version: 2.5.1
       react:
         specifier: '>=17.0.2'
-        version: 19.1.0
+        version: 19.1.1
     devDependencies:
       '@flows/shared':
         specifier: workspace:*
@@ -3421,8 +3421,8 @@ packages:
     resolution: {integrity: sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==}
     engines: {node: '>=0.10.0'}
 
-  react@19.1.0:
-    resolution: {integrity: sha512-FS+XFBNvn3GTAWq26joslQgWNoFu08F4kl0J4CgdNKADkdSGXQyTCnKteIAJy96Br6YbpEU1LSzV5dYtjMkMDg==}
+  react@19.1.1:
+    resolution: {integrity: sha512-w8nqGImo45dmMIfljjMwOGtbmC/mk4CMYhWIicdSflH91J9TyCyczcPFXJzrZ/ZXcgGRFeP6BU0BEJTw6tZdfQ==}
     engines: {node: '>=0.10.0'}
 
   read-pkg-up@7.0.1:
@@ -4767,11 +4767,11 @@ snapshots:
       '@floating-ui/core': 1.7.2
       '@floating-ui/utils': 0.2.10
 
-  '@floating-ui/react-dom@2.1.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+  '@floating-ui/react-dom@2.1.4(react-dom@19.1.0(react@19.1.1))(react@19.1.1)':
     dependencies:
       '@floating-ui/dom': 1.7.2
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
+      react: 19.1.1
+      react-dom: 19.1.0(react@19.1.1)
 
   '@floating-ui/utils@0.2.10': {}
 
@@ -7912,9 +7912,9 @@ snapshots:
 
   queue-microtask@1.2.3: {}
 
-  react-dom@19.1.0(react@19.1.0):
+  react-dom@19.1.0(react@19.1.1):
     dependencies:
-      react: 19.1.0
+      react: 19.1.1
       scheduler: 0.26.0
 
   react-is@16.13.1: {}
@@ -7927,7 +7927,7 @@ snapshots:
     dependencies:
       loose-envify: 1.4.0
 
-  react@19.1.0: {}
+  react@19.1.1: {}
 
   read-pkg-up@7.0.1:
     dependencies:
