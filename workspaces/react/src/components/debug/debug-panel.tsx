@@ -1,15 +1,20 @@
-import { type ChangeEvent, useState, type FC, useMemo } from "react";
+import { useState, type FC, useMemo } from "react";
 import {
   type DebugPanelPosition,
-  debugPanelPositionLocalStorageKey,
-  debugPanelPositionOptions,
   getDefaultDebugPanelPosition,
   type UserProperties,
 } from "@flows/shared";
 import debugStyles from "@flows/styles/debug.css";
 import { useFlowsContext } from "../../flows-context";
 import { useVisibleBlocks } from "../../hooks/use-current-blocks";
-import { LogoPillSvg } from "./logo";
+import { Logo } from "./icons/logo";
+import { UserPanel } from "./panels/user-panel";
+import { SdkSetupPanel } from "./panels/sdk-setup-panel";
+import { BlocksPanel } from "./panels/blocks-panel";
+import { HomePanel } from "./panels/main-panel";
+import { SettingsPanel } from "./panels/settings-panel";
+import { Check } from "./icons/check";
+import { X } from "./icons/x";
 
 const uuidv4Regex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 const booleanToString = (value: unknown): "true" | "false" => (value ? "true" : "false");
@@ -51,13 +56,14 @@ const DebugPanel: FC<DebugPanelProps> = ({
   userId,
   userProperties,
 }) => {
-  const [open, setOpen] = useState(false);
-  const [position, setPosition] = useState<DebugPanelPosition>(getDefaultDebugPanelPosition());
-  const handleChangePosition = (e: ChangeEvent<HTMLSelectElement>): void => {
-    const value = e.target.value as DebugPanelPosition;
-    setPosition(value);
-    localStorage.setItem(debugPanelPositionLocalStorageKey, value);
+  const [open, setOpen] = useState(true);
+
+  const [panelState, setPanelState] = useState("home");
+  const closeSubPanel = (): void => {
+    setPanelState("home");
   };
+
+  const [position, setPosition] = useState<DebugPanelPosition>(getDefaultDebugPanelPosition());
   const { runningTours, blocks } = useFlowsContext();
   const visibleBlocks = useVisibleBlocks();
   const activeBlockCount = useMemo(() => {
@@ -76,59 +82,71 @@ const DebugPanel: FC<DebugPanelProps> = ({
     { key: "apiError", valid: !blocksError && !wsError },
   ] as const;
 
+  const sdkSetupValid = statusItems.every((item) => item.valid);
+
   return (
     <div className={`flows-debug flows-debug-${position}`}>
       <button
-        className="flows-debug-menu"
+        className={`flows-debug-menu ${sdkSetupValid ? "" : " flows-debug-menu-error"}`}
         type="button"
         onClick={() => {
           setOpen((p) => !p);
         }}
       >
-        <LogoPillSvg width={16} />
+        <div
+          className={`flows-debug-menu-inset ${sdkSetupValid ? "" : "flows-debug-menu-inset-error"}`}
+        >
+          <Logo width={16} />
+        </div>
       </button>
       {open ? (
         <div className="flows-debug-popover">
-          <ul>
-            {statusItems.map((item) => {
-              const indicator = item.valid ? "✅" : "❌";
+          <HomePanel
+            userId={userId}
+            setPanelState={setPanelState}
+            sdkSetupValid={sdkSetupValid}
+            blocks={blocks}
+            activeBlockCount={activeBlockCount}
+            panelState={panelState}
+            organizationId={organizationId}
+          />
+          <UserPanel
+            panelState={panelState}
+            onClose={closeSubPanel}
+            userProperties={userProperties}
+            userId={userId}
+          />
+          <SdkSetupPanel
+            panelState={panelState}
+            onClose={closeSubPanel}
+            organizationId={organizationId}
+            environment={environment}
+            statusItems={statusItems.map((item) => {
+              const indicator = item.valid ? (
+                <Check className="flows-debug-validation-valid" />
+              ) : (
+                <X className="flows-debug-validation-invalid" />
+              );
               const message = t[item.key][booleanToString(item.valid)];
               return (
-                <li key={item.key}>
-                  {indicator} {message}
-                </li>
+                <div className="flows-debug-validation-item" key={item.key}>
+                  {indicator} <p>{message}</p>
+                </div>
               );
             })}
-          </ul>
-          <hr />
-          <ul>
-            <li>
-              OrganizationId: <code>{organizationId}</code>
-            </li>
-            <li>
-              Environment: <code>{environment}</code>
-            </li>
-            <li>
-              userId: <code>{userId}</code>
-            </li>
-            <li>
-              User properties:{" "}
-              <pre className="mono">{JSON.stringify(userProperties ?? {}, null, 2)}</pre>
-            </li>
-            <li>Loaded blocks: {blocks.length}</li>
-            <li>Active blocks: {activeBlockCount}</li>
-          </ul>
-          <hr />
-          <label>
-            Position
-            <select value={position} onChange={handleChangePosition}>
-              {debugPanelPositionOptions.map((opt) => (
-                <option value={opt.value} key={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-          </label>
+          />
+          <BlocksPanel
+            panelState={panelState}
+            onClose={closeSubPanel}
+            blocks={blocks}
+            activeBlockCount={activeBlockCount}
+          />
+          <SettingsPanel
+            panelState={panelState}
+            onClose={closeSubPanel}
+            position={position}
+            setPosition={setPosition}
+          />
         </div>
       ) : null}
 

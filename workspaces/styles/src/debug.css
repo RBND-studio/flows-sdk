@@ -1,7 +1,57 @@
+:root {
+  --flows-debug-bg-default: #ffffff;
+  --flows-debug-bg-subtle: #f9fafc;
+  --flows-debug-bg-hover: #ebeef3;
+
+  --flows-debug-fg-default: #15181c;
+  --flows-debug-fg-subtle: #6b727b;
+  --flows-debug-border: 1px solid #d9dde2;
+  --flows-debug-fg-success: #188635;
+  --flows-debug-fg-error: #cf2320;
+  --flows-debug-overlay: hsla(0, 0%, 100%, 0.2);
+  --flows-debug-overlay-hover: hsla(0, 0%, 100%, 0.3);
+
+  --flows-debug-small-shadow: 0px 0px 1px rgba(0, 0, 0, 0.06), 0px 4px 4px -1px rgba(0, 0, 0, 0.02);
+  --flows-debug-shadow:
+    0px 3px 8px rgba(0, 0, 0, 0.07), 0px 2px 5px rgba(0, 0, 0, 0.07),
+    0px 1px 1px rgba(0, 0, 0, 0.07);
+
+  --flows-debug-system-font:
+    system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
+    "Open Sans", "Helvetica Neue", sans-serif;
+  --flows-debug-mono-font:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+    monospace;
+}
+
+.dark {
+  --flows-debug-bg-default: #15181c;
+  --flows-debug-bg-subtle: #22262d;
+  --flows-debug-bg-hover: #2b313a;
+
+  --flows-debug-fg-default: #f9fafc;
+  --flows-debug-fg-subtle: #8b929b;
+  --flows-debug-border: 1px solid #353c46;
+  --flows-debug-fg-success: #33a449;
+  --flows-debug-fg-error: #ea6369;
+  --flows-debug-overlay: hsla(0, 0%, 100%, 0.1);
+  --flows-debug-overlay-hover: hsla(0, 0%, 100%, 0.2);
+
+  --flows-debug-small-shadow:
+    0px 4px 4px -1px rgba(0, 0, 0, 0.06), 0px 1px 1px 0px rgba(0, 0, 0, 0.12);
+  --flows-debug-shadow:
+    0px 3px 8px rgba(0, 0, 0, 0.188), 0px 2px 5px rgba(0, 0, 0, 0.188),
+    0px 1px 1px rgba(0, 0, 0, 0.188);
+}
+
 .flows-debug {
   position: fixed;
-  color: #000;
+  color: var(--flows-debug-fg-default);
+  & hr {
+    border-top: var(--flows-debug-border);
+  }
 }
+
 .flows-debug-top-left {
   top: 16px;
   left: 16px;
@@ -18,24 +68,60 @@
   top: 16px;
   right: 16px;
 }
+
 .flows-debug-menu {
-  background: #fff;
-  padding: 8px;
+  background: var(--flows-debug-bg-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  width: 36px;
   border-radius: 99px;
   margin: 0;
   cursor: pointer;
+  border: var(--flows-debug-border);
+  box-shadow: var(--flows-debug-small-shadow);
 }
+.flows-debug-menu-inset {
+  transition: background 120ms ease-in-out;
+  padding: 7px;
+  border-radius: 99px;
+}
+.flows-debug-menu:hover {
+  & .flows-debug-menu-inset {
+    background: var(--flows-debug-bg-hover);
+  }
+}
+
+.flows-debug-menu-error {
+  background: var(--flows-debug-fg-error) !important;
+}
+
+.flows-debug-menu-inset-error {
+  background: var(--flows-debug-overlay) !important;
+  color: var(--flows-debug-bg-default) !important;
+  &:hover {
+    background: var(--flows-debug-overlay-hover) !important;
+  }
+}
+
 .flows-debug-popover {
   position: absolute;
   margin-top: 8px;
   margin-bottom: 8px;
-  background: #fff;
-  border: 1px solid #ccc;
+  background: var(--flows-debug-bg-default);
+  border: var(--flows-debug-border);
   border-radius: 8px;
-  padding: 16px;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
-  width: 250px;
+  box-shadow: var(--flows-debug-shadow);
   font-size: 13px;
+  font-family: var(--flows-debug-system-font);
+}
+.flows-debug-popover-wide {
+  width: 360px;
+}
+
+.flows-debug-popover-narrow {
+  width: 260px;
 }
 .flows-debug-top-right .flows-debug-popover {
   right: 0;
@@ -55,4 +141,165 @@
 }
 .flows-debug-top .mono {
   font-family: monospace;
+}
+
+.flows-debug-section-header {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  border-bottom: var(--flows-debug-border);
+  padding: 12px 16px 12px 8px;
+}
+
+.flows-debug-section-label {
+  font-weight: 600;
+}
+
+.flows-debug-section-content {
+  padding: 16px;
+}
+.flows-debug-code-block {
+  padding: 8px;
+  border-radius: 4px;
+  background: var(--flows-debug-bg-subtle);
+  font-size: 12px;
+  font-family: var(--flows-debug-mono-font);
+  overflow-x: auto;
+  max-height: 480px;
+  border: var(--flows-debug-border);
+}
+
+.flows-debug-inline-code {
+  font-family: var(--flows-debug-mono-font);
+  font-size: 12px;
+}
+
+.flows-debug-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 6px;
+  border-radius: 6px;
+  transition: background 120ms ease-in-out;
+}
+.flows-debug-item-interactive {
+  cursor: pointer;
+  &:hover {
+    background: var(--flows-debug-bg-hover);
+  }
+}
+
+.flows-debug-item-info {
+  font-size: 12px;
+  color: var(--flows-debug-fg-subtle);
+  margin-top: 2px;
+}
+
+.flows-debug-item-label {
+  font-weight: 600;
+}
+
+.flows-debug-item-secondary {
+  color: var(--flows-debug-fg-subtle);
+}
+
+.flows-debug-item-list {
+  display: flex;
+  flex-direction: column;
+  padding: 6px;
+}
+
+.flows-debug-info-line {
+  margin-bottom: 4px;
+}
+
+.flows-debug-button-secondary {
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background-color: var(--flows-debug-bg-subtle);
+  border: var(--flows-debug-border);
+  cursor: pointer;
+  transition: all 80ms ease-in-out;
+  flex-shrink: 0;
+  &:hover {
+    background-color: var(--flows-debug-bg-hover);
+  }
+  &:active {
+    background-color: var(--flows-debug-bg-default);
+  }
+}
+
+.flows-debug-section-close {
+  padding: 4px;
+  border-radius: 6px;
+
+  &:hover {
+    background-color: var(--flows-debug-bg-hover);
+  }
+}
+
+.flows-debug-select-button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background-color: var(--flows-debug-bg-subtle);
+  border: var(--flows-debug-border);
+  cursor: pointer;
+  transition: all 80ms ease-in-out;
+
+  &:hover {
+    background-color: var(--flows-debug-bg-hover);
+  }
+}
+.flows-debug-select {
+  all: unset;
+  background-color: rgba(0, 0, 0, 0) !important;
+  &:focus {
+    outline: none;
+  }
+}
+
+.flows-debug-shortcut-list {
+  display: flex;
+  gap: 4px;
+}
+
+.flows-debug-shortcut {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  background-color: var(--flows-debug-bg-subtle);
+  min-width: 20px;
+  height: 20px;
+  padding: 0 4px;
+  border-radius: 4px;
+  justify-content: center;
+  border: var(--flows-debug-border);
+}
+
+.flows-debug-validation-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 8px;
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.flows-debug-validation-valid {
+  color: var(--flows-debug-fg-success);
+  flex-shrink: 0;
+}
+.flows-debug-validation-invalid {
+  color: var(--flows-debug-fg-error);
+  flex-shrink: 0;
+}
+
+.flows-debug-print-button {
+  margin-top: 8px;
 }
