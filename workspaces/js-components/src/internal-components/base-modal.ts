@@ -1,3 +1,6 @@
+import { html, LitElement } from "lit";
+import { customElement, property } from "lit/decorators.js";
+import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import { close16 } from "../icons/close-16";
 import { type _Component } from "../types";
 
@@ -5,65 +8,67 @@ interface Props {
   title: string;
   body: string;
   overlay: boolean;
-  buttons: HTMLElement[];
+  buttons: unknown[];
   close?: () => void;
 }
 
-export const BaseModal: _Component<Props> = (props) => {
-  const root = document.createElement("div");
+const tagName = "flows-base-modal";
+class BaseModal extends LitElement implements Props {
+  @property({ type: String })
+  title: string;
 
-  let overlay: HTMLDivElement | null = null;
-  if (props.overlay) {
-    overlay = document.createElement("div");
-    root.appendChild(overlay);
-    overlay.className = `flows_modal_overlay${props.close ? " flows_modal_clickable" : ""}`;
-    overlay.setAttribute("aria-hidden", "true");
-    if (props.close) overlay.addEventListener("click", props.close);
+  @property({ type: String })
+  body: string;
+
+  @property({ type: Boolean })
+  overlay: boolean;
+
+  @property({ attribute: false })
+  buttons: unknown[];
+
+  @property({ attribute: false })
+  close?: () => void;
+
+  createRenderRoot(): this {
+    return this;
   }
 
-  const modalWrapper = document.createElement("div");
-  root.appendChild(modalWrapper);
-  modalWrapper.className = "flows_modal_wrapper";
+  render(): unknown {
+    const overlay = this.overlay
+      ? html`<div
+          class="flows_modal_overlay ${this.close ? "flows_modal_clickable" : ""}"
+          @click=${this.close}
+          aria-hidden="true"
+        ></div>`
+      : null;
 
-  const modal = document.createElement("div");
-  modalWrapper.appendChild(modal);
-  modal.className = "flows_modal_modal";
+    return html`
+      ${overlay}
+      <div class="flows_modal_wrapper">
+        <div class="flows_modal_modal">
+          <p class="flows_text flows_text_title">${this.title}</p>
+          <p class="flows_text flows_text_body">${unsafeHTML(this.body)}</p>
 
-  const title = document.createElement("p");
-  modal.appendChild(title);
-  title.className = "flows_text flows_text_title";
-  title.textContent = props.title;
-
-  const body = document.createElement("p");
-  modal.appendChild(body);
-  body.className = "flows_text flows_text_body";
-  body.innerHTML = props.body;
-
-  if (props.buttons.length) {
-    const footer = document.createElement("div");
-    modal.appendChild(footer);
-    footer.className = "flows_modal_footer";
-
-    props.buttons.forEach((button) => footer.appendChild(button));
+          ${this.buttons.length
+            ? html`<div class="flows_modal_footer">${this.buttons.map((button) => button)}</div>`
+            : null}
+          ${this.close
+            ? html`<button
+                class="flows_iconButton flows_modal_close"
+                aria-label="Close"
+                @click=${this.close}
+              >
+                ${close16()}
+              </button>`
+            : null}
+        </div>
+      </div>
+    `;
   }
+}
 
-  let closeButton: HTMLButtonElement | null = null;
-  if (props.close) {
-    closeButton = document.createElement("button");
-    modal.appendChild(closeButton);
-    closeButton.className = "flows_iconButton flows_modal_close";
-    closeButton.setAttribute("aria-label", "Close");
-    closeButton.addEventListener("click", props.close);
-    closeButton.appendChild(close16());
+export const defineBaseModal = (): void => {
+  if (!customElements.get(tagName)) {
+    customElements.define(tagName, BaseModal);
   }
-
-  return {
-    element: root,
-    cleanup: () => {
-      if (props.close) {
-        closeButton?.removeEventListener("click", props.close);
-        overlay?.removeEventListener("click", props.close);
-      }
-    },
-  };
 };
