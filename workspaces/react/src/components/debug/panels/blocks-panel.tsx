@@ -23,7 +23,7 @@ export const BlocksPanel = ({ blocks, activeBlockCount }: Props): ReactNode => {
 
       <pre className="flows-debug-code-block">{JSON.stringify(blocks, null, 2)}</pre>
       <button
-        className="flows-debug-button-secondary flows-debug-print-button"
+        className="flows-debug-btn flows-debug-button-secondary flows-debug-print-button"
         onClick={() => {
           // eslint-disable-next-line no-console -- feature for debugging
           console.log(blocks);

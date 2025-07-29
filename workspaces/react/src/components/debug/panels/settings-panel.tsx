@@ -25,7 +25,7 @@ export const SettingsPanel = ({ position, onPositionChange }: Props): ReactNode 
             Sets the position of the debug panel on the screen.
           </p>
         </div>
-        <div className="flows-debug-select-button">
+        <div className="flows-debug-select-wrap">
           <select
             className="flows-debug-select"
             value={position}

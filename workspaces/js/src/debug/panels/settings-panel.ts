@@ -20,7 +20,7 @@ export const SettingsPanel = ({ position, onPositionChange }: Props): TemplateRe
         <label class="flows-debug-item-label" htmlFor="debug-panel-position"> Position </label>
         <p class="flows-debug-item-info">Sets the position of the debug panel on the screen.</p>
       </div>
-      <div class="flows-debug-select-button">
+      <div class="flows-debug-select-wrap">
         <select
           class="flows-debug-select"
           id="debug-panel-position"

@@ -50,6 +50,16 @@
   & hr {
     border-top: var(--flows-debug-border);
   }
+  & a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+.flows-debug-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
 }
 
 .flows-debug-top-left {
@@ -243,26 +253,30 @@
   }
 }
 
-.flows-debug-select-button {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 8px;
-  border-radius: 6px;
-  background-color: var(--flows-debug-bg-subtle);
-  border: var(--flows-debug-border);
-  cursor: pointer;
-  transition: all 80ms ease-in-out;
-
-  &:hover {
-    background-color: var(--flows-debug-bg-hover);
+.flows-debug-select-wrap {
+  position: relative;
+  svg {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
   }
 }
 .flows-debug-select {
   all: unset;
-  background-color: rgba(0, 0, 0, 0) !important;
+  border-radius: 6px;
+  background-color: var(--flows-debug-bg-subtle);
+  border: var(--flows-debug-border);
+  padding: 4px 8px;
+  padding-right: 28px;
+  cursor: pointer;
+  transition: all 80ms ease-in-out;
   &:focus {
     outline: none;
+  }
+  &:hover {
+    background-color: var(--flows-debug-bg-hover);
   }
 }
 

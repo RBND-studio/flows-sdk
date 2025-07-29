@@ -14,7 +14,7 @@ export const BlocksPanel = ({ blocks, activeBlockCount }: Props): TemplateResult
     </p>
     <pre class="flows-debug-code-block">${JSON.stringify(blocks, null, 2)}</pre>
     <button
-      class="flows-debug-button-secondary flows-debug-print-button"
+      class="flows-debug-btn flows-debug-button-secondary flows-debug-print-button"
       type="button"
       @click=${() => {
         // eslint-disable-next-line no-console -- feature for debugging

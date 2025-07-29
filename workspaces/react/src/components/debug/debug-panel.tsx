@@ -120,7 +120,11 @@ const DebugPanel: FC<DebugPanelProps> = ({
   return (
     <div className={clsx("flows-debug", `flows-debug-${position}`)}>
       <button
-        className={clsx("flows-debug-menu", !sdkSetupValid && "flows-debug-menu-error")}
+        className={clsx(
+          "flows-debug-btn",
+          "flows-debug-menu",
+          !sdkSetupValid && "flows-debug-menu-error",
+        )}
         type="button"
         onClick={toggleOpen}
       >
@@ -130,7 +134,7 @@ const DebugPanel: FC<DebugPanelProps> = ({
             !sdkSetupValid && "flows-debug-menu-inset-error",
           )}
         >
-          <Logo width={16} />
+          <Logo />
         </div>
       </button>
       {open ? (

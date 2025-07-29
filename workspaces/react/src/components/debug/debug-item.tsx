@@ -9,7 +9,7 @@ interface Props {
 export const DebugItem = ({ label, secondary, onClick }: Props): ReactNode => {
   return (
     <button
-      className="flows-debug-item flows-debug-item-interactive"
+      className="flows-debug-btn flows-debug-item flows-debug-item-interactive"
       onClick={onClick}
       type="button"
     >

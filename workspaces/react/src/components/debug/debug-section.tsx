@@ -11,7 +11,11 @@ export const DebugSection = ({ label, children, onClose }: Props): ReactNode => 
   return (
     <div className="flows-debug-popover-wide">
       <div className="flows-debug-section-header">
-        <button className="flows-debug-section-close" onClick={onClose} type="button">
+        <button
+          className="flows-debug-btn flows-debug-section-close"
+          onClick={onClose}
+          type="button"
+        >
           <ArrowLeft />
         </button>
         <p className="flows-debug-section-label">{label}</p>

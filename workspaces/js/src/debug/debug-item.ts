@@ -8,7 +8,7 @@ interface Props {
 
 export const DebugItem = ({ label, secondary, onClick }: Props): TemplateResult => {
   return html`<button
-    class="flows-debug-item flows-debug-item-interactive"
+    class="flows-debug-btn flows-debug-item flows-debug-item-interactive"
     @click=${onClick}
     type="button"
   >
