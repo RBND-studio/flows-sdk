@@ -164,9 +164,6 @@
   left: 0;
   bottom: 100%;
 }
-.flows-debug-top .mono {
-  font-family: monospace;
-}
 
 .flows-debug-section-header {
   display: flex;

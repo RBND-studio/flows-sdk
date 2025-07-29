@@ -4,6 +4,7 @@ import {
   getDefaultDebugEnabled,
   isDebugShortcut,
 } from "@flows/shared";
+import { ErrorBoundary } from "../error-boundary";
 import { type DebugPanelProps } from "./debug-panel";
 
 const DebugPanel = lazy(() => import("./debug-panel"));
@@ -47,5 +48,9 @@ const DebugInner: FC<Props> = ({ enabled: forceEnabled, onDebugKeydown, ...props
 
   if (!enabled) return null;
 
-  return <DebugPanel {...props} />;
+  return (
+    <ErrorBoundary>
+      <DebugPanel {...props} />
+    </ErrorBoundary>
+  );
 };

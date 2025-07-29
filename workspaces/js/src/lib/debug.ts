@@ -2,6 +2,7 @@ import {
   debugEnabledSessionStorageKey,
   getDefaultDebugEnabled,
   isDebugShortcut,
+  log,
 } from "@flows/shared";
 import { effect, signal } from "@preact/signals-core";
 
@@ -12,12 +13,16 @@ const debugPanelOpen = signal(false);
 const openDebugPanel = async (): Promise<void> => {
   if (document.querySelector(tagName)) return;
 
-  const { DebugPanel } = await import("../debug/debug-panel");
-  if (!customElements.get(tagName)) {
-    customElements.define(tagName, DebugPanel);
+  try {
+    const { DebugPanel } = await import("../debug/debug-panel");
+    if (!customElements.get(tagName)) {
+      customElements.define(tagName, DebugPanel);
+    }
+    const debugPanelEl = document.createElement(tagName);
+    document.body.appendChild(debugPanelEl);
+  } catch (error) {
+    log.error("Failed to load the DebugPanel module", error);
   }
-  const debugPanelEl = document.createElement(tagName);
-  document.body.appendChild(debugPanelEl);
 };
 const closeDebugPanel = (): void => {
   const debugPanelEl = document.querySelector(tagName);

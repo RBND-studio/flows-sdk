@@ -48,6 +48,7 @@ export class DebugPanel extends SignalWatcher(LitElement) {
     this._page = page;
   }
 
+  // Disable shadow DOM to use global CSS
   createRenderRoot(): this {
     return this;
   }
