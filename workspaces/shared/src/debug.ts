@@ -50,9 +50,14 @@ export const t = {
 };
 
 export const getDefaultDebugEnabled = (forced?: boolean): boolean => {
-  const isSessionEnabled = sessionStorage.getItem(debugEnabledSessionStorageKey) === "true";
+  if (typeof forced !== "undefined") return forced;
+  const sessionValue = sessionStorage.getItem(debugEnabledSessionStorageKey);
+  if (sessionValue) {
+    return sessionValue === "true";
+  }
+
   const isLocalhost = localhostRegex.test(window.location.origin);
-  return forced ?? (isSessionEnabled || isLocalhost);
+  return isLocalhost;
 };
 
 export const dashboardLink = (organizationId: string): string =>

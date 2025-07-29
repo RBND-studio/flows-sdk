@@ -31,8 +31,11 @@ const DebugInner: FC<Props> = ({ enabled: forceEnabled, onDebugKeydown, ...props
     const handleKeyDown = (e: KeyboardEvent): void => {
       const shortcutMatcher = onDebugKeydown ?? isDebugShortcut;
       if (shortcutMatcher(e)) {
-        setEnabled(true);
-        sessionStorage.setItem(debugEnabledSessionStorageKey, "true");
+        setEnabled((prev) => {
+          const newValue = !prev;
+          sessionStorage.setItem(debugEnabledSessionStorageKey, String(newValue));
+          return newValue;
+        });
       }
     };
 
