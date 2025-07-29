@@ -44,6 +44,20 @@
     0px 1px 1px rgba(0, 0, 0, 0.188);
 }
 
+@keyframes flows-debug-fadeIn {
+  from {
+    opacity: 0;
+    scale: 0.5;
+  }
+  80% {
+    opacity: 1;
+    scale: 1.2;
+  }
+  to {
+    scale: 1;
+  }
+}
+
 .flows-debug {
   position: fixed;
   color: var(--flows-debug-fg-default);
@@ -91,6 +105,7 @@
   cursor: pointer;
   border: var(--flows-debug-border);
   box-shadow: var(--flows-debug-small-shadow);
+  animation: flows-debug-fadeIn 120ms ease-out;
 }
 .flows-debug-menu-inset {
   transition: background 120ms ease-in-out;

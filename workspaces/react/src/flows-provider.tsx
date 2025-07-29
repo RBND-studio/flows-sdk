@@ -50,11 +50,34 @@ export interface FlowsProviderProps {
    */
   language?: LanguageOption;
   /**
-   * Show debug panel. Can be also invoked by pressing `Ctrl + Shift + F`.
+   * Show debug panel. Can be also invoked by pressing `Cmd/Ctrl + Option/Alt + Shift + F`.
    *
    * Disabled by default. Defaults to `true` when you're on localhost.
+   *
+   * Passing `false` here will NOT disable the shortcut.
    */
   debug?: boolean;
+  /**
+   * Custom keyboard shortcut handler for opening the debug panel.
+   *
+   * By default, the debug panel opens with `Cmd/Ctrl + Option/Alt + Shift + F`.
+   * Use this function to customize the shortcut or disable it entirely.
+   *
+   * @param event - The `keydown` keyboard event to evaluate
+   * @returns `true` to open the debug panel, `false` to ignore the shortcut
+   *
+   * @example
+   * ```ts
+   * // Disable debug panel shortcut
+   * onDebugShortcut={() => false}
+   *
+   * // Use custom shortcut
+   * onDebugShortcut={(e) => {
+   *   return e.ctrlKey && e.key === "c"
+   * }}
+   * ```
+   */
+  onDebugShortcut?: (event: KeyboardEvent) => boolean;
 
   children: ReactNode;
 }
@@ -85,6 +108,7 @@ const FlowsProviderInner: FC<Props> = ({
   userProperties,
   language,
   debug,
+  onDebugShortcut,
 }) => {
   globalConfig.apiUrl = apiUrl;
   globalConfig.environment = environment;
@@ -125,6 +149,7 @@ const FlowsProviderInner: FC<Props> = ({
         organizationId={organizationId}
         userId={userId}
         userProperties={userProperties}
+        onDebugKeydown={onDebugShortcut}
       />
     </FlowsContext.Provider>
   );

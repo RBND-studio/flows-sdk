@@ -43,7 +43,7 @@ const DebugPanel: FC<DebugPanelProps> = ({
   userId,
   userProperties,
 }) => {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const toggleOpen = (): void => {
     setOpen((p) => !p);
   };

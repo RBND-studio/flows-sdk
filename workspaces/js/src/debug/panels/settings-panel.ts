@@ -1,4 +1,9 @@
-import { debugPanelPositionOptions, docsLink, type DebugPanelPosition } from "@flows/shared";
+import {
+  debugPanelPositionOptions,
+  docsLink,
+  isMacLike,
+  type DebugPanelPosition,
+} from "@flows/shared";
 import { type TemplateResult, html } from "lit";
 import { packageAndVersion } from "../../lib/constants";
 import { ChevronDown } from "../icons/chevron-down";
@@ -43,10 +48,9 @@ export const SettingsPanel = ({ position, onPositionChange }: Props): TemplateRe
           Used to toggle the panel visibility even when debug mode is not active.
         </p>
       </div>
-      {/* FIXME: add correct shortcut */}
       <div class="flows-debug-shortcut-list">
-        <p class="flows-debug-shortcut">Cmd</p>
-        <p class="flows-debug-shortcut">Option</p>
+        <p class="flows-debug-shortcut">${isMacLike() ? "Cmd" : "Ctrl"}</p>
+        <p class="flows-debug-shortcut">${isMacLike() ? "Option" : "Alt"}</p>
         <p class="flows-debug-shortcut">Shift</p>
         <p class="flows-debug-shortcut">F</p>
       </div>

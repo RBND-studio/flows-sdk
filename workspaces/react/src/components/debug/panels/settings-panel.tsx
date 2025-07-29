@@ -1,5 +1,10 @@
 import { type ChangeEvent, type ReactNode } from "react";
-import { type DebugPanelPosition, debugPanelPositionOptions, docsLink } from "@flows/shared";
+import {
+  type DebugPanelPosition,
+  debugPanelPositionOptions,
+  docsLink,
+  isMacLike,
+} from "@flows/shared";
 import { ChevronDown } from "../icons/chevron-down";
 import { packageAndVersion } from "../../../lib/constants";
 
@@ -48,10 +53,9 @@ export const SettingsPanel = ({ position, onPositionChange }: Props): ReactNode 
             Used to toggle the panel visibility even when debug mode is not active.
           </p>
         </div>
-        {/* FIXME: add correct shortcut */}
         <div className="flows-debug-shortcut-list">
-          <p className="flows-debug-shortcut">Cmd</p>
-          <p className="flows-debug-shortcut">Option</p>
+          <p className="flows-debug-shortcut">{isMacLike() ? "Cmd" : "Ctrl"}</p>
+          <p className="flows-debug-shortcut">{isMacLike() ? "Option" : "Alt"}</p>
           <p className="flows-debug-shortcut">Shift</p>
           <p className="flows-debug-shortcut">F</p>
         </div>

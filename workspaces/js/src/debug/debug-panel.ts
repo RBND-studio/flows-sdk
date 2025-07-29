@@ -110,7 +110,8 @@ export class DebugPanel extends SignalWatcher(LitElement) {
     return html`<div class=${clsx("flows-debug", `flows-debug-${this._position}`)}>
       <button
         class=${clsx(
-          "flows-debug-btn flows-debug-menu",
+          "flows-debug-btn",
+          "flows-debug-menu",
           !sdkSetupValid && "flows-debug-menu-error",
         )}
         type="button"

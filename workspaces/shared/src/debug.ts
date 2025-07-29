@@ -52,3 +52,14 @@ export const dashboardLink = (organizationId: string): string =>
   `https://app.flows.sh/org/${organizationId}`;
 // TODO: add correct link
 export const docsLink = "https://flows.sh/docs";
+
+export const isMacLike = (): boolean => {
+  if (typeof window === "undefined") return false;
+  const isMac = navigator.userAgent.includes("Mac");
+  const isIos = /(?:iphone|ipad|ipod)/i.test(navigator.userAgent);
+  return isMac || isIos;
+};
+export const isDebugShortcut = (e: KeyboardEvent): boolean => {
+  const cmdOrCtrl = isMacLike() ? e.metaKey : e.ctrlKey;
+  return cmdOrCtrl && e.shiftKey && e.altKey && e.key.toLowerCase() === "f";
+};

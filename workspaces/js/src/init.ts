@@ -4,7 +4,7 @@ import { connectToWebsocketAndFetchBlocks } from "./lib/blocks";
 import { addHandlers } from "./lib/handler";
 import { config, pathname } from "./store";
 import { type FlowsOptions } from "./types/configuration";
-import { initDebugPanel, keydownDebugListener } from "./lib/debug";
+import { createKeydownDebugListener, initDebugPanel } from "./lib/debug";
 
 let locationChangeInterval: number | null = null;
 
@@ -13,7 +13,7 @@ let locationChangeInterval: number | null = null;
  *
  * @param options - The configuration options for Flows
  */
-export const init = (options: FlowsOptions): void => {
+export const init = ({ debug, onDebugShortcut, ...options }: FlowsOptions): void => {
   const apiUrl = options.apiUrl ?? "https://api.flows-cloud.com";
   config.value = { ...options, apiUrl };
   const { environment, organizationId, userId, userProperties, language } = options;
@@ -37,8 +37,8 @@ export const init = (options: FlowsOptions): void => {
 
   addHandlers([
     { type: "click", handler: handleDocumentClick },
-    { type: "keydown", handler: keydownDebugListener },
+    { type: "keydown", handler: createKeydownDebugListener(onDebugShortcut) },
   ]);
 
-  initDebugPanel(options.debug);
+  initDebugPanel(debug);
 };

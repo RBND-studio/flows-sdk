@@ -1,4 +1,4 @@
-import { debugEnabledSessionStorageKey, localhostRegex } from "@flows/shared";
+import { debugEnabledSessionStorageKey, isDebugShortcut, localhostRegex } from "@flows/shared";
 
 const tagName = "flows-debug-panel";
 
@@ -14,12 +14,15 @@ const openDebugPanel = async (): Promise<void> => {
   document.body.appendChild(debugPanelEl);
 };
 
-export const keydownDebugListener = (e: KeyboardEvent): void => {
-  if (e.key.toLowerCase() === "f" && e.ctrlKey && e.shiftKey) {
-    void openDebugPanel();
-    sessionStorage.setItem(debugEnabledSessionStorageKey, "true");
-  }
-};
+export const createKeydownDebugListener =
+  (onDebugKeydown?: (event: KeyboardEvent) => boolean) =>
+  (e: KeyboardEvent): void => {
+    const shortcutMatcher = onDebugKeydown ?? isDebugShortcut;
+    if (shortcutMatcher(e)) {
+      void openDebugPanel();
+      sessionStorage.setItem(debugEnabledSessionStorageKey, "true");
+    }
+  };
 
 export const initDebugPanel = (enabled?: boolean): void => {
   const isLocalhost = localhostRegex.test(window.location.origin);

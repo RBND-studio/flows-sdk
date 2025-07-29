@@ -1,5 +1,5 @@
 import { lazy, useEffect, useState, type FC } from "react";
-import { debugEnabledSessionStorageKey, localhostRegex } from "@flows/shared";
+import { debugEnabledSessionStorageKey, isDebugShortcut, localhostRegex } from "@flows/shared";
 import { type DebugPanelProps } from "./debug-panel";
 
 const DebugPanel = lazy(() => import("./debug-panel"));
@@ -23,14 +23,16 @@ export const Debug: FC<Props> = (props) => {
 
 type Props = {
   enabled?: boolean;
+  onDebugKeydown?: (event: KeyboardEvent) => boolean;
 } & DebugPanelProps;
 
-const DebugInner: FC<Props> = ({ enabled: forceEnabled, ...props }) => {
+const DebugInner: FC<Props> = ({ enabled: forceEnabled, onDebugKeydown, ...props }) => {
   const [enabled, setEnabled] = useState(getDefaultEnabled(forceEnabled));
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent): void => {
-      if (e.key.toLowerCase() === "f" && e.ctrlKey && e.shiftKey) {
+      const shortcutMatcher = onDebugKeydown ?? isDebugShortcut;
+      if (shortcutMatcher(e)) {
         setEnabled(true);
         sessionStorage.setItem(debugEnabledSessionStorageKey, "true");
       }
@@ -40,7 +42,7 @@ const DebugInner: FC<Props> = ({ enabled: forceEnabled, ...props }) => {
     return () => {
       removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [onDebugKeydown]);
 
   if (!enabled) return null;
 
