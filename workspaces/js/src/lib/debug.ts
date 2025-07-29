@@ -1,4 +1,8 @@
-import { debugEnabledSessionStorageKey, isDebugShortcut, localhostRegex } from "@flows/shared";
+import {
+  debugEnabledSessionStorageKey,
+  getDefaultDebugEnabled,
+  isDebugShortcut,
+} from "@flows/shared";
 
 const tagName = "flows-debug-panel";
 
@@ -25,10 +29,7 @@ export const createKeydownDebugListener =
   };
 
 export const initDebugPanel = (enabled?: boolean): void => {
-  const isLocalhost = localhostRegex.test(window.location.origin);
-  const isSessionEnabled = sessionStorage.getItem(debugEnabledSessionStorageKey) === "true";
-
-  if (enabled ?? (isSessionEnabled || isLocalhost)) {
+  if (getDefaultDebugEnabled(enabled)) {
     return void openDebugPanel();
   }
 };

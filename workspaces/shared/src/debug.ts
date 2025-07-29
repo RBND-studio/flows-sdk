@@ -1,6 +1,7 @@
 export const localhostRegex = /^https?:\/\/localhost/;
 export const uuidV4Regex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
-export const booleanToString = (value: unknown): "true" | "false" => (value ? "true" : "false");
+export const booleanToString = (value: unknown): "true" | "false" =>
+  Boolean(value).toString() as "true" | "false";
 
 export const debugEnabledSessionStorageKey = "flows-debug-enabled";
 export const debugPanelPositionLocalStorageKey = "flows-debug-position";
@@ -48,10 +49,15 @@ export const t = {
   },
 };
 
+export const getDefaultDebugEnabled = (forced?: boolean): boolean => {
+  const isSessionEnabled = sessionStorage.getItem(debugEnabledSessionStorageKey) === "true";
+  const isLocalhost = localhostRegex.test(window.location.origin);
+  return forced ?? (isSessionEnabled || isLocalhost);
+};
+
 export const dashboardLink = (organizationId: string): string =>
   `https://app.flows.sh/org/${organizationId}`;
-// TODO: add correct link
-export const docsLink = "https://flows.sh/docs";
+export const docsLink = "https://flows.sh/docs/sdk-overview#debug-mode";
 
 export const isMacLike = (): boolean => {
   if (typeof window === "undefined") return false;

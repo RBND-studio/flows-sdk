@@ -1,14 +1,12 @@
 import { lazy, useEffect, useState, type FC } from "react";
-import { debugEnabledSessionStorageKey, isDebugShortcut, localhostRegex } from "@flows/shared";
+import {
+  debugEnabledSessionStorageKey,
+  getDefaultDebugEnabled,
+  isDebugShortcut,
+} from "@flows/shared";
 import { type DebugPanelProps } from "./debug-panel";
 
 const DebugPanel = lazy(() => import("./debug-panel"));
-
-const getDefaultEnabled = (forced?: boolean): boolean => {
-  const isSessionEnabled = sessionStorage.getItem(debugEnabledSessionStorageKey) === "true";
-  const isLocalhost = localhostRegex.test(window.location.origin);
-  return forced ?? (isSessionEnabled || isLocalhost);
-};
 
 export const Debug: FC<Props> = (props) => {
   const [firstRender, setFirstRender] = useState(true);
@@ -27,7 +25,7 @@ type Props = {
 } & DebugPanelProps;
 
 const DebugInner: FC<Props> = ({ enabled: forceEnabled, onDebugKeydown, ...props }) => {
-  const [enabled, setEnabled] = useState(getDefaultEnabled(forceEnabled));
+  const [enabled, setEnabled] = useState(getDefaultDebugEnabled(forceEnabled));
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent): void => {
