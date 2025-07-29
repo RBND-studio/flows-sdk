@@ -40,7 +40,7 @@ export const HomePanel = ({
         },
         secondary: sdkSetupValid
           ? "Valid"
-          : html`<span class="flows-debug-validation-invalid">Invalid</span>`,
+          : html`<span class="flows-debug-validation-invalid">Error</span>`,
       })}
       ${DebugItem({
         label: "Blocks",

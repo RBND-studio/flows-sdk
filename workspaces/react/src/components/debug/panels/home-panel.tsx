@@ -35,11 +35,7 @@ export const HomePanel: FC<Props> = ({
         <DebugItem
           label="SDK setup"
           secondary={
-            sdkSetupValid ? (
-              "Valid"
-            ) : (
-              <span className="flows-debug-validation-invalid">Invalid</span>
-            )
+            sdkSetupValid ? "Valid" : <span className="flows-debug-validation-invalid">Error</span>
           }
           onClick={() => {
             setPanelPage("sdk-setup");

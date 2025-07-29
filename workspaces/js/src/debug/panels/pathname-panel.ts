@@ -5,5 +5,11 @@ interface Props {
 }
 
 export const PathnamePanel = ({ pathname }: Props): TemplateResult => {
-  return html`<p>${pathname}</p>`;
+  return html`<p class="flows-debug-info-line">
+      <strong>Pathname:</strong>
+    </p>
+    <p class="flows-debug-code-block flows-debug-info-line">${pathname}</p>
+    <p class="flows-debug-info-line">
+      This pathname is used when evaluating page targeting conditions.
+    </p>`;
 };

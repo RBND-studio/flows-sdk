@@ -37,8 +37,8 @@ export const t = {
     false: "Environment is not set.",
   },
   apiError: {
-    true: "API working correctly.",
-    false: "API is not working correctly. Check the browser console for more details.",
+    true: "API responded successfully.",
+    false: "API returned an error. Check the browser console for details.",
   },
   title: {
     user: "User Information",
