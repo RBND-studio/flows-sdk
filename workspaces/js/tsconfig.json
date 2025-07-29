@@ -2,7 +2,8 @@
   "extends": "../../tsconfig.base.json",
   "include": ["src/**/*"],
   "compilerOptions": {
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false,
+    "strictPropertyInitialization": false
   }
 }

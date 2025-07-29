@@ -1,8 +1,7 @@
-import { type Block } from "@flows/shared";
+import { type PanelPage, type Block, dashboardLink } from "@flows/shared";
 import { type FC } from "react";
 import { DebugItem } from "../debug-item";
 import { packageAndVersion } from "../../../lib/constants";
-import { type PanelPage } from "./panel-page";
 
 interface Props {
   userId: string;
@@ -11,6 +10,7 @@ interface Props {
   blocks: Block[];
   activeBlockCount: number;
   organizationId: string;
+  pathname?: string;
 }
 
 export const HomePanel: FC<Props> = ({
@@ -19,6 +19,7 @@ export const HomePanel: FC<Props> = ({
   sdkSetupValid,
   blocks,
   activeBlockCount,
+  pathname,
   organizationId,
 }) => {
   return (
@@ -51,6 +52,13 @@ export const HomePanel: FC<Props> = ({
             setPanelPage("blocks");
           }}
         />
+        <DebugItem
+          label="Pathname"
+          secondary={pathname}
+          onClick={() => {
+            setPanelPage("pathname");
+          }}
+        />
       </div>
       <hr />
       <div className="flows-debug-item-list">
@@ -62,7 +70,7 @@ export const HomePanel: FC<Props> = ({
           }}
         />
         <a
-          href={`https://app.flows.sh/org/${organizationId}`}
+          href={dashboardLink(organizationId)}
           target="_blank"
           rel="noopener noreferrer"
           className="flows-debug-item flows-debug-item-interactive flows-debug-item-label"

@@ -1,13 +1,19 @@
-import { useState, type FC, useMemo, type ReactNode } from "react";
+import { useState, type FC, useMemo, type ReactNode, useCallback } from "react";
 import {
+  booleanToString,
   type DebugPanelPosition,
+  debugPanelPositionLocalStorageKey,
   getDefaultDebugPanelPosition,
+  type PanelPage,
+  t,
   type UserProperties,
+  uuidV4Regex,
 } from "@flows/shared";
 import debugStyles from "@flows/styles/debug.css";
 import { clsx } from "clsx";
 import { useFlowsContext } from "../../flows-context";
 import { useVisibleBlocks } from "../../hooks/use-current-blocks";
+import { usePathname } from "../../contexts/pathname-context";
 import { Logo } from "./icons/logo";
 import { UserPanel } from "./panels/user-panel";
 import { SdkSetupPanel } from "./panels/sdk-setup-panel";
@@ -16,36 +22,8 @@ import { HomePanel } from "./panels/home-panel";
 import { SettingsPanel } from "./panels/settings-panel";
 import { Check } from "./icons/check";
 import { X } from "./icons/x";
-import { type PanelPage } from "./panels/panel-page";
 import { DebugSection } from "./debug-section";
-
-const uuidv4Regex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
-const booleanToString = (value: unknown): "true" | "false" => (value ? "true" : "false");
-
-const t = {
-  organizationId: {
-    true: "Organization ID is valid.",
-    false: "Organization ID is not valid.",
-  },
-  userId: {
-    true: "User ID is set.",
-    false: "User ID is not set.",
-  },
-  environment: {
-    true: "Environment is set.",
-    false: "Environment is not set.",
-  },
-  apiError: {
-    true: "API working correctly.",
-    false: "API is not working correctly. Check the browser console for more details.",
-  },
-  title: {
-    user: "User Information",
-    "sdk-setup": "SDK Setup",
-    blocks: "Blocks",
-    settings: "Settings",
-  },
-};
+import { PathnamePanel } from "./panels/pathname-panel";
 
 export interface DebugPanelProps {
   organizationId: string;
@@ -76,6 +54,12 @@ const DebugPanel: FC<DebugPanelProps> = ({
   };
 
   const [position, setPosition] = useState<DebugPanelPosition>(getDefaultDebugPanelPosition());
+  const handleChangePosition = useCallback((value: DebugPanelPosition): void => {
+    setPosition(value);
+    localStorage.setItem(debugPanelPositionLocalStorageKey, value);
+  }, []);
+
+  const pathname = usePathname();
   const { runningTours, blocks } = useFlowsContext();
   const visibleBlocks = useVisibleBlocks();
   const activeBlockCount = useMemo(() => {
@@ -85,10 +69,7 @@ const DebugPanel: FC<DebugPanelProps> = ({
   }, [runningTours, visibleBlocks]);
 
   const statusItems = [
-    {
-      key: "organizationId",
-      valid: organizationId && uuidv4Regex.test(organizationId),
-    },
+    { key: "organizationId", valid: organizationId && uuidV4Regex.test(organizationId) },
     { key: "userId", valid: Boolean(userId) },
     { key: "environment", valid: Boolean(environment) },
     { key: "apiError", valid: !blocksError && !wsError },
@@ -119,11 +100,13 @@ const DebugPanel: FC<DebugPanelProps> = ({
       );
     if (panelPage === "blocks")
       return <BlocksPanel blocks={blocks} activeBlockCount={activeBlockCount} />;
+    if (panelPage === "pathname") return <PathnamePanel pathname={pathname} />;
     if (panelPage === "settings")
-      return <SettingsPanel position={position} setPosition={setPosition} />;
+      return <SettingsPanel position={position} onPositionChange={handleChangePosition} />;
 
     return (
       <HomePanel
+        pathname={pathname}
         userId={userId}
         setPanelPage={setPanelPage}
         sdkSetupValid={sdkSetupValid}

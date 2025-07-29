@@ -7,7 +7,7 @@ import {
   log,
   type UserProperties,
 } from "@flows/shared";
-import { blocks, blocksState, pendingMessages } from "../store";
+import { blocks, blocksError, blocksState, pendingMessages } from "../store";
 import { type Disconnect, websocket } from "./websocket";
 import { packageAndVersion } from "./constants";
 
@@ -31,6 +31,7 @@ export const connectToWebsocketAndFetchBlocks = (props: Props): void => {
   })();
 
   const fetchBlocks = (): void => {
+    blocksError.value = false;
     void getApi(apiUrl, packageAndVersion)
       .getBlocks({
         ...params,
@@ -49,6 +50,7 @@ export const connectToWebsocketAndFetchBlocks = (props: Props): void => {
         if (res.meta?.usage_limited) disconnect?.();
       })
       .catch((err: unknown) => {
+        blocksError.value = true;
         log.error("Failed to load blocks", err);
       });
   };

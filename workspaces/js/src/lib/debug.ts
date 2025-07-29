@@ -1,14 +1,16 @@
 import { debugEnabledSessionStorageKey, localhostRegex } from "@flows/shared";
 
+const tagName = "flows-debug-panel";
+
 const openDebugPanel = async (): Promise<void> => {
-  if (document.querySelector("debug-panel")) return;
+  if (document.querySelector(tagName)) return;
 
-  const { DebugPanel } = await import("../components/debug-panel");
+  const { DebugPanel } = await import("../debug/debug-panel");
 
-  if (!customElements.get("debug-panel")) {
-    customElements.define("debug-panel", DebugPanel);
+  if (!customElements.get(tagName)) {
+    customElements.define(tagName, DebugPanel);
   }
-  const debugPanelEl = document.createElement("debug-panel");
+  const debugPanelEl = document.createElement(tagName);
   document.body.appendChild(debugPanelEl);
 };
 

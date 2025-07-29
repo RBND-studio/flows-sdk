@@ -84,9 +84,15 @@ importers:
 
   workspaces/js:
     dependencies:
+      '@lit-labs/preact-signals':
+        specifier: ^1.0.3
+        version: 1.0.3
       '@preact/signals-core':
         specifier: ^1.11.0
         version: 1.11.0
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
       es-toolkit:
         specifier: ^1.39.7
         version: 1.39.7
@@ -1020,6 +1026,9 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
+
+  '@lit-labs/preact-signals@1.0.3':
+    resolution: {integrity: sha512-aZDNZUgEpYPB+zfApIZpChSyKlLoqvILYt0nTm0KAXTU8FZsht6I6QZRvdKItD3EI8w0FHsqk9CpzIdd3gFXCA==}
 
   '@lit-labs/ssr-dom-shim@1.4.0':
     resolution: {integrity: sha512-ficsEARKnmmW5njugNYKipTm4SFnbik7CXtoencDZzmzo/dQ+2Q0bgkzJuoJP20Aj0F+izzJjOqsnkd6F/o1bw==}
@@ -5159,6 +5168,11 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.4.15
+
+  '@lit-labs/preact-signals@1.0.3':
+    dependencies:
+      '@preact/signals-core': 1.11.0
+      lit: 3.3.1
 
   '@lit-labs/ssr-dom-shim@1.4.0': {}
 

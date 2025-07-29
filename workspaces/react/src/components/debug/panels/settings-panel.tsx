@@ -1,22 +1,17 @@
 import { type ChangeEvent, type ReactNode } from "react";
-import {
-  type DebugPanelPosition,
-  debugPanelPositionLocalStorageKey,
-  debugPanelPositionOptions,
-} from "@flows/shared";
+import { type DebugPanelPosition, debugPanelPositionOptions, docsLink } from "@flows/shared";
 import { ChevronDown } from "../icons/chevron-down";
 import { packageAndVersion } from "../../../lib/constants";
 
 interface Props {
   position: DebugPanelPosition;
-  setPosition: (position: DebugPanelPosition) => void;
+  onPositionChange: (value: DebugPanelPosition) => void;
 }
 
-export const SettingsPanel = ({ position, setPosition }: Props): ReactNode => {
-  const handleChangePosition = (e: ChangeEvent<HTMLSelectElement>): void => {
+export const SettingsPanel = ({ position, onPositionChange }: Props): ReactNode => {
+  const handlePositionChange = (e: ChangeEvent<HTMLSelectElement>): void => {
     const value = e.target.value as DebugPanelPosition;
-    setPosition(value);
-    localStorage.setItem(debugPanelPositionLocalStorageKey, value);
+    onPositionChange(value);
   };
 
   return (
@@ -35,7 +30,7 @@ export const SettingsPanel = ({ position, setPosition }: Props): ReactNode => {
             className="flows-debug-select"
             value={position}
             id="debug-panel-position"
-            onChange={handleChangePosition}
+            onChange={handlePositionChange}
           >
             {debugPanelPositionOptions.map((opt) => (
               <option value={opt.value} key={opt.value}>
@@ -70,7 +65,7 @@ export const SettingsPanel = ({ position, setPosition }: Props): ReactNode => {
         </div>
         <a
           className="flows-debug-button-secondary"
-          href="/TODO"
+          href={docsLink}
           target="_blank"
           rel="noopener noreferrer"
         >

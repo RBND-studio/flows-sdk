@@ -4,18 +4,16 @@ import { ArrowLeft } from "./icons/arrow-left";
 interface Props {
   label: string;
   children: ReactNode;
-  onClose?: () => void;
+  onClose: () => void;
 }
 
 export const DebugSection = ({ label, children, onClose }: Props): ReactNode => {
   return (
     <div className="flows-debug-popover-wide">
       <div className="flows-debug-section-header">
-        {onClose ? (
-          <button className="flows-debug-section-close" onClick={onClose} type="button">
-            <ArrowLeft />
-          </button>
-        ) : null}
+        <button className="flows-debug-section-close" onClick={onClose} type="button">
+          <ArrowLeft />
+        </button>
         <p className="flows-debug-section-label">{label}</p>
       </div>
       <div className="flows-debug-section-content">{children}</div>
