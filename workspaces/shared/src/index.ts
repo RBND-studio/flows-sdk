@@ -1,6 +1,7 @@
 export * from "./api";
 export * from "./blocks";
 export * from "./component-props";
+export * from "./debug";
 export * from "./language";
 export * from "./log";
 export * from "./matchers";

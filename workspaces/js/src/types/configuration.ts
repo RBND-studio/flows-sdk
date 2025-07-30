@@ -29,4 +29,34 @@ export interface FlowsOptions {
    * @defaultValue `disabled`
    */
   language?: LanguageOption;
+  /**
+   * Enables the debug panel. Can be also invoked by pressing `Cmd + Option + Shift + F` on Mac or `Ctrl + Alt + Shift + F` on Windows/Linux.
+   *
+   * Disabled by default. Defaults to `true` when running on `localhost`.
+   *
+   * Passing `false` here will NOT disable the shortcut.
+   */
+  debug?: boolean;
+  /**
+   * Custom keyboard shortcut handler for opening the debug panel.
+   *
+   * By default, the debug panel opens with `Cmd + Option + Shift + F` on Mac or `Ctrl + Alt + Shift + F` on Windows/Linux.
+   *
+   * Use this function to customize the shortcut or disable it entirely.
+   *
+   * @param event - The `keydown` keyboard event to evaluate
+   * @returns `true` to open the debug panel, `false` to ignore the shortcut
+   *
+   * @example
+   * ```ts
+   * // Disable debug panel shortcut
+   * onDebugShortcut: () => false
+   *
+   * // Use custom shortcut
+   * onDebugShortcut: (e) => {
+   *   return e.ctrlKey && e.key === "c"
+   * }
+   * ```
+   */
+  onDebugShortcut?: (event: KeyboardEvent) => boolean;
 }
