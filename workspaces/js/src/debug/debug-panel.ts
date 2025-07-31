@@ -13,7 +13,6 @@ import {
 import { clsx } from "clsx";
 import { SignalWatcher } from "@lit-labs/preact-signals";
 import { blocks, blocksError, config, pathname, wsError } from "../store";
-import { visibleBlocks, visibleTours } from "../computed";
 import { Logo } from "./icons/logo";
 import { DebugSection } from "./debug-section";
 import { SettingsPanel } from "./panels/settings-panel";
@@ -57,7 +56,6 @@ export class DebugPanel extends SignalWatcher(LitElement) {
     const userId = config.value?.userId;
     const environment = config.value?.environment;
     const blocksValue = blocks.value;
-    const activeBlockCount = visibleBlocks.value.length + visibleTours.value.length;
     const pathnameValue = pathname.value;
 
     const statusItems = [
@@ -74,7 +72,7 @@ export class DebugPanel extends SignalWatcher(LitElement) {
           userId: config.value?.userId ?? "",
           userProperties: config.value?.userProperties,
         });
-      if (this._page === "blocks") return BlocksPanel({ activeBlockCount, blocks: blocksValue });
+      if (this._page === "blocks") return BlocksPanel({ blocks: blocksValue });
       if (this._page === "sdk-setup")
         return SdkSetupPanel({
           environment: config.value?.environment ?? "",
@@ -99,7 +97,6 @@ export class DebugPanel extends SignalWatcher(LitElement) {
 
       return HomePanel({
         blocks: blocksValue,
-        activeBlockCount,
         userId: config.value?.userId ?? "",
         organizationId: config.value?.organizationId ?? "",
         sdkSetupValid,
