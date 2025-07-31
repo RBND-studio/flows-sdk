@@ -8,7 +8,6 @@ interface Props {
   setPanelPage: (page: PanelPage) => void;
   sdkSetupValid: boolean;
   blocks: Block[];
-  activeBlockCount: number;
   organizationId: string;
   pathname?: string;
 }
@@ -18,7 +17,6 @@ export const HomePanel: FC<Props> = ({
   setPanelPage,
   sdkSetupValid,
   blocks,
-  activeBlockCount,
   pathname,
   organizationId,
 }) => {
@@ -43,7 +41,7 @@ export const HomePanel: FC<Props> = ({
         />
         <DebugItem
           label="Blocks"
-          secondary={`${blocks.length} loaded, ${activeBlockCount} active`}
+          secondary={`${blocks.length} loaded`}
           onClick={() => {
             setPanelPage("blocks");
           }}
