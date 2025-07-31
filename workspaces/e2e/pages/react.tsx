@@ -21,6 +21,7 @@ const noUserId = new URLSearchParams(window.location.search).get("noUserId") ===
 const noCurrentBlocks =
   new URLSearchParams(window.location.search).get("noCurrentBlocks") === "true";
 const language = new URLSearchParams(window.location.search).get("language") as LanguageOption;
+const organizationId = new URLSearchParams(window.location.search).get("organizationId");
 
 const Card: FC<ComponentProps<{ text: string }>> = (props) => (
   <div
@@ -97,7 +98,7 @@ const App: FC = () => {
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <FlowsProvider
-      organizationId="orgId"
+      organizationId={organizationId ?? "orgId"}
       environment="prod"
       userId={noUserId ? null : "testUserId"}
       language={language}
