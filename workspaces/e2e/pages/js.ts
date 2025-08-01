@@ -15,6 +15,7 @@ const apiUrl = new URLSearchParams(window.location.search).get("apiUrl") ?? unde
 const noCurrentBlocks =
   new URLSearchParams(window.location.search).get("noCurrentBlocks") === "true";
 const language = new URLSearchParams(window.location.search).get("language") as LanguageOption;
+const organizationId = new URLSearchParams(window.location.search).get("organizationId");
 
 const Card: Component<{ text: string }> = (props) => {
   const card = document.createElement("div");
@@ -116,7 +117,7 @@ const StateMemory: Component<{ title: string; checked: IStateMemory }> = (props)
 
 init({
   environment: "prod",
-  organizationId: "orgId",
+  organizationId: organizationId ?? "orgId",
   userId: "testUserId",
   language,
   apiUrl,
