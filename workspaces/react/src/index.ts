@@ -1,4 +1,5 @@
 export type {
+  Action,
   ActiveBlock,
   BlockState,
   ComponentProps,

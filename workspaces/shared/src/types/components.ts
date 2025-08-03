@@ -71,6 +71,27 @@ export interface StateMemory {
    */
   triggers: StateMemoryTrigger[];
 }
+/**
+ * The object representing action property in you component properties.
+ */
+export interface Action {
+  /**
+   * Label for the action button.
+   */
+  label: string;
+  /**
+   * Optional URL to navigate to when the button is clicked.
+   */
+  url?: string;
+  /**
+   * Optional flag to open the URL in a new tab.
+   */
+  openInNew?: boolean;
+  /**
+   * Function to call when the button is clicked, will follow exit node.
+   */
+  transition?: () => void;
+}
 
 /**
  * The object representing block state of the selected block in the workflow.

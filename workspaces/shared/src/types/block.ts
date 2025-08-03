@@ -7,12 +7,27 @@ interface TourWait {
   ms?: number;
 }
 
-export interface PropertyMeta {
+type PropertyMetaType = "state-memory" | "block-state" | "action";
+interface PropertyMetaTemplate<T extends PropertyMetaType> {
   key: string;
-  type: string;
-  value?: unknown;
-  triggers?: StateMemoryTrigger[];
+  type: T;
 }
+type StateMemoryPropertyMeta = PropertyMetaTemplate<"state-memory"> & {
+  value: boolean;
+  triggers?: StateMemoryTrigger[];
+};
+type BlockStatePropertyMeta = PropertyMetaTemplate<"block-state"> & {
+  value: Block;
+};
+interface ActionPropertyMeta extends PropertyMetaTemplate<"action"> {
+  value: {
+    label: string;
+    exitNode?: string;
+    url?: string;
+    openInNew?: boolean;
+  };
+}
+export type PropertyMeta = ActionPropertyMeta | BlockStatePropertyMeta | StateMemoryPropertyMeta;
 
 export type TourTriggerType = "navigation" | "click" | "dom-element" | "not-dom-element";
 export interface TourTriggerExpression {
