@@ -1,5 +1,12 @@
 import { set } from "es-toolkit/compat";
-import { type ComponentProps, type Block, type StateMemory, type Action } from "./types";
+import {
+  type ComponentProps,
+  type Block,
+  type StateMemory,
+  type Action,
+  type TourComponentProps,
+  type TourStep,
+} from "./types";
 
 export type SetStateMemory = (props: {
   key: string;
@@ -111,5 +118,57 @@ export const createComponentProps = (props: {
     },
     ...data,
     ...methods,
+  };
+};
+
+export const createTourComponentProps = ({
+  tourStep,
+  currentIndex,
+  handleCancel,
+  handleContinue,
+  handlePrevious,
+}: {
+  tourStep: TourStep;
+  currentIndex: number;
+  handleContinue: () => void;
+  handlePrevious: () => void;
+  handleCancel: () => void;
+}): TourComponentProps<object> => {
+  const isFirstStep = currentIndex === 0;
+
+  const data = { ...tourStep.data };
+
+  for (const propMeta of tourStep.propertyMeta ?? []) {
+    if (propMeta.type === "action") {
+      const actionValue = propMeta.value;
+
+      const propValue: Action = {
+        label: actionValue.label,
+        url: actionValue.url,
+        openInNew: actionValue.openInNew,
+      };
+
+      if (actionValue.exitNode) {
+        propValue.transition = () => {
+          if (actionValue.exitNode === "continue") handleContinue();
+          if (actionValue.exitNode === "previous") handlePrevious();
+          if (actionValue.exitNode === "cancel") handleCancel();
+        };
+      }
+
+      set(data, propMeta.key, propValue);
+    }
+  }
+
+  return {
+    __flows: {
+      id: tourStep.id,
+      key: tourStep.key,
+      workflowId: tourStep.workflowId,
+    },
+    ...data,
+    continue: handleContinue,
+    previous: !isFirstStep ? handlePrevious : undefined,
+    cancel: handleCancel,
   };
 };

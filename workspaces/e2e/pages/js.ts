@@ -3,6 +3,7 @@ import {
   addFloatingBlocksChangeListener,
   resetAllWorkflowsProgress,
   resetWorkflowProgress,
+  Action as IAction,
 } from "@flows/js";
 import { Component, render, updateSlotComponents } from "@flows/js-components";
 import * as _components from "@flows/js-components/components";
@@ -114,6 +115,32 @@ const StateMemory: Component<{ title: string; checked: IStateMemory }> = (props)
   };
 };
 
+const Action: Component<{ title: string; action: IAction }> = (props) => {
+  const card = document.createElement("div");
+  card.className = "flows-card";
+
+  const title = document.createElement("p");
+  card.appendChild(title);
+  title.textContent = props.title;
+
+  const ActionEl = props.action.url ? "a" : "button";
+  const actionElement = document.createElement(ActionEl);
+  actionElement.textContent = props.action.label;
+  if (props.action.url) (actionElement as HTMLAnchorElement).href = props.action.url;
+  if (props.action.openInNew) (actionElement as HTMLAnchorElement).target = "_blank";
+  if (props.action.transition) actionElement.addEventListener("click", props.action.transition);
+
+  card.appendChild(actionElement);
+
+  return {
+    cleanup: () => {
+      if (props.action.transition)
+        actionElement.removeEventListener("click", props.action.transition);
+    },
+    element: card,
+  };
+};
+
 init({
   environment: "prod",
   organizationId: "orgId",
@@ -126,8 +153,8 @@ init({
   },
 });
 
-const components = { ..._components, Card, BlockTrigger, StateMemory };
-const tourComponents = { ..._tourComponents, Card };
+const components = { ..._components, Card, BlockTrigger, StateMemory, Action };
+const tourComponents = { ..._tourComponents, Card, Action };
 
 addFloatingBlocksChangeListener((blocks) => {
   render({ blocks, components, tourComponents });

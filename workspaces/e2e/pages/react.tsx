@@ -7,6 +7,7 @@ import {
   startWorkflow,
   StateMemory as IStateMemory,
   useCurrentFloatingBlocks,
+  Action as IAction,
 } from "@flows/react";
 import { FC, StrictMode } from "react";
 import { createRoot } from "react-dom/client";
@@ -70,6 +71,22 @@ const StateMemory: FC<
   </div>
 );
 
+const Action: FC<ComponentProps<{ title: string; action: IAction }>> = (props) => {
+  const ActionEl = props.action.url ? "a" : "button";
+  return (
+    <div className="flows-card">
+      <p>{props.title}</p>
+      <ActionEl
+        href={props.action.url}
+        target={props.action.openInNew ? "_blank" : undefined}
+        onClick={props.action.transition}
+      >
+        {props.action.label}
+      </ActionEl>
+    </div>
+  );
+};
+
 const App: FC = () => {
   const floatingBlocks = useCurrentFloatingBlocks();
 
@@ -106,8 +123,8 @@ createRoot(document.getElementById("root")!).render(
         age: 10,
       }}
       apiUrl={apiUrl}
-      components={{ ...components, Card, BlockTrigger, StateMemory }}
-      tourComponents={{ ...tourComponents, Card }}
+      components={{ ...components, Card, BlockTrigger, StateMemory, Action }}
+      tourComponents={{ ...tourComponents, Card, Action }}
     >
       <App />
     </FlowsProvider>

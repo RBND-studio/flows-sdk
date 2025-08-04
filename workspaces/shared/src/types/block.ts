@@ -70,6 +70,7 @@ export interface TourStep {
   type: string;
   componentType?: string;
   data: Record<string, unknown>;
+  propertyMeta?: PropertyMeta[];
 
   slottable: boolean;
   slotId?: string;
