@@ -4,6 +4,7 @@ import {
   createComponentProps,
   type SetStateMemory,
   createActiveBlockProxy,
+  createTourComponentProps,
 } from "@flows/shared";
 import { removeBlock, updateBlock } from "../store";
 import { nextTourStep, previousTourStep, cancelTour } from "./tour";
@@ -52,34 +53,26 @@ export const tourToActiveBlock = (block: Block, currentIndex: number): ActiveBlo
   const activeStep = tourBlocks.at(currentIndex);
   if (!activeStep?.componentType) return [];
 
-  const isFirstStep = currentIndex === 0;
-
-  const handlePrevious = (): void => {
-    previousTourStep(block, currentIndex);
-  };
-  const handleContinue = (): void => {
-    nextTourStep(block, currentIndex);
-  };
-  const handleCancel = (): void => {
-    cancelTour(block.id);
-  };
+  const props = createTourComponentProps({
+    tourStep: activeStep,
+    currentIndex,
+    handleContinue: () => {
+      nextTourStep(block, currentIndex);
+    },
+    handlePrevious: () => {
+      previousTourStep(block, currentIndex);
+    },
+    handleCancel: () => {
+      cancelTour(block.id);
+    },
+  });
 
   const activeBlock: ActiveBlock = {
     id: activeStep.id,
     tourBlockId: block.id,
     type: "tour-component",
     component: activeStep.componentType,
-    props: {
-      __flows: {
-        id: activeStep.id,
-        key: activeStep.key,
-        workflowId: activeStep.workflowId,
-      },
-      ...activeStep.data,
-      previous: !isFirstStep ? handlePrevious : undefined,
-      continue: handleContinue,
-      cancel: handleCancel,
-    },
+    props,
   };
 
   return createActiveBlockProxy(activeBlock, sendActivate);
