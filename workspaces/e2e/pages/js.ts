@@ -128,14 +128,14 @@ const Action: Component<{ title: string; action: IAction }> = (props) => {
   actionElement.textContent = props.action.label;
   if (props.action.url) (actionElement as HTMLAnchorElement).href = props.action.url;
   if (props.action.openInNew) (actionElement as HTMLAnchorElement).target = "_blank";
-  if (props.action.transition) actionElement.addEventListener("click", props.action.transition);
+  if (props.action.callAction) actionElement.addEventListener("click", props.action.callAction);
 
   card.appendChild(actionElement);
 
   return {
     cleanup: () => {
-      if (props.action.transition)
-        actionElement.removeEventListener("click", props.action.transition);
+      if (props.action.callAction)
+        actionElement.removeEventListener("click", props.action.callAction);
     },
     element: card,
   };

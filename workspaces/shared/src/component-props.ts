@@ -92,8 +92,8 @@ export const createComponentProps = (props: {
 
       const exitNode = actionValue.exitNode;
       if (exitNode) {
-        propValue.transition = () => {
-          void exitNodeCb({ key: exitNode, blockId: block.id });
+        propValue.callAction = () => {
+          return exitNodeCb({ key: exitNode, blockId: block.id });
         };
       }
 
@@ -149,7 +149,8 @@ export const createTourComponentProps = ({
       };
 
       if (actionValue.exitNode) {
-        propValue.transition = () => {
+        // eslint-disable-next-line @typescript-eslint/require-await -- needed for the callAction to return Promise
+        propValue.callAction = async () => {
           if (actionValue.exitNode === "continue") handleContinue();
           if (actionValue.exitNode === "previous") handlePrevious();
           if (actionValue.exitNode === "cancel") handleCancel();

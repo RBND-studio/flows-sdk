@@ -90,7 +90,7 @@ export interface Action {
   /**
    * Function to call when the button is clicked, will follow exit node.
    */
-  transition?: () => void;
+  callAction?: () => Promise<void>;
 }
 
 /**

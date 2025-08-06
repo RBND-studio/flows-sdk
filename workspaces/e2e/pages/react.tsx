@@ -79,7 +79,7 @@ const Action: FC<ComponentProps<{ title: string; action: IAction }>> = (props) =
       <ActionEl
         href={props.action.url}
         target={props.action.openInNew ? "_blank" : undefined}
-        onClick={props.action.transition}
+        onClick={props.action.callAction}
       >
         {props.action.label}
       </ActionEl>
