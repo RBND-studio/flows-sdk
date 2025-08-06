@@ -76,19 +76,22 @@ export interface StateMemory {
  */
 export interface Action {
   /**
-   * Label for the action button.
+   * The label of the element used to trigger the action (eg. button text).
    */
   label: string;
   /**
-   * Optional URL to navigate to when the button is clicked.
+   * Optional URL to navigate to when the action is triggered.
+   * When provided no special handling is done, you need to handle the navigation yourself using a link or similar.
    */
   url?: string;
   /**
    * Optional flag to open the URL in a new tab.
+   * When provided no special handling is done, you need to pass this to the element that will handle the navigation.
    */
   openInNew?: boolean;
   /**
-   * Function to call when the button is clicked, will follow exit node.
+   * Function to call when the action is triggered.
+   * Currently supports only transition to a specified exit node.
    */
   callAction?: () => Promise<void>;
 }
