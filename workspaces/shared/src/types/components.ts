@@ -72,7 +72,7 @@ export interface StateMemory {
   triggers: StateMemoryTrigger[];
 }
 /**
- * The object representing action property in you component properties.
+ * The object representing action property in your component properties.
  */
 export interface Action {
   /**
