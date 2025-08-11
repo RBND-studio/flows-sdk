@@ -15,7 +15,7 @@
     "@types/node": "^22",
     "jest": "^30.0.4",
     "ts-jest": "^29.4.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.9.2"
   },
   "dependencies": {
     "es-toolkit": "^1.39.7"
