@@ -46,13 +46,13 @@
     "jest-environment-jsdom": "^30.0.4",
     "ts-jest": "^29.4.0",
     "tsup": "^8.5.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.9.2"
   },
   "peerDependencies": {
     "react": ">=17.0.2"
   },
   "dependencies": {
-    "@floating-ui/react-dom": "^2.1.4",
+    "@floating-ui/react-dom": "^2.1.5",
     "classnames": "^2.5.1"
   },
   "exports": {

@@ -64,12 +64,14 @@ export const useBlocks = ({
         userProperties: userPropertiesRef.current,
       })
       .then((res) => {
-        const blocksWithUpdates = pendingMessages.current.reduce(
-          applyUpdateMessageToBlocksState,
-          res.blocks,
-        );
-        setBlocksState(blocksWithUpdates);
-        pendingMessages.current = [];
+        setBlocksState(() => {
+          const blocksWithUpdates = pendingMessages.current.reduce(
+            applyUpdateMessageToBlocksState,
+            res.blocks,
+          );
+          pendingMessages.current = [];
+          return blocksWithUpdates;
+        });
 
         if (res.meta?.usage_limited) setUsageLimited(true);
       })
