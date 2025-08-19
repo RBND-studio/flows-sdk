@@ -26,6 +26,7 @@ const getBlocks = (): Block[] => [
       {
         key: "checked2",
         type: "state-memory",
+        value: false,
       },
     ],
     slottable: false,

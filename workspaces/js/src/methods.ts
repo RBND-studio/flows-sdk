@@ -1,51 +1,9 @@
 import { computed, effect, type ReadonlySignal } from "@preact/signals-core";
-import { type ActiveBlock, type Block, pathnameMatch } from "@flows/shared";
-import { blocks, pathname, type RunningTour, runningTours } from "./store";
+import { type ActiveBlock, type Block } from "@flows/shared";
+import { type RunningTour } from "./store";
 import { blockToActiveBlock, tourToActiveBlock } from "./lib/active-block";
 import { sendEvent } from "./lib/api";
-
-const visibleBlocks = computed(() =>
-  blocks.value.filter((b) =>
-    pathnameMatch({
-      pathname: pathname.value,
-      operator: b.page_targeting_operator,
-      value: b.page_targeting_values,
-    }),
-  ),
-);
-const visibleTours = computed(() => {
-  const blocksById = new Map(blocks.value.map((b) => [b.id, b]));
-  return runningTours.value
-    .filter((t) => {
-      const block = blocksById.get(t.blockId);
-      const activeStep = block?.tourBlocks?.at(t.currentBlockIndex);
-      return pathnameMatch({
-        pathname: pathname.value,
-        operator: activeStep?.page_targeting_operator,
-        value: activeStep?.page_targeting_values,
-      });
-    })
-    .flatMap((t) => {
-      const block = blocksById.get(t.blockId);
-      if (!block) return [];
-      return { ...t, block };
-    });
-});
-
-const floatingItems = computed(() => {
-  const floatingBlocks = visibleBlocks.value
-    .filter((b) => !b.slottable)
-    .flatMap(blockToActiveBlock);
-  const floatingTourBlocks = visibleTours.value
-    .filter((t) => {
-      const activeStep = t.block.tourBlocks?.at(t.currentBlockIndex);
-      return !activeStep?.slottable;
-    })
-    .flatMap((tour) => tourToActiveBlock(tour.block, tour.currentBlockIndex));
-  return [...floatingBlocks, ...floatingTourBlocks];
-});
-
-const slotBlocks = computed(() => visibleBlocks.value.filter((b) => b.slottable));
+import { floatingItems, slotBlocks, visibleTours } from "./computed";
 
 const isBlock = (item: Block | RunningTour): item is Block => "type" in item;
 const getSlotIndex = (item: Block | (RunningTour & { block: Block })): number => {

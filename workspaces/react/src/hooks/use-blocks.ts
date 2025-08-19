@@ -27,6 +27,8 @@ interface Return {
   blocks: Block[];
   removeBlock: RemoveBlock;
   updateBlock: UpdateBlock;
+  error: boolean;
+  wsError: boolean;
 }
 
 export const useBlocks = ({
@@ -38,6 +40,7 @@ export const useBlocks = ({
   language,
 }: Props): Return => {
   const [blocksState, setBlocksState] = useState<Block[] | null>(null);
+  const [error, setError] = useState(false);
   const blocks = useMemo(() => blocksState ?? [], [blocksState]);
 
   const [usageLimited, setUsageLimited] = useState(false);
@@ -53,6 +56,7 @@ export const useBlocks = ({
   }, [userProperties]);
 
   const fetchBlocks = useCallback(() => {
+    setError(false);
     void getApi(apiUrl, packageAndVersion)
       .getBlocks({
         ...params,
@@ -60,16 +64,19 @@ export const useBlocks = ({
         userProperties: userPropertiesRef.current,
       })
       .then((res) => {
-        const blocksWithUpdates = pendingMessages.current.reduce(
-          applyUpdateMessageToBlocksState,
-          res.blocks,
-        );
-        setBlocksState(blocksWithUpdates);
-        pendingMessages.current = [];
+        setBlocksState(() => {
+          const blocksWithUpdates = pendingMessages.current.reduce(
+            applyUpdateMessageToBlocksState,
+            res.blocks,
+          );
+          pendingMessages.current = [];
+          return blocksWithUpdates;
+        });
 
         if (res.meta?.usage_limited) setUsageLimited(true);
       })
       .catch((err: unknown) => {
+        setError(true);
         log.error("Failed to load blocks", err);
       });
   }, [apiUrl, language, params]);
@@ -92,7 +99,7 @@ export const useBlocks = ({
       return applyUpdateMessageToBlocksState(prev, data);
     });
   }, []);
-  useWebsocket({ url: websocketUrl, onMessage, onOpen: fetchBlocks });
+  const { error: wsError } = useWebsocket({ url: websocketUrl, onMessage, onOpen: fetchBlocks });
 
   // Log error about slottable blocks without slotId
   useEffect(() => {
@@ -118,7 +125,7 @@ export const useBlocks = ({
     });
   }, []);
 
-  return { blocks, removeBlock, updateBlock };
+  return { blocks, error, wsError, removeBlock, updateBlock };
 };
 
 const logSlottableError = (b: Block | TourStep): void => {

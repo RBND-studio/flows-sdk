@@ -71,6 +71,30 @@ export interface StateMemory {
    */
   triggers: StateMemoryTrigger[];
 }
+/**
+ * The object representing action property in your component properties.
+ */
+export interface Action {
+  /**
+   * The label of the element used to trigger the action (eg. button text).
+   */
+  label: string;
+  /**
+   * Optional URL to navigate to when the action is triggered.
+   * When provided no special handling is done, you need to handle the navigation yourself using a link or similar.
+   */
+  url?: string;
+  /**
+   * Optional flag to open the URL in a new tab.
+   * When provided no special handling is done, you need to pass this to the element that will handle the navigation.
+   */
+  openInNew?: boolean;
+  /**
+   * Function to call when the action is triggered.
+   * Currently supports only transition to a specified exit node.
+   */
+  callAction?: () => Promise<void>;
+}
 
 /**
  * The object representing block state of the selected block in the workflow.

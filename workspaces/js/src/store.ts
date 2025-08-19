@@ -13,6 +13,9 @@ export const blocksState = signal<Block[] | null>(null);
 export const blocks = computed(() => blocksState.value ?? []);
 export const pendingMessages = signal<BlockUpdatesPayload[]>([]);
 
+export const blocksError = signal(false);
+export const wsError = signal(false);
+
 export type RemoveBlock = (blockId: string) => void;
 export type UpdateBlock = (blockId: string, updateFn: (block: Block) => Block) => void;
 export const removeBlock: RemoveBlock = (blockId) => {

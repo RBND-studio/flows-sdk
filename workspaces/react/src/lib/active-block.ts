@@ -4,6 +4,7 @@ import {
   type ActiveBlock,
   type Block,
   createActiveBlockProxy,
+  createTourComponentProps,
 } from "@flows/shared";
 import { type RemoveBlock, type UpdateBlock, type RunningTour } from "../flows-context";
 import { sendActivate, sendEvent } from "./api";
@@ -57,24 +58,20 @@ export const tourBlockToActiveBlock = (tour: RunningTour): ActiveBlock | [] => {
   const activeStep = tour.activeStep;
   if (!activeStep?.componentType) return [];
 
-  const isFirstStep = tour.currentBlockIndex === 0;
+  const props = createTourComponentProps({
+    tourStep: activeStep,
+    currentIndex: tour.currentBlockIndex,
+    handleCancel: tour.cancel,
+    handleContinue: tour.continue,
+    handlePrevious: tour.previous,
+  });
 
   const activeBlock: ActiveBlock = {
     id: activeStep.id,
     tourBlockId: tour.block.id,
     type: "tour-component",
     component: activeStep.componentType,
-    props: {
-      __flows: {
-        id: activeStep.id,
-        key: activeStep.key,
-        workflowId: activeStep.workflowId,
-      },
-      ...activeStep.data,
-      continue: tour.continue,
-      previous: !isFirstStep ? tour.previous : undefined,
-      cancel: tour.cancel,
-    },
+    props,
   };
 
   return createActiveBlockProxy(activeBlock, sendActivate);

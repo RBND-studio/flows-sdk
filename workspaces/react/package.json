@@ -1,6 +1,6 @@
 {
   "name": "@flows/react",
-  "version": "1.14.0",
+  "version": "1.16.1",
   "description": "Flows React SDK – Build native product growth experiences, your way",
   "keywords": [
     "react",
@@ -22,7 +22,7 @@
   ],
   "sideEffects": false,
   "scripts": {
-    "dev": "tsup --watch --env.NODE_ENV development",
+    "dev": "tsup --env.NODE_ENV development",
     "build": "tsup --env.NODE_ENV production",
     "lint": "eslint src",
     "tsc": "tsc -p tsconfig.json",
@@ -38,6 +38,7 @@
   },
   "devDependencies": {
     "@flows/shared": "workspace:*",
+    "@flows/styles": "workspace:*",
     "@types/jest": "^30.0.0",
     "@types/node": "^22",
     "@types/react": "^19.1.8",
@@ -45,7 +46,7 @@
     "jest-environment-jsdom": "^30.0.4",
     "ts-jest": "^29.4.0",
     "tsup": "^8.5.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.9.2"
   },
   "peerDependencies": {
     "react": ">=17.0.2"
@@ -58,6 +59,7 @@
     }
   },
   "dependencies": {
+    "clsx": "^2.1.1",
     "es-toolkit": "^1.39.7"
   }
 }

@@ -8,6 +8,7 @@ import { PathnameProvider } from "./contexts/pathname-context";
 import { TourController } from "./tour-controller";
 import { globalConfig } from "./lib/store";
 import { FloatingBlocks } from "./components/floating-blocks";
+import { Debug } from "./components/debug";
 
 export interface FlowsProviderProps {
   /**
@@ -48,6 +49,36 @@ export interface FlowsProviderProps {
    * @defaultValue `disabled`
    */
   language?: LanguageOption;
+  /**
+   * Enables the debug panel. Can be also invoked by pressing `Cmd + Option + Shift + F` on Mac or `Ctrl + Alt + Shift + F` on Windows/Linux.
+   *
+   * Disabled by default. Defaults to `true` when running on `localhost`.
+   *
+   * Passing `false` here will NOT disable the shortcut.
+   */
+  debug?: boolean;
+  /**
+   * Custom keyboard shortcut handler for opening the debug panel.
+   *
+   * By default, the debug panel opens with `Cmd + Option + Shift + F` on Mac or `Ctrl + Alt + Shift + F` on Windows/Linux.
+   *
+   * Use this function to customize the shortcut or disable it entirely.
+   *
+   * @param event - The `keydown` keyboard event to evaluate
+   * @returns `true` to open the debug panel, `false` to ignore the shortcut
+   *
+   * @example
+   * ```ts
+   * // Disable debug panel shortcut
+   * onDebugShortcut={() => false}
+   *
+   * // Use custom shortcut
+   * onDebugShortcut={(e) => {
+   *   return e.ctrlKey && e.key === "c"
+   * }}
+   * ```
+   */
+  onDebugShortcut?: (event: KeyboardEvent) => boolean;
 
   children: ReactNode;
 }
@@ -77,13 +108,15 @@ const FlowsProviderInner: FC<Props> = ({
   tourComponents,
   userProperties,
   language,
+  debug,
+  onDebugShortcut,
 }) => {
   globalConfig.apiUrl = apiUrl;
   globalConfig.environment = environment;
   globalConfig.organizationId = organizationId;
   globalConfig.userId = userId;
 
-  const { blocks, removeBlock, updateBlock } = useBlocks({
+  const { blocks, error, wsError, removeBlock, updateBlock } = useBlocks({
     apiUrl,
     environment,
     organizationId,
@@ -108,6 +141,17 @@ const FlowsProviderInner: FC<Props> = ({
       {children}
       <FloatingBlocks />
       <TourController />
+
+      <Debug
+        enabled={debug}
+        blocksError={error}
+        wsError={wsError}
+        environment={environment}
+        organizationId={organizationId}
+        userId={userId}
+        userProperties={userProperties}
+        onDebugKeydown={onDebugShortcut}
+      />
     </FlowsContext.Provider>
   );
 };

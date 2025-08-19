@@ -1,5 +1,12 @@
 import { set } from "es-toolkit/compat";
-import { type ComponentProps, type Block, type StateMemory } from "./types";
+import {
+  type ComponentProps,
+  type Block,
+  type StateMemory,
+  type Action,
+  type TourComponentProps,
+  type TourStep,
+} from "./types";
 
 export type SetStateMemory = (props: {
   key: string;
@@ -59,7 +66,7 @@ export const createComponentProps = (props: {
   for (const propMeta of block.propertyMeta ?? []) {
     if (propMeta.type === "state-memory") {
       const stateMemoryValue: StateMemory = {
-        value: (propMeta.value as boolean | undefined) ?? false,
+        value: propMeta.value,
         setValue: (value: boolean) => {
           void setStateMemory({ key: propMeta.key, value, blockId: block.id });
         },
@@ -68,12 +75,29 @@ export const createComponentProps = (props: {
       set(data, propMeta.key, stateMemoryValue);
     }
     if (propMeta.type === "block-state") {
-      const value = propMeta.value as Block;
       const blockStateProps = createComponentProps({
         ...props,
-        block: value,
+        block: propMeta.value,
       });
       set(data, propMeta.key, blockStateProps);
+    }
+    if (propMeta.type === "action") {
+      const actionValue = propMeta.value;
+
+      const propValue: Action = {
+        label: actionValue.label,
+        url: actionValue.url,
+        openInNew: actionValue.openInNew,
+      };
+
+      const exitNode = actionValue.exitNode;
+      if (exitNode) {
+        propValue.callAction = () => {
+          return exitNodeCb({ key: exitNode, blockId: block.id });
+        };
+      }
+
+      set(data, propMeta.key, propValue);
     }
   }
 
@@ -94,5 +118,58 @@ export const createComponentProps = (props: {
     },
     ...data,
     ...methods,
+  };
+};
+
+export const createTourComponentProps = ({
+  tourStep,
+  currentIndex,
+  handleCancel,
+  handleContinue,
+  handlePrevious,
+}: {
+  tourStep: TourStep;
+  currentIndex: number;
+  handleContinue: () => void;
+  handlePrevious: () => void;
+  handleCancel: () => void;
+}): TourComponentProps<object> => {
+  const isFirstStep = currentIndex === 0;
+
+  const data = { ...tourStep.data };
+
+  for (const propMeta of tourStep.propertyMeta ?? []) {
+    if (propMeta.type === "action") {
+      const actionValue = propMeta.value;
+
+      const propValue: Action = {
+        label: actionValue.label,
+        url: actionValue.url,
+        openInNew: actionValue.openInNew,
+      };
+
+      if (actionValue.exitNode) {
+        // eslint-disable-next-line @typescript-eslint/require-await -- needed for the callAction to return Promise
+        propValue.callAction = async () => {
+          if (actionValue.exitNode === "continue") handleContinue();
+          if (actionValue.exitNode === "previous") handlePrevious();
+          if (actionValue.exitNode === "cancel") handleCancel();
+        };
+      }
+
+      set(data, propMeta.key, propValue);
+    }
+  }
+
+  return {
+    __flows: {
+      id: tourStep.id,
+      key: tourStep.key,
+      workflowId: tourStep.workflowId,
+    },
+    ...data,
+    continue: handleContinue,
+    previous: !isFirstStep ? handlePrevious : undefined,
+    cancel: handleCancel,
   };
 };
