@@ -1,69 +1,45 @@
-import { close16 } from "../icons/close-16";
-import { type _Component } from "../types";
+import { html, type TemplateResult } from "lit";
+import { unsafeHTML } from "lit/directives/unsafe-html.js";
+import classNames from "classnames";
+import { Close16 } from "../icons/close-16";
+import { Text } from "./text";
+import { IconButton } from "./icon-button";
 
 interface Props {
   title: string;
   body: string;
   overlay: boolean;
-  buttons: HTMLElement[];
+  buttons: unknown[];
   close?: () => void;
 }
 
-export const BaseModal: _Component<Props> = (props) => {
-  const root = document.createElement("div");
+export const BaseModal = (props: Props): TemplateResult => {
+  const overlay = props.overlay
+    ? html`<div
+        class=${classNames("flows_modal_overlay", props.close && "flows_modal_clickable")}
+        @click=${props.close}
+        aria-hidden="true"
+      ></div>`
+    : null;
 
-  let overlay: HTMLDivElement | null = null;
-  if (props.overlay) {
-    overlay = document.createElement("div");
-    root.appendChild(overlay);
-    overlay.className = `flows_modal_overlay${props.close ? " flows_modal_clickable" : ""}`;
-    overlay.setAttribute("aria-hidden", "true");
-    if (props.close) overlay.addEventListener("click", props.close);
-  }
-
-  const modalWrapper = document.createElement("div");
-  root.appendChild(modalWrapper);
-  modalWrapper.className = "flows_modal_wrapper";
-
-  const modal = document.createElement("div");
-  modalWrapper.appendChild(modal);
-  modal.className = "flows_modal_modal";
-
-  const title = document.createElement("p");
-  modal.appendChild(title);
-  title.className = "flows_text flows_text_title";
-  title.textContent = props.title;
-
-  const body = document.createElement("p");
-  modal.appendChild(body);
-  body.className = "flows_text flows_text_body";
-  body.innerHTML = props.body;
-
-  if (props.buttons.length) {
-    const footer = document.createElement("div");
-    modal.appendChild(footer);
-    footer.className = "flows_modal_footer";
-
-    props.buttons.forEach((button) => footer.appendChild(button));
-  }
-
-  let closeButton: HTMLButtonElement | null = null;
-  if (props.close) {
-    closeButton = document.createElement("button");
-    modal.appendChild(closeButton);
-    closeButton.className = "flows_iconButton flows_modal_close";
-    closeButton.setAttribute("aria-label", "Close");
-    closeButton.addEventListener("click", props.close);
-    closeButton.appendChild(close16());
-  }
-
-  return {
-    element: root,
-    cleanup: () => {
-      if (props.close) {
-        closeButton?.removeEventListener("click", props.close);
-        overlay?.removeEventListener("click", props.close);
-      }
-    },
-  };
+  return html`
+    ${overlay}
+    <div class="flows_modal_wrapper">
+      <div class="flows_modal_modal">
+        ${Text({ variant: "title", children: props.title })}
+        ${Text({ variant: "body", children: unsafeHTML(props.body) })}
+        ${props.buttons.length
+          ? html`<div class="flows_modal_footer">${props.buttons.map((button) => button)}</div>`
+          : null}
+        ${props.close
+          ? IconButton({
+              children: Close16(),
+              "aria-label": "Close",
+              className: "flows_modal_close",
+              onClick: props.close,
+            })
+          : null}
+      </div>
+    </div>
+  `;
 };
