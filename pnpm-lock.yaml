@@ -53,6 +53,9 @@ importers:
       '@flows/shared':
         specifier: workspace:*
         version: link:../shared
+      lit:
+        specifier: ^3.3.1
+        version: 3.3.1
     devDependencies:
       '@playwright/test':
         specifier: ^1.54.1
@@ -133,6 +136,9 @@ importers:
       '@floating-ui/dom':
         specifier: ^1.7.2
         version: 1.7.2
+      classnames:
+        specifier: ^2.5.1
+        version: 2.5.1
       lit:
         specifier: ^3.3.1
         version: 3.3.1

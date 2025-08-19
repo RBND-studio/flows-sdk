@@ -10,16 +10,17 @@ import { html, unsafeStatic } from "lit/static-html.js";
 import { type Components, type TourComponents } from "./types";
 import { spreadProps } from "./spread-props";
 import { components, tourComponents } from "./components-store";
+import { FlowsSlot } from "./slot";
 
 /**
  * Render floating blocks at the end of the body element. This function needs to be called every time the floating blocks change.
  *
  * @param options - active blocks to render and the components to render them with
- *
+ * TODO: update example
  * @example
  * ```js
  * import { addFloatingBlocksChangeListener } from "@flows/js";
- * import { render } from "@flows/js-comp onents";
+ * import { render } from "@flows/js-components";
  * import * as components from "@flows/js-components/components";
  * import * as tourComponents from "@flows/js-components/tour-components";
  *
@@ -43,6 +44,7 @@ export class FlowsFloatingBlocks extends LitElement {
 
   connectedCallback(): void {
     super.connectedCallback();
+
     this._blocks = getCurrentFloatingBlocks();
     this._changeListenerDispose = addFloatingBlocksChangeListener((blocks) => {
       this._blocks = blocks;
@@ -50,6 +52,8 @@ export class FlowsFloatingBlocks extends LitElement {
   }
 
   disconnectedCallback(): void {
+    super.disconnectedCallback();
+
     this._changeListenerDispose?.();
   }
 
@@ -60,7 +64,10 @@ export class FlowsFloatingBlocks extends LitElement {
   render(): unknown {
     return repeat(
       this._blocks,
-      (b) => b.id,
+      (b) => {
+        if (b.type === "tour-component") return b.tourBlockId;
+        return b.id;
+      },
       (block) => {
         const Cmp = (() => {
           if (block.type === "component") return components[block.component];
@@ -96,6 +103,9 @@ export const setupJsComponents = (options: SetupJsComponentsOptions): void => {
   Object.entries(options.tourComponents).forEach(([name, Cmp]) => {
     tourComponents[name] = Cmp;
 
+    // Component may be already defined if it's also used for `components`
+    if (customElements.getName(Cmp)) return;
+
     const tagName = `flows-tour-${name.toLowerCase()}`;
     if (!customElements.get(tagName)) {
       customElements.define(tagName, Cmp);
@@ -103,4 +113,5 @@ export const setupJsComponents = (options: SetupJsComponentsOptions): void => {
   });
 
   customElements.define("flows-floating-blocks", FlowsFloatingBlocks);
+  customElements.define("flows-slot", FlowsSlot);
 };

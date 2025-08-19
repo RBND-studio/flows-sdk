@@ -12,7 +12,8 @@
     "@flows/js-components": "workspace:*",
     "@flows/react": "workspace:*",
     "@flows/react-components": "workspace:*",
-    "@flows/shared": "workspace:*"
+    "@flows/shared": "workspace:*",
+    "lit": "^3.3.1"
   },
   "devDependencies": {
     "@playwright/test": "^1.54.1",

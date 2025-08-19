@@ -1,7 +1,7 @@
 import { type TourComponentProps, type FlowsProperties } from "@flows/shared";
 import { LitElement, type TemplateResult, html } from "lit";
 import { property } from "lit/decorators.js";
-import { defineBaseModal } from "../internal-components/base-modal";
+import { BaseModal } from "../internal-components/base-modal";
 
 export type ModalProps = TourComponentProps<{
   title: string;
@@ -47,8 +47,6 @@ export class Modal extends LitElement implements ModalProps {
   }
 
   render(): unknown {
-    defineBaseModal();
-
     const buttons: TemplateResult[] = [];
 
     if (this.previous && this.previousText) {
@@ -71,12 +69,12 @@ export class Modal extends LitElement implements ModalProps {
       buttons.push(continueButton);
     }
 
-    return html`<flows-base-modal
-      ?overlay=${!this.hideOverlay}
-      title=${this.title}
-      body=${this.body}
-      .buttons=${buttons}
-      .close=${this.showCloseButton ? this.cancel : undefined}
-    />`;
+    return BaseModal({
+      body: this.body,
+      title: this.title,
+      overlay: !this.hideOverlay,
+      buttons,
+      close: this.showCloseButton ? this.cancel : undefined,
+    });
   }
 }

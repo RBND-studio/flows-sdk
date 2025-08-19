@@ -37,7 +37,7 @@ export class SpreadPropsDirective extends AsyncDirective {
     if (this.element !== (part as ElementPart).element) {
       this.element = (part as ElementPart).element;
     }
-    this.host = part.options?.host || this.element;
+    this.host = part.options?.host ?? this.element;
     this.apply(spreadData);
     this.groom(spreadData);
     this.prevData = { ...spreadData };

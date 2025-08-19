@@ -1,6 +1,6 @@
 import { type ActiveBlock, addSlotBlocksChangeListener, getCurrentSlotBlocks } from "@flows/js";
 import { LitElement } from "lit";
-import { property, state } from "lit/decorators.js";
+import { property, query, state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
 import { html, unsafeStatic } from "lit/static-html.js";
 import { spreadProps } from "./spread-props";
@@ -11,10 +11,12 @@ export class FlowsSlot extends LitElement {
   private _blocks: ActiveBlock[] = [];
   private _changeListenerDispose?: () => void;
 
-  @property({ type: String })
+  @property({ type: String, attribute: "data-slot-id" })
   slotId: string;
 
   connectedCallback(): void {
+    super.connectedCallback();
+
     this._blocks = getCurrentSlotBlocks(this.slotId);
     this._changeListenerDispose = addSlotBlocksChangeListener(this.slotId, (blocks) => {
       this._blocks = blocks;
@@ -22,12 +24,13 @@ export class FlowsSlot extends LitElement {
   }
 
   disconnectedCallback(): void {
+    super.disconnectedCallback();
+
     this._changeListenerDispose?.();
   }
 
-  get placeholderElement(): HTMLElement | null {
-    return this.querySelector("[data-placeholder]");
-  }
+  @query("[data-placeholder]")
+  placeholderElement: HTMLElement | null;
 
   createRenderRoot(): this {
     return this;
