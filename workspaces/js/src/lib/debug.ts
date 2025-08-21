@@ -11,6 +11,9 @@ const tagName = "flows-debug-panel";
 const debugPanelOpen = signal(false);
 
 const openDebugPanel = async (): Promise<void> => {
+  // Avoid running in non-browser environments
+  if (typeof window === "undefined") return;
+
   if (document.querySelector(tagName)) return;
 
   try {
@@ -25,6 +28,9 @@ const openDebugPanel = async (): Promise<void> => {
   }
 };
 const closeDebugPanel = (): void => {
+  // Avoid running in non-browser environments
+  if (typeof window === "undefined") return;
+
   const debugPanelEl = document.querySelector(tagName);
   if (debugPanelEl) {
     debugPanelEl.remove();

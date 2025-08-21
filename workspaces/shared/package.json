@@ -12,12 +12,12 @@
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
-    "@types/node": "^22",
-    "jest": "^30.0.4",
-    "ts-jest": "^29.4.0",
+    "@types/node": "^22.17.2",
+    "jest": "^30.0.5",
+    "ts-jest": "^29.4.1",
     "typescript": "^5.9.2"
   },
   "dependencies": {
-    "es-toolkit": "^1.39.7"
+    "es-toolkit": "^1.39.10"
   }
 }
