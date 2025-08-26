@@ -88,8 +88,8 @@ importers:
         specifier: ^1.0.3
         version: 1.0.3
       '@preact/signals-core':
-        specifier: ^1.12.0
-        version: 1.12.0
+        specifier: ^1.12.1
+        version: 1.12.1
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -964,8 +964,8 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  '@preact/signals-core@1.12.0':
-    resolution: {integrity: sha512-etWpENXm469RHMWIZGblgWrapbIGcRcbccEGGaLkFez3PjlI3XkBrUtSiNFsIfV/DN16PxMOxbWAZUIaLFyJDg==}
+  '@preact/signals-core@1.12.1':
+    resolution: {integrity: sha512-BwbTXpj+9QutoZLQvbttRg5x3l5468qaV2kufh+51yha1c53ep5dY4kTuZR35+3pAZxpfQerGJiQqg34ZNZ6uA==}
 
   '@rolldown/pluginutils@1.0.0-beta.32':
     resolution: {integrity: sha512-QReCdvxiUZAPkvp1xpAg62IeNzykOFA6syH2CnClif4YmALN1XKpB39XneL80008UbtMShthSVDKmrx05N1q/g==}
@@ -4780,7 +4780,7 @@ snapshots:
 
   '@lit-labs/preact-signals@1.0.3':
     dependencies:
-      '@preact/signals-core': 1.12.0
+      '@preact/signals-core': 1.12.1
       lit: 3.3.1
 
   '@lit-labs/ssr-dom-shim@1.4.0': {}
@@ -4871,7 +4871,7 @@ snapshots:
     dependencies:
       playwright: 1.54.2
 
-  '@preact/signals-core@1.12.0': {}
+  '@preact/signals-core@1.12.1': {}
 
   '@rolldown/pluginutils@1.0.0-beta.32': {}
 
