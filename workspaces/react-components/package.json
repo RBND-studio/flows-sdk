@@ -41,7 +41,7 @@
     "@flows/styles": "workspace:*",
     "@types/jest": "^30.0.0",
     "@types/node": "^22.17.2",
-    "@types/react": "^19.1.10",
+    "@types/react": "^19.1.11",
     "jest": "^30.0.5",
     "jest-environment-jsdom": "^30.0.5",
     "ts-jest": "^29.4.1",
