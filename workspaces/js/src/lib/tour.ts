@@ -194,19 +194,60 @@ effect(() => {
   startToursIfNeeded(tourBlocksValue, { pathname: pathnameValue });
 });
 
-// Handle trigger by DOM element
+const handleTourElementWaits = (tours: RunningTour[]): void => {
+  const blocksById = new Map(blocks.peek().map((block) => [block.id, block]));
+
+  tours.forEach((tour) => {
+    const tourBlock = blocksById.get(tour.blockId);
+    if (!tourBlock) return;
+    const activeStep = tourBlock.tourBlocks?.at(tour.currentBlockIndex);
+    if (!activeStep) return;
+    const tourWait = activeStep.tourWait;
+    if (!tourWait) return;
+    const waitElement = tourWait.element;
+
+    if (tourWait.interaction === "dom-element" && typeof waitElement === "string") {
+      const pageMatch = pathnameMatch({
+        pathname: getPathname(),
+        operator: tourWait.page?.operator,
+        value: tourWait.page?.value,
+      });
+
+      const domElementMatch = waitElement ? document.querySelector(waitElement) : true;
+      if (domElementMatch && pageMatch) nextTourStep(tourBlock, tour.currentBlockIndex);
+    }
+    if (tourWait.interaction === "not-dom-element" && typeof waitElement === "string") {
+      const pageMatch = pathnameMatch({
+        pathname: getPathname(),
+        operator: tourWait.page?.operator,
+        value: tourWait.page?.value,
+      });
+
+      const notDomElementMatch = waitElement ? !document.querySelector(waitElement) : true;
+      if (notDomElementMatch && pageMatch) nextTourStep(tourBlock, tour.currentBlockIndex);
+    }
+  });
+};
+
+// Handle trigger and wait by DOM element
 effect(() => {
   // Ensure this effect runs only in the browser environment because of the MutationObserver
   if (typeof window === "undefined") return;
 
   const tourBlocksValue = tourBlocks.value;
+  const runningToursValue = runningTours.value;
 
-  const debouncedCallback = debounce(() => {
+  const callback = (): void => {
     startToursIfNeeded(tourBlocksValue, { pathname: getPathname() });
-  }, 32);
+    handleTourElementWaits(runningToursValue);
+  };
+
+  const debouncedCallback = debounce(callback, 32);
 
   const observer = new MutationObserver(debouncedCallback);
   observer.observe(document.body, { childList: true, subtree: true, attributes: true });
+  // Run once to catch existing elements
+  debouncedCallback();
   return () => {
     observer.disconnect();
   };
