@@ -1,5 +1,11 @@
 import { type FC, useEffect, useMemo } from "react";
-import { elementContains, getPathname, pathnameMatch } from "@flows/shared";
+import {
+  elementContains,
+  elementExists,
+  elementNotExists,
+  getPathname,
+  pathnameMatch,
+} from "@flows/shared";
 import { useState } from "react";
 import { debounce } from "es-toolkit";
 import { useFlowsContext } from "./flows-context";
@@ -74,25 +80,23 @@ export const TourController: FC = () => {
         const tourWait = tour.activeStep?.tourWait;
         const waitElement = tourWait?.element;
 
-        if (tourWait?.interaction === "dom-element" && typeof waitElement === "string") {
+        if (tourWait?.interaction === "dom-element") {
           const pageMatch = pathnameMatch({
             pathname: currentPathname,
             operator: tourWait.page?.operator,
             value: tourWait.page?.value,
           });
-
-          const domElementMatch = waitElement ? document.querySelector(waitElement) : true;
+          const domElementMatch = elementExists(waitElement);
 
           if (domElementMatch && pageMatch) tour.continue();
         }
-        if (tourWait?.interaction === "not-dom-element" && typeof waitElement === "string") {
+        if (tourWait?.interaction === "not-dom-element") {
           const pageMatch = pathnameMatch({
             pathname: currentPathname,
             operator: tourWait.page?.operator,
             value: tourWait.page?.value,
           });
-
-          const notDomElementMatch = waitElement ? !document.querySelector(waitElement) : true;
+          const notDomElementMatch = elementNotExists(waitElement);
 
           if (notDomElementMatch && pageMatch) tour.continue();
         }

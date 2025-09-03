@@ -1,5 +1,7 @@
 import {
   elementContains,
+  elementExists,
+  elementNotExists,
   getPathname,
   pathnameMatch,
   tourTriggerMatch,
@@ -206,24 +208,22 @@ const handleTourElementWaits = (tours: RunningTour[]): void => {
     if (!tourWait) return;
     const waitElement = tourWait.element;
 
-    if (tourWait.interaction === "dom-element" && typeof waitElement === "string") {
+    if (tourWait.interaction === "dom-element") {
       const pageMatch = pathnameMatch({
         pathname: getPathname(),
         operator: tourWait.page?.operator,
         value: tourWait.page?.value,
       });
-
-      const domElementMatch = waitElement ? document.querySelector(waitElement) : true;
+      const domElementMatch = elementExists(waitElement);
       if (domElementMatch && pageMatch) nextTourStep(tourBlock, tour.currentBlockIndex);
     }
-    if (tourWait.interaction === "not-dom-element" && typeof waitElement === "string") {
+    if (tourWait.interaction === "not-dom-element") {
       const pageMatch = pathnameMatch({
         pathname: getPathname(),
         operator: tourWait.page?.operator,
         value: tourWait.page?.value,
       });
-
-      const notDomElementMatch = waitElement ? !document.querySelector(waitElement) : true;
+      const notDomElementMatch = elementNotExists(waitElement);
       if (notDomElementMatch && pageMatch) nextTourStep(tourBlock, tour.currentBlockIndex);
     }
   });
