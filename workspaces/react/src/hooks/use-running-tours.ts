@@ -65,6 +65,8 @@ export const useRunningTours = ({ blocks, removeBlock }: Props): RunningTour[] =
 
     const observer = new MutationObserver(debouncedCallback);
     observer.observe(document.body, { childList: true, subtree: true, attributes: true });
+    // Run once to catch existing elements
+    debouncedCallback();
     return () => {
       observer.disconnect();
     };

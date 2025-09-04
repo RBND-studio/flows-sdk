@@ -1,7 +1,13 @@
 import { type StateMemoryTrigger } from "./components";
 
-interface TourWait {
-  interaction: string;
+export type TourWaitInteraction =
+  | "navigation"
+  | "click"
+  | "delay"
+  | "dom-element"
+  | "not-dom-element";
+export interface TourWait {
+  interaction: TourWaitInteraction;
   element?: string;
   page?: { operator: string; value: string[] };
   ms?: number;
