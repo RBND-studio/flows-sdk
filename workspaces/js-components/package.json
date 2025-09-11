@@ -38,7 +38,7 @@
     "prepare": "pnpm build"
   },
   "dependencies": {
-    "@floating-ui/dom": "^1.7.3"
+    "@floating-ui/dom": "^1.7.4"
   },
   "devDependencies": {
     "@flows/js": "workspace:*",
