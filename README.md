@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-  Build native product growth experiences, your way.
+  The better way to build product adoption.
 </p>
 
 <p align="center">
@@ -47,11 +47,11 @@ We provide a set of templates to help you get started with Flows.
 
 ## Get started for free
 
-The fastest and most reliable way to get started with Flows is [signing up for free](https://app.flows.sh/signup). Your first 500 MTUs (monthly tracked users) are free every month, after which you pay based on usage. See our [pricing](https://flows.sh/pricing) for more details.
+The fastest and most reliable way to get started with Flows is [signing up for free](https://app.flows.sh/signup). Your first 250 MTUs (monthly tracked users) are free every month, after which you pay based on usage. See our [pricing](https://flows.sh/pricing) for more details.
 
 ## Contributing
 
-We ❤️ contributions big and small, more info in [CONTRIBUTING.md](/CONTRIBUTING.md).
+We ❤️ contributions big and small. If you have any ideas for improvements, either submit an issue or create a pull request.
 
 ---
 

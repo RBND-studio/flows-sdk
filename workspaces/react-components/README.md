@@ -1,19 +1,42 @@
-<h1 align="center">Flows React components</h1>
+<p align="center">
+  <a href="https://flows.sh">
+    <img src="./../../docs/avatar.png" height="96">
+    <h3 align="center">Flows React Components</h3>
+  </a>
+</p>
 
-## Getting started
+<p align="center">
+  The better way to build product adoption.
+</p>
 
-Build native product growth experiences, your way – Meet Flows, the flexible platform for building in-app experiences. Focus on your product, not creating one-off logic.
+<p align="center">
+  <a href="https://flows.sh/docs"><strong>Documentation</strong></a> ·
+  <a href="https://flows.sh/changelog"><strong>Changelog</strong></a> ·
+  <a href="https://flows.sh/examples"><strong>Examples</strong></a> ·
+  <a href="https://flows.sh/docs/sdk-overview"><strong>SDKs</strong></a>
+</p>
 
-- Build powerful in-app experiences to drive product growth
-- Embed components directly into your app
-- Create onboarding, product adoption, in-app messaging, growth experiments, and more
-- Bring your own UI components or use Flows' built-in components
+## Installation
 
-Visit our [website](https://flows.sh) to learn more about Flows
+For full setup instructions, see our [Quickstart guide](https://flows.sh/docs/quickstart).
 
-## Documentation
+```
+npm install @flows/react-components
+```
 
-Visit [https://flows.sh/docs](https://flows.sh/docs) for full documentation.
+⚠️ This package provides a set of ready-made components for building product adoption. To use it, you also need to install the `@flows/react` package.
+
+## Components
+
+- [Modal](https://flows.sh/docs/components/modal)
+- [Tooltip](https://flows.sh/docs/components/tooltip)
+- [Hint](https://flows.sh/docs/components/hint)
+
+Looking for more components? [Contact us](https://flows.sh/contact) or create your own custom components by following our [guide](https://flows.sh/docs/create-custom-components).
+
+## Contributing
+
+We ❤️ contributions big and small. If you have any ideas for improvements, either submit an issue or create a pull request.
 
 ---
 
