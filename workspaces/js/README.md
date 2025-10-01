@@ -1,7 +1,7 @@
 <p align="center">
   <a href="https://flows.sh">
     <img src="./../../docs/avatar.png" height="96">
-    <h3 align="center">Flows Javascript SDK</h3>
+    <h3 align="center">Flows JavaScript SDK</h3>
   </a>
 </p>
 
