@@ -21,7 +21,7 @@
     "@commitlint/config-conventional": "^19.8.1",
     "@commitlint/types": "^19.8.1",
     "@vercel/style-guide": "^6.0.0",
-    "concurrently": "^9.2.0",
+    "concurrently": "^9.2.1",
     "eslint": "8.57.1",
     "husky": "^9.1.7",
     "minimist": "^1.2.8",
