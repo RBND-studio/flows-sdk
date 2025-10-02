@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://flows.sh">
-    <img src="./docs/avatar.png" height="96">
+    <img src="https://raw.githubusercontent.com/RBND-studio/flows-sdk/refs/heads/main/docs/avatar.png" height="96">
     <h3 align="center">Flows SDKs</h3>
   </a>
 </p>
