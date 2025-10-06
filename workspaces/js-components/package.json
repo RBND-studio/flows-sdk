@@ -46,7 +46,7 @@
     "@flows/styles": "workspace:*",
     "@types/jest": "^30.0.0",
     "@types/node": "^22.17.2",
-    "jest": "^30.0.5",
+    "jest": "^30.2.0",
     "rimraf": "^6.0.1",
     "ts-jest": "^29.4.1",
     "tsup": "^8.5.0",
