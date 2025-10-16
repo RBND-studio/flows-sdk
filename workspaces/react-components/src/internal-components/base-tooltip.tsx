@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type FC, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type FC, type ReactNode } from "react";
 import {
   useFloating,
   shift,
@@ -57,23 +57,21 @@ export const BaseTooltip: FC<Props> = (props) => {
 
   const [enterAnimationEnded, setEnterAnimationEnded] = useState(false);
   useEffect(() => {
+    // Show enter animation in tour after the tooltip was hidden because the target element isn't on page
+    if (!reference) setEnterAnimationEnded(false);
+  }, [reference]);
+  useEffect(() => {
     if (enterAnimationEnded) return;
     const el = refs.floating.current;
     if (!el) return;
-    const handleAnimationEnd = (): void => {
-      setEnterAnimationEnded(true);
-    };
     const hasAnimation = window.getComputedStyle(el).animationName !== "none";
     if (!hasAnimation) {
       setEnterAnimationEnded(true);
-      return;
     }
-
-    el.addEventListener("animationend", handleAnimationEnd);
-    return () => {
-      el.removeEventListener("animationend", handleAnimationEnd);
-    };
   }, [enterAnimationEnded, refs.floating]);
+  const handleAnimationEnd = useCallback((): void => {
+    setEnterAnimationEnded(true);
+  }, []);
 
   const staticSide = useMemo((): Side => {
     if (placement.includes("top")) return "bottom";
@@ -123,6 +121,7 @@ export const BaseTooltip: FC<Props> = (props) => {
         className="flows_tooltip_tooltip"
         ref={refs.setFloating}
         data-open={enterAnimationEnded ? "true" : "false"}
+        onAnimationEnd={handleAnimationEnd}
       >
         <Text className="flows_tooltip_title" variant="title">
           {props.title}

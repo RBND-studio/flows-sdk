@@ -151,10 +151,7 @@ const run = (packageName: string) => {
                 wait: {
                   interaction: "click",
                   element: "h1",
-                  page: {
-                    operator: "contains",
-                    value: ["?correct=true"],
-                  },
+                  page: { operator: "contains", value: ["?correct=true"] },
                 },
               }),
               getModalStep({ title: "World" }),
@@ -213,10 +210,7 @@ const run = (packageName: string) => {
                 wait: {
                   interaction: "click",
                   element: "h1",
-                  page: {
-                    operator: "contains",
-                    value: ["?correct=true"],
-                  },
+                  page: { operator: "contains", value: ["?correct=true"] },
                 },
               }),
               getModalStep({ title: "World" }),
@@ -281,6 +275,88 @@ const run = (packageName: string) => {
     await page.waitForTimeout(1000);
     await expect(page.getByText("Hello", { exact: true })).toBeVisible({ timeout: 0 });
     await expect(page.getByText("World", { exact: true })).toBeHidden({ timeout: 0 });
+  });
+  test(`${packageName} - should trigger wait on dom element`, async ({ page }) => {
+    await page.route("**/v2/sdk/blocks", (route) => {
+      route.fulfill({
+        json: {
+          blocks: [
+            getTour([
+              getModalStep({ title: "Step 1" }),
+              getModalStep({
+                title: "Step 2",
+                wait: {
+                  interaction: "dom-element",
+                  element: "h1",
+                  page: { operator: "contains", value: ["?correct=true"] },
+                },
+              }),
+              getModalStep({ title: "Step 3" }),
+              getModalStep({
+                title: "Step 4",
+                wait: { interaction: "dom-element", element: ".wrong-el" },
+              }),
+              getModalStep({
+                title: "Step 5",
+                wait: {
+                  interaction: "dom-element",
+                  element: "h1",
+                  page: { operator: "contains", value: ["?correct=false"] },
+                },
+              }),
+              getModalStep({ title: "Step 6" }),
+            ]),
+          ],
+        },
+      });
+    });
+    await page.goto(`/${packageName}.html?correct=true`);
+    await expect(page.getByText("Step 1", { exact: true })).toBeVisible();
+    await page.getByText("Continue", { exact: true }).click();
+    await expect(page.getByText("Step 3", { exact: true })).toBeVisible();
+    await page.getByText("Continue", { exact: true }).click();
+    await expect(page.getByText("Step 4", { exact: true })).toBeVisible({ timeout: 0 });
+    await page.getByText("Continue", { exact: true }).click();
+    await expect(page.getByText("Step 5", { exact: true })).toBeVisible({ timeout: 0 });
+  });
+  test(`${packageName} - should trigger wait on not-dom element`, async ({ page }) => {
+    await page.route("**/v2/sdk/blocks", (route) => {
+      route.fulfill({
+        json: {
+          blocks: [
+            getTour([
+              getModalStep({ title: "Step 1" }),
+              getModalStep({
+                title: "Step 2",
+                wait: { interaction: "not-dom-element", element: ".wrong-el" },
+              }),
+              getModalStep({ title: "Step 3" }),
+              getModalStep({
+                title: "Step 4",
+                wait: { interaction: "not-dom-element", element: "h1" },
+              }),
+              getModalStep({
+                title: "Step 5",
+                wait: {
+                  interaction: "not-dom-element",
+                  element: ".wrong-el",
+                  page: { operator: "contains", value: ["?correct=false"] },
+                },
+              }),
+              getModalStep({ title: "Step 6" }),
+            ]),
+          ],
+        },
+      });
+    });
+    await page.goto(`/${packageName}.html`);
+    await expect(page.getByText("Step 1", { exact: true })).toBeVisible();
+    await page.getByText("Continue", { exact: true }).click();
+    await expect(page.getByText("Step 3", { exact: true })).toBeVisible();
+    await page.getByText("Continue", { exact: true }).click();
+    await expect(page.getByText("Step 4", { exact: true })).toBeVisible({ timeout: 0 });
+    await page.getByText("Continue", { exact: true }).click();
+    await expect(page.getByText("Step 5", { exact: true })).toBeVisible({ timeout: 0 });
   });
 };
 

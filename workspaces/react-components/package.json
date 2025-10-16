@@ -1,6 +1,6 @@
 {
   "name": "@flows/react-components",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Built-in components for Flows React SDK",
   "keywords": [
     "react",
@@ -40,11 +40,11 @@
     "@flows/shared": "workspace:*",
     "@flows/styles": "workspace:*",
     "@types/jest": "^30.0.0",
-    "@types/node": "^22",
-    "@types/react": "^19.1.8",
-    "jest": "^30.0.4",
-    "jest-environment-jsdom": "^30.0.4",
-    "ts-jest": "^29.4.0",
+    "@types/node": "^22.17.2",
+    "@types/react": "^19.1.10",
+    "jest": "^30.0.5",
+    "jest-environment-jsdom": "^30.2.0",
+    "ts-jest": "^29.4.1",
     "tsup": "^8.5.0",
     "typescript": "^5.9.2"
   },
@@ -52,7 +52,7 @@
     "react": ">=17.0.2"
   },
   "dependencies": {
-    "@floating-ui/react-dom": "^2.1.5",
+    "@floating-ui/react-dom": "^2.1.6",
     "classnames": "^2.5.1"
   },
   "exports": {

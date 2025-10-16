@@ -1,6 +1,13 @@
 import { type FC, useEffect, useMemo } from "react";
-import { elementContains, getPathname, pathnameMatch } from "@flows/shared";
+import {
+  elementContains,
+  elementExists,
+  elementNotExists,
+  getPathname,
+  pathnameMatch,
+} from "@flows/shared";
 import { useState } from "react";
+import { debounce } from "es-toolkit";
 import { useFlowsContext } from "./flows-context";
 import { usePathname } from "./contexts/pathname-context";
 
@@ -61,6 +68,50 @@ export const TourController: FC = () => {
     return () => {
       removeEventListener("click", handleClick);
     };
+    // Watch pathname to check on each pathname change
+  }, [pathname, relevantTours]);
+
+  // Handle DOM element waits
+  useEffect(() => {
+    const callback = (): void => {
+      const currentPathname = getPathname();
+
+      relevantTours.forEach((tour) => {
+        const tourWait = tour.activeStep?.tourWait;
+        const waitElement = tourWait?.element;
+
+        if (tourWait?.interaction === "dom-element") {
+          const pageMatch = pathnameMatch({
+            pathname: currentPathname,
+            operator: tourWait.page?.operator,
+            value: tourWait.page?.value,
+          });
+          const domElementMatch = elementExists(waitElement);
+
+          if (domElementMatch && pageMatch) tour.continue();
+        }
+        if (tourWait?.interaction === "not-dom-element") {
+          const pageMatch = pathnameMatch({
+            pathname: currentPathname,
+            operator: tourWait.page?.operator,
+            value: tourWait.page?.value,
+          });
+          const notDomElementMatch = elementNotExists(waitElement);
+
+          if (notDomElementMatch && pageMatch) tour.continue();
+        }
+      });
+    };
+
+    const debouncedCallback = debounce(callback, 32);
+    const observer = new MutationObserver(debouncedCallback);
+    observer.observe(document.body, { childList: true, subtree: true, attributes: true });
+    // Run once to catch existing elements
+    debouncedCallback();
+    return () => {
+      observer.disconnect();
+    };
+    // Watch pathname to check on each pathname change
   }, [pathname, relevantTours]);
 
   // Clear timeouts for tours that don't have active the wait step
