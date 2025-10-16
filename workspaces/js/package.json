@@ -53,16 +53,16 @@
     "@swc/core": "^1.13.3",
     "@types/jest": "^30.0.0",
     "@types/node": "^22.17.2",
-    "jest": "^30.0.5",
-    "ts-jest": "^29.4.1",
+    "jest": "^30.2.0",
+    "ts-jest": "^29.4.5",
     "tsup": "^8.5.0",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "@lit-labs/preact-signals": "^1.0.3",
     "@preact/signals-core": "^1.12.1",
     "clsx": "^2.1.1",
-    "es-toolkit": "^1.39.10",
+    "es-toolkit": "^1.40.0",
     "lit": "^3.3.1"
   }
 }

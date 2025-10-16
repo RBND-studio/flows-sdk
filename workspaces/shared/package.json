@@ -13,11 +13,11 @@
   "devDependencies": {
     "@types/jest": "^30.0.0",
     "@types/node": "^22.17.2",
-    "jest": "^30.0.5",
-    "ts-jest": "^29.4.1",
-    "typescript": "^5.9.2"
+    "jest": "^30.2.0",
+    "ts-jest": "^29.4.5",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
-    "es-toolkit": "^1.39.10"
+    "es-toolkit": "^1.40.0"
   }
 }
