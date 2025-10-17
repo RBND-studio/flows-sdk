@@ -1,180 +1,167 @@
 import { type Placement } from "@flows/shared";
-import { computePosition, flip, offset, shift } from "@floating-ui/dom";
-import { html, type TemplateResult } from "lit";
+import { autoUpdate, computePosition, flip, offset, shift } from "@floating-ui/dom";
+import { html, LitElement, type PropertyValues, type TemplateResult } from "lit";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
+import { property, query, queryAll, state } from "lit/decorators.js";
 import { Close16 } from "../icons/close-16";
+import { observeQuerySelector } from "../lib/query-selector";
 import { Text } from "./text";
 import { IconButton } from "./icon-button";
 
-interface Props {
-  title: string;
-  body: string;
-
-  targetElement: string;
-  placement?: Placement;
-  offsetX?: number;
-  offsetY?: number;
-
-  buttons: TemplateResult[];
-  onClose?: () => void;
-
-  open: boolean;
-  tooltipClosing: boolean;
-  handleOpen: () => void;
-  handleClose: () => void;
-}
-
+const CLOSE_TIMEOUT = 300;
 const BOUNDARY_PADDING = 8;
 const DISTANCE = 4;
 
-export const BaseHint = (props: Props): TemplateResult => {
-  return html`
-    <button
-      aria-label="Open hint"
-      type="button"
-      class="flows_hint_hotspot"
-      @click=${props.open ? props.handleOpen : props.handleClose}
-    ></button>
+class BaseHint extends LitElement {
+  @property()
+  title: string;
+  @property()
+  body: string;
 
-    ${props.open
-      ? html`
-          <div
-            data-open=${!props.tooltipClosing ? "true" : "false"}
-            class="flows_tooltip_tooltip flows_hint_tooltip"
-          >
-            ${Text({ className: "flows_tooltip_title", variant: "title", children: props.title })}
-            ${Text({
-              className: "flows_tooltip_body",
-              variant: "body",
-              children: unsafeHTML(props.body),
-            })}
-            ${props.buttons.length
-              ? html`<div class="flows_tooltip_footer">${props.buttons}</div>`
-              : null}
-            ${props.onClose
-              ? IconButton({
-                  children: Close16(),
-                  className: "flows_tooltip_close",
-                  "aria-label": "Close",
-                  onClick: props.onClose,
-                })
-              : null}
-          </div>
-        `
-      : null}
-  `;
+  @property()
+  targetElement: string;
+  @property()
+  placement?: Placement;
+  @property({ type: Number })
+  offsetX?: number;
+  @property({ type: Number })
+  offsetY?: number;
+
+  @property({ attribute: false })
+  buttons: unknown[];
+  @property({ attribute: false })
+  onClose?: () => void;
+
+  @state()
+  private accessor _open = false;
+
+  @state()
+  private accessor _tooltipClosing = false;
+
+  handleClick(): void {
+    if (!this._open) {
+      this._open = true;
+    } else {
+      this._tooltipClosing = true;
+      setTimeout(() => {
+        this._open = false;
+        this._tooltipClosing = false;
+      }, CLOSE_TIMEOUT);
+    }
+  }
+
+  @query(".flows_hint_hotspot")
+  target: HTMLElement;
+
+  @query(".flows_tooltip_tooltip")
+  tooltip?: HTMLElement;
+
+  @queryAll(".flows_tooltip_arrow")
+  arrows: [HTMLElement, HTMLElement];
+
+  @state()
+  private _reference: Element | null = null;
+
+  targetAutoUpdateCleanup: (() => void) | null = null;
+  tooltipAutoUpdateCleanup: (() => void) | null = null;
+  observerCleanup: (() => void) | null = null;
+
+  connectedCallback(): void {
+    super.connectedCallback();
+
+    this.observerCleanup = observeQuerySelector(this.targetElement, (el) => {
+      this._reference = el;
+    });
+  }
+  disconnectedCallback(): void {
+    super.disconnectedCallback();
+
+    this.targetAutoUpdateCleanup?.();
+    this.tooltipAutoUpdateCleanup?.();
+    this.observerCleanup?.();
+  }
+
+  protected firstUpdated(_changedProperties: PropertyValues): void {
+    const reference = this._reference;
+    if (!reference) return;
+
+    this.targetAutoUpdateCleanup = autoUpdate(
+      reference,
+      this.target,
+      () =>
+        void updateTargetButton({
+          reference,
+          el: this.target,
+          offsetX: this.offsetX,
+          offsetY: this.offsetY,
+        }),
+      { animationFrame: true },
+    );
+  }
+
+  protected updated(_changedProperties: PropertyValues): void {
+    const reference = this.target;
+    const tooltip = this.tooltip;
+    if (!tooltip) return;
+
+    this.tooltipAutoUpdateCleanup = autoUpdate(
+      reference,
+      tooltip,
+      () =>
+        void updateTooltip({
+          reference,
+          el: tooltip,
+          placement: this.placement,
+        }),
+      { animationFrame: true },
+    );
+  }
+
+  createRenderRoot(): this {
+    return this;
+  }
+
+  render(): TemplateResult {
+    return html`
+      <button
+        aria-label="Open hint"
+        type="button"
+        class="flows_hint_hotspot"
+        @click=${this.handleClick.bind(this)}
+      ></button>
+
+      ${this._open
+        ? html`
+            <div
+              data-open=${!this._tooltipClosing ? "true" : "false"}
+              class="flows_tooltip_tooltip flows_hint_tooltip"
+            >
+              ${Text({ className: "flows_tooltip_title", variant: "title", children: this.title })}
+              ${Text({
+                className: "flows_tooltip_body",
+                variant: "body",
+                children: unsafeHTML(this.body),
+              })}
+              ${this.buttons.length
+                ? html`<div class="flows_tooltip_footer">${this.buttons}</div>`
+                : null}
+              ${this.onClose
+                ? IconButton({
+                    children: Close16(),
+                    className: "flows_tooltip_close",
+                    "aria-label": "Close",
+                    onClick: this.onClose,
+                  })
+                : null}
+            </div>
+          `
+        : null}
+    `;
+  }
+}
+export const defineBaseHint = (): void => {
+  if (!customElements.get("flows-base-hint")) customElements.define("flows-base-hint", BaseHint);
 };
-
-// export const BaseHint: _Component<Props> = (props) => {
-//   // TODO: setup auto update based on reference element change
-//   const reference = props.targetElement ? document.querySelector(props.targetElement) : null;
-//   if (!reference) {
-//     if (!props.targetElement) log.error("Cannot render Hint without target element");
-
-//     return {
-//       element: null,
-//       cleanup: () => {
-//         // Do nothing
-//       },
-//     };
-//   }
-
-//   const root = document.createElement("div");
-
-//   const targetButton = document.createElement("button");
-//   root.appendChild(targetButton);
-//   targetButton.className = "flows_hint_hotspot";
-//   targetButton.setAttribute("aria-label", "Open hint");
-//   targetButton.type = "button";
-
-//   let tooltipCleanup: (() => void) | null = null;
-
-//   const handleTargetButtonClick = (): void => {
-//     if (tooltipCleanup) {
-//       tooltipCleanup();
-//       return;
-//     }
-
-//     const tooltip = document.createElement("div");
-//     root.appendChild(tooltip);
-//     tooltip.className = "flows_tooltip_tooltip flows_hint_tooltip";
-//     tooltip.setAttribute("data-open", "true");
-
-//     const title = document.createElement("p");
-//     tooltip.appendChild(title);
-//     title.className = "flows_text flows_text_title flows_tooltip_title";
-//     title.textContent = props.title;
-
-//     const body = document.createElement("p");
-//     tooltip.appendChild(body);
-//     body.className = "flows_text flows_text_body flows_tooltip_body";
-//     body.innerHTML = props.body;
-
-//     if (props.buttons.length) {
-//       const footer = document.createElement("div");
-//       tooltip.appendChild(footer);
-//       footer.className = "flows_tooltip_footer";
-//       props.buttons.forEach((button) => footer.appendChild(button));
-//     }
-
-//     let closeButton: HTMLButtonElement | null = null;
-//     if (props.onClose) {
-//       closeButton = document.createElement("button");
-//       tooltip.appendChild(closeButton);
-//       closeButton.className = "flows_iconButton flows_tooltip_close";
-//       closeButton.setAttribute("aria-label", "Close");
-//       closeButton.appendChild(close16());
-//       closeButton.addEventListener("click", props.onClose);
-//     }
-
-//     const tooltipPositionCleanup = autoUpdate(
-//       reference,
-//       tooltip,
-//       () =>
-//         void updateTooltip({
-//           el: tooltip as HTMLElement,
-//           reference: targetButton,
-//           placement: props.placement,
-//         }),
-//       { animationFrame: true },
-//     );
-
-//     const handleWindowClick = (e: MouseEvent): void => {
-//       const target = e.target as Node;
-//       if (!target.isConnected) return;
-
-//       const isOutside = !tooltip.contains(target) && !targetButton.contains(target);
-//       if (isOutside) tooltipCleanup?.();
-//     };
-//     window.addEventListener("click", handleWindowClick);
-
-//     tooltipCleanup = () => {
-//       if (props.onClose) closeButton?.removeEventListener("click", props.onClose);
-//       window.removeEventListener("click", handleWindowClick);
-//       tooltipPositionCleanup();
-//       tooltip.remove();
-//       tooltipCleanup = null;
-//     };
-//   };
-
-//   targetButton.addEventListener("click", handleTargetButtonClick);
-
-//   const buttonPositionCleanup = autoUpdate(
-//     reference,
-//     targetButton,
-//     () => void updateTargetButton({ el: targetButton, reference, placement: props.placement }),
-//     { animationFrame: true },
-//   );
-
-//   return {
-//     element: root,
-//     cleanup: () => {
-//       tooltipCleanup?.();
-//       buttonPositionCleanup();
-//       targetButton.removeEventListener("click", handleTargetButtonClick);
-//     },
-//   };
-// };
 
 export const updateTargetButton = ({
   reference,

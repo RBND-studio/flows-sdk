@@ -4,7 +4,8 @@
     "noEmit": true,
     "target": "ES2017",
     "moduleResolution": "Bundler",
-    "module": "ESNext"
+    "module": "ESNext",
+    "lib": ["es2022", "dom"]
   },
   "include": []
 }

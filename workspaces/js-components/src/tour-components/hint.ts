@@ -1,4 +1,8 @@
-import { type Placement, type TourComponentProps } from "@flows/shared";
+import { type FlowsProperties, type Placement, type TourComponentProps } from "@flows/shared";
+import { html, LitElement, type TemplateResult } from "lit";
+import { property } from "lit/decorators.js";
+import { defineBaseHint } from "../internal-components/base-hint";
+import { Button } from "../internal-components/button";
 
 export type HintProps = TourComponentProps<{
   title: string;
@@ -13,56 +17,87 @@ export type HintProps = TourComponentProps<{
   offsetY?: number;
 }>;
 
-// const hiddenDiv = (): HTMLElement => {
-//   const div = document.createElement("div");
-//   div.setAttribute("aria-hidden", "true");
-//   return div;
-// };
+defineBaseHint();
 
-// export const Hint: Component<HintProps> = (props) => {
-//   let previousButton: HTMLButtonElement | null = null;
-//   if (props.previous && props.previousText) {
-//     previousButton = document.createElement("button");
-//     previousButton.className = "flows_button flows_button_secondary";
-//     previousButton.textContent = props.previousText;
-//     previousButton.addEventListener("click", props.previous);
-//   }
+export class Hint extends LitElement implements HintProps {
+  @property({ type: String })
+  title: string;
 
-//   let continueButton: HTMLButtonElement | null = null;
-//   if (props.continueText) {
-//     continueButton = document.createElement("button");
-//     continueButton.className = "flows_button flows_button_primary";
-//     continueButton.textContent = props.continueText;
-//     continueButton.addEventListener("click", props.continue);
-//   }
+  @property({ type: String })
+  body: string;
 
-//   const buttons =
-//     Boolean(continueButton) || Boolean(previousButton)
-//       ? [
-//           //  The empty div ensures elements are aligned correctly when there is no continue button
-//           previousButton ?? hiddenDiv(),
-//           continueButton ?? hiddenDiv(),
-//         ]
-//       : [];
+  @property({ type: String })
+  continueText?: string;
 
-//   const result = BaseHint({
-//     title: props.title,
-//     body: props.body,
-//     targetElement: props.targetElement,
-//     offsetX: props.offsetX,
-//     offsetY: props.offsetY,
-//     placement: props.placement,
-//     onClose: props.showCloseButton ? props.cancel : undefined,
-//     buttons,
-//   });
+  @property({ type: String })
+  previousText?: string;
 
-//   return {
-//     element: result.element,
-//     cleanup: () => {
-//       continueButton?.removeEventListener("click", props.continue);
-//       if (props.previous) previousButton?.removeEventListener("click", props.previous);
+  @property({ type: Boolean })
+  showCloseButton: boolean;
 
-//       result.cleanup();
-//     },
-//   };
-// };
+  @property({ type: String })
+  targetElement: string;
+
+  @property({ type: String })
+  placement?: Placement;
+
+  @property({ type: Number })
+  offsetX?: number;
+
+  @property({ type: Number })
+  offsetY?: number;
+
+  @property({ type: Function })
+  continue: () => void;
+
+  @property({ type: Function })
+  previous?: () => void;
+
+  @property({ type: Function })
+  cancel: () => void;
+
+  __flows: FlowsProperties;
+
+  createRenderRoot(): this {
+    return this;
+  }
+
+  render(): TemplateResult {
+    let previousButton: TemplateResult | null = null;
+    if (this.previous && this.previousText) {
+      previousButton = Button({
+        variant: "secondary",
+        children: this.previousText,
+        onClick: this.previous,
+      });
+    }
+
+    let continueButton: TemplateResult | null = null;
+    if (this.continueText) {
+      continueButton = Button({
+        variant: "primary",
+        children: this.continueText,
+        onClick: this.continue,
+      });
+    }
+
+    const buttons =
+      Boolean(continueButton) || Boolean(previousButton)
+        ? [
+            previousButton ?? html`<div aria-hidden="true"></div>`,
+            continueButton ?? html`<div aria-hidden="true"></div>`,
+          ]
+        : [];
+
+    return html`<flows-base-hint
+      .title=${this.title}
+      .body=${this.body}
+      .targetElement=${this.targetElement}
+      .placement=${this.placement}
+      .offsetX=${this.offsetX}
+      .offsetY=${this.offsetY}
+      .onClose=${this.showCloseButton ? this.cancel : undefined}
+      .buttons=${buttons}
+    ></flows-base-hint>`;
+  }
+}

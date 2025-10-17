@@ -1,6 +1,8 @@
 import { type FlowsProperties, type ComponentProps, type Placement } from "@flows/shared";
-import { LitElement } from "lit";
+import { html, LitElement, type TemplateResult } from "lit";
 import { property } from "lit/decorators.js";
+import { defineBaseHint } from "../internal-components/base-hint";
+import { Button } from "../internal-components/button";
 
 export type HintProps = ComponentProps<{
   title: string;
@@ -16,6 +18,8 @@ export type HintProps = ComponentProps<{
   continue: () => void;
   close: () => void;
 }>;
+
+defineBaseHint();
 
 export class Hint extends LitElement implements HintProps {
   @property({ type: String })
@@ -33,6 +37,9 @@ export class Hint extends LitElement implements HintProps {
   @property({ type: String })
   targetElement: string;
 
+  @property({ type: String })
+  placement?: Placement;
+
   @property({ type: Number })
   offsetX?: number;
 
@@ -46,37 +53,27 @@ export class Hint extends LitElement implements HintProps {
   close: () => void;
 
   __flows: FlowsProperties;
+
+  createRenderRoot(): this {
+    return this;
+  }
+
+  render(): TemplateResult {
+    const buttons: TemplateResult[] = [];
+    if (this.continueText)
+      buttons.push(
+        Button({ variant: "primary", onClick: this.continue, children: this.continueText }),
+      );
+
+    return html`<flows-base-hint
+      .title=${this.title}
+      .body=${this.body}
+      .targetElement=${this.targetElement}
+      .placement=${this.placement}
+      .offsetX=${this.offsetX}
+      .offsetY=${this.offsetY}
+      .onClose=${this.showCloseButton ? this.close : undefined}
+      .buttons=${buttons}
+    ></flows-base-hint>`;
+  }
 }
-
-// export const Hint: Component<HintProps> = (props) => {
-//   const buttons: HTMLElement[] = [];
-
-//   let continueButton: HTMLButtonElement | null = null;
-//   if (props.continueText) {
-//     continueButton = document.createElement("button");
-//     buttons.push(continueButton);
-//     continueButton.className = "flows_button flows_button_primary";
-//     continueButton.textContent = props.continueText;
-//     continueButton.addEventListener("click", props.continue);
-//   }
-
-//   const result = BaseHint({
-//     title: props.title,
-//     body: props.body,
-//     targetElement: props.targetElement,
-//     offsetX: props.offsetX,
-//     offsetY: props.offsetY,
-//     placement: props.placement,
-//     buttons,
-//     onClose: props.showCloseButton ? props.close : undefined,
-//   });
-
-//   return {
-//     element: result.element,
-//     cleanup: () => {
-//       result.cleanup();
-
-//       continueButton?.removeEventListener("click", props.continue);
-//     },
-//   };
-// };
