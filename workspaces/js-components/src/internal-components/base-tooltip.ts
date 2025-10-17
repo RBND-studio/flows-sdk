@@ -1,49 +1,132 @@
-import { type Placement } from "@flows/shared";
-import { arrow, computePosition, flip, offset, shift, type Side } from "@floating-ui/dom";
-import { html, type TemplateResult } from "lit";
+import { log, type Placement } from "@flows/shared";
+import {
+  arrow,
+  autoUpdate,
+  computePosition,
+  flip,
+  offset,
+  shift,
+  type Side,
+} from "@floating-ui/dom";
+import { html, LitElement, type PropertyValues, type TemplateResult } from "lit";
 import classNames from "classnames";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
+import { property, query, queryAll, state } from "lit/decorators.js";
 import { Close16 } from "../icons/close-16";
+import { observeQuerySelector } from "../lib/query-selector";
 import { Text } from "./text";
 import { IconButton } from "./icon-button";
 
-interface Props {
+class BaseTooltip extends LitElement {
+  @property()
   title: string;
+  @property()
   body: string;
-  buttons?: TemplateResult[];
+  @property({ attribute: false })
+  buttons?: unknown[];
+  @property({ attribute: false })
   close?: () => void;
+  @property()
+  targetElement: string;
+  @property()
   placement?: Placement;
+  @property({ type: Boolean })
   overlay?: boolean;
-}
 
-export const BaseTooltip = (props: Props): TemplateResult => {
-  return html`
-    <div class="flows_tooltip_root">
-      ${props.overlay ? html`<div class="flows_tooltip_overlay"></div>` : null}
-      <div class="flows_tooltip_tooltip">
-        ${Text({ variant: "title", className: "flows_tooltip_title", children: props.title })}
-        ${Text({
-          variant: "body",
-          className: "flows_tooltip_body",
-          children: unsafeHTML(props.body),
-        })}
-        ${props.buttons?.length
-          ? html`<div class="flows_tooltip_footer">${props.buttons}</div>`
-          : null}
-        ${props.close
-          ? IconButton({
-              "aria-label": "Close",
-              className: "flows_tooltip_close",
-              children: Close16(),
-              onClick: props.close,
-            })
-          : null}
+  @query(".flows_tooltip_tooltip")
+  tooltip: HTMLElement;
 
-        <div class=${classNames("flows_tooltip_arrow", "flows_tooltip_arrow-bottom")}></div>
-        <div class=${classNames("flows_tooltip_arrow", "flows_tooltip_arrow-top")}></div>
+  @queryAll(".flows_tooltip_arrow")
+  arrows: [HTMLElement, HTMLElement];
+
+  @state()
+  private _reference: Element | null = null;
+
+  autoUpdateCleanup: (() => void) | null = null;
+  observerCleanup: (() => void) | null = null;
+
+  connectedCallback(): void {
+    super.connectedCallback();
+
+    this.observerCleanup = observeQuerySelector(this.targetElement, (el) => {
+      this._reference = el;
+    });
+  }
+  disconnectedCallback(): void {
+    super.disconnectedCallback();
+
+    this.autoUpdateCleanup?.();
+    this.observerCleanup?.();
+  }
+
+  protected firstUpdated(_changedProperties: PropertyValues): void {
+    if (!this.targetElement) {
+      log.error("Cannot render Tooltip without target element");
+    }
+
+    const reference = this._reference;
+    if (!reference) return;
+
+    const tooltip = this.tooltip;
+
+    this.autoUpdateCleanup = autoUpdate(
+      reference,
+      tooltip,
+      () =>
+        void updateTooltip({
+          reference,
+          tooltip,
+          arrowEls: this.arrows,
+          overlay: null,
+          placement: this.placement,
+        }),
+      { animationFrame: true },
+    );
+  }
+
+  createRenderRoot(): this {
+    return this;
+  }
+
+  render(): TemplateResult | null {
+    const reference = this._reference;
+    if (!reference) {
+      log.error("Cannot render Tooltip without target element");
+      return null;
+    }
+
+    return html`
+      <div class="flows_tooltip_root">
+        ${this.overlay ? html`<div class="flows_tooltip_overlay"></div>` : null}
+        <div class="flows_tooltip_tooltip">
+          ${Text({ variant: "title", className: "flows_tooltip_title", children: this.title })}
+          ${Text({
+            variant: "body",
+            className: "flows_tooltip_body",
+            children: unsafeHTML(this.body),
+          })}
+          ${this.buttons?.length
+            ? html`<div class="flows_tooltip_footer">${this.buttons}</div>`
+            : null}
+          ${this.close
+            ? IconButton({
+                "aria-label": "Close",
+                className: "flows_tooltip_close",
+                children: Close16(),
+                onClick: this.close,
+              })
+            : null}
+
+          <div class=${classNames("flows_tooltip_arrow", "flows_tooltip_arrow-bottom")}></div>
+          <div class=${classNames("flows_tooltip_arrow", "flows_tooltip_arrow-top")}></div>
+        </div>
       </div>
-    </div>
-  `;
+    `;
+  }
+}
+export const defineBaseTooltip = (): void => {
+  if (!customElements.get("flows-base-tooltip"))
+    customElements.define("flows-base-tooltip", BaseTooltip);
 };
 
 const DISTANCE = 4;

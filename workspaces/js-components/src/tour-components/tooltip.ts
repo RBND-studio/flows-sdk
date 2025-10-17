@@ -1,9 +1,7 @@
-import { log, type FlowsProperties, type Placement, type TourComponentProps } from "@flows/shared";
-import { LitElement, type TemplateResult, type PropertyValues, html } from "lit";
-import { property, query, queryAll, state } from "lit/decorators.js";
-import { autoUpdate } from "@floating-ui/dom";
-import { BaseTooltip, updateTooltip } from "../internal-components/base-tooltip";
-import { observeQuerySelector } from "../lib/query-selector";
+import { type FlowsProperties, type Placement, type TourComponentProps } from "@flows/shared";
+import { LitElement, type TemplateResult, html } from "lit";
+import { property } from "lit/decorators.js";
+import { defineBaseTooltip } from "../internal-components/base-tooltip";
 import { Button } from "../internal-components/button";
 
 export type TooltipProps = TourComponentProps<{
@@ -17,6 +15,7 @@ export type TooltipProps = TourComponentProps<{
   hideOverlay?: boolean;
 }>;
 
+defineBaseTooltip();
 export class Tooltip extends LitElement implements TooltipProps {
   @property({ type: String })
   title: string;
@@ -53,64 +52,11 @@ export class Tooltip extends LitElement implements TooltipProps {
 
   __flows: FlowsProperties;
 
-  @query(".flows_tooltip_tooltip")
-  tooltip: HTMLElement;
-
-  @queryAll(".flows_tooltip_arrow")
-  arrows: [HTMLElement, HTMLElement];
-
-  @state()
-  private _reference: Element | null = null;
-
-  autoUpdateCleanup: (() => void) | null = null;
-  observerCleanup: (() => void) | null = null;
-
-  connectedCallback(): void {
-    super.connectedCallback();
-
-    this.observerCleanup = observeQuerySelector(this.targetElement, (el) => {
-      this._reference = el;
-    });
-  }
-  disconnectedCallback(): void {
-    super.disconnectedCallback();
-
-    this.autoUpdateCleanup?.();
-    this.observerCleanup?.();
-  }
-
-  protected firstUpdated(_changedProperties: PropertyValues): void {
-    const reference = this._reference;
-    if (!reference) return;
-
-    const tooltip = this.tooltip;
-
-    this.autoUpdateCleanup = autoUpdate(
-      reference,
-      tooltip,
-      () =>
-        void updateTooltip({
-          reference,
-          tooltip,
-          arrowEls: this.arrows,
-          overlay: null,
-          placement: this.placement,
-        }),
-      { animationFrame: true },
-    );
-  }
-
   createRenderRoot(): this {
     return this;
   }
 
-  render(): unknown {
-    const reference = this._reference;
-    if (!reference) {
-      log.error("Cannot render Tooltip without target element");
-      return null;
-    }
-
+  render(): TemplateResult {
     let previousButton: TemplateResult | null = null;
     if (this.previous && this.previousText) {
       previousButton = Button({
@@ -137,13 +83,14 @@ export class Tooltip extends LitElement implements TooltipProps {
           ]
         : [];
 
-    return BaseTooltip({
-      title: this.title,
-      body: this.body,
-      placement: this.placement,
-      overlay: !this.hideOverlay,
-      close: this.showCloseButton ? this.cancel : undefined,
-      buttons,
-    });
+    return html`<flows-base-tooltip
+      .title=${this.title}
+      .body=${this.body}
+      .targetElement=${this.targetElement}
+      .placement=${this.placement}
+      .overlay=${!this.hideOverlay}
+      .close=${this.showCloseButton ? this.cancel : undefined}
+      .buttons=${buttons}
+    ></flows-base-tooltip>`;
   }
 }

@@ -1,4 +1,4 @@
-import { type Placement } from "@flows/shared";
+import { log, type Placement } from "@flows/shared";
 import { autoUpdate, computePosition, flip, offset, shift } from "@floating-ui/dom";
 import { html, LitElement, type PropertyValues, type TemplateResult } from "lit";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
@@ -38,14 +38,19 @@ class BaseHint extends LitElement {
   @state()
   private accessor _tooltipClosing = false;
 
+  private _closeTimeout: number | null = null;
   handleClick(): void {
-    if (!this._open) {
+    if (!this._open || this._tooltipClosing) {
       this._open = true;
+      this._tooltipClosing = false;
+      window.clearTimeout(this._closeTimeout ?? undefined);
+      this._closeTimeout = null;
     } else {
       this._tooltipClosing = true;
-      setTimeout(() => {
+      this._closeTimeout = window.setTimeout(() => {
         this._open = false;
         this._tooltipClosing = false;
+        this._closeTimeout = null;
       }, CLOSE_TIMEOUT);
     }
   }
@@ -82,6 +87,10 @@ class BaseHint extends LitElement {
   }
 
   protected firstUpdated(_changedProperties: PropertyValues): void {
+    if (!this.targetElement) {
+      log.error("Cannot render Hint without target element");
+    }
+
     const reference = this._reference;
     if (!reference) return;
 
@@ -121,7 +130,9 @@ class BaseHint extends LitElement {
     return this;
   }
 
-  render(): TemplateResult {
+  render(): TemplateResult | null {
+    if (!this._reference) return null;
+
     return html`
       <button
         aria-label="Open hint"
