@@ -1,145 +1,112 @@
 import {
   init,
-  addFloatingBlocksChangeListener,
   resetAllWorkflowsProgress,
   resetWorkflowProgress,
   Action as IAction,
+  addFloatingBlocksChangeListener,
 } from "@flows/js";
-import { Component, render, updateSlotComponents } from "@flows/js-components";
+import { setupJsComponents } from "@flows/js-components";
 import * as _components from "@flows/js-components/components";
 import * as _tourComponents from "@flows/js-components/tour-components";
 import "@flows/js-components/index.css";
 import { startWorkflow, StateMemory as IStateMemory } from "@flows/js";
 import { LanguageOption } from "@flows/shared";
+import { css, LitElement } from "lit";
+import { property } from "lit/decorators.js";
+import { FlowsProperties } from "@flows/js";
+import { html, unsafeStatic } from "lit/static-html.js";
 
 const apiUrl = new URLSearchParams(window.location.search).get("apiUrl") ?? undefined;
 const noCurrentBlocks =
   new URLSearchParams(window.location.search).get("noCurrentBlocks") === "true";
 const language = new URLSearchParams(window.location.search).get("language") as LanguageOption;
 
-const Card: Component<{ text: string }> = (props) => {
-  const card = document.createElement("div");
-  card.className = "flows-card";
-  card.style.border = "1px solid black";
-  card.style.padding = "16px";
-  card.style.borderRadius = "4px";
+class Card extends LitElement {
+  @property({ type: String })
+  text: string;
 
-  const text = document.createElement("p");
-  card.appendChild(text);
-  text.classList.add("card-text");
-  text.textContent = props.text;
+  __flows: FlowsProperties;
 
-  const keyText = document.createElement("p");
-  card.appendChild(keyText);
-  keyText.textContent = `key: ${props.__flows.key}`;
+  static styles = css`
+    .flows-card {
+      border: 1px solid black;
+      padding: 16px;
+      border-radius: 4px;
+    }
+  `;
 
-  return {
-    cleanup: () => {},
-    element: card,
-  };
-};
+  render() {
+    return html`<div class="flows-card">
+      <p class="card-text">${this.text}</p>
+      <p>key: ${this.__flows.key}</p>
+    </div>`;
+  }
+}
 
-const BlockTrigger: Component<{
+class BlockTrigger extends LitElement {
+  @property({ type: String })
   title: string;
-  trigger: () => void;
+
+  @property({ type: Array })
   items: { text: string; trigger?: () => void }[];
-}> = (props) => {
-  const card = document.createElement("div");
-  card.className = "flows-card";
 
-  const title = document.createElement("p");
-  card.appendChild(title);
-  title.textContent = props.title;
+  @property({ type: Function })
+  trigger: () => void;
 
-  const triggerButton = document.createElement("button");
-  card.appendChild(triggerButton);
-  triggerButton.textContent = "Trigger";
-  triggerButton.addEventListener("click", props.trigger);
+  render() {
+    return html`<div class="flows-card">
+      <p>${this.title}</p>
+      <button @click=${this.trigger}>Trigger</button>
+      <ul>
+        ${this.items.map(
+          (item) =>
+            html`<li>
+              <button @click=${item.trigger}>${item.text}</button>
+            </li>`,
+        )}
+      </ul>
+    </div>`;
+  }
+}
 
-  const list = document.createElement("ul");
-  card.appendChild(list);
-  let listButtons: HTMLButtonElement[] = [];
-  props.items.forEach((item) => {
-    const listItem = document.createElement("li");
-    list.appendChild(listItem);
+class StateMemory extends LitElement {
+  @property({ type: String })
+  title: string;
 
-    const button = document.createElement("button");
-    listButtons.push(button);
-    listItem.appendChild(button);
-    button.textContent = item.text;
-    if (item.trigger) button.addEventListener("click", item.trigger);
-  });
+  @property({ type: Object })
+  checked: IStateMemory;
 
-  return {
-    cleanup: () => {
-      triggerButton.removeEventListener("click", props.trigger);
-      listButtons.forEach((button, i) => {
-        const trigger = props.items[i]?.trigger;
-        if (trigger) button.removeEventListener("click", trigger);
-      });
-    },
-    element: card,
-  };
-};
+  render() {
+    return html`<div class="flows-card">
+      <p>${this.title}</p>
+      <p>checked: ${this.checked.value.toString()}</p>
+      <button @click=${() => this.checked.setValue(true)}>true</button>
+      <button @click=${() => this.checked.setValue(false)}>false</button>
+    </div>`;
+  }
+}
 
-const StateMemory: Component<{ title: string; checked: IStateMemory }> = (props) => {
-  const card = document.createElement("div");
-  card.className = "flows-card";
+class Action extends LitElement {
+  @property({ type: String })
+  title: string;
 
-  const title = document.createElement("p");
-  card.appendChild(title);
-  title.textContent = props.title;
+  @property({ type: Object })
+  action: IAction;
 
-  const checkedText = document.createElement("p");
-  card.appendChild(checkedText);
-  checkedText.textContent = `checked: ${props.checked.value}`;
-
-  const handleTrue = () => props.checked.setValue(true);
-  const trueButton = document.createElement("button");
-  card.appendChild(trueButton);
-  trueButton.textContent = "true";
-  trueButton.addEventListener("click", handleTrue);
-
-  const handleFalse = () => props.checked.setValue(false);
-  const falseButton = document.createElement("button");
-  card.appendChild(falseButton);
-  falseButton.textContent = "false";
-  falseButton.addEventListener("click", handleFalse);
-
-  return {
-    cleanup: () => {
-      trueButton.removeEventListener("click", handleTrue);
-      falseButton.removeEventListener("click", handleFalse);
-    },
-    element: card,
-  };
-};
-
-const Action: Component<{ title: string; action: IAction }> = (props) => {
-  const card = document.createElement("div");
-  card.className = "flows-card";
-
-  const title = document.createElement("p");
-  card.appendChild(title);
-  title.textContent = props.title;
-
-  const ActionEl = props.action.url ? "a" : "button";
-  const actionElement = document.createElement(ActionEl);
-  actionElement.textContent = props.action.label;
-  if (props.action.url) (actionElement as HTMLAnchorElement).href = props.action.url;
-  if (props.action.openInNew) (actionElement as HTMLAnchorElement).target = "_blank";
-  if (props.action.callAction) actionElement.addEventListener("click", props.action.callAction);
-
-  card.appendChild(actionElement);
-
-  return {
-    cleanup: () => {
-      if (props.action.callAction)
-        actionElement.removeEventListener("click", props.action.callAction);
-    },
-    element: card,
-  };
-};
+  render() {
+    const ActionEl = this.action.url ? "a" : "button";
+    return html`<div class="flows-card">
+      <p>${this.title}</p>
+      <${unsafeStatic(ActionEl)}
+        href=${this.action.url}
+        target=${this.action.openInNew ? "_blank" : undefined}
+        @click=${this.action.callAction}
+      >
+        ${this.action.label}
+      </${unsafeStatic(ActionEl)}>
+    </div>`;
+  }
+}
 
 init({
   environment: "prod",
@@ -153,18 +120,24 @@ init({
   },
 });
 
-const components = { ..._components, Card, BlockTrigger, StateMemory, Action };
-const tourComponents = { ..._tourComponents, Card, Action };
+const components = {
+  ..._components,
+  Card,
+  BlockTrigger,
+  StateMemory,
+  Action,
+};
+const tourComponents = {
+  ..._tourComponents,
+  Card,
+  Action,
+};
+
+setupJsComponents({ components, tourComponents });
 
 addFloatingBlocksChangeListener((blocks) => {
-  render({ blocks, components, tourComponents });
-
   if (!noCurrentBlocks)
     document.querySelector(".current-blocks")!.textContent = JSON.stringify(blocks);
-});
-updateSlotComponents({
-  components,
-  tourComponents,
 });
 
 (document.querySelector("#resetAllWorkflowsProgress") as HTMLButtonElement).addEventListener(
