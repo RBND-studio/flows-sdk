@@ -1,3 +1,4 @@
+import { type ButtonVariant } from "@flows/shared";
 import classNames from "classnames";
 import { html, type TemplateResult } from "lit";
 
@@ -5,7 +6,7 @@ interface Props {
   className?: string;
   children?: string;
   onClick?: () => void;
-  variant: "primary" | "secondary";
+  variant: ButtonVariant;
 }
 
 export const Button = ({ className, variant, children, onClick }: Props): TemplateResult => {
