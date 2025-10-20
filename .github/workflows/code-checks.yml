@@ -12,7 +12,7 @@ jobs:
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 22
           cache: "pnpm"
       - run: pnpm install
       - run: pnpm tsc
@@ -24,7 +24,7 @@ jobs:
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 22
           cache: "pnpm"
       - run: pnpm install
       - run: pnpm test
@@ -36,7 +36,7 @@ jobs:
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 22
           cache: "pnpm"
       - run: pnpm install
       - run: pnpm lint
@@ -49,7 +49,7 @@ jobs:
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 22
           cache: "pnpm"
       - run: pnpm install
       - run: pnpm e2e playwright:install
