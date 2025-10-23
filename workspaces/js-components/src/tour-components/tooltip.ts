@@ -1,6 +1,8 @@
-import { type Placement, type TourComponentProps } from "@flows/shared";
-import { BaseTooltip } from "../internal-components/base-tooltip";
-import { type Component } from "../types";
+import { type FlowsProperties, type Placement, type TourComponentProps } from "@flows/shared";
+import { LitElement, type TemplateResult, html } from "lit";
+import { property } from "lit/decorators.js";
+import { defineBaseTooltip } from "../internal-components/base-tooltip";
+import { Button } from "../internal-components/button";
 
 export type TooltipProps = TourComponentProps<{
   title: string;
@@ -13,55 +15,82 @@ export type TooltipProps = TourComponentProps<{
   hideOverlay?: boolean;
 }>;
 
-const hiddenDiv = (): HTMLElement => {
-  const div = document.createElement("div");
-  div.setAttribute("aria-hidden", "true");
-  return div;
-};
+defineBaseTooltip();
+export class Tooltip extends LitElement implements TooltipProps {
+  @property({ type: String })
+  title: string;
 
-export const Tooltip: Component<TooltipProps> = (props) => {
-  let previousButton: HTMLButtonElement | null = null;
-  if (props.previous && props.previousText) {
-    previousButton = document.createElement("button");
-    previousButton.className = "flows_button flows_button_secondary";
-    previousButton.textContent = props.previousText;
-    previousButton.addEventListener("click", props.previous);
+  @property({ type: String })
+  body: string;
+
+  @property({ type: String })
+  continueText?: string;
+
+  @property({ type: String })
+  previousText?: string;
+
+  @property({ type: String })
+  targetElement: string;
+
+  @property({ type: Boolean })
+  showCloseButton: boolean;
+
+  @property({ type: String })
+  placement?: Placement;
+
+  @property({ type: Boolean })
+  hideOverlay: boolean;
+
+  @property({ type: Function })
+  continue: () => void;
+
+  @property({ type: Function })
+  previous?: () => void;
+
+  @property({ type: Function })
+  cancel: () => void;
+
+  __flows: FlowsProperties;
+
+  createRenderRoot(): this {
+    return this;
   }
 
-  let continueButton: HTMLButtonElement | null = null;
-  if (props.continueText) {
-    continueButton = document.createElement("button");
-    continueButton.className = "flows_button flows_button_primary";
-    continueButton.textContent = props.continueText;
-    continueButton.addEventListener("click", props.continue);
+  render(): TemplateResult {
+    let previousButton: TemplateResult | null = null;
+    if (this.previous && this.previousText) {
+      previousButton = Button({
+        variant: "secondary",
+        children: this.previousText,
+        onClick: this.previous,
+      });
+    }
+
+    let continueButton: TemplateResult | null = null;
+    if (this.continueText) {
+      continueButton = Button({
+        variant: "primary",
+        children: this.continueText,
+        onClick: this.continue,
+      });
+    }
+
+    const buttons =
+      Boolean(continueButton) || Boolean(previousButton)
+        ? [
+            previousButton ?? html`<div aria-hidden="true"></div>`,
+            continueButton ?? html`<div aria-hidden="true"></div>`,
+          ]
+        : [];
+
+    return html`<flows-base-tooltip
+      .title=${this.title}
+      .body=${this.body}
+      .targetElement=${this.targetElement}
+      .placement=${this.placement}
+      .overlay=${!this.hideOverlay}
+      .close=${this.showCloseButton ? this.cancel : undefined}
+      .buttons=${buttons}
+    ></flows-base-tooltip>`;
   }
-
-  const buttons =
-    Boolean(continueButton) || Boolean(previousButton)
-      ? [
-          //  The empty div ensures elements are aligned correctly when there is no continue button
-          previousButton ?? hiddenDiv(),
-          continueButton ?? hiddenDiv(),
-        ]
-      : [];
-
-  const result = BaseTooltip({
-    title: props.title,
-    body: props.body,
-    targetElement: props.targetElement,
-    placement: props.placement,
-    overlay: !props.hideOverlay,
-    close: props.showCloseButton ? props.cancel : undefined,
-    buttons,
-  });
-
-  return {
-    element: result.element,
-    cleanup: () => {
-      continueButton?.removeEventListener("click", props.continue);
-      if (props.previous) previousButton?.removeEventListener("click", props.previous);
-
-      result.cleanup();
-    },
-  };
-};
+}
