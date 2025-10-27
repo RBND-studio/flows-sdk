@@ -5,7 +5,8 @@
     "playwright": "playwright test",
     "playwright:install": "playwright install --with-deps",
     "vite": "vite",
-    "tsc": "tsc -p tsconfig.json"
+    "tsc": "tsc -p tsconfig.json",
+    "playwright:update-snapshots": "docker run --rm --ipc=host --mount type=bind,src=./../../,dst=/app --mount type=volume,dst=/app/node_modules --mount type=volume,dst=/app/.pnpm-store mcr.microsoft.com/playwright:v1.54.1-noble /bin/sh -c 'cd app && corepack enable && pnpm install --frozen-lockfile && pnpm e2e playwright --update-snapshots'"
   },
   "dependencies": {
     "@flows/js": "workspace:*",
