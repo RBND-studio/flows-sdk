@@ -1,20 +1,9 @@
 import { type FC } from "react";
-import { type ComponentProps, type Placement } from "@flows/shared";
+import { type ComponentProps, type TooltipProps as LibraryTooltipProps } from "@flows/shared";
 import { BaseTooltip } from "../internal-components/base-tooltip";
 import { Button } from "../internal-components/button";
 
-export type TooltipProps = ComponentProps<{
-  title: string;
-  body: string;
-  continueText?: string;
-  targetElement: string;
-  showCloseButton: boolean;
-  placement?: Placement;
-  hideOverlay?: boolean;
-
-  continue: () => void;
-  close: () => void;
-}>;
+export type TooltipProps = ComponentProps<LibraryTooltipProps>;
 
 export const Tooltip: FC<TooltipProps> = (props) => {
   const buttons = [];

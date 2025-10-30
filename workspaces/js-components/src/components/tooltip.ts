@@ -1,48 +1,71 @@
-import { type ComponentProps, type Placement } from "@flows/shared";
-import { type Component } from "../types";
-import { BaseTooltip } from "../internal-components/base-tooltip";
+import {
+  type ComponentProps,
+  type Placement,
+  type FlowsProperties,
+  type TooltipProps as LibraryTooltipProps,
+} from "@flows/shared";
+import { html, LitElement, type TemplateResult } from "lit";
+import { property } from "lit/decorators.js";
+import { defineBaseTooltip } from "../internal-components/base-tooltip";
+import { Button } from "../internal-components/button";
 
-export type TooltipProps = ComponentProps<{
+export type TooltipProps = ComponentProps<LibraryTooltipProps>;
+
+defineBaseTooltip();
+export class Tooltip extends LitElement implements TooltipProps {
+  @property({ type: String })
   title: string;
+
+  @property({ type: String })
   body: string;
+
+  @property({ type: String })
   continueText?: string;
+
+  @property({ type: String })
   targetElement: string;
+
+  @property({ type: Boolean })
   showCloseButton: boolean;
+
+  @property({ type: String })
   placement?: Placement;
-  hideOverlay?: boolean;
 
+  @property({ type: Boolean })
+  hideOverlay: boolean;
+
+  @property({ type: Function })
   continue: () => void;
+
+  @property({ type: Function })
   close: () => void;
-}>;
 
-export const Tooltip: Component<TooltipProps> = (props) => {
-  const buttons: HTMLElement[] = [];
+  __flows: FlowsProperties;
 
-  let continueButton: HTMLButtonElement | null = null;
-  if (props.continueText) {
-    continueButton = document.createElement("button");
-    buttons.push(continueButton);
-    continueButton.className = "flows_button flows_button_primary";
-    continueButton.textContent = props.continueText;
-    continueButton.addEventListener("click", props.continue);
+  createRenderRoot(): this {
+    return this;
   }
 
-  const result = BaseTooltip({
-    title: props.title,
-    body: props.body,
-    targetElement: props.targetElement,
-    placement: props.placement,
-    overlay: !props.hideOverlay,
-    close: props.showCloseButton ? props.close : undefined,
-    buttons,
-  });
+  render(): TemplateResult {
+    const buttons: TemplateResult[] = [];
+    if (this.continueText) {
+      buttons.push(
+        Button({
+          onClick: this.continue,
+          variant: "primary",
+          children: this.continueText,
+        }),
+      );
+    }
 
-  return {
-    element: result.element,
-    cleanup: () => {
-      result.cleanup();
-
-      continueButton?.removeEventListener("click", props.continue);
-    },
-  };
-};
+    return html`<flows-base-tooltip
+      .title=${this.title}
+      .body=${this.body}
+      .targetElement=${this.targetElement}
+      .placement=${this.placement}
+      .overlay=${!this.hideOverlay}
+      .close=${this.showCloseButton ? this.close : undefined}
+      .buttons=${buttons}
+    ></flows-base-tooltip>`;
+  }
+}

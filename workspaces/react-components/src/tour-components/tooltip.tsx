@@ -1,18 +1,9 @@
 import { type FC } from "react";
-import { type Placement, type TourComponentProps } from "@flows/shared";
+import { type TourTooltipProps, type TourComponentProps } from "@flows/shared";
 import { BaseTooltip } from "../internal-components/base-tooltip";
 import { Button } from "../internal-components/button";
 
-export type TooltipProps = TourComponentProps<{
-  title: string;
-  body: string;
-  continueText?: string;
-  previousText?: string;
-  showCloseButton: boolean;
-  targetElement: string;
-  placement?: Placement;
-  hideOverlay?: boolean;
-}>;
+export type TooltipProps = TourComponentProps<TourTooltipProps>;
 
 export const Tooltip: FC<TooltipProps> = (props) => {
   const previousButton = props.previous && props.previousText && (

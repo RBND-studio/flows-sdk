@@ -1,44 +1,61 @@
-import { type ComponentProps } from "@flows/shared";
+import {
+  type ComponentProps,
+  type FlowsProperties,
+  type ModalProps as LibraryModalProps,
+} from "@flows/shared";
+import { html, LitElement, type TemplateResult } from "lit";
+import { property } from "lit/decorators.js";
 import { BaseModal } from "../internal-components/base-modal";
-import { type Component } from "../types";
 
-export type ModalProps = ComponentProps<{
+export type ModalProps = ComponentProps<LibraryModalProps>;
+
+export class Modal extends LitElement implements ModalProps {
+  @property({ type: String })
   title: string;
+
+  @property({ type: String })
   body: string;
+
+  @property({ type: String })
   continueText?: string;
+
+  @property({ type: Boolean })
   showCloseButton: boolean;
+
+  @property({ type: Boolean })
   hideOverlay: boolean;
 
+  @property({ type: Function })
   continue: () => void;
+
+  @property({ type: Function })
   close: () => void;
-}>;
 
-export const Modal: Component<ModalProps> = (props) => {
-  const buttons: HTMLElement[] = [];
+  __flows: FlowsProperties;
 
-  let continueButton: HTMLButtonElement | null = null;
-  if (props.continueText) {
-    continueButton = document.createElement("button");
-    buttons.push(continueButton);
-    continueButton.className = "flows_button flows_button_primary";
-    continueButton.textContent = props.continueText;
-    continueButton.addEventListener("click", props.continue);
+  createRenderRoot(): this {
+    return this;
   }
 
-  const result = BaseModal({
-    title: props.title,
-    body: props.body,
-    overlay: !props.hideOverlay,
-    buttons,
-    close: props.showCloseButton ? props.close : undefined,
-  });
+  render(): unknown {
+    const buttons: TemplateResult[] = [];
 
-  return {
-    element: result.element,
-    cleanup: () => {
-      continueButton?.removeEventListener("click", props.continue);
+    if (this.continueText) {
+      const continueButton = html`<button
+        @click=${this.continue}
+        class="flows_button flows_button_primary"
+      >
+        ${this.continueText}
+      </button>`;
+      buttons.push(continueButton);
+    }
 
-      result.cleanup();
-    },
-  };
-};
+    return BaseModal({
+      title: this.title,
+      body: this.body,
+      overlay: !this.hideOverlay,
+      buttons,
+      close: this.showCloseButton ? this.close : undefined,
+    });
+  }
+}

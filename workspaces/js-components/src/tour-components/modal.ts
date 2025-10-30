@@ -1,52 +1,73 @@
-import { type TourComponentProps } from "@flows/shared";
-import { type Component } from "../types";
+import { type TourComponentProps, type FlowsProperties, type TourModalProps } from "@flows/shared";
+import { LitElement, type TemplateResult, html } from "lit";
+import { property } from "lit/decorators.js";
 import { BaseModal } from "../internal-components/base-modal";
 
-export type ModalProps = TourComponentProps<{
+export type ModalProps = TourComponentProps<TourModalProps>;
+
+export class Modal extends LitElement implements ModalProps {
+  @property({ type: String })
   title: string;
+
+  @property({ type: String })
   body: string;
+
+  @property({ type: String })
   continueText?: string;
+
+  @property({ type: String })
   previousText?: string;
+
+  @property({ type: Boolean })
   showCloseButton: boolean;
+
+  @property({ type: Boolean })
   hideOverlay: boolean;
-}>;
 
-export const Modal: Component<ModalProps> = (props) => {
-  const buttons: HTMLElement[] = [];
+  @property({ type: Function })
+  continue: () => void;
 
-  let previousButton: HTMLButtonElement | null = null;
-  if (props.previous && props.previousText) {
-    previousButton = document.createElement("button");
-    buttons.push(previousButton);
-    previousButton.className = "flows_button flows_button_secondary";
-    previousButton.textContent = props.previousText;
-    previousButton.addEventListener("click", props.previous);
+  @property({ type: Function })
+  previous?: () => void;
+
+  @property({ type: Function })
+  cancel: () => void;
+
+  __flows: FlowsProperties;
+
+  createRenderRoot(): this {
+    return this;
   }
 
-  let continueButton: HTMLButtonElement | null = null;
-  if (props.continueText) {
-    continueButton = document.createElement("button");
-    buttons.push(continueButton);
-    continueButton.className = "flows_button flows_button_primary";
-    continueButton.textContent = props.continueText;
-    continueButton.addEventListener("click", props.continue);
+  render(): unknown {
+    const buttons: TemplateResult[] = [];
+
+    if (this.previous && this.previousText) {
+      const previousButton = html`<button
+        class="flows_button flows_button_secondary"
+        @click=${this.previous}
+      >
+        ${this.previousText}
+      </button>`;
+      buttons.push(previousButton);
+    }
+
+    if (this.continueText) {
+      const continueButton = html`<button
+        @click=${this.continue}
+        class="flows_button flows_button_primary"
+      >
+        ${this.continueText}
+      </button>`;
+      buttons.push(continueButton);
+    }
+
+    return BaseModal({
+      body: this.body,
+      title: this.title,
+      overlay: !this.hideOverlay,
+      buttons,
+      close: this.showCloseButton ? this.cancel : undefined,
+    });
   }
-
-  const result = BaseModal({
-    title: props.title,
-    body: props.body,
-    overlay: !props.hideOverlay,
-    buttons,
-    close: props.showCloseButton ? props.cancel : undefined,
-  });
-
-  return {
-    element: result.element,
-    cleanup: () => {
-      result.cleanup();
-
-      if (props.previous) previousButton?.removeEventListener("click", props.previous);
-      continueButton?.removeEventListener("click", props.continue);
-    },
-  };
-};
+}

@@ -1,22 +1,9 @@
-import { type Placement, type ComponentProps } from "@flows/shared";
+import { type ComponentProps, type HintProps as LibraryHintProps } from "@flows/shared";
 import { type FC } from "react";
 import { BaseHint } from "../internal-components/base-hint";
 import { Button } from "../internal-components/button";
 
-export type HintProps = ComponentProps<{
-  title: string;
-  body: string;
-  continueText?: string;
-  showCloseButton: boolean;
-
-  targetElement: string;
-  placement?: Placement;
-  offsetX?: number;
-  offsetY?: number;
-
-  continue: () => void;
-  close: () => void;
-}>;
+export type HintProps = ComponentProps<LibraryHintProps>;
 
 export const Hint: FC<HintProps> = (props) => {
   const buttons = [];

@@ -1,20 +1,9 @@
-import { type Placement, type TourComponentProps } from "@flows/shared";
+import { type TourHintProps, type TourComponentProps } from "@flows/shared";
 import { type FC } from "react";
 import { BaseHint } from "../internal-components/base-hint";
 import { Button } from "../internal-components/button";
 
-export type HintProps = TourComponentProps<{
-  title: string;
-  body: string;
-  continueText?: string;
-  previousText?: string;
-  showCloseButton: boolean;
-
-  targetElement: string;
-  placement?: Placement;
-  offsetX?: number;
-  offsetY?: number;
-}>;
+export type HintProps = TourComponentProps<TourHintProps>;
 
 export const Hint: FC<HintProps> = (props) => {
   const previousButton = props.previous && props.previousText && (
