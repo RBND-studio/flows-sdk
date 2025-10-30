@@ -1,23 +1,15 @@
-import { type FlowsProperties, type ComponentProps, type Placement } from "@flows/shared";
+import {
+  type FlowsProperties,
+  type ComponentProps,
+  type Placement,
+  type HintProps as LibraryHintProps,
+} from "@flows/shared";
 import { html, LitElement, type TemplateResult } from "lit";
 import { property } from "lit/decorators.js";
 import { defineBaseHint } from "../internal-components/base-hint";
 import { Button } from "../internal-components/button";
 
-export type HintProps = ComponentProps<{
-  title: string;
-  body: string;
-  continueText?: string;
-  showCloseButton: boolean;
-
-  targetElement: string;
-  placement?: Placement;
-  offsetX?: number;
-  offsetY?: number;
-
-  continue: () => void;
-  close: () => void;
-}>;
+export type HintProps = ComponentProps<LibraryHintProps>;
 
 defineBaseHint();
 

@@ -1,19 +1,15 @@
-import { type FlowsProperties, type Placement, type TourComponentProps } from "@flows/shared";
+import {
+  type TourTooltipProps,
+  type FlowsProperties,
+  type Placement,
+  type TourComponentProps,
+} from "@flows/shared";
 import { LitElement, type TemplateResult, html } from "lit";
 import { property } from "lit/decorators.js";
 import { defineBaseTooltip } from "../internal-components/base-tooltip";
 import { Button } from "../internal-components/button";
 
-export type TooltipProps = TourComponentProps<{
-  title: string;
-  body: string;
-  continueText?: string;
-  previousText?: string;
-  showCloseButton: boolean;
-  targetElement: string;
-  placement?: Placement;
-  hideOverlay?: boolean;
-}>;
+export type TooltipProps = TourComponentProps<TourTooltipProps>;
 
 defineBaseTooltip();
 export class Tooltip extends LitElement implements TooltipProps {

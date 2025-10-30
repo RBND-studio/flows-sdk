@@ -1,16 +1,9 @@
-import { type TourComponentProps, type FlowsProperties } from "@flows/shared";
+import { type TourComponentProps, type FlowsProperties, type TourModalProps } from "@flows/shared";
 import { LitElement, type TemplateResult, html } from "lit";
 import { property } from "lit/decorators.js";
 import { BaseModal } from "../internal-components/base-modal";
 
-export type ModalProps = TourComponentProps<{
-  title: string;
-  body: string;
-  continueText?: string;
-  previousText?: string;
-  showCloseButton: boolean;
-  hideOverlay: boolean;
-}>;
+export type ModalProps = TourComponentProps<TourModalProps>;
 
 export class Modal extends LitElement implements ModalProps {
   @property({ type: String })

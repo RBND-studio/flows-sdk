@@ -1,21 +1,15 @@
-import { type ComponentProps, type Placement, type FlowsProperties } from "@flows/shared";
+import {
+  type ComponentProps,
+  type Placement,
+  type FlowsProperties,
+  type TooltipProps as LibraryTooltipProps,
+} from "@flows/shared";
 import { html, LitElement, type TemplateResult } from "lit";
 import { property } from "lit/decorators.js";
 import { defineBaseTooltip } from "../internal-components/base-tooltip";
 import { Button } from "../internal-components/button";
 
-export type TooltipProps = ComponentProps<{
-  title: string;
-  body: string;
-  continueText?: string;
-  targetElement: string;
-  showCloseButton: boolean;
-  placement?: Placement;
-  hideOverlay: boolean;
-
-  continue: () => void;
-  close: () => void;
-}>;
+export type TooltipProps = ComponentProps<LibraryTooltipProps>;
 
 defineBaseTooltip();
 export class Tooltip extends LitElement implements TooltipProps {

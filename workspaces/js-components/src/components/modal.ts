@@ -1,18 +1,13 @@
-import { type ComponentProps, type FlowsProperties } from "@flows/shared";
+import {
+  type ComponentProps,
+  type FlowsProperties,
+  type ModalProps as LibraryModalProps,
+} from "@flows/shared";
 import { html, LitElement, type TemplateResult } from "lit";
 import { property } from "lit/decorators.js";
 import { BaseModal } from "../internal-components/base-modal";
 
-export type ModalProps = ComponentProps<{
-  title: string;
-  body: string;
-  continueText?: string;
-  showCloseButton: boolean;
-  hideOverlay: boolean;
-
-  continue: () => void;
-  close: () => void;
-}>;
+export type ModalProps = ComponentProps<LibraryModalProps>;
 
 export class Modal extends LitElement implements ModalProps {
   @property({ type: String })

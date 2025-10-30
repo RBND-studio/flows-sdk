@@ -1,16 +1,9 @@
 import { type FC } from "react";
-import { type TourComponentProps } from "@flows/shared";
+import { type TourModalProps, type TourComponentProps } from "@flows/shared";
 import { BaseModal } from "../internal-components/base-modal";
 import { Button } from "../internal-components/button";
 
-export type ModalProps = TourComponentProps<{
-  title: string;
-  body: string;
-  continueText?: string;
-  previousText?: string;
-  showCloseButton: boolean;
-  hideOverlay: boolean;
-}>;
+export type ModalProps = TourComponentProps<TourModalProps>;
 
 export const Modal: FC<ModalProps> = (props) => {
   const buttons = [];

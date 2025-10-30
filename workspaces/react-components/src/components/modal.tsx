@@ -1,18 +1,9 @@
 import { type FC } from "react";
-import { type ComponentProps } from "@flows/shared";
+import { type ComponentProps, type ModalProps as LibraryModalProps } from "@flows/shared";
 import { Button } from "../internal-components/button";
 import { BaseModal } from "../internal-components/base-modal";
 
-export type ModalProps = ComponentProps<{
-  title: string;
-  body: string;
-  continueText?: string;
-  showCloseButton: boolean;
-  hideOverlay: boolean;
-
-  continue: () => void;
-  close: () => void;
-}>;
+export type ModalProps = ComponentProps<LibraryModalProps>;
 
 export const Modal: FC<ModalProps> = (props) => {
   const buttons = [];

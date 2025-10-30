@@ -1,21 +1,15 @@
-import { type FlowsProperties, type Placement, type TourComponentProps } from "@flows/shared";
+import {
+  type TourHintProps,
+  type FlowsProperties,
+  type Placement,
+  type TourComponentProps,
+} from "@flows/shared";
 import { html, LitElement, type TemplateResult } from "lit";
 import { property } from "lit/decorators.js";
 import { defineBaseHint } from "../internal-components/base-hint";
 import { Button } from "../internal-components/button";
 
-export type HintProps = TourComponentProps<{
-  title: string;
-  body: string;
-  continueText?: string;
-  previousText?: string;
-  showCloseButton: boolean;
-
-  targetElement: string;
-  placement?: Placement;
-  offsetX?: number;
-  offsetY?: number;
-}>;
+export type HintProps = TourComponentProps<TourHintProps>;
 
 defineBaseHint();
 
