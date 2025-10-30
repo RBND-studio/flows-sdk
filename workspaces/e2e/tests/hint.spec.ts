@@ -94,6 +94,9 @@ const run = (packageName: string) => {
     `);
 
     await page.getByText("Continue", { exact: true }).click();
+    await expect(page.locator(".flows_hint_hotspot")).toBeVisible();
+    await expect(page.locator(".flows_hint_tooltip")).toBeHidden();
+    await page.locator(".flows_hint_hotspot").click();
 
     await expect(page.locator(".flows_hint_tooltip")).toMatchAriaSnapshot(`
       - paragraph: Step 2
