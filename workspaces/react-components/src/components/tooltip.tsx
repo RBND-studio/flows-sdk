@@ -1,18 +1,18 @@
 import { type FC } from "react";
 import { type ComponentProps, type TooltipProps as LibraryTooltipProps } from "@flows/shared";
 import { BaseTooltip } from "../internal-components/base-tooltip";
-import { Button } from "../internal-components/button";
+import { ActionButton } from "../internal-components/action-button";
 
 export type TooltipProps = ComponentProps<LibraryTooltipProps>;
 
 export const Tooltip: FC<TooltipProps> = (props) => {
   const buttons = [];
-  if (props.continueText)
+  if (props.secondaryButton)
     buttons.push(
-      <Button key="continue" variant="primary" onClick={props.continue}>
-        {props.continueText}
-      </Button>,
+      <ActionButton key="secondary" action={props.secondaryButton} variant="secondary" />,
     );
+  if (props.primaryButton)
+    buttons.push(<ActionButton key="primary" action={props.primaryButton} variant="primary" />);
 
   return (
     <BaseTooltip
@@ -21,7 +21,7 @@ export const Tooltip: FC<TooltipProps> = (props) => {
       targetElement={props.targetElement}
       placement={props.placement}
       overlay={!props.hideOverlay}
-      onClose={props.showCloseButton ? props.close : undefined}
+      onClose={props.dismissible ? props.close : undefined}
       buttons={buttons.length ? buttons : undefined}
     />
   );

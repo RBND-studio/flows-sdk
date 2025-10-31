@@ -11,7 +11,6 @@
   position: fixed;
   inset: 0;
   display: grid;
-  place-items: center;
   padding: var(--flows-modal-padding);
   overflow: auto;
   pointer-events: none;
@@ -33,12 +32,48 @@
   animation: flows-scaleIn 150ms ease-out;
 }
 
+.flows_modal_center {
+  place-self: center;
+}
+.flows_modal_top {
+  place-self: start center;
+}
+.flows_modal_bottom {
+  place-self: end center;
+}
+.flows_modal_left {
+  place-self: center start;
+}
+.flows_modal_right {
+  place-self: center end;
+}
+.flows_modal_top-left {
+  place-self: start start;
+}
+.flows_modal_top-right {
+  place-self: start end;
+}
+.flows_modal_bottom-left {
+  place-self: end start;
+}
+.flows_modal_bottom-right {
+  place-self: end end;
+}
+
 .flows_modal_footer {
   margin-top: var(--flows-size-medium);
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
   gap: var(--flows-size-small);
+}
+.flows_modal_footer_left {
+  justify-content: flex-start;
+}
+.flows_modal_footer_center {
+  justify-content: center;
+}
+.flows_modal_footer_right {
+  justify-content: flex-end;
 }
 
 .flows_modal_close {

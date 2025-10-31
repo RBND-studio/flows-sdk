@@ -1,5 +1,5 @@
 import { type ButtonVariant, type Action } from "@flows/shared";
-import { type FC, useCallback } from "react";
+import { useCallback, type FC } from "react";
 import { Button } from "./button";
 
 interface Props {

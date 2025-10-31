@@ -1,3 +1,5 @@
+import { type Action } from "./components";
+
 export type Placement =
   | "top"
   | "right"
@@ -12,16 +14,30 @@ export type Placement =
   | "left-start"
   | "left-end";
 
+export type ModalPosition =
+  | "center"
+  | "top"
+  | "bottom"
+  | "left"
+  | "right"
+  | "top-left"
+  | "top-right"
+  | "bottom-left"
+  | "bottom-right";
+export type ModalButtonAlignment = "left" | "center" | "right";
+
 export type ButtonVariant = "primary" | "secondary";
 
 // Tooltip
 export interface TooltipProps {
   title: string;
   body: string;
-  continueText?: string;
+  primaryButton?: Action;
+  secondaryButton?: Action;
+
   targetElement: string;
-  showCloseButton: boolean;
   placement?: Placement;
+  dismissible: boolean;
   hideOverlay: boolean;
 
   continue: () => void;
@@ -31,12 +47,13 @@ export interface TooltipProps {
 export interface TourTooltipProps {
   title: string;
   body: string;
-  continueText?: string;
-  previousText?: string;
-  showCloseButton: boolean;
+  primaryButton?: Action;
+  secondaryButton?: Action;
+
   targetElement: string;
   placement?: Placement;
-  hideOverlay?: boolean;
+  dismissible: boolean;
+  hideOverlay: boolean;
 }
 
 // Modal
@@ -44,9 +61,13 @@ export interface TourTooltipProps {
 export interface ModalProps {
   title: string;
   body: string;
-  continueText?: string;
-  showCloseButton: boolean;
+  primaryButton?: Action;
+  secondaryButton?: Action;
+  buttonAlignment?: ModalButtonAlignment;
+
+  dismissible: boolean;
   hideOverlay: boolean;
+  position?: ModalPosition;
 
   continue: () => void;
   close: () => void;
@@ -55,10 +76,13 @@ export interface ModalProps {
 export interface TourModalProps {
   title: string;
   body: string;
-  continueText?: string;
-  previousText?: string;
-  showCloseButton: boolean;
+  primaryButton?: Action;
+  secondaryButton?: Action;
+  buttonAlignment?: ModalButtonAlignment;
+
+  dismissible: boolean;
   hideOverlay: boolean;
+  position?: ModalPosition;
 }
 
 // Hint
@@ -66,13 +90,14 @@ export interface TourModalProps {
 export interface HintProps {
   title: string;
   body: string;
-  continueText?: string;
-  showCloseButton: boolean;
+  primaryButton?: Action;
+  secondaryButton?: Action;
 
   targetElement: string;
   placement?: Placement;
   offsetX?: number;
   offsetY?: number;
+  dismissible: boolean;
 
   continue: () => void;
   close: () => void;
@@ -81,12 +106,12 @@ export interface HintProps {
 export interface TourHintProps {
   title: string;
   body: string;
-  continueText?: string;
-  previousText?: string;
-  showCloseButton: boolean;
+  primaryButton?: Action;
+  secondaryButton?: Action;
 
   targetElement: string;
   placement?: Placement;
   offsetX?: number;
   offsetY?: number;
+  dismissible: boolean;
 }

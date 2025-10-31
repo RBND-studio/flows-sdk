@@ -1,27 +1,22 @@
 import { type TourHintProps, type TourComponentProps } from "@flows/shared";
 import { type FC } from "react";
 import { BaseHint } from "../internal-components/base-hint";
-import { Button } from "../internal-components/button";
+import { ActionButton } from "../internal-components/action-button";
 
 export type HintProps = TourComponentProps<TourHintProps>;
 
 export const Hint: FC<HintProps> = (props) => {
-  const previousButton = props.previous && props.previousText && (
-    <Button variant="secondary" onClick={props.previous}>
-      {props.previousText}
-    </Button>
-  );
-  const continueButton = props.continueText && (
-    <Button variant="primary" onClick={props.continue}>
-      {props.continueText}
-    </Button>
-  );
+  const primaryBtn = props.primaryButton ? (
+    <ActionButton action={props.primaryButton} variant="primary" />
+  ) : null;
+  const secondaryBtn = props.secondaryButton ? (
+    <ActionButton action={props.secondaryButton} variant="secondary" />
+  ) : null;
   const buttons =
-    Boolean(continueButton) || Boolean(previousButton) ? (
+    (primaryBtn ?? secondaryBtn) ? (
       <>
-        {/* The empty div ensures elements are aligned correctly when there is no continue button */}
-        {previousButton ?? <div aria-hidden />}
-        {continueButton ?? <div aria-hidden />}
+        {primaryBtn ?? <div aria-hidden />}
+        {secondaryBtn ?? <div aria-hidden />}
       </>
     ) : null;
 
@@ -33,7 +28,7 @@ export const Hint: FC<HintProps> = (props) => {
       offsetX={props.offsetX}
       offsetY={props.offsetY}
       placement={props.placement}
-      onClose={props.showCloseButton ? props.cancel : undefined}
+      onClose={props.dismissible ? props.cancel : undefined}
       buttons={buttons}
       // Needed to avoid reusing html elements between tour steps. Otherwise the tooltip exit animation is triggered.
       key={props.__flows.id}

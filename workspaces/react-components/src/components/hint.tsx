@@ -1,18 +1,18 @@
 import { type ComponentProps, type HintProps as LibraryHintProps } from "@flows/shared";
 import { type FC } from "react";
 import { BaseHint } from "../internal-components/base-hint";
-import { Button } from "../internal-components/button";
+import { ActionButton } from "../internal-components/action-button";
 
 export type HintProps = ComponentProps<LibraryHintProps>;
 
 export const Hint: FC<HintProps> = (props) => {
   const buttons = [];
-  if (props.continueText)
+  if (props.secondaryButton)
     buttons.push(
-      <Button key="continue" variant="primary" onClick={props.continue}>
-        {props.continueText}
-      </Button>,
+      <ActionButton key="secondary" action={props.secondaryButton} variant="secondary" />,
     );
+  if (props.primaryButton)
+    buttons.push(<ActionButton key="primary" action={props.primaryButton} variant="primary" />);
 
   return (
     <BaseHint
@@ -22,7 +22,7 @@ export const Hint: FC<HintProps> = (props) => {
       offsetX={props.offsetX}
       offsetY={props.offsetY}
       placement={props.placement}
-      onClose={props.showCloseButton ? props.close : undefined}
+      onClose={props.dismissible ? props.close : undefined}
       buttons={buttons.length ? buttons : undefined}
     />
   );
