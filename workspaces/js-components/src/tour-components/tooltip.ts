@@ -3,11 +3,12 @@ import {
   type FlowsProperties,
   type Placement,
   type TourComponentProps,
+  type Action,
 } from "@flows/shared";
 import { LitElement, type TemplateResult, html } from "lit";
 import { property } from "lit/decorators.js";
 import { defineBaseTooltip } from "../internal-components/base-tooltip";
-import { Button } from "../internal-components/button";
+import { ActionButton } from "../internal-components/action-button";
 
 export type TooltipProps = TourComponentProps<TourTooltipProps>;
 
@@ -19,17 +20,17 @@ export class Tooltip extends LitElement implements TooltipProps {
   @property({ type: String })
   body: string;
 
-  @property({ type: String })
-  continueText?: string;
+  @property({ type: Object })
+  primaryButton?: Action;
 
-  @property({ type: String })
-  previousText?: string;
+  @property({ type: Object })
+  secondaryButton?: Action;
 
   @property({ type: String })
   targetElement: string;
 
   @property({ type: Boolean })
-  showCloseButton: boolean;
+  dismissible: boolean;
 
   @property({ type: String })
   placement?: Placement;
@@ -53,29 +54,18 @@ export class Tooltip extends LitElement implements TooltipProps {
   }
 
   render(): TemplateResult {
-    let previousButton: TemplateResult | null = null;
-    if (this.previous && this.previousText) {
-      previousButton = Button({
-        variant: "secondary",
-        children: this.previousText,
-        onClick: this.previous,
-      });
-    }
-
-    let continueButton: TemplateResult | null = null;
-    if (this.continueText) {
-      continueButton = Button({
-        variant: "primary",
-        children: this.continueText,
-        onClick: this.continue,
-      });
-    }
+    const primaryBtn = this.primaryButton
+      ? ActionButton({ action: this.primaryButton, variant: "primary" })
+      : null;
+    const secondaryBtn = this.secondaryButton
+      ? ActionButton({ action: this.secondaryButton, variant: "secondary" })
+      : null;
 
     const buttons =
-      Boolean(continueButton) || Boolean(previousButton)
+      Boolean(primaryBtn) || Boolean(secondaryBtn)
         ? [
-            previousButton ?? html`<div aria-hidden="true"></div>`,
-            continueButton ?? html`<div aria-hidden="true"></div>`,
+            primaryBtn ?? html`<div aria-hidden="true"></div>`,
+            secondaryBtn ?? html`<div aria-hidden="true"></div>`,
           ]
         : [];
 
@@ -85,7 +75,7 @@ export class Tooltip extends LitElement implements TooltipProps {
       .targetElement=${this.targetElement}
       .placement=${this.placement}
       .overlay=${!this.hideOverlay}
-      .close=${this.showCloseButton ? this.cancel : undefined}
+      .close=${this.dismissible ? this.cancel : undefined}
       .buttons=${buttons}
     ></flows-base-tooltip>`;
   }

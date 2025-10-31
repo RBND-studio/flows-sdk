@@ -3,11 +3,12 @@ import {
   type ComponentProps,
   type Placement,
   type HintProps as LibraryHintProps,
+  type Action,
 } from "@flows/shared";
 import { html, LitElement, type TemplateResult } from "lit";
 import { property } from "lit/decorators.js";
 import { defineBaseHint } from "../internal-components/base-hint";
-import { Button } from "../internal-components/button";
+import { ActionButton } from "../internal-components/action-button";
 
 export type HintProps = ComponentProps<LibraryHintProps>;
 
@@ -20,11 +21,14 @@ export class Hint extends LitElement implements HintProps {
   @property({ type: String })
   body: string;
 
-  @property({ type: String })
-  continueText?: string;
+  @property({ type: Object })
+  primaryButton?: Action;
+
+  @property({ type: Object })
+  secondaryButton?: Action;
 
   @property({ type: Boolean })
-  showCloseButton: boolean;
+  dismissible: boolean;
 
   @property({ type: String })
   targetElement: string;
@@ -51,11 +55,11 @@ export class Hint extends LitElement implements HintProps {
   }
 
   render(): TemplateResult {
-    const buttons: TemplateResult[] = [];
-    if (this.continueText)
-      buttons.push(
-        Button({ variant: "primary", onClick: this.continue, children: this.continueText }),
-      );
+    const buttons = [];
+    if (this.secondaryButton)
+      buttons.push(ActionButton({ action: this.secondaryButton, variant: "secondary" }));
+    if (this.primaryButton)
+      buttons.push(ActionButton({ action: this.primaryButton, variant: "primary" }));
 
     return html`<flows-base-hint
       .title=${this.title}
@@ -64,7 +68,7 @@ export class Hint extends LitElement implements HintProps {
       .placement=${this.placement}
       .offsetX=${this.offsetX}
       .offsetY=${this.offsetY}
-      .onClose=${this.showCloseButton ? this.close : undefined}
+      .onClose=${this.dismissible ? this.close : undefined}
       .buttons=${buttons}
     ></flows-base-hint>`;
   }

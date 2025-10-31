@@ -13,7 +13,7 @@ export const Hint: FC<HintProps> = (props) => {
     <ActionButton action={props.secondaryButton} variant="secondary" />
   ) : null;
   const buttons =
-    (primaryBtn ?? secondaryBtn) ? (
+    Boolean(primaryBtn) || Boolean(secondaryBtn) ? (
       <>
         {primaryBtn ?? <div aria-hidden />}
         {secondaryBtn ?? <div aria-hidden />}

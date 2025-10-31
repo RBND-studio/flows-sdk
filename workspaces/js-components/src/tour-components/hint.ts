@@ -3,12 +3,13 @@ import {
   type FlowsProperties,
   type Placement,
   type TourComponentProps,
+  type Action,
 } from "@flows/shared";
-import { html, LitElement, type TemplateResult } from "lit";
+import { html, LitElement } from "lit";
 import { property } from "lit/decorators.js";
 import { keyed } from "lit/directives/keyed.js";
 import { defineBaseHint } from "../internal-components/base-hint";
-import { Button } from "../internal-components/button";
+import { ActionButton } from "../internal-components/action-button";
 
 export type HintProps = TourComponentProps<TourHintProps>;
 
@@ -21,14 +22,14 @@ export class Hint extends LitElement implements HintProps {
   @property({ type: String })
   body: string;
 
-  @property({ type: String })
-  continueText?: string;
+  @property({ type: Object })
+  primaryButton?: Action;
 
-  @property({ type: String })
-  previousText?: string;
+  @property({ type: Object })
+  secondaryButton?: Action;
 
   @property({ type: Boolean })
-  showCloseButton: boolean;
+  dismissible: boolean;
 
   @property({ type: String })
   targetElement: string;
@@ -58,29 +59,18 @@ export class Hint extends LitElement implements HintProps {
   }
 
   render(): unknown {
-    let previousButton: TemplateResult | null = null;
-    if (this.previous && this.previousText) {
-      previousButton = Button({
-        variant: "secondary",
-        children: this.previousText,
-        onClick: this.previous,
-      });
-    }
-
-    let continueButton: TemplateResult | null = null;
-    if (this.continueText) {
-      continueButton = Button({
-        variant: "primary",
-        children: this.continueText,
-        onClick: this.continue,
-      });
-    }
+    const primaryBtn = this.primaryButton
+      ? ActionButton({ action: this.primaryButton, variant: "primary" })
+      : null;
+    const secondaryBtn = this.secondaryButton
+      ? ActionButton({ action: this.secondaryButton, variant: "secondary" })
+      : null;
 
     const buttons =
-      Boolean(continueButton) || Boolean(previousButton)
+      Boolean(primaryBtn) || Boolean(secondaryBtn)
         ? [
-            previousButton ?? html`<div aria-hidden="true"></div>`,
-            continueButton ?? html`<div aria-hidden="true"></div>`,
+            primaryBtn ?? html`<div aria-hidden="true"></div>`,
+            secondaryBtn ?? html`<div aria-hidden="true"></div>`,
           ]
         : [];
 
@@ -94,7 +84,7 @@ export class Hint extends LitElement implements HintProps {
         .placement=${this.placement}
         .offsetX=${this.offsetX}
         .offsetY=${this.offsetY}
-        .onClose=${this.showCloseButton ? this.cancel : undefined}
+        .onClose=${this.dismissible ? this.cancel : undefined}
         .buttons=${buttons}
       ></flows-base-hint>`,
     );
