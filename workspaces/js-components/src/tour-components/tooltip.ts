@@ -64,8 +64,8 @@ export class Tooltip extends LitElement implements TooltipProps {
     const buttons =
       Boolean(primaryBtn) || Boolean(secondaryBtn)
         ? [
-            primaryBtn ?? html`<div aria-hidden="true"></div>`,
             secondaryBtn ?? html`<div aria-hidden="true"></div>`,
+            primaryBtn ?? html`<div aria-hidden="true"></div>`,
           ]
         : [];
 

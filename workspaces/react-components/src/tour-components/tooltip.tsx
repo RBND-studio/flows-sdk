@@ -15,8 +15,8 @@ export const Tooltip: FC<TooltipProps> = (props) => {
   const buttons =
     Boolean(primaryBtn) || Boolean(secondaryBtn) ? (
       <>
-        {primaryBtn ?? <div aria-hidden />}
         {secondaryBtn ?? <div aria-hidden />}
+        {primaryBtn ?? <div aria-hidden />}
       </>
     ) : null;
 

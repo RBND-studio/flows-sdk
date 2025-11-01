@@ -34,11 +34,21 @@ const getModalStep = ({
   data: {
     title,
     body: "",
-    continueText: "Continue",
-    previousText: "Previous",
-    showCloseButton: false,
+    dismissible: false,
     hideOverlay: true,
   },
+  propertyMeta: [
+    {
+      type: "action",
+      key: "primaryButton",
+      value: { label: "Continue", exitNode: "continue" },
+    },
+    {
+      type: "action",
+      key: "secondaryButton",
+      value: { label: "Previous", exitNode: "previous" },
+    },
+  ],
   tourWait: wait,
   slottable: false,
 });
