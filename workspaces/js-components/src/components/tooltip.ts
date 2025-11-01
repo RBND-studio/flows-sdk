@@ -3,11 +3,12 @@ import {
   type Placement,
   type FlowsProperties,
   type TooltipProps as LibraryTooltipProps,
+  type Action,
 } from "@flows/shared";
 import { html, LitElement, type TemplateResult } from "lit";
 import { property } from "lit/decorators.js";
 import { defineBaseTooltip } from "../internal-components/base-tooltip";
-import { Button } from "../internal-components/button";
+import { ActionButton } from "../internal-components/action-button";
 
 export type TooltipProps = ComponentProps<LibraryTooltipProps>;
 
@@ -19,14 +20,17 @@ export class Tooltip extends LitElement implements TooltipProps {
   @property({ type: String })
   body: string;
 
-  @property({ type: String })
-  continueText?: string;
+  @property({ type: Object })
+  primaryButton?: Action;
+
+  @property({ type: Object })
+  secondaryButton?: Action;
 
   @property({ type: String })
   targetElement: string;
 
   @property({ type: Boolean })
-  showCloseButton: boolean;
+  dismissible: boolean;
 
   @property({ type: String })
   placement?: Placement;
@@ -47,16 +51,11 @@ export class Tooltip extends LitElement implements TooltipProps {
   }
 
   render(): TemplateResult {
-    const buttons: TemplateResult[] = [];
-    if (this.continueText) {
-      buttons.push(
-        Button({
-          onClick: this.continue,
-          variant: "primary",
-          children: this.continueText,
-        }),
-      );
-    }
+    const buttons = [];
+    if (this.secondaryButton)
+      buttons.push(ActionButton({ action: this.secondaryButton, variant: "secondary" }));
+    if (this.primaryButton)
+      buttons.push(ActionButton({ action: this.primaryButton, variant: "primary" }));
 
     return html`<flows-base-tooltip
       .title=${this.title}
@@ -64,7 +63,7 @@ export class Tooltip extends LitElement implements TooltipProps {
       .targetElement=${this.targetElement}
       .placement=${this.placement}
       .overlay=${!this.hideOverlay}
-      .close=${this.showCloseButton ? this.close : undefined}
+      .close=${this.dismissible ? this.close : undefined}
       .buttons=${buttons}
     ></flows-base-tooltip>`;
   }
