@@ -22,14 +22,28 @@
   background-color: var(--flows-bg-default);
   border: var(--flows-border);
   color: var(--flows-fg-default);
-  border-radius: var(--flows-borderRadius-medium);
+  /* border-radius: var(--flows-borderRadius-medium); */
+  border-radius: 16px;
   box-shadow: var(--flows-shadow-large);
-  padding: var(--flows-modal-padding);
+  /* padding: var(--flows-modal-padding); */
+  padding: 24px;
   position: relative;
   box-sizing: border-box;
-  min-width: var(--flows-modal-minWidth);
-  max-width: var(--flows-modal-maxWidth);
+  /* min-width: var(--flows-modal-minWidth);
+  max-width: var(--flows-modal-maxWidth); */
+  width: 100%;
+  max-width: 420px;
+
   animation: flows-scaleIn 150ms ease-out;
+}
+
+.flows_modal_title {
+  text-align: center;
+  margin-bottom: 2px;
+}
+
+.flows_modal_body {
+  text-align: center;
 }
 
 .flows_modal_center {
@@ -61,10 +75,12 @@
 }
 
 .flows_modal_footer {
-  margin-top: var(--flows-size-medium);
+  /* margin-top: var(--flows-size-medium); */
+  margin-top: 24px;
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--flows-size-small);
+  /* flex-wrap: wrap; */
+  /* gap: var(--flows-size-small); */
+  gap: 12px;
 }
 .flows_modal_footer_left {
   justify-content: flex-start;
@@ -76,8 +92,20 @@
   justify-content: flex-end;
 }
 
+.flows_modal_footer .flows_button {
+  width: 100%;
+}
+
 .flows_modal_close {
   position: absolute;
-  top: var(--flows-modal-padding);
-  right: var(--flows-modal-padding);
+  /* top: var(--flows-modal-padding); */
+  /* right: var(--flows-modal-padding); */
+  top: 20px;
+  right: 20px;
+}
+
+.flows_modal_dots {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
 }

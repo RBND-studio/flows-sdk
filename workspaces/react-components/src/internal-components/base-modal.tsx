@@ -46,9 +46,16 @@ export const BaseModal: FC<Props> = (props) => {
 
       <div className="flows_modal_wrapper">
         <div className={classNames("flows_modal_modal", `flows_modal_${position}`)}>
-          <Text variant="title">{props.title}</Text>
-          <Text variant="body" dangerouslySetInnerHTML={{ __html: props.body }} />
-          {props.dots}
+          <Text className="flows_modal_title" variant="title">
+            {props.title}
+          </Text>
+          <Text
+            className="flows_modal_body"
+            variant="body"
+            dangerouslySetInnerHTML={{ __html: props.body }}
+          />
+
+          {props.dots ? <div className="flows_modal_dots">{props.dots}</div> : null}
 
           {buttons.length ? (
             <div

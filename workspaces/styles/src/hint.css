@@ -4,8 +4,16 @@
   border-radius: 50%;
   transition: background-color 120ms ease-in-out;
   z-index: var(--flows-zIndex);
-  width: 16px;
-  height: 16px;
+  width: 15px;
+  height: 15px;
+
+  border: 1px solid var(--flows-bg-primary);
+
+  background-image: linear-gradient(#ffffff14, #fff0);
+
+  box-shadow:
+    inset 0 1px #ffffff1f,
+    0 1px 2px #0a0d120d;
 }
 
 .flows_hint_hotspot:hover {

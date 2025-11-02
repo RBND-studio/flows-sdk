@@ -25,7 +25,8 @@
   background-color: var(--flows-bg-default);
   border: var(--flows-border);
   color: var(--flows-fg-default);
-  border-radius: var(--flows-borderRadius-medium);
+  /* border-radius: var(--flows-borderRadius-medium); */
+  border-radius: 12px;
   position: absolute;
   padding: var(--flows-tooltip-padding);
 
@@ -43,7 +44,8 @@
 }
 .flows_tooltip_tooltip:before {
   box-shadow: var(--flows-shadow);
-  border-radius: var(--flows-borderRadius-medium);
+  /* border-radius: var(--flows-borderRadius-medium); */
+  border-radius: 12px;
   content: "";
   position: absolute;
   inset: calc(var(--flows-borderWidth) * -1);
@@ -54,9 +56,8 @@
 .flows_tooltip_title {
   /* Space between title and close button */
   margin-right: 24px;
-}
-.flows_tooltip_body {
-  margin-top: var(--flows-size-small);
+
+  margin-bottom: 2px;
 }
 
 .flows_tooltip_arrow {
@@ -87,7 +88,14 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  align-items: center;
   gap: var(--flows-size-small);
+}
+
+.flows_tooltip_buttons {
+  display: flex;
+  gap: var(--flows-size-small);
+  flex-wrap: wrap;
 }
 
 .flows_tooltip_close {

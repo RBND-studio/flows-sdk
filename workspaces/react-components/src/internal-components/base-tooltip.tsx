@@ -132,8 +132,14 @@ export const BaseTooltip: FC<Props> = (props) => {
           className="flows_tooltip_body"
           dangerouslySetInnerHTML={{ __html: props.body }}
         />
-        {props.dots}
-        {props.buttons ? <div className="flows_tooltip_footer">{props.buttons}</div> : null}
+
+        {props.dots || props.buttons ? (
+          <div className="flows_tooltip_footer">
+            {props.dots}
+            {props.buttons ? <div className="flows_tooltip_buttons">{props.buttons}</div> : null}
+          </div>
+        ) : null}
+
         {props.onClose ? (
           <IconButton aria-label="Close" className="flows_tooltip_close" onClick={props.onClose}>
             <Close16 />
