@@ -93,7 +93,6 @@ export const createComponentProps = (props: {
       const exitNode = actionValue.exitNode;
       if (exitNode) {
         propValue.callAction = () => {
-          removeBlock(block.id);
           return exitNodeCb({ key: exitNode, blockId: block.id });
         };
       }
@@ -104,6 +103,7 @@ export const createComponentProps = (props: {
 
   const methods = block.exitNodes.reduce<Record<string, () => Promise<void>>>((acc, exitNode) => {
     const cb = (): Promise<void> => {
+      removeBlock(block.id);
       return exitNodeCb({ key: exitNode, blockId: block.id });
     };
     acc[exitNode] = cb;
