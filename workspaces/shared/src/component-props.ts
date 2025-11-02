@@ -93,6 +93,8 @@ export const createComponentProps = (props: {
       const exitNode = actionValue.exitNode;
       if (exitNode) {
         propValue.callAction = () => {
+          // Don't remove block for block triggers
+          if (block.exitNodes.includes(exitNode)) removeBlock(block.id);
           return exitNodeCb({ key: exitNode, blockId: block.id });
         };
       }
