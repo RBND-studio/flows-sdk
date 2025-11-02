@@ -31,6 +31,8 @@ class BaseHint extends LitElement {
   buttons: unknown[];
   @property({ attribute: false })
   onClose?: () => void;
+  @property({ attribute: false })
+  dots?: unknown;
 
   @state()
   private accessor _open = false;
@@ -153,6 +155,7 @@ class BaseHint extends LitElement {
                 variant: "body",
                 children: unsafeHTML(this.body),
               })}
+              ${this.dots}
               ${this.buttons.length
                 ? html`<div class="flows_tooltip_footer">${this.buttons}</div>`
                 : null}

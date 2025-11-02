@@ -37,9 +37,11 @@ const getBlock = ({
 const getTourStep = ({
   title,
   propertyMeta,
+  showProgress,
 }: {
   title: string;
   propertyMeta?: PropertyMeta[];
+  showProgress?: boolean;
 }): TourStep => ({
   id: randomUUID(),
   workflowId: randomUUID(),
@@ -49,6 +51,7 @@ const getTourStep = ({
     title,
     body: "Modal body",
     dismissible: true,
+    showProgress: showProgress ?? false,
   },
   propertyMeta: propertyMeta ?? [
     {
@@ -126,7 +129,10 @@ const run = (packageName: string) => {
     test(`${packageName} - should render tour modal`, async ({ page }) => {
       await mockBlocksEndpoint(page, [
         getTour({
-          tourBlocks: [getTourStep({ title: "Step 1" }), getTourStep({ title: "Step 2" })],
+          tourBlocks: [
+            getTourStep({ title: "Step 1", showProgress: true }),
+            getTourStep({ title: "Step 2", showProgress: true }),
+          ],
         }),
       ]);
       await page.goto(`/${packageName}.html`);
@@ -134,6 +140,9 @@ const run = (packageName: string) => {
       await expect(page.locator(".flows_modal_modal")).toBeVisible();
       await expect(page.getByText("Step 1", { exact: true })).toBeVisible();
       await expect(page.getByText("Step 2", { exact: true })).toBeHidden();
+      await expect(page.locator(".flows_dots")).toBeVisible();
+      await expect(page.locator(".flows_dots_dot")).toHaveCount(2);
+      await expect(page.locator(".flows_dots_dot_active")).toHaveCount(1);
 
       await expect(page.locator(".flows_modal_wrapper")).toMatchAriaSnapshot(`
         - paragraph: Step 1

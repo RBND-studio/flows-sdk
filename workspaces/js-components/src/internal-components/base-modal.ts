@@ -13,6 +13,7 @@ interface Props {
   overlay: boolean;
   position?: ModalPosition;
   buttonAlignment?: ModalButtonAlignment;
+  dots?: TemplateResult;
 
   primaryButton?: Action;
   secondaryButton?: Action;
@@ -44,7 +45,7 @@ export const BaseModal = (props: Props): TemplateResult => {
     <div class="flows_modal_wrapper">
       <div class=${classNames("flows_modal_modal", `flows_modal_${position}`)}>
         ${Text({ variant: "title", children: props.title })}
-        ${Text({ variant: "body", children: unsafeHTML(props.body) })}
+        ${Text({ variant: "body", children: unsafeHTML(props.body) })}${props.dots}
         ${buttons.length
           ? html`<div
               class=${classNames("flows_modal_footer", `flows_modal_footer_${buttonAlignment}`)}

@@ -35,9 +35,11 @@ const getBlock = ({
 const getTourStep = ({
   title,
   propertyMeta,
+  showProgress,
 }: {
   title: string;
   propertyMeta?: PropertyMeta[];
+  showProgress?: boolean;
 }): TourStep => ({
   id: randomUUID(),
   workflowId: randomUUID(),
@@ -48,6 +50,7 @@ const getTourStep = ({
     body: "Tooltip body",
     targetElement: "h1",
     dismissible: true,
+    showProgress: showProgress ?? false,
   },
   propertyMeta: propertyMeta ?? [
     {
@@ -156,7 +159,10 @@ const run = (packageName: string) => {
           json: {
             blocks: [
               getTour({
-                tourBlocks: [getTourStep({ title: "Step 1" }), getTourStep({ title: "Step 2" })],
+                tourBlocks: [
+                  getTourStep({ title: "Step 1", showProgress: true }),
+                  getTourStep({ title: "Step 2", showProgress: true }),
+                ],
               }),
             ],
           },
@@ -167,6 +173,9 @@ const run = (packageName: string) => {
       await expect(page.locator(".flows_tooltip_tooltip")).toBeVisible();
       await expect(page.getByText("Step 1", { exact: true })).toBeVisible();
       await expect(page.getByText("Step 2", { exact: true })).toBeHidden();
+      await expect(page.locator(".flows_dots")).toBeVisible();
+      await expect(page.locator(".flows_dots_dot")).toHaveCount(2);
+      await expect(page.locator(".flows_dots_dot_active")).toHaveCount(1);
 
       await expect(page.locator(".flows_tooltip_root")).toMatchAriaSnapshot(`
         - paragraph: Step 1

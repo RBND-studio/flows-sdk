@@ -10,6 +10,7 @@ import { property } from "lit/decorators.js";
 import { keyed } from "lit/directives/keyed.js";
 import { defineBaseHint } from "../internal-components/base-hint";
 import { ActionButton } from "../internal-components/action-button";
+import { Dots } from "../internal-components/dots";
 
 export type HintProps = TourComponentProps<TourHintProps>;
 
@@ -43,6 +44,9 @@ export class Hint extends LitElement implements HintProps {
   @property({ type: Number })
   offsetY?: number;
 
+  @property({ type: Boolean })
+  showProgress: boolean;
+
   @property({ type: Function })
   continue: () => void;
 
@@ -74,6 +78,13 @@ export class Hint extends LitElement implements HintProps {
           ]
         : [];
 
+    const dots = this.showProgress
+      ? Dots({
+          count: this.__flows.tourVisibleStepCount ?? 0,
+          index: this.__flows.tourVisibleStepIndex ?? 0,
+        })
+      : undefined;
+
     return keyed(
       // Needed to avoid reusing html elements between tour steps. Otherwise the tooltip exit animation is triggered.
       this.__flows.id,
@@ -86,6 +97,7 @@ export class Hint extends LitElement implements HintProps {
         .offsetY=${this.offsetY}
         .onClose=${this.dismissible ? this.cancel : undefined}
         .buttons=${buttons}
+        .dots=${dots}
       ></flows-base-hint>`,
     );
   }

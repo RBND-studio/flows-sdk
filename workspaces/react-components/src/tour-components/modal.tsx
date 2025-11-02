@@ -6,6 +6,13 @@ import { Dots } from "../internal-components/dots";
 export type ModalProps = TourComponentProps<TourModalProps>;
 
 export const Modal: FC<ModalProps> = (props) => {
+  const dots = props.showProgress ? (
+    <Dots
+      count={props.__flows.tourVisibleStepCount ?? 0}
+      index={props.__flows.tourVisibleStepIndex ?? 0}
+    />
+  ) : null;
+
   return (
     <BaseModal
       title={props.title}
@@ -15,12 +22,7 @@ export const Modal: FC<ModalProps> = (props) => {
       secondaryButton={props.secondaryButton}
       onClose={props.dismissible ? props.cancel : undefined}
       position={props.position}
-      dots={
-        <Dots
-          count={props.__flows.tourVisibleStepCount ?? 0}
-          index={props.__flows.tourVisibleStepIndex ?? 0}
-        />
-      }
+      dots={dots}
     />
   );
 };

@@ -21,6 +21,13 @@ export const Tooltip: FC<TooltipProps> = (props) => {
       </>
     ) : null;
 
+  const dots = props.showProgress ? (
+    <Dots
+      count={props.__flows.tourVisibleStepCount ?? 0}
+      index={props.__flows.tourVisibleStepIndex ?? 0}
+    />
+  ) : null;
+
   return (
     <BaseTooltip
       title={props.title}
@@ -30,12 +37,7 @@ export const Tooltip: FC<TooltipProps> = (props) => {
       overlay={!props.hideOverlay}
       onClose={props.dismissible ? props.cancel : undefined}
       buttons={buttons}
-      dots={
-        <Dots
-          count={props.__flows.tourVisibleStepCount ?? 0}
-          index={props.__flows.tourVisibleStepIndex ?? 0}
-        />
-      }
+      dots={dots}
     />
   );
 };

@@ -21,6 +21,13 @@ export const Hint: FC<HintProps> = (props) => {
       </>
     ) : null;
 
+  const dots = props.showProgress ? (
+    <Dots
+      count={props.__flows.tourVisibleStepCount ?? 0}
+      index={props.__flows.tourVisibleStepIndex ?? 0}
+    />
+  ) : null;
+
   return (
     <BaseHint
       title={props.title}
@@ -31,12 +38,7 @@ export const Hint: FC<HintProps> = (props) => {
       placement={props.placement}
       onClose={props.dismissible ? props.cancel : undefined}
       buttons={buttons}
-      dots={
-        <Dots
-          count={props.__flows.tourVisibleStepCount ?? 0}
-          index={props.__flows.tourVisibleStepIndex ?? 0}
-        />
-      }
+      dots={dots}
       // Needed to avoid reusing html elements between tour steps. Otherwise the tooltip exit animation is triggered.
       key={props.__flows.id}
     />

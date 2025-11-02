@@ -32,6 +32,8 @@ class BaseTooltip extends LitElement {
   placement?: Placement;
   @property({ type: Boolean })
   overlay?: boolean;
+  @property({ attribute: false })
+  dots?: unknown;
 
   @query(".flows_tooltip_tooltip")
   tooltip: HTMLElement;
@@ -105,6 +107,7 @@ class BaseTooltip extends LitElement {
             className: "flows_tooltip_body",
             children: unsafeHTML(this.body),
           })}
+          ${this.dots}
           ${this.buttons?.length
             ? html`<div class="flows_tooltip_footer">${this.buttons}</div>`
             : null}

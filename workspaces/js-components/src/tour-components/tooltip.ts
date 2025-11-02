@@ -9,6 +9,7 @@ import { LitElement, type TemplateResult, html } from "lit";
 import { property } from "lit/decorators.js";
 import { defineBaseTooltip } from "../internal-components/base-tooltip";
 import { ActionButton } from "../internal-components/action-button";
+import { Dots } from "../internal-components/dots";
 
 export type TooltipProps = TourComponentProps<TourTooltipProps>;
 
@@ -37,6 +38,9 @@ export class Tooltip extends LitElement implements TooltipProps {
 
   @property({ type: Boolean })
   hideOverlay: boolean;
+
+  @property({ type: Boolean })
+  showProgress: boolean;
 
   @property({ type: Function })
   continue: () => void;
@@ -69,6 +73,13 @@ export class Tooltip extends LitElement implements TooltipProps {
           ]
         : [];
 
+    const dots = this.showProgress
+      ? Dots({
+          count: this.__flows.tourVisibleStepCount ?? 0,
+          index: this.__flows.tourVisibleStepIndex ?? 0,
+        })
+      : undefined;
+
     return html`<flows-base-tooltip
       .title=${this.title}
       .body=${this.body}
@@ -77,6 +88,7 @@ export class Tooltip extends LitElement implements TooltipProps {
       .overlay=${!this.hideOverlay}
       .close=${this.dismissible ? this.cancel : undefined}
       .buttons=${buttons}
+      .dots=${dots}
     ></flows-base-tooltip>`;
   }
 }

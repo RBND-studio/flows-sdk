@@ -8,6 +8,7 @@ import {
 import { LitElement } from "lit";
 import { property } from "lit/decorators.js";
 import { BaseModal } from "../internal-components/base-modal";
+import { Dots } from "../internal-components/dots";
 
 export type ModalProps = TourComponentProps<TourModalProps>;
 
@@ -33,6 +34,9 @@ export class Modal extends LitElement implements ModalProps {
   @property({ type: String })
   position?: ModalPosition;
 
+  @property({ type: Boolean })
+  showProgress: boolean;
+
   @property({ type: Function })
   continue: () => void;
 
@@ -49,6 +53,13 @@ export class Modal extends LitElement implements ModalProps {
   }
 
   render(): unknown {
+    const dots = this.showProgress
+      ? Dots({
+          count: this.__flows.tourVisibleStepCount ?? 0,
+          index: this.__flows.tourVisibleStepIndex ?? 0,
+        })
+      : undefined;
+
     return BaseModal({
       title: this.title,
       body: this.body,
@@ -57,6 +68,7 @@ export class Modal extends LitElement implements ModalProps {
       overlay: !this.hideOverlay,
       position: this.position,
       close: this.dismissible ? this.cancel : undefined,
+      dots,
     });
   }
 }

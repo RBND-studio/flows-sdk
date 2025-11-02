@@ -54,6 +54,7 @@ export interface TourTooltipProps {
   placement?: Placement;
   dismissible: boolean;
   hideOverlay: boolean;
+  showProgress: boolean;
 }
 
 // Modal
@@ -83,6 +84,7 @@ export interface TourModalProps {
   dismissible: boolean;
   hideOverlay: boolean;
   position?: ModalPosition;
+  showProgress: boolean;
 }
 
 // Hint
@@ -114,4 +116,5 @@ export interface TourHintProps {
   offsetX?: number;
   offsetY?: number;
   dismissible: boolean;
+  showProgress: boolean;
 }

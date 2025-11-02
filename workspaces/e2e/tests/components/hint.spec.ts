@@ -29,9 +29,11 @@ const getBlock = ({ propertyMeta }: { propertyMeta?: PropertyMeta[] }): Block =>
 const getTourStep = ({
   title,
   propertyMeta,
+  showProgress,
 }: {
   title: string;
   propertyMeta?: PropertyMeta[];
+  showProgress?: boolean;
 }): TourStep => ({
   id: randomUUID(),
   workflowId: randomUUID(),
@@ -42,6 +44,7 @@ const getTourStep = ({
     body: "Hint body",
     targetElement: "h1",
     dismissible: true,
+    showProgress: showProgress ?? false,
   },
   slottable: false,
   propertyMeta: propertyMeta ?? [
@@ -113,13 +116,19 @@ const run = (packageName: string) => {
     test(`${packageName} - should render tour hint`, async ({ page }) => {
       await mockBlocksEndpoint(page, [
         getTour({
-          tourBlocks: [getTourStep({ title: "Step 1" }), getTourStep({ title: "Step 2" })],
+          tourBlocks: [
+            getTourStep({ title: "Step 1", showProgress: true }),
+            getTourStep({ title: "Step 2", showProgress: true }),
+          ],
         }),
       ]);
       await page.goto(`/${packageName}.html`);
       await expect(page.locator(".flows_hint_hotspot")).toBeVisible();
       await expect(page.locator(".flows_hint_tooltip")).toBeHidden();
       await page.locator(".flows_hint_hotspot").click();
+      await expect(page.locator(".flows_dots")).toBeVisible();
+      await expect(page.locator(".flows_dots_dot")).toHaveCount(2);
+      await expect(page.locator(".flows_dots_dot_active")).toHaveCount(1);
 
       await expect(page.locator(".flows_hint_tooltip")).toMatchAriaSnapshot(`
         - paragraph: Step 1
