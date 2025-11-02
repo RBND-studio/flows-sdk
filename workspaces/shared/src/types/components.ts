@@ -16,6 +16,14 @@ export interface FlowsProperties {
    * Id of the workflow this block belongs to.
    */
   workflowId: string;
+  /**
+   * Total number of visible tour blocks (components) in the current tour.
+   */
+  tourVisibleStepCount?: number;
+  /**
+   * 0-based index of the currently visible tour block (component) in the current tour.
+   */
+  tourVisibleStepIndex?: number;
 }
 
 export type ComponentProps<T extends Record<string, any> = any> = {

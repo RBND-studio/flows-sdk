@@ -59,6 +59,7 @@ export const tourBlockToActiveBlock = (tour: RunningTour): ActiveBlock | [] => {
   if (!activeStep?.componentType) return [];
 
   const props = createTourComponentProps({
+    tourSteps: tour.block.tourBlocks ?? [],
     tourStep: activeStep,
     currentIndex: tour.currentBlockIndex,
     handleCancel: tour.cancel,

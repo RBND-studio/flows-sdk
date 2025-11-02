@@ -122,12 +122,14 @@ export const createComponentProps = (props: {
 };
 
 export const createTourComponentProps = ({
+  tourSteps,
   tourStep,
   currentIndex,
   handleCancel,
   handleContinue,
   handlePrevious,
 }: {
+  tourSteps: TourStep[];
   tourStep: TourStep;
   currentIndex: number;
   handleContinue: () => void;
@@ -161,11 +163,16 @@ export const createTourComponentProps = ({
     }
   }
 
+  const visibleTourSteps = tourSteps.filter((s) => s.type === "tour-component");
+  const tourVisibleStepIndex = visibleTourSteps.findIndex((s) => s.id === tourStep.id);
+
   return {
     __flows: {
       id: tourStep.id,
       key: tourStep.key,
       workflowId: tourStep.workflowId,
+      tourVisibleStepCount: visibleTourSteps.length,
+      tourVisibleStepIndex,
     },
     ...data,
     continue: handleContinue,
