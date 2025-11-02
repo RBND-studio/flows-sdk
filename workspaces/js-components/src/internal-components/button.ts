@@ -31,6 +31,7 @@ export const Button = ({
       class=${classNames("flows_button", `flows_button_${variant}`, className)}
       @click=${onClick}
       target=${target}
+      href=${href}
     >
       ${children}
     </button>

@@ -11,8 +11,8 @@ interface Props {
   target?: "_blank";
 }
 
-export const Button: FC<Props> = ({ className, variant, href, ...props }) => {
-  const Cmp = href ? "a" : "button";
+export const Button: FC<Props> = ({ className, variant, ...props }) => {
+  const Cmp = props.href ? "a" : "button";
 
   return (
     <Cmp
