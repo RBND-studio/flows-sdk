@@ -49,7 +49,7 @@ export const BaseModal = (props: Props): TemplateResult => {
           ? html`<div
               class=${classNames("flows_modal_footer", `flows_modal_footer_${buttonAlignment}`)}
             >
-              ${buttons.map((button) => button)}
+              ${buttons}
             </div>`
           : null}
         ${props.close
