@@ -2,6 +2,7 @@ import { type TourHintProps, type TourComponentProps } from "@flows/shared";
 import { type FC } from "react";
 import { BaseHint } from "../internal-components/base-hint";
 import { ActionButton } from "../internal-components/action-button";
+import { Dots } from "../internal-components/dots";
 
 export type HintProps = TourComponentProps<TourHintProps>;
 
@@ -30,6 +31,12 @@ export const Hint: FC<HintProps> = (props) => {
       placement={props.placement}
       onClose={props.dismissible ? props.cancel : undefined}
       buttons={buttons}
+      dots={
+        <Dots
+          count={props.__flows.tourVisibleStepCount ?? 0}
+          index={props.__flows.tourVisibleStepIndex ?? 0}
+        />
+      }
       // Needed to avoid reusing html elements between tour steps. Otherwise the tooltip exit animation is triggered.
       key={props.__flows.id}
     />

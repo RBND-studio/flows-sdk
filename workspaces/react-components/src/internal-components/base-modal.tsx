@@ -1,4 +1,4 @@
-import { type FC } from "react";
+import { type ReactNode, type FC } from "react";
 import classNames from "classnames";
 import { type ModalButtonAlignment, type Action, type ModalPosition } from "@flows/shared";
 import { Close16 } from "../icons/close16";
@@ -12,6 +12,7 @@ interface Props {
   overlay: boolean;
   position?: ModalPosition;
   buttonAlignment?: ModalButtonAlignment;
+  dots?: ReactNode;
 
   primaryButton?: Action;
   secondaryButton?: Action;
@@ -47,6 +48,7 @@ export const BaseModal: FC<Props> = (props) => {
         <div className={classNames("flows_modal_modal", `flows_modal_${position}`)}>
           <Text variant="title">{props.title}</Text>
           <Text variant="body" dangerouslySetInnerHTML={{ __html: props.body }} />
+          {props.dots}
 
           {buttons.length ? (
             <div

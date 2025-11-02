@@ -32,6 +32,7 @@ interface Props {
   onClose?: () => void;
   placement?: Placement;
   overlay?: boolean;
+  dots?: ReactNode;
 }
 
 const autoUpdate: typeof floatingAutoUpdate = (ref, floating, update) =>
@@ -131,7 +132,7 @@ export const BaseTooltip: FC<Props> = (props) => {
           className="flows_tooltip_body"
           dangerouslySetInnerHTML={{ __html: props.body }}
         />
-
+        {props.dots}
         {props.buttons ? <div className="flows_tooltip_footer">{props.buttons}</div> : null}
         {props.onClose ? (
           <IconButton aria-label="Close" className="flows_tooltip_close" onClick={props.onClose}>

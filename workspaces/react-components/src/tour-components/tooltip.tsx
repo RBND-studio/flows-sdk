@@ -2,6 +2,7 @@ import { type FC } from "react";
 import { type TourTooltipProps, type TourComponentProps } from "@flows/shared";
 import { BaseTooltip } from "../internal-components/base-tooltip";
 import { ActionButton } from "../internal-components/action-button";
+import { Dots } from "../internal-components/dots";
 
 export type TooltipProps = TourComponentProps<TourTooltipProps>;
 
@@ -29,6 +30,12 @@ export const Tooltip: FC<TooltipProps> = (props) => {
       overlay={!props.hideOverlay}
       onClose={props.dismissible ? props.cancel : undefined}
       buttons={buttons}
+      dots={
+        <Dots
+          count={props.__flows.tourVisibleStepCount ?? 0}
+          index={props.__flows.tourVisibleStepIndex ?? 0}
+        />
+      }
     />
   );
 };

@@ -1,0 +1,18 @@
+.flows_dots {
+  display: flex;
+  gap: var(--flows-size-small);
+  justify-content: center;
+  margin-top: var(--flows-size-small);
+  margin-bottom: var(--flows-size-small);
+}
+
+.flows_dots_dot {
+  /* TODO: move to variable */
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--flows-bg-subtle);
+}
+.flows_dots_dot_active {
+  background-color: var(--flows-bg-primary);
+}
