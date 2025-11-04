@@ -2,9 +2,10 @@
   /* Colors */
   --flows-bg-default: #ffffff;
   --flows-bg-subtle: #fafafa;
+  --flows-bg-strong: #eaeaea;
   --flows-bg-hover: #f0f0f0;
-  --flows-bg-primary: #067efd;
-  --flows-bg-primary-hover: #0d67ec;
+  --flows-bg-primary: #262626;
+  --flows-bg-primary-hover: #3b3b3b;
   --flows-bg-overlay: rgba(0, 0, 0, 0.4);
 
   --flows-fg-default: #1a1a1a;
@@ -14,7 +15,7 @@
   --flows-border: var(--flows-borderWidth) solid #d6d6d6;
   --flows-border-strong: var(--flows-borderWidth) solid #ccc;
   --flows-border-strong-hover: var(--flows-borderWidth) solid #bababa;
-  --flows-border-primary: var(--flows-borderWidth) solid #0d67ec;
+  --flows-border-primary: var(--flows-borderWidth) solid #262626;
 
   --flows-shadow:
     0px 6px 18px rgba(0, 0, 0, 0.15), 0px 3px 8px rgba(0, 0, 0, 0.03),
@@ -25,15 +26,17 @@
     0px 0px 1px rgba(0, 0, 0, 0.05);
 
   /* Sizes */
-  --flows-borderRadius-xSmall: 3px;
-  --flows-borderRadius-small: 6px;
-  --flows-borderRadius-medium: 8px;
-  --flows-borderRadius-large: 12px;
+  --flows-borderRadius-xs: 3px;
+  --flows-borderRadius-m: 8px;
+  --flows-borderRadius-l: 12px;
+  --flows-borderRadius-xl: 16px;
 
-  --flows-size-xSmall: 4px;
-  --flows-size-small: 8px;
-  --flows-size-medium: 12px;
-  --flows-size-large: 20px;
+  --flows-size-xs: 2px;
+  --flows-size-s: 8px;
+  --flows-size-m: 12px;
+  --flows-size-l: 16px;
+  --flows-size-xl: 20px;
+  --flows-size-xxl: 24px;
 
   /* Typography */
   --flows-font-family:
@@ -50,46 +53,63 @@
   /* Elements */
   --flows-zIndex: 1500;
 
-  --flows-tooltip-padding: var(--flows-size-large);
+  --flows-tooltip-padding: var(--flows-size-xl);
   --flows-tooltip-overlayBackground: var(--flows-bg-overlay);
-  --flows-tooltip-overlayBorderRadius: var(--flows-borderRadius-medium);
+  --flows-tooltip-overlayBorderRadius: var(--flows-borderRadius-m);
   --flows-tooltip-overlayPadding: 4px;
   --flows-tooltip-minWidth: 200px;
   --flows-tooltip-maxWidth: 320px;
 
   --flows-modal-overlayBackground: var(--flows-bg-overlay);
-  --flows-modal-padding: var(--flows-size-large);
+  --flows-modal-padding: var(--flows-size-xxl);
   --flows-modal-minWidth: 320px;
   --flows-modal-maxWidth: 640px;
+  --flows-modal-size-small: 420px;
+  --flows-modal-size-medium: 640px;
 
-  --flows-banner-screenEdgePadding: var(--flows-size-large);
-  --flows-banner-padding: var(--flows-size-large);
+  --flows-banner-screenEdgePadding: var(--flows-size-xl);
+  --flows-banner-padding: var(--flows-size-xl);
   --flows-banner-minWidth: 200px;
   --flows-banner-maxWidth: 320px;
+
+  --flows-button-font-size: 15px;
+  --flows-button-line-height: 24px;
+  --flows-primary-button-gradient: linear-gradient(#ffffff14, #fff0);
+  --flows-primary-button-shadow: inset 0 1px #ffffff1f, 0 1px 2px #0a0d120d;
+  --flows-secondary-button-shadow: inset 0 -2px 0 0 #fafafa, 0 1px 2px 0 #0d0d0d0d;
+
+  --flows-progress-dots-size: 10px;
+  --flows-progress-dots-gap: 6px;
 }
 
 /* Dark mode */
 .dark {
   --flows-bg-default: #1e1e1e;
   --flows-bg-subtle: #262626;
+  --flows-bg-strong: #303030;
   --flows-bg-hover: #333333;
-  --flows-bg-primary: #357ddb;
-  --flows-bg-primary-hover: #3382e7;
+  --flows-bg-primary: #f1f1f1;
+  --flows-bg-primary-hover: #dddddd;
   --flows-bg-overlay: rgba(0, 0, 0, 0.6);
 
   --flows-fg-default: #fafafa;
-  --flows-fg-onPrimary: #ffffff;
+  --flows-fg-onPrimary: #1e1e1e;
 
   --flows-border: 1px solid #3d3d3d;
   --flows-border-strong: 1px solid #4a4a4a;
   --flows-border-strong-hover: 1px solid #616161;
-  --flows-border-primary: 1px solid #468ff1;
+  --flows-border-primary: 1px solid #f1f1f1;
 
   --flows-shadow:
     0px 4px 12px rgba(0, 0, 0, 0.2), 0px 2px 6px rgba(0, 0, 0, 0.25), 0px 1px 1px rgba(0, 0, 0, 0.2);
   --flows-shadow-large:
     0px 1px 1px rgba(0, 0, 0, 0.2), 0px 2px 8px rgba(0, 0, 0, 0.2), 0px 4px 12px rgba(0, 0, 0, 0.2),
     0px 4px 20px rgba(0, 0, 0, 0.2), 0px 4px 40px rgba(0, 0, 0, 0.15);
+
+  /* Elements */
+  --flows-primary-button-gradient: linear-gradient(#fff0, #0000001a);
+  --flows-primary-button-shadow: inset 0 1px #ffffff1f;
+  --flows-secondary-button-shadow: unset;
 }
 
 /* Animation */

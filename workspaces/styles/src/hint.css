@@ -4,16 +4,12 @@
   border-radius: 50%;
   transition: background-color 120ms ease-in-out;
   z-index: var(--flows-zIndex);
-  width: 15px;
-  height: 15px;
-
-  border: 1px solid var(--flows-bg-primary);
-
-  background-image: linear-gradient(#ffffff14, #fff0);
-
-  box-shadow:
-    inset 0 1px #ffffff1f,
-    0 1px 2px #0a0d120d;
+  width: var(--flows-size-l);
+  height: var(--flows-size-l);
+  cursor: pointer;
+  border: var(--flows-border-primary);
+  background-image: var(--flows-primary-button-gradient);
+  box-shadow: var(--flows-primary-button-shadow);
 }
 
 .flows_hint_hotspot:hover {

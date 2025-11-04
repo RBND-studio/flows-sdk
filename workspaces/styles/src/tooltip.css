@@ -25,8 +25,7 @@
   background-color: var(--flows-bg-default);
   border: var(--flows-border);
   color: var(--flows-fg-default);
-  /* border-radius: var(--flows-borderRadius-medium); */
-  border-radius: 12px;
+  border-radius: var(--flows-borderRadius-l);
   position: absolute;
   padding: var(--flows-tooltip-padding);
 
@@ -44,8 +43,7 @@
 }
 .flows_tooltip_tooltip:before {
   box-shadow: var(--flows-shadow);
-  /* border-radius: var(--flows-borderRadius-medium); */
-  border-radius: 12px;
+  border-radius: var(--flows-borderRadius-l);
   content: "";
   position: absolute;
   inset: calc(var(--flows-borderWidth) * -1);
@@ -56,16 +54,15 @@
 .flows_tooltip_title {
   /* Space between title and close button */
   margin-right: 24px;
-
-  margin-bottom: 2px;
+  margin-bottom: var(--flows-size-xs);
 }
 
 .flows_tooltip_arrow {
   position: absolute;
-  width: var(--flows-size-medium);
-  height: var(--flows-size-medium);
+  width: var(--flows-size-l);
+  height: var(--flows-size-l);
   transform: rotate(45deg);
-  border-radius: var(--flows-borderRadius-xSmall);
+  border-radius: var(--flows-borderRadius-xs);
 }
 .flows_tooltip_tooltip[data-open="false"] .flows_tooltip_arrow {
   border-color: var(--flows-bg-default);
@@ -84,13 +81,13 @@
 }
 
 .flows_tooltip_footer {
-  margin-top: var(--flows-size-medium);
+  margin-top: var(--flows-size-l);
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  column-gap: var(--flows-size-small);
-  row-gap: 20px;
+  column-gap: var(--flows-size-s);
+  row-gap: var(--flows-size-l);
 }
 
 .flows_tooltip_buttons_wrapper {
@@ -99,20 +96,16 @@
   display: flex;
   justify-content: flex-end;
 }
+
 .flows_tooltip_buttons {
   display: flex;
-  gap: var(--flows-size-small);
+  gap: var(--flows-size-s);
   flex-wrap: wrap-reverse;
 }
+
 .flows_tooltip_buttons button,
 .flows_modal_footer a {
   flex: 1;
-}
-
-@container (width = 100%) {
-  .flows_tooltip_buttons {
-    background-color: red;
-  }
 }
 
 .flows_tooltip_close {

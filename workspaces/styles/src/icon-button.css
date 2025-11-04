@@ -1,5 +1,5 @@
 .flows_iconButton {
-  border-radius: var(--flows-borderRadius-small);
+  border-radius: var(--flows-borderRadius-m);
   cursor: pointer;
   transition:
     background-color 120ms ease-in-out,

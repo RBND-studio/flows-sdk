@@ -1,18 +1,16 @@
 .flows_dots {
   justify-content: center;
   display: flex;
-  gap: 6px;
+  gap: var(--flows-progress-dots-gap);
   overflow: hidden;
 }
 
 .flows_dots_dot {
-  /* TODO: move to variable */
-  width: 10px;
-  height: 10px;
+  width: var(--flows-progress-dots-size);
+  height: var(--flows-progress-dots-size);
   border-radius: 50%;
   flex-shrink: 0;
-  /* background-color: var(--flows-bg-subtle); */
-  background-color: #e9eaeb;
+  background-color: var(--flows-bg-strong);
 }
 .flows_dots_dot_active {
   background-color: var(--flows-bg-primary);

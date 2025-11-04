@@ -22,24 +22,36 @@
   background-color: var(--flows-bg-default);
   border: var(--flows-border);
   color: var(--flows-fg-default);
-  /* border-radius: var(--flows-borderRadius-medium); */
-  border-radius: 16px;
+  border-radius: var(--flows-borderRadius-xl);
   box-shadow: var(--flows-shadow-large);
-  /* padding: var(--flows-modal-padding); */
-  padding: 24px;
+  padding: var(--flows-size-xxl);
   position: relative;
   box-sizing: border-box;
-  /* min-width: var(--flows-modal-minWidth);
-  max-width: var(--flows-modal-maxWidth); */
-  width: 100%;
-  max-width: 420px;
-
   animation: flows-scaleIn 150ms ease-out;
+
+  /* TODO: remove this after modal size is implemented */
+  width: 100%;
+  max-width: var(--flows-modal-size-small);
+}
+
+.flows_modal_width_small {
+  width: 100%;
+  max-width: var(--flows-modal-size-small);
+}
+
+.flows_modal_width_medium {
+  width: 100%;
+  max-width: var(--flows-modal-size-medium);
+}
+
+.flows_modal_width_auto {
+  min-width: var(--flows-modal-minWidth);
+  max-width: var(--flows-modal-maxWidth);
 }
 
 .flows_modal_title {
   text-align: center;
-  margin-bottom: 2px;
+  margin-bottom: var(--flows-size-xs);
 }
 
 .flows_modal_body {
@@ -75,12 +87,10 @@
 }
 
 .flows_modal_footer {
-  /* margin-top: var(--flows-size-medium); */
-  margin-top: 24px;
+  margin-top: var(--flows-size-xxl);
   display: flex;
   flex-wrap: wrap-reverse;
-  /* gap: var(--flows-size-small); */
-  gap: 12px;
+  gap: var(--flows-size-m);
 }
 .flows_modal_footer button,
 .flows_modal_footer a {
@@ -102,14 +112,12 @@
 
 .flows_modal_close {
   position: absolute;
-  /* top: var(--flows-modal-padding); */
-  /* right: var(--flows-modal-padding); */
-  top: 20px;
-  right: 20px;
+  top: var(--flows-size-xl);
+  right: var(--flows-size-xl);
 }
 
 .flows_modal_dots {
-  margin-top: 24px;
+  margin-top: var(--flows-size-xxl);
   display: flex;
   justify-content: center;
 }
