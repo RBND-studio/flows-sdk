@@ -28,10 +28,6 @@
   position: relative;
   box-sizing: border-box;
   animation: flows-scaleIn 150ms ease-out;
-
-  /* TODO: remove this after modal size is implemented */
-  width: 100%;
-  max-width: var(--flows-modal-size-small);
 }
 
 .flows_modal_width_small {

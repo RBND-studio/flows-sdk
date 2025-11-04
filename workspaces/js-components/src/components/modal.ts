@@ -4,6 +4,7 @@ import {
   type ComponentProps,
   type FlowsProperties,
   type ModalProps as LibraryModalProps,
+  type ModalSize,
 } from "@flows/shared";
 import { LitElement } from "lit";
 import { property } from "lit/decorators.js";
@@ -33,6 +34,9 @@ export class Modal extends LitElement implements ModalProps {
   @property({ type: String })
   position?: ModalPosition;
 
+  @property({ type: String })
+  size?: ModalSize;
+
   @property({ type: Function })
   continue: () => void;
 
@@ -53,6 +57,7 @@ export class Modal extends LitElement implements ModalProps {
       secondaryButton: this.secondaryButton,
       overlay: !this.hideOverlay,
       position: this.position,
+      size: this.size,
       close: this.dismissible ? this.close : undefined,
     });
   }

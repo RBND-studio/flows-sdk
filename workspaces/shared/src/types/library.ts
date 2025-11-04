@@ -25,6 +25,7 @@ export type ModalPosition =
   | "bottom-left"
   | "bottom-right";
 export type ModalButtonAlignment = "left" | "center" | "right";
+export type ModalSize = "small" | "medium" | "auto";
 
 export type ButtonVariant = "primary" | "secondary";
 
@@ -69,6 +70,7 @@ export interface ModalProps {
   dismissible: boolean;
   hideOverlay: boolean;
   position?: ModalPosition;
+  size?: ModalSize;
 
   continue: () => void;
   close: () => void;
@@ -84,6 +86,7 @@ export interface TourModalProps {
   dismissible: boolean;
   hideOverlay: boolean;
   position?: ModalPosition;
+  size?: ModalSize;
   showProgress: boolean;
 }
 

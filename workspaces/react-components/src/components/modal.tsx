@@ -14,6 +14,7 @@ export const Modal: FC<ModalProps> = (props) => {
       overlay={!props.hideOverlay}
       onClose={props.dismissible ? props.close : undefined}
       position={props.position}
+      size={props.size}
     />
   );
 };

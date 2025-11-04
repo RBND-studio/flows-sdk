@@ -22,6 +22,7 @@ export const Modal: FC<ModalProps> = (props) => {
       secondaryButton={props.secondaryButton}
       onClose={props.dismissible ? props.cancel : undefined}
       position={props.position}
+      size={props.size}
       dots={dots}
     />
   );

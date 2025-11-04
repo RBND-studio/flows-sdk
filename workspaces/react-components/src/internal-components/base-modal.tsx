@@ -1,6 +1,11 @@
 import { type ReactNode, type FC } from "react";
 import classNames from "classnames";
-import { type ModalButtonAlignment, type Action, type ModalPosition } from "@flows/shared";
+import {
+  type ModalButtonAlignment,
+  type Action,
+  type ModalPosition,
+  type ModalSize,
+} from "@flows/shared";
 import { Close16 } from "../icons/close16";
 import { Text } from "./text";
 import { IconButton } from "./icon-button";
@@ -11,6 +16,7 @@ interface Props {
   body: string;
   overlay: boolean;
   position?: ModalPosition;
+  size?: ModalSize;
   buttonAlignment?: ModalButtonAlignment;
   dots?: ReactNode;
 
@@ -24,6 +30,8 @@ export const BaseModal: FC<Props> = (props) => {
   const position: ModalPosition = props.position || "center";
   // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- value can be empty string ""
   const buttonAlignment: ModalButtonAlignment = props.buttonAlignment || "center";
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- value can be empty string ""
+  const size: ModalSize = props.size || "small";
 
   const buttons = [];
   if (props.secondaryButton)
@@ -45,7 +53,13 @@ export const BaseModal: FC<Props> = (props) => {
       ) : null}
 
       <div className="flows_modal_wrapper">
-        <div className={classNames("flows_modal_modal", `flows_modal_${position}`)}>
+        <div
+          className={classNames(
+            "flows_modal_modal",
+            `flows_modal_${position}`,
+            `flows_modal_width_${size}`,
+          )}
+        >
           <Text className="flows_modal_title" variant="title">
             {props.title}
           </Text>
