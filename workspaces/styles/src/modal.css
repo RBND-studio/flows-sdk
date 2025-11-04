@@ -78,9 +78,13 @@
   /* margin-top: var(--flows-size-medium); */
   margin-top: 24px;
   display: flex;
-  /* flex-wrap: wrap; */
+  flex-wrap: wrap-reverse;
   /* gap: var(--flows-size-small); */
   gap: 12px;
+}
+.flows_modal_footer button,
+.flows_modal_footer a {
+  flex: 1;
 }
 .flows_modal_footer_left {
   justify-content: flex-start;

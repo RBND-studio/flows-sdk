@@ -1,10 +1,8 @@
 .flows_dots {
-  display: flex;
-  /* gap: var(--flows-size-small); */
-  gap: 6px;
   justify-content: center;
-  /* margin-top: var(--flows-size-small); */
-  /* margin-top: 16px; */
+  display: flex;
+  gap: 6px;
+  overflow: hidden;
 }
 
 .flows_dots_dot {

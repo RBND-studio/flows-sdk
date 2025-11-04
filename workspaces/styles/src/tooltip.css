@@ -89,13 +89,30 @@
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  gap: var(--flows-size-small);
+  column-gap: var(--flows-size-small);
+  row-gap: 20px;
 }
 
+.flows_tooltip_buttons_wrapper {
+  flex: 1;
+  flex-basis: auto;
+  display: flex;
+  justify-content: flex-end;
+}
 .flows_tooltip_buttons {
   display: flex;
   gap: var(--flows-size-small);
-  flex-wrap: wrap;
+  flex-wrap: wrap-reverse;
+}
+.flows_tooltip_buttons button,
+.flows_modal_footer a {
+  flex: 1;
+}
+
+@container (width = 100%) {
+  .flows_tooltip_buttons {
+    background-color: red;
+  }
 }
 
 .flows_tooltip_close {

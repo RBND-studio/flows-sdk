@@ -125,10 +125,14 @@ export const BaseHint: FC<Props> = (props) => {
             className="flows_tooltip_body"
             dangerouslySetInnerHTML={{ __html: props.body }}
           />
-          {props.dots || props.buttons ? (
+          {(props.dots ?? props.buttons) ? (
             <div className="flows_tooltip_footer">
               {props.dots}
-              {props.buttons ? <div className="flows_tooltip_buttons">{props.buttons}</div> : null}
+              {props.buttons ? (
+                <div className="flows_tooltip_buttons_wrapper">
+                  <div className="flows_tooltip_buttons">{props.buttons}</div>
+                </div>
+              ) : null}
             </div>
           ) : null}
 
