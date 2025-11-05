@@ -9,6 +9,7 @@ import { log, type Placement } from "@flows/shared";
 import { type ReactNode, useCallback, useEffect, useState, type FC } from "react";
 import { useQuerySelector } from "../hooks/use-query-selector";
 import { Close16 } from "../icons/close16";
+import { useFirstRender } from "../hooks/use-first-render";
 import { Text } from "./text";
 import { IconButton } from "./icon-button";
 
@@ -34,6 +35,7 @@ const autoUpdate: typeof floatingAutoUpdate = (ref, floating, update) =>
   floatingAutoUpdate(ref, floating, update, { animationFrame: true });
 
 export const BaseHint: FC<Props> = (props) => {
+  const firstRender = useFirstRender();
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const handleOpen = useCallback(() => {
     setTooltipOpen(true);
@@ -95,6 +97,8 @@ export const BaseHint: FC<Props> = (props) => {
   }, [props.targetElement]);
 
   if (!reference) return null;
+  // Avoid rendering on client render to prevent hydration issues
+  if (firstRender) return null;
 
   return (
     <>
