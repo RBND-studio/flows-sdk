@@ -39,7 +39,7 @@ export class Modal extends LitElement implements ModalProps {
   size?: ModalSize;
 
   @property({ type: Boolean })
-  showProgress: boolean;
+  hideProgress: boolean;
 
   @property({ type: Function })
   continue: () => void;
@@ -57,7 +57,7 @@ export class Modal extends LitElement implements ModalProps {
   }
 
   render(): unknown {
-    const dots = this.showProgress
+    const dots = !this.hideProgress
       ? Dots({
           count: this.__flows.tourVisibleStepCount ?? 0,
           index: this.__flows.tourVisibleStepIndex ?? 0,

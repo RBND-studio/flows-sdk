@@ -40,7 +40,7 @@ export class Tooltip extends LitElement implements TooltipProps {
   hideOverlay: boolean;
 
   @property({ type: Boolean })
-  showProgress: boolean;
+  hideProgress: boolean;
 
   @property({ type: Function })
   continue: () => void;
@@ -73,7 +73,7 @@ export class Tooltip extends LitElement implements TooltipProps {
           ]
         : [];
 
-    const dots = this.showProgress
+    const dots = !this.hideProgress
       ? Dots({
           count: this.__flows.tourVisibleStepCount ?? 0,
           index: this.__flows.tourVisibleStepIndex ?? 0,

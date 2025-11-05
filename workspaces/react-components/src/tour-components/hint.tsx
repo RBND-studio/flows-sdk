@@ -21,7 +21,7 @@ export const Hint: FC<HintProps> = (props) => {
       </>
     ) : null;
 
-  const dots = props.showProgress ? (
+  const dots = !props.hideProgress ? (
     <Dots
       count={props.__flows.tourVisibleStepCount ?? 0}
       index={props.__flows.tourVisibleStepIndex ?? 0}
