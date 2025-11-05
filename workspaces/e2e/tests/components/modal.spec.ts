@@ -22,7 +22,7 @@ const getBlock = ({
   id: randomUUID(),
   workflowId: randomUUID(),
   type: "component",
-  componentType: "Modal",
+  componentType: "BasicsV2Modal",
   data: {
     title: "Modal title",
     body: "Modal body",
@@ -37,21 +37,21 @@ const getBlock = ({
 const getTourStep = ({
   title,
   propertyMeta,
-  showProgress,
+  hideProgress,
 }: {
   title: string;
   propertyMeta?: PropertyMeta[];
-  showProgress?: boolean;
+  hideProgress?: boolean;
 }): TourStep => ({
   id: randomUUID(),
   workflowId: randomUUID(),
   type: "tour-component",
-  componentType: "Modal",
+  componentType: "BasicsV2Modal",
   data: {
     title,
     body: "Modal body",
     dismissible: true,
-    showProgress: showProgress ?? false,
+    hideProgress: hideProgress ?? false,
   },
   propertyMeta: propertyMeta ?? [
     {
@@ -129,10 +129,7 @@ const run = (packageName: string) => {
     test(`${packageName} - should render tour modal`, async ({ page }) => {
       await mockBlocksEndpoint(page, [
         getTour({
-          tourBlocks: [
-            getTourStep({ title: "Step 1", showProgress: true }),
-            getTourStep({ title: "Step 2", showProgress: true }),
-          ],
+          tourBlocks: [getTourStep({ title: "Step 1" }), getTourStep({ title: "Step 2" })],
         }),
       ]);
       await page.goto(`/${packageName}.html`);
@@ -171,7 +168,9 @@ const run = (packageName: string) => {
     });
     test(`${packageName} - should hide footer without buttons`, async ({ page }) => {
       await mockBlocksEndpoint(page, [
-        getTour({ tourBlocks: [getTourStep({ title: "Modal title", propertyMeta: [] })] }),
+        getTour({
+          tourBlocks: [getTourStep({ title: "Modal title", propertyMeta: [], hideProgress: true })],
+        }),
       ]);
       await page.goto(`/${packageName}.html`);
       await expect(page.locator(".flows_modal_modal")).toBeVisible();

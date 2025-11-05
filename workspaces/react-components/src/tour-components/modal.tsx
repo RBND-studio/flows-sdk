@@ -5,7 +5,7 @@ import { Dots } from "../internal-components/dots";
 
 export type ModalProps = TourComponentProps<TourModalProps>;
 
-export const Modal: FC<ModalProps> = (props) => {
+const Modal: FC<ModalProps> = (props) => {
   const dots = !props.hideProgress ? (
     <Dots
       count={props.__flows.tourVisibleStepCount ?? 0}
@@ -27,3 +27,5 @@ export const Modal: FC<ModalProps> = (props) => {
     />
   );
 };
+
+export const BasicsV2Modal = Modal;

@@ -5,7 +5,7 @@ import { ActionButton } from "../internal-components/action-button";
 
 export type TooltipProps = ComponentProps<LibraryTooltipProps>;
 
-export const Tooltip: FC<TooltipProps> = (props) => {
+const Tooltip: FC<TooltipProps> = (props) => {
   const buttons = [];
   if (props.secondaryButton)
     buttons.push(
@@ -26,3 +26,5 @@ export const Tooltip: FC<TooltipProps> = (props) => {
     />
   );
 };
+
+export const BasicsV2Tooltip = Tooltip;

@@ -6,7 +6,7 @@ import { Dots } from "../internal-components/dots";
 
 export type TooltipProps = TourComponentProps<TourTooltipProps>;
 
-export const Tooltip: FC<TooltipProps> = (props) => {
+const Tooltip: FC<TooltipProps> = (props) => {
   const primaryBtn = props.primaryButton ? (
     <ActionButton action={props.primaryButton} variant="primary" />
   ) : null;
@@ -41,3 +41,5 @@ export const Tooltip: FC<TooltipProps> = (props) => {
     />
   );
 };
+
+export const BasicsV2Tooltip = Tooltip;

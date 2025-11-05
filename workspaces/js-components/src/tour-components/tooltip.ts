@@ -14,7 +14,7 @@ import { Dots } from "../internal-components/dots";
 export type TooltipProps = TourComponentProps<TourTooltipProps>;
 
 defineBaseTooltip();
-export class Tooltip extends LitElement implements TooltipProps {
+class Tooltip extends LitElement implements TooltipProps {
   @property({ type: String })
   title: string;
 
@@ -92,3 +92,5 @@ export class Tooltip extends LitElement implements TooltipProps {
     ></flows-base-tooltip>`;
   }
 }
+
+export const BasicsV2Tooltip = Tooltip;

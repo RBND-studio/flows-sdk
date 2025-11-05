@@ -14,7 +14,7 @@ const getBlock = ({ propertyMeta }: { propertyMeta?: PropertyMeta[] }): Block =>
   id: randomUUID(),
   workflowId: randomUUID(),
   type: "component",
-  componentType: "Hint",
+  componentType: "BasicsV2Hint",
   data: {
     title: "Hint title",
     body: "Hint body",
@@ -29,22 +29,22 @@ const getBlock = ({ propertyMeta }: { propertyMeta?: PropertyMeta[] }): Block =>
 const getTourStep = ({
   title,
   propertyMeta,
-  showProgress,
+  hideProgress,
 }: {
   title: string;
   propertyMeta?: PropertyMeta[];
-  showProgress?: boolean;
+  hideProgress?: boolean;
 }): TourStep => ({
   id: randomUUID(),
   workflowId: randomUUID(),
   type: "tour-component",
-  componentType: "Hint",
+  componentType: "BasicsV2Hint",
   data: {
     title,
     body: "Hint body",
     targetElement: "h1",
     dismissible: true,
-    showProgress: showProgress ?? false,
+    hideProgress: hideProgress ?? false,
   },
   slottable: false,
   propertyMeta: propertyMeta ?? [
@@ -116,10 +116,7 @@ const run = (packageName: string) => {
     test(`${packageName} - should render tour hint`, async ({ page }) => {
       await mockBlocksEndpoint(page, [
         getTour({
-          tourBlocks: [
-            getTourStep({ title: "Step 1", showProgress: true }),
-            getTourStep({ title: "Step 2", showProgress: true }),
-          ],
+          tourBlocks: [getTourStep({ title: "Step 1" }), getTourStep({ title: "Step 2" })],
         }),
       ]);
       await page.goto(`/${packageName}.html`);
@@ -157,7 +154,9 @@ const run = (packageName: string) => {
     });
     test(`${packageName} - should hide footer without buttons`, async ({ page }) => {
       await mockBlocksEndpoint(page, [
-        getTour({ tourBlocks: [getTourStep({ title: "Hint title", propertyMeta: [] })] }),
+        getTour({
+          tourBlocks: [getTourStep({ title: "Hint title", propertyMeta: [], hideProgress: true })],
+        }),
       ]);
       await page.goto(`/${packageName}.html`);
       await expect(page.locator(".flows_hint_hotspot")).toBeVisible();

@@ -6,7 +6,7 @@ import { Dots } from "../internal-components/dots";
 
 export type HintProps = TourComponentProps<TourHintProps>;
 
-export const Hint: FC<HintProps> = (props) => {
+const Hint: FC<HintProps> = (props) => {
   const primaryBtn = props.primaryButton ? (
     <ActionButton action={props.primaryButton} variant="primary" />
   ) : null;
@@ -44,3 +44,5 @@ export const Hint: FC<HintProps> = (props) => {
     />
   );
 };
+
+export const BasicsV2Hint = Hint;

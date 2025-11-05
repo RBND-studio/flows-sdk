@@ -51,7 +51,8 @@ export const BaseModal = (props: Props): TemplateResult => {
         )}
       >
         ${Text({ variant: "title", children: props.title })}
-        ${Text({ variant: "body", children: unsafeHTML(props.body) })}${props.dots}
+        ${Text({ variant: "body", children: unsafeHTML(props.body) })}
+        ${props.dots ? html`<div class="flows_modal_dots">${props.dots}</div>` : null}
         ${buttons.length ? html`<div class=${"flows_modal_footer"}>${buttons}</div>` : null}
         ${props.close
           ? IconButton({

@@ -14,7 +14,7 @@ export type HintProps = ComponentProps<LibraryHintProps>;
 
 defineBaseHint();
 
-export class Hint extends LitElement implements HintProps {
+class Hint extends LitElement implements HintProps {
   @property({ type: String })
   title: string;
 
@@ -73,3 +73,5 @@ export class Hint extends LitElement implements HintProps {
     ></flows-base-hint>`;
   }
 }
+
+export const BasicsV2Hint = Hint;

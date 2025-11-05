@@ -155,9 +155,15 @@ class BaseHint extends LitElement {
                 variant: "body",
                 children: unsafeHTML(this.body),
               })}
-              ${this.dots}
-              ${this.buttons.length
-                ? html`<div class="flows_tooltip_footer">${this.buttons}</div>`
+              ${this.dots || Boolean(this.buttons.length)
+                ? html` <div class="flows_tooltip_footer">
+                    ${this.dots}
+                    ${this.buttons.length
+                      ? html`<div className="flows_tooltip_buttons_wrapper">
+                          <div className="flows_tooltip_buttons">${this.buttons}</div>
+                        </div>`
+                      : null}
+                  </div>`
                 : null}
               ${this.onClose
                 ? IconButton({

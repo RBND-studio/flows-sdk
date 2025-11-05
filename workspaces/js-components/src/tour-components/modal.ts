@@ -13,7 +13,7 @@ import { Dots } from "../internal-components/dots";
 
 export type ModalProps = TourComponentProps<TourModalProps>;
 
-export class Modal extends LitElement implements ModalProps {
+class Modal extends LitElement implements ModalProps {
   @property({ type: String })
   title: string;
 
@@ -77,3 +77,5 @@ export class Modal extends LitElement implements ModalProps {
     });
   }
 }
+
+export const BasicsV2Modal = Modal;

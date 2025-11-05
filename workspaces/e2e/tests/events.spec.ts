@@ -14,7 +14,7 @@ const getBlock = ({ propertyMeta }: { propertyMeta: PropertyMeta[] }): Block => 
   id: randomUUID(),
   workflowId: randomUUID(),
   type: "component",
-  componentType: "Modal",
+  componentType: "BasicsV2Modal",
   data: { title: "Workflow block", body: "" },
   exitNodes: ["continue"],
   slottable: false,

@@ -30,7 +30,7 @@ const getModalStep = ({
   id: randomUUID(),
   workflowId: randomUUID(),
   type: "tour-component",
-  componentType: "Modal",
+  componentType: "BasicsV2Modal",
   data: {
     title,
     body: "",

@@ -12,7 +12,7 @@ import { BaseModal } from "../internal-components/base-modal";
 
 export type ModalProps = ComponentProps<LibraryModalProps>;
 
-export class Modal extends LitElement implements ModalProps {
+class Modal extends LitElement implements ModalProps {
   @property({ type: String })
   title: string;
 
@@ -62,3 +62,5 @@ export class Modal extends LitElement implements ModalProps {
     });
   }
 }
+
+export const BasicsV2Modal = Modal;

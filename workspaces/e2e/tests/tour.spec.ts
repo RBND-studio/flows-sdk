@@ -24,7 +24,7 @@ const getTour = (tour_trigger?: TourTriggerExpression[]): Block => ({
       id: randomUUID(),
       workflowId: randomUUID(),
       type: "tour-component",
-      componentType: "Modal",
+      componentType: "BasicsV2Modal",
       data: {
         title: "Hello",
         body: "",
@@ -48,7 +48,7 @@ const getTour = (tour_trigger?: TourTriggerExpression[]): Block => ({
       id: randomUUID(),
       workflowId: randomUUID(),
       type: "tour-component",
-      componentType: "Modal",
+      componentType: "BasicsV2Modal",
       data: {
         title: "World",
         body: "",

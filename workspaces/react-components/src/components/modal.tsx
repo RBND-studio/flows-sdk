@@ -4,7 +4,7 @@ import { BaseModal } from "../internal-components/base-modal";
 
 export type ModalProps = ComponentProps<LibraryModalProps>;
 
-export const Modal: FC<ModalProps> = (props) => {
+const Modal: FC<ModalProps> = (props) => {
   return (
     <BaseModal
       title={props.title}
@@ -18,3 +18,5 @@ export const Modal: FC<ModalProps> = (props) => {
     />
   );
 };
+
+export const BasicsV2Modal = Modal;

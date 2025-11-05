@@ -9,7 +9,7 @@ const getBlocks = (): Block[] =>
       workflowId: randomUUID(),
       key: "my-key",
       type: "component",
-      componentType: "Modal",
+      componentType: "BasicsV2Modal",
       data: {},
       exitNodes: [],
       slottable: false,
@@ -31,7 +31,7 @@ const getBlocks = (): Block[] =>
           key: "tour-block-key",
           slottable: false,
           type: "tour-component",
-          componentType: "Modal",
+          componentType: "BasicsV2Modal",
         },
       ],
     },
@@ -64,7 +64,7 @@ const run = (packageName: string) => {
         {
           id: blocks[0]?.id,
           type: "component",
-          component: "Modal",
+          component: "BasicsV2Modal",
           props: {
             __flows: {
               id: blocks[0]?.id,
@@ -77,12 +77,14 @@ const run = (packageName: string) => {
           id: blocks[1]?.tourBlocks?.[0]?.id,
           tourBlockId: blocks[1]?.id,
           type: "tour-component",
-          component: "Modal",
+          component: "BasicsV2Modal",
           props: {
             __flows: {
               id: blocks[1]?.tourBlocks?.[0]?.id,
               key: "tour-block-key",
               workflowId: blocks[1]?.tourBlocks?.[0]?.workflowId,
+              tourVisibleStepCount: 1,
+              tourVisibleStepIndex: 0,
             },
           },
         },

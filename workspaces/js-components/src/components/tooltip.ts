@@ -13,7 +13,7 @@ import { ActionButton } from "../internal-components/action-button";
 export type TooltipProps = ComponentProps<LibraryTooltipProps>;
 
 defineBaseTooltip();
-export class Tooltip extends LitElement implements TooltipProps {
+class Tooltip extends LitElement implements TooltipProps {
   @property({ type: String })
   title: string;
 
@@ -68,3 +68,5 @@ export class Tooltip extends LitElement implements TooltipProps {
     ></flows-base-tooltip>`;
   }
 }
+
+export const BasicsV2Tooltip = Tooltip;

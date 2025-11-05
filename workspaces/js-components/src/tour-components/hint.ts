@@ -16,7 +16,7 @@ export type HintProps = TourComponentProps<TourHintProps>;
 
 defineBaseHint();
 
-export class Hint extends LitElement implements HintProps {
+class Hint extends LitElement implements HintProps {
   @property({ type: String })
   title: string;
 
@@ -102,3 +102,5 @@ export class Hint extends LitElement implements HintProps {
     );
   }
 }
+
+export const BasicsV2Hint = Hint;

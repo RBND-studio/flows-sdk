@@ -5,7 +5,7 @@ import { ActionButton } from "../internal-components/action-button";
 
 export type HintProps = ComponentProps<LibraryHintProps>;
 
-export const Hint: FC<HintProps> = (props) => {
+const Hint: FC<HintProps> = (props) => {
   const buttons = [];
   if (props.secondaryButton)
     buttons.push(
@@ -27,3 +27,5 @@ export const Hint: FC<HintProps> = (props) => {
     />
   );
 };
+
+export const BasicsV2Hint = Hint;

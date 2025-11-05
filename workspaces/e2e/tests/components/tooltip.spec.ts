@@ -20,7 +20,7 @@ const getBlock = ({
   id: randomUUID(),
   workflowId: randomUUID(),
   type: "component",
-  componentType: "Tooltip",
+  componentType: "BasicsV2Tooltip",
   data: {
     title: "Tooltip title",
     body: "Tooltip body",
@@ -35,22 +35,22 @@ const getBlock = ({
 const getTourStep = ({
   title,
   propertyMeta,
-  showProgress,
+  hideProgress,
 }: {
   title: string;
   propertyMeta?: PropertyMeta[];
-  showProgress?: boolean;
+  hideProgress?: boolean;
 }): TourStep => ({
   id: randomUUID(),
   workflowId: randomUUID(),
   type: "tour-component",
-  componentType: "Tooltip",
+  componentType: "BasicsV2Tooltip",
   data: {
     title,
     body: "Tooltip body",
     targetElement: "h1",
     dismissible: true,
-    showProgress: showProgress ?? false,
+    hideProgress: hideProgress ?? false,
   },
   propertyMeta: propertyMeta ?? [
     {
@@ -159,10 +159,7 @@ const run = (packageName: string) => {
           json: {
             blocks: [
               getTour({
-                tourBlocks: [
-                  getTourStep({ title: "Step 1", showProgress: true }),
-                  getTourStep({ title: "Step 2", showProgress: true }),
-                ],
+                tourBlocks: [getTourStep({ title: "Step 1" }), getTourStep({ title: "Step 2" })],
               }),
             ],
           },
@@ -205,7 +202,11 @@ const run = (packageName: string) => {
 
     test(`${packageName} - shouldn't render tooltip footer without buttons`, async ({ page }) => {
       await mockBlocksEndpoint(page, [
-        getTour({ tourBlocks: [getTourStep({ title: "Tooltip title", propertyMeta: [] })] }),
+        getTour({
+          tourBlocks: [
+            getTourStep({ title: "Tooltip title", propertyMeta: [], hideProgress: true }),
+          ],
+        }),
       ]);
       await page.goto(`/${packageName}.html`);
       await expect(page.getByText("Tooltip title", { exact: true })).toBeVisible();
