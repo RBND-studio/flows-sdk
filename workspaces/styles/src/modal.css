@@ -92,15 +92,6 @@
 .flows_modal_footer a {
   flex: 1;
 }
-.flows_modal_footer_left {
-  justify-content: flex-start;
-}
-.flows_modal_footer_center {
-  justify-content: center;
-}
-.flows_modal_footer_right {
-  justify-content: flex-end;
-}
 
 .flows_modal_footer .flows_button {
   width: 100%;

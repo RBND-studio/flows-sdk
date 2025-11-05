@@ -1,12 +1,7 @@
 import { html, type TemplateResult } from "lit";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import classNames from "classnames";
-import {
-  type ModalButtonAlignment,
-  type Action,
-  type ModalPosition,
-  type ModalSize,
-} from "@flows/shared";
+import { type Action, type ModalPosition, type ModalSize } from "@flows/shared";
 import { Close16 } from "../icons/close-16";
 import { Text } from "./text";
 import { IconButton } from "./icon-button";
@@ -18,7 +13,6 @@ interface Props {
   overlay: boolean;
   position?: ModalPosition;
   size?: ModalSize;
-  buttonAlignment?: ModalButtonAlignment;
   dots?: TemplateResult;
 
   primaryButton?: Action;
@@ -29,8 +23,6 @@ interface Props {
 export const BaseModal = (props: Props): TemplateResult => {
   // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- value can be empty string ""
   const position: ModalPosition = props.position || "center";
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- value can be empty string ""
-  const buttonAlignment: ModalButtonAlignment = props.buttonAlignment || "center";
   // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- value can be empty string ""
   const size: ModalSize = props.size || "small";
 
@@ -60,13 +52,7 @@ export const BaseModal = (props: Props): TemplateResult => {
       >
         ${Text({ variant: "title", children: props.title })}
         ${Text({ variant: "body", children: unsafeHTML(props.body) })}${props.dots}
-        ${buttons.length
-          ? html`<div
-              class=${classNames("flows_modal_footer", `flows_modal_footer_${buttonAlignment}`)}
-            >
-              ${buttons}
-            </div>`
-          : null}
+        ${buttons.length ? html`<div class=${"flows_modal_footer"}>${buttons}</div>` : null}
         ${props.close
           ? IconButton({
               children: Close16(),
