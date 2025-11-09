@@ -84,6 +84,9 @@
 
 .flows_modal_footer {
   margin-top: var(--flows-size-xxl);
+  margin-right: auto;
+  margin-left: auto;
+  max-width: var(--flows-modal-button-max-width);
   display: flex;
   flex-wrap: wrap-reverse;
   gap: var(--flows-size-m);

@@ -66,6 +66,7 @@
   --flows-modal-maxWidth: 640px;
   --flows-modal-size-small: 420px;
   --flows-modal-size-medium: 640px;
+  --flows-modal-button-max-width: 600px;
 
   --flows-banner-screenEdgePadding: var(--flows-size-xl);
   --flows-banner-padding: var(--flows-size-xl);
