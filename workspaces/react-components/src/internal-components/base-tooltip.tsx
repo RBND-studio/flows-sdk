@@ -120,46 +120,53 @@ export const BaseTooltip: FC<Props> = (props) => {
   }
 
   return (
-    <div className="flows_tooltip_root">
-      {props.overlay ? <div className="flows_tooltip_overlay" ref={overlayRef} /> : null}
+    <div className="flows_basicsV2_tooltip_root">
+      {props.overlay ? <div className="flows_basicsV2_tooltip_overlay" ref={overlayRef} /> : null}
       <div
-        className="flows_tooltip_tooltip"
+        className="flows_basicsV2_tooltip_tooltip"
         ref={refs.setFloating}
         data-open={enterAnimationEnded ? "true" : "false"}
         onAnimationEnd={handleAnimationEnd}
       >
-        <Text className="flows_tooltip_title" variant="title">
+        <Text className="flows_basicsV2_tooltip_title" variant="title">
           {props.title}
         </Text>
         <Text
           variant="body"
-          className="flows_tooltip_body"
+          className="flows_basicsV2_tooltip_body"
           dangerouslySetInnerHTML={{ __html: props.body }}
         />
 
         {(props.dots ?? props.buttons) ? (
-          <div className="flows_tooltip_footer">
+          <div className="flows_basicsV2_tooltip_footer">
             {props.dots}
             {props.buttons ? (
-              <div className="flows_tooltip_buttons_wrapper">
-                <div className="flows_tooltip_buttons">{props.buttons}</div>
+              <div className="flows_basicsV2_tooltip_buttons_wrapper">
+                <div className="flows_basicsV2_tooltip_buttons">{props.buttons}</div>
               </div>
             ) : null}
           </div>
         ) : null}
 
         {props.onClose ? (
-          <IconButton aria-label="Close" className="flows_tooltip_close" onClick={props.onClose}>
+          <IconButton
+            aria-label="Close"
+            className="flows_basicsV2_tooltip_close"
+            onClick={props.onClose}
+          >
             <Close16 />
           </IconButton>
         ) : null}
 
         <div
-          className={classNames("flows_tooltip_arrow", "flows_tooltip_arrow-bottom")}
+          className={classNames(
+            "flows_basicsV2_tooltip_arrow",
+            "flows_basicsV2_tooltip_arrow-bottom",
+          )}
           ref={bottomArrowRef}
         />
         <div
-          className={classNames("flows_tooltip_arrow", "flows_tooltip_arrow-top")}
+          className={classNames("flows_basicsV2_tooltip_arrow", "flows_basicsV2_tooltip_arrow-top")}
           ref={topArrowRef}
         />
       </div>

@@ -75,10 +75,10 @@ const run = (packageName: string) => {
     }) => {
       await mockBlocksEndpoint(page, [getBlock({})]);
       await page.goto(`/${packageName}.html`);
-      await expect(page.locator(".flows_modal_overlay")).toBeVisible();
-      await expect(page.locator(".flows_modal_close")).toBeHidden();
+      await expect(page.locator(".flows_basicsV2_modal_overlay")).toBeVisible();
+      await expect(page.locator(".flows_basicsV2_modal_close")).toBeHidden();
 
-      await expect(page.locator(".flows_modal_wrapper")).toMatchAriaSnapshot(`
+      await expect(page.locator(".flows_basicsV2_modal_wrapper")).toMatchAriaSnapshot(`
         - paragraph: Modal title
         - paragraph: Modal body
         `);
@@ -103,7 +103,7 @@ const run = (packageName: string) => {
         }),
       ]);
       await page.goto(`/${packageName}.html`);
-      await expect(page.locator(".flows_modal_wrapper")).toMatchAriaSnapshot(`
+      await expect(page.locator(".flows_basicsV2_modal_wrapper")).toMatchAriaSnapshot(`
         - paragraph: Modal title
         - paragraph: Modal body
         - button "Cancel"
@@ -112,16 +112,16 @@ const run = (packageName: string) => {
           - img
         `);
       await expect(page.getByText("Modal title", { exact: true })).toBeVisible();
-      await expect(page.locator(".flows_modal_overlay")).toBeHidden();
-      await expect(page.locator(".flows_modal_close")).toBeVisible();
-      await page.locator(".flows_modal_close").click();
+      await expect(page.locator(".flows_basicsV2_modal_overlay")).toBeHidden();
+      await expect(page.locator(".flows_basicsV2_modal_close")).toBeVisible();
+      await page.locator(".flows_basicsV2_modal_close").click();
       await expect(page.getByText("Modal title", { exact: true })).toBeHidden();
     });
     test(`${packageName} - shouldn't render modal footer without buttons`, async ({ page }) => {
       await mockBlocksEndpoint(page, [getBlock({})]);
       await page.goto(`/${packageName}.html`);
-      await expect(page.locator(".flows_modal_modal")).toBeVisible();
-      await expect(page.locator(".flows_modal_footer")).toBeHidden();
+      await expect(page.locator(".flows_basicsV2_modal_modal")).toBeVisible();
+      await expect(page.locator(".flows_basicsV2_modal_footer")).toBeHidden();
     });
   });
 
@@ -134,14 +134,14 @@ const run = (packageName: string) => {
       ]);
       await page.goto(`/${packageName}.html`);
 
-      await expect(page.locator(".flows_modal_modal")).toBeVisible();
+      await expect(page.locator(".flows_basicsV2_modal_modal")).toBeVisible();
       await expect(page.getByText("Step 1", { exact: true })).toBeVisible();
       await expect(page.getByText("Step 2", { exact: true })).toBeHidden();
-      await expect(page.locator(".flows_dots")).toBeVisible();
-      await expect(page.locator(".flows_dots_dot")).toHaveCount(2);
-      await expect(page.locator(".flows_dots_dot_active")).toHaveCount(1);
+      await expect(page.locator(".flows_basicsV2_dots")).toBeVisible();
+      await expect(page.locator(".flows_basicsV2_dots_dot")).toHaveCount(2);
+      await expect(page.locator(".flows_basicsV2_dots_dot_active")).toHaveCount(1);
 
-      await expect(page.locator(".flows_modal_wrapper")).toMatchAriaSnapshot(`
+      await expect(page.locator(".flows_basicsV2_modal_wrapper")).toMatchAriaSnapshot(`
         - paragraph: Step 1
         - paragraph: Modal body
         - button "Previous"
@@ -154,7 +154,7 @@ const run = (packageName: string) => {
       await expect(page.getByText("Step 1", { exact: true })).toBeHidden();
       await expect(page.getByText("Step 2", { exact: true })).toBeVisible();
 
-      await expect(page.locator(".flows_modal_wrapper")).toMatchAriaSnapshot(`
+      await expect(page.locator(".flows_basicsV2_modal_wrapper")).toMatchAriaSnapshot(`
           - paragraph: Step 2
           - paragraph: Modal body
           - button "Previous"
@@ -164,7 +164,7 @@ const run = (packageName: string) => {
           `);
 
       await page.getByText("Continue", { exact: true }).click();
-      await expect(page.locator(".flows_modal_modal")).toBeHidden();
+      await expect(page.locator(".flows_basicsV2_modal_modal")).toBeHidden();
     });
     test(`${packageName} - should hide footer without buttons`, async ({ page }) => {
       await mockBlocksEndpoint(page, [
@@ -173,8 +173,8 @@ const run = (packageName: string) => {
         }),
       ]);
       await page.goto(`/${packageName}.html`);
-      await expect(page.locator(".flows_modal_modal")).toBeVisible();
-      await expect(page.locator(".flows_modal_footer")).toHaveCount(0);
+      await expect(page.locator(".flows_basicsV2_modal_modal")).toBeVisible();
+      await expect(page.locator(".flows_basicsV2_modal_footer")).toHaveCount(0);
     });
   });
 };

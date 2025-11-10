@@ -57,13 +57,13 @@ class BaseHint extends LitElement {
     }
   }
 
-  @query(".flows_hint_hotspot")
+  @query(".flows_basicsV2_hint_hotspot")
   target: HTMLElement;
 
-  @query(".flows_tooltip_tooltip")
+  @query(".flows_basicsV2_tooltip_tooltip")
   tooltip?: HTMLElement;
 
-  @queryAll(".flows_tooltip_arrow")
+  @queryAll(".flows_basicsV2_tooltip_arrow")
   arrows: [HTMLElement, HTMLElement];
 
   @state()
@@ -139,7 +139,7 @@ class BaseHint extends LitElement {
       <button
         aria-label="Open hint"
         type="button"
-        class="flows_hint_hotspot"
+        class="flows_basicsV2_hint_hotspot"
         @click=${this.handleClick.bind(this)}
       ></button>
 
@@ -147,20 +147,24 @@ class BaseHint extends LitElement {
         ? html`
             <div
               data-open=${!this._tooltipClosing ? "true" : "false"}
-              class="flows_tooltip_tooltip flows_hint_tooltip"
+              class="flows_basicsV2_tooltip_tooltip flows_basicsV2_hint_tooltip"
             >
-              ${Text({ className: "flows_tooltip_title", variant: "title", children: this.title })}
               ${Text({
-                className: "flows_tooltip_body",
+                className: "flows_basicsV2_tooltip_title",
+                variant: "title",
+                children: this.title,
+              })}
+              ${Text({
+                className: "flows_basicsV2_tooltip_body",
                 variant: "body",
                 children: unsafeHTML(this.body),
               })}
               ${this.dots || Boolean(this.buttons.length)
-                ? html` <div class="flows_tooltip_footer">
+                ? html` <div class="flows_basicsV2_tooltip_footer">
                     ${this.dots}
                     ${this.buttons.length
-                      ? html`<div className="flows_tooltip_buttons_wrapper">
-                          <div className="flows_tooltip_buttons">${this.buttons}</div>
+                      ? html`<div className="flows_basicsV2_tooltip_buttons_wrapper">
+                          <div className="flows_basicsV2_tooltip_buttons">${this.buttons}</div>
                         </div>`
                       : null}
                   </div>`
@@ -168,7 +172,7 @@ class BaseHint extends LitElement {
               ${this.onClose
                 ? IconButton({
                     children: Close16(),
-                    className: "flows_tooltip_close",
+                    className: "flows_basicsV2_tooltip_close",
                     "aria-label": "Close",
                     onClick: this.onClose,
                   })

@@ -28,7 +28,7 @@ export const Button = ({
   return html`
     <${tag}
       type=${tag === buttonLiteral ? "button" : undefined}
-      class=${classNames("flows_button", `flows_button_${variant}`, className)}
+      class=${classNames("flows_basicsV2_button", `flows_basicsV2_button_${variant}`, className)}
       @click=${onClick}
       target=${target}
       href=${href}

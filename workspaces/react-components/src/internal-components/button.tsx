@@ -17,7 +17,7 @@ export const Button: FC<Props> = ({ className, variant, ...props }) => {
   return (
     <Cmp
       type={Cmp === "button" ? "button" : undefined}
-      className={classNames("flows_button", `flows_button_${variant}`, className)}
+      className={classNames("flows_basicsV2_button", `flows_basicsV2_button_${variant}`, className)}
       {...props}
     />
   );

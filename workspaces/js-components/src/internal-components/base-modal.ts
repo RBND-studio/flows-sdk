@@ -27,7 +27,11 @@ export const BaseModal = (props: Props): TemplateResult => {
   const size: ModalSize = props.size || "small";
 
   const overlay = props.overlay
-    ? html`<div class="flows_modal_overlay" @click=${props.close} aria-hidden="true"></div>`
+    ? html`<div
+        class="flows_basicsV2_modal_overlay"
+        @click=${props.close}
+        aria-hidden="true"
+      ></div>`
     : null;
 
   const buttons = [];
@@ -38,23 +42,25 @@ export const BaseModal = (props: Props): TemplateResult => {
 
   return html`
     ${overlay}
-    <div class="flows_modal_wrapper">
+    <div class="flows_basicsV2_modal_wrapper">
       <div
         class=${classNames(
-          "flows_modal_modal",
-          `flows_modal_${position}`,
-          `flows_modal_width_${size}`,
+          "flows_basicsV2_modal_modal",
+          `flows_basicsV2_modal_${position}`,
+          `flows_basicsV2_modal_width_${size}`,
         )}
       >
         ${Text({ variant: "title", children: props.title })}
         ${Text({ variant: "body", children: unsafeHTML(props.body) })}
-        ${props.dots ? html`<div class="flows_modal_dots">${props.dots}</div>` : null}
-        ${buttons.length ? html`<div class=${"flows_modal_footer"}>${buttons}</div>` : null}
+        ${props.dots ? html`<div class="flows_basicsV2_modal_dots">${props.dots}</div>` : null}
+        ${buttons.length
+          ? html`<div class=${"flows_basicsV2_modal_footer"}>${buttons}</div>`
+          : null}
         ${props.close
           ? IconButton({
               children: Close16(),
               "aria-label": "Close",
-              className: "flows_modal_close",
+              className: "flows_basicsV2_modal_close",
               onClick: props.close,
             })
           : null}

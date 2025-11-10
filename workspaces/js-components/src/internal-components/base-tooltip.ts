@@ -35,10 +35,10 @@ class BaseTooltip extends LitElement {
   @property({ attribute: false })
   dots?: unknown;
 
-  @query(".flows_tooltip_tooltip")
+  @query(".flows_basicsV2_tooltip_tooltip")
   tooltip: HTMLElement;
 
-  @queryAll(".flows_tooltip_arrow")
+  @queryAll(".flows_basicsV2_tooltip_arrow")
   arrows: [HTMLElement, HTMLElement];
 
   @state()
@@ -98,21 +98,25 @@ class BaseTooltip extends LitElement {
     }
 
     return html`
-      <div class="flows_tooltip_root">
-        ${this.overlay ? html`<div class="flows_tooltip_overlay"></div>` : null}
-        <div class="flows_tooltip_tooltip">
-          ${Text({ variant: "title", className: "flows_tooltip_title", children: this.title })}
+      <div class="flows_basicsV2_tooltip_root">
+        ${this.overlay ? html`<div class="flows_basicsV2_tooltip_overlay"></div>` : null}
+        <div class="flows_basicsV2_tooltip_tooltip">
+          ${Text({
+            variant: "title",
+            className: "flows_basicsV2_tooltip_title",
+            children: this.title,
+          })}
           ${Text({
             variant: "body",
-            className: "flows_tooltip_body",
+            className: "flows_basicsV2_tooltip_body",
             children: unsafeHTML(this.body),
           })}
           ${this.dots || Boolean(this.buttons.length)
-            ? html` <div class="flows_tooltip_footer">
+            ? html` <div class="flows_basicsV2_tooltip_footer">
                 ${this.dots}
                 ${this.buttons.length
-                  ? html`<div className="flows_tooltip_buttons_wrapper">
-                      <div className="flows_tooltip_buttons">${this.buttons}</div>
+                  ? html`<div className="flows_basicsV2_tooltip_buttons_wrapper">
+                      <div className="flows_basicsV2_tooltip_buttons">${this.buttons}</div>
                     </div>`
                   : null}
               </div>`
@@ -120,14 +124,21 @@ class BaseTooltip extends LitElement {
           ${this.close
             ? IconButton({
                 "aria-label": "Close",
-                className: "flows_tooltip_close",
+                className: "flows_basicsV2_tooltip_close",
                 children: Close16(),
                 onClick: this.close,
               })
             : null}
 
-          <div class=${classNames("flows_tooltip_arrow", "flows_tooltip_arrow-bottom")}></div>
-          <div class=${classNames("flows_tooltip_arrow", "flows_tooltip_arrow-top")}></div>
+          <div
+            class=${classNames(
+              "flows_basicsV2_tooltip_arrow",
+              "flows_basicsV2_tooltip_arrow-bottom",
+            )}
+          ></div>
+          <div
+            class=${classNames("flows_basicsV2_tooltip_arrow", "flows_basicsV2_tooltip_arrow-top")}
+          ></div>
         </div>
       </div>
     `;

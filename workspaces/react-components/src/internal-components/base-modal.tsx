@@ -36,31 +36,35 @@ export const BaseModal: FC<Props> = (props) => {
   return (
     <>
       {props.overlay ? (
-        <div className="flows_modal_overlay" onClick={props.onClose} aria-hidden="true" />
+        <div className="flows_basicsV2_modal_overlay" onClick={props.onClose} aria-hidden="true" />
       ) : null}
 
-      <div className="flows_modal_wrapper">
+      <div className="flows_basicsV2_modal_wrapper">
         <div
           className={classNames(
-            "flows_modal_modal",
-            `flows_modal_${position}`,
-            `flows_modal_width_${size}`,
+            "flows_basicsV2_modal_modal",
+            `flows_basicsV2_modal_${position}`,
+            `flows_basicsV2_modal_width_${size}`,
           )}
         >
-          <Text className="flows_modal_title" variant="title">
+          <Text className="flows_basicsV2_modal_title" variant="title">
             {props.title}
           </Text>
           <Text
-            className="flows_modal_body"
+            className="flows_basicsV2_modal_body"
             variant="body"
             dangerouslySetInnerHTML={{ __html: props.body }}
           />
 
-          {props.dots ? <div className="flows_modal_dots">{props.dots}</div> : null}
+          {props.dots ? <div className="flows_basicsV2_modal_dots">{props.dots}</div> : null}
 
-          {buttons.length ? <div className="flows_modal_footer">{buttons}</div> : null}
+          {buttons.length ? <div className="flows_basicsV2_modal_footer">{buttons}</div> : null}
           {props.onClose ? (
-            <IconButton aria-label="Close" className="flows_modal_close" onClick={props.onClose}>
+            <IconButton
+              aria-label="Close"
+              className="flows_basicsV2_modal_close"
+              onClick={props.onClose}
+            >
               <Close16 />
             </IconButton>
           ) : null}

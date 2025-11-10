@@ -13,12 +13,15 @@ export const Dots = ({ count, index }: Props): TemplateResult => {
     .map((_, i) => i);
 
   return html`
-    <div class="flows_dots">
+    <div class="flows_basicsV2_dots">
       ${repeat(
         dots,
         (item) =>
           html`<div
-            class=${classNames("flows_dots_dot", item === index && "flows_dots_dot_active")}
+            class=${classNames(
+              "flows_basicsV2_dots_dot",
+              item === index && "flows_basicsV2_dots_dot_active",
+            )}
           ></div>`,
       )}
     </div>

@@ -104,7 +104,7 @@ const run = (packageName: string) => {
       await page.goto(`/${packageName}.html`);
       await expect(page.getByText("Tooltip title", { exact: true })).toBeVisible();
 
-      await expect(page.locator(".flows_tooltip_root")).toMatchAriaSnapshot(`
+      await expect(page.locator(".flows_basicsV2_tooltip_root")).toMatchAriaSnapshot(`
       - paragraph: Tooltip title
       - paragraph: Tooltip body
       - button "Continue"
@@ -117,7 +117,7 @@ const run = (packageName: string) => {
       await mockBlocksEndpoint(page, [getBlock({ targetElement: "h1" })]);
       await page.goto(`/${packageName}.html`);
       await expect(page.getByText("Tooltip title", { exact: true })).toBeVisible();
-      await expect(page.locator(".flows_tooltip_footer")).toHaveCount(0);
+      await expect(page.locator(".flows_basicsV2_tooltip_footer")).toHaveCount(0);
     });
     test(`${packageName} - should render tooltip with both buttons`, async ({ page }) => {
       await mockBlocksEndpoint(page, [
@@ -139,7 +139,7 @@ const run = (packageName: string) => {
       ]);
       await page.goto(`/${packageName}.html`);
       await expect(page.getByText("Tooltip title", { exact: true })).toBeVisible();
-      await expect(page.locator(".flows_tooltip_root")).toMatchAriaSnapshot(`
+      await expect(page.locator(".flows_basicsV2_tooltip_root")).toMatchAriaSnapshot(`
       - paragraph: Tooltip title
       - paragraph: Tooltip body
       - button "Cancel"
@@ -148,7 +148,7 @@ const run = (packageName: string) => {
         - img
       `);
       await page.getByText("Continue", { exact: true }).click();
-      await expect(page.locator(".flows_tooltip_tooltip")).toBeHidden();
+      await expect(page.locator(".flows_basicsV2_tooltip_tooltip")).toBeHidden();
     });
   });
 
@@ -167,14 +167,14 @@ const run = (packageName: string) => {
       });
       await page.goto(`/${packageName}.html`);
 
-      await expect(page.locator(".flows_tooltip_tooltip")).toBeVisible();
+      await expect(page.locator(".flows_basicsV2_tooltip_tooltip")).toBeVisible();
       await expect(page.getByText("Step 1", { exact: true })).toBeVisible();
       await expect(page.getByText("Step 2", { exact: true })).toBeHidden();
-      await expect(page.locator(".flows_dots")).toBeVisible();
-      await expect(page.locator(".flows_dots_dot")).toHaveCount(2);
-      await expect(page.locator(".flows_dots_dot_active")).toHaveCount(1);
+      await expect(page.locator(".flows_basicsV2_dots")).toBeVisible();
+      await expect(page.locator(".flows_basicsV2_dots_dot")).toHaveCount(2);
+      await expect(page.locator(".flows_basicsV2_dots_dot_active")).toHaveCount(1);
 
-      await expect(page.locator(".flows_tooltip_root")).toMatchAriaSnapshot(`
+      await expect(page.locator(".flows_basicsV2_tooltip_root")).toMatchAriaSnapshot(`
         - paragraph: Step 1
         - paragraph: Tooltip body
         - button "Previous"
@@ -187,7 +187,7 @@ const run = (packageName: string) => {
       await expect(page.getByText("Step 1", { exact: true })).toBeHidden();
       await expect(page.getByText("Step 2", { exact: true })).toBeVisible();
 
-      await expect(page.locator(".flows_tooltip_root")).toMatchAriaSnapshot(`
+      await expect(page.locator(".flows_basicsV2_tooltip_root")).toMatchAriaSnapshot(`
           - paragraph: Step 2
           - paragraph: Tooltip body
           - button "Previous"
@@ -197,7 +197,7 @@ const run = (packageName: string) => {
           `);
 
       await page.getByText("Continue", { exact: true }).click();
-      await expect(page.locator(".flows_tooltip_tooltip")).toBeHidden();
+      await expect(page.locator(".flows_basicsV2_tooltip_tooltip")).toBeHidden();
     });
 
     test(`${packageName} - shouldn't render tooltip footer without buttons`, async ({ page }) => {
@@ -210,7 +210,7 @@ const run = (packageName: string) => {
       ]);
       await page.goto(`/${packageName}.html`);
       await expect(page.getByText("Tooltip title", { exact: true })).toBeVisible();
-      await expect(page.locator(".flows_tooltip_footer")).toHaveCount(0);
+      await expect(page.locator(".flows_basicsV2_tooltip_footer")).toHaveCount(0);
     });
   });
 };

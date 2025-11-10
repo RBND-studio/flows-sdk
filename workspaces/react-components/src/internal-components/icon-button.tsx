@@ -9,5 +9,11 @@ interface Props {
 }
 
 export const IconButton: FC<Props> = ({ className, ...props }) => {
-  return <button type="button" className={classNames("flows_iconButton", className)} {...props} />;
+  return (
+    <button
+      type="button"
+      className={classNames("flows_basicsV2_iconButton", className)}
+      {...props}
+    />
+  );
 };

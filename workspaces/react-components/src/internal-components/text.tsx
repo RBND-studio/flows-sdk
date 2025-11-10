@@ -6,5 +6,10 @@ interface Props extends React.HTMLAttributes<HTMLParagraphElement> {
 }
 
 export const Text: FC<Props> = ({ className, variant, ...props }) => {
-  return <p className={classNames("flows_text", `flows_text_${variant}`, className)} {...props} />;
+  return (
+    <p
+      className={classNames("flows_basicsV2_text", `flows_basicsV2_text_${variant}`, className)}
+      {...props}
+    />
+  );
 };

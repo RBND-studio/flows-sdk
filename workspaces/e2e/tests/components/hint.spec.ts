@@ -81,12 +81,14 @@ const run = (packageName: string) => {
         }),
       ]);
       await page.goto(`/${packageName}.html`);
-      await expect(page.locator(".flows_hint_hotspot")).toBeVisible();
-      await expect(page.locator(".flows_hint_tooltip")).toBeHidden();
-      await page.locator(".flows_hint_hotspot").click();
+      await expect(page.locator(".flows_basicsV2_hint_hotspot")).toBeVisible();
+      await expect(page.locator(".flows_basicsV2_hint_tooltip")).toBeHidden();
+      await page.locator(".flows_basicsV2_hint_hotspot").click();
 
-      await expect(page.locator(".flows_hint_hotspot")).toMatchAriaSnapshot(`- button "Open hint"`);
-      await expect(page.locator(".flows_hint_tooltip")).toMatchAriaSnapshot(`
+      await expect(page.locator(".flows_basicsV2_hint_hotspot")).toMatchAriaSnapshot(
+        `- button "Open hint"`,
+      );
+      await expect(page.locator(".flows_basicsV2_hint_tooltip")).toMatchAriaSnapshot(`
       - paragraph: Hint title
       - paragraph: Hint body
       - button "Cancel"
@@ -95,20 +97,20 @@ const run = (packageName: string) => {
         - img
       `);
 
-      await expect(page.locator(".flows_hint_tooltip")).toBeVisible();
+      await expect(page.locator(".flows_basicsV2_hint_tooltip")).toBeVisible();
       await expect(page.getByText("Hint title", { exact: true })).toBeVisible();
       await expect(page.getByText("Hint body", { exact: true })).toBeVisible();
       await page.getByText("Continue", { exact: true }).click();
-      await expect(page.locator(".flows_hint_tooltip")).toBeHidden();
-      await expect(page.locator(".flows_hint_hotspot")).toBeHidden();
+      await expect(page.locator(".flows_basicsV2_hint_tooltip")).toBeHidden();
+      await expect(page.locator(".flows_basicsV2_hint_hotspot")).toBeHidden();
     });
     test(`${packageName} - should hide footer without buttons`, async ({ page }) => {
       await mockBlocksEndpoint(page, [getBlock({})]);
       await page.goto(`/${packageName}.html`);
-      await expect(page.locator(".flows_hint_hotspot")).toBeVisible();
-      await expect(page.locator(".flows_hint_tooltip")).toBeHidden();
-      await page.locator(".flows_hint_hotspot").click();
-      await expect(page.locator(".flows_tooltip_footer")).toBeHidden();
+      await expect(page.locator(".flows_basicsV2_hint_hotspot")).toBeVisible();
+      await expect(page.locator(".flows_basicsV2_hint_tooltip")).toBeHidden();
+      await page.locator(".flows_basicsV2_hint_hotspot").click();
+      await expect(page.locator(".flows_basicsV2_tooltip_footer")).toBeHidden();
     });
   });
 
@@ -120,14 +122,14 @@ const run = (packageName: string) => {
         }),
       ]);
       await page.goto(`/${packageName}.html`);
-      await expect(page.locator(".flows_hint_hotspot")).toBeVisible();
-      await expect(page.locator(".flows_hint_tooltip")).toBeHidden();
-      await page.locator(".flows_hint_hotspot").click();
-      await expect(page.locator(".flows_dots")).toBeVisible();
-      await expect(page.locator(".flows_dots_dot")).toHaveCount(2);
-      await expect(page.locator(".flows_dots_dot_active")).toHaveCount(1);
+      await expect(page.locator(".flows_basicsV2_hint_hotspot")).toBeVisible();
+      await expect(page.locator(".flows_basicsV2_hint_tooltip")).toBeHidden();
+      await page.locator(".flows_basicsV2_hint_hotspot").click();
+      await expect(page.locator(".flows_basicsV2_dots")).toBeVisible();
+      await expect(page.locator(".flows_basicsV2_dots_dot")).toHaveCount(2);
+      await expect(page.locator(".flows_basicsV2_dots_dot_active")).toHaveCount(1);
 
-      await expect(page.locator(".flows_hint_tooltip")).toMatchAriaSnapshot(`
+      await expect(page.locator(".flows_basicsV2_hint_tooltip")).toMatchAriaSnapshot(`
         - paragraph: Step 1
         - paragraph: Hint body
         - button "Continue"
@@ -136,11 +138,11 @@ const run = (packageName: string) => {
         `);
 
       await page.getByText("Continue", { exact: true }).click();
-      await expect(page.locator(".flows_hint_hotspot")).toBeVisible();
-      await expect(page.locator(".flows_hint_tooltip")).toBeHidden();
-      await page.locator(".flows_hint_hotspot").click();
+      await expect(page.locator(".flows_basicsV2_hint_hotspot")).toBeVisible();
+      await expect(page.locator(".flows_basicsV2_hint_tooltip")).toBeHidden();
+      await page.locator(".flows_basicsV2_hint_hotspot").click();
 
-      await expect(page.locator(".flows_hint_tooltip")).toMatchAriaSnapshot(`
+      await expect(page.locator(".flows_basicsV2_hint_tooltip")).toMatchAriaSnapshot(`
           - paragraph: Step 2
           - paragraph: Hint body
           - button "Previous"
@@ -159,10 +161,10 @@ const run = (packageName: string) => {
         }),
       ]);
       await page.goto(`/${packageName}.html`);
-      await expect(page.locator(".flows_hint_hotspot")).toBeVisible();
-      await expect(page.locator(".flows_hint_tooltip")).toBeHidden();
-      await page.locator(".flows_hint_hotspot").click();
-      await expect(page.locator(".flows_tooltip_footer")).toBeHidden();
+      await expect(page.locator(".flows_basicsV2_hint_hotspot")).toBeVisible();
+      await expect(page.locator(".flows_basicsV2_hint_tooltip")).toBeHidden();
+      await page.locator(".flows_basicsV2_hint_hotspot").click();
+      await expect(page.locator(".flows_basicsV2_tooltip_footer")).toBeHidden();
     });
   });
 };

@@ -65,7 +65,7 @@ const run = (packageName: string) => {
       );
     });
 
-    await expect(page.locator(".flows_modal_modal")).toBeVisible();
+    await expect(page.locator(".flows_basicsV2_modal_modal")).toBeVisible();
     await modalReqPromise;
     await expect(wrongCmpReqWasSent).toBe(false);
   });

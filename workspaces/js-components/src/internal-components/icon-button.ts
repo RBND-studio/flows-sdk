@@ -19,7 +19,7 @@ export const IconButton = ({
     type="button"
     @click=${onClick}
     aria-label=${ifDefined(ariaLabel)}
-    class=${classNames("flows_iconButton", className)}
+    class=${classNames("flows_basicsV2_iconButton", className)}
   >
     ${children}
   </button>`;

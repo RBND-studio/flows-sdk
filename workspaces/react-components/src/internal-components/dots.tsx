@@ -16,11 +16,14 @@ export const Dots: FC<Props> = ({ count, index }) => {
   );
 
   return (
-    <div className="flows_dots">
+    <div className="flows_basicsV2_dots">
       {dots.map((item) => (
         <div
           key={item}
-          className={classNames("flows_dots_dot", item === index && "flows_dots_dot_active")}
+          className={classNames(
+            "flows_basicsV2_dots_dot",
+            item === index && "flows_basicsV2_dots_dot_active",
+          )}
         />
       ))}
     </div>
