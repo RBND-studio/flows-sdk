@@ -27,11 +27,7 @@ export const BaseModal = (props: Props): TemplateResult => {
   const size: ModalSize = props.size || "small";
 
   const overlay = props.overlay
-    ? html`<div
-        class=${classNames("flows_modal_overlay", props.close && "flows_modal_clickable")}
-        @click=${props.close}
-        aria-hidden="true"
-      ></div>`
+    ? html`<div class="flows_modal_overlay" @click=${props.close} aria-hidden="true"></div>`
     : null;
 
   const buttons = [];
