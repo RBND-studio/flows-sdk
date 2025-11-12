@@ -8,7 +8,6 @@ import {
 import { html, LitElement, type TemplateResult } from "lit";
 import { property } from "lit/decorators.js";
 import { defineBaseTooltip } from "../internal-components/base-tooltip";
-import { ActionButton } from "../internal-components/action-button";
 
 export type TooltipProps = ComponentProps<LibraryTooltipProps>;
 
@@ -51,20 +50,15 @@ class Tooltip extends LitElement implements TooltipProps {
   }
 
   render(): TemplateResult {
-    const buttons = [];
-    if (this.secondaryButton)
-      buttons.push(ActionButton({ action: this.secondaryButton, variant: "secondary" }));
-    if (this.primaryButton)
-      buttons.push(ActionButton({ action: this.primaryButton, variant: "primary" }));
-
     return html`<flows-base-tooltip
       .title=${this.title}
       .body=${this.body}
       .targetElement=${this.targetElement}
       .placement=${this.placement}
       .overlay=${!this.hideOverlay}
-      .close=${this.dismissible ? this.close : undefined}
-      .buttons=${buttons}
+      .onClose=${this.dismissible ? this.close : undefined}
+      .primaryButton=${this.primaryButton}
+      .secondaryButton=${this.secondaryButton}
     ></flows-base-tooltip>`;
   }
 }

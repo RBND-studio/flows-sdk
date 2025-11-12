@@ -1,4 +1,4 @@
-import { log, type Placement } from "@flows/shared";
+import { type Action, log, type Placement } from "@flows/shared";
 import { autoUpdate, computePosition, flip, offset, shift } from "@floating-ui/dom";
 import { html, LitElement, type PropertyValues, type TemplateResult } from "lit";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
@@ -7,6 +7,7 @@ import { Close16 } from "../icons/close-16";
 import { observeQuerySelector } from "../lib/query-selector";
 import { Text } from "./text";
 import { IconButton } from "./icon-button";
+import { ActionButton } from "./action-button";
 
 const CLOSE_TIMEOUT = 300;
 const BOUNDARY_PADDING = 8;
@@ -28,11 +29,13 @@ class BaseHint extends LitElement {
   offsetY?: number;
 
   @property({ attribute: false })
-  buttons: unknown[];
+  dots?: unknown;
+  @property({ attribute: false })
+  primaryButton?: Action;
+  @property({ attribute: false })
+  secondaryButton?: Action;
   @property({ attribute: false })
   onClose?: () => void;
-  @property({ attribute: false })
-  dots?: unknown;
 
   @state()
   private accessor _open = false;
@@ -135,6 +138,12 @@ class BaseHint extends LitElement {
   render(): TemplateResult | null {
     if (!this._reference) return null;
 
+    const buttons = [];
+    if (this.secondaryButton)
+      buttons.push(ActionButton({ action: this.secondaryButton, variant: "secondary" }));
+    if (this.primaryButton)
+      buttons.push(ActionButton({ action: this.primaryButton, variant: "primary" }));
+
     return html`
       <button
         aria-label="Open hint"
@@ -159,12 +168,12 @@ class BaseHint extends LitElement {
                 variant: "body",
                 children: unsafeHTML(this.body),
               })}
-              ${this.dots || Boolean(this.buttons.length)
+              ${this.dots || Boolean(buttons.length)
                 ? html` <div class="flows_basicsV2_tooltip_footer">
                     ${this.dots}
-                    ${this.buttons.length
+                    ${buttons.length
                       ? html`<div className="flows_basicsV2_tooltip_buttons_wrapper">
-                          <div className="flows_basicsV2_tooltip_buttons">${this.buttons}</div>
+                          <div className="flows_basicsV2_tooltip_buttons">${buttons}</div>
                         </div>`
                       : null}
                   </div>`

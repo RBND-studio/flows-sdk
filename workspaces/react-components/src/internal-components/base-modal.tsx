@@ -12,8 +12,8 @@ interface Props {
   overlay: boolean;
   position?: ModalPosition;
   size?: ModalSize;
-  dots?: ReactNode;
 
+  dots?: ReactNode;
   primaryButton?: Action;
   secondaryButton?: Action;
   onClose?: () => void;

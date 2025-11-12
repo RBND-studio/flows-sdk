@@ -8,7 +8,6 @@ import {
 import { html, LitElement, type TemplateResult } from "lit";
 import { property } from "lit/decorators.js";
 import { defineBaseHint } from "../internal-components/base-hint";
-import { ActionButton } from "../internal-components/action-button";
 
 export type HintProps = ComponentProps<LibraryHintProps>;
 
@@ -55,12 +54,6 @@ class Hint extends LitElement implements HintProps {
   }
 
   render(): TemplateResult {
-    const buttons = [];
-    if (this.secondaryButton)
-      buttons.push(ActionButton({ action: this.secondaryButton, variant: "secondary" }));
-    if (this.primaryButton)
-      buttons.push(ActionButton({ action: this.primaryButton, variant: "primary" }));
-
     return html`<flows-base-hint
       .title=${this.title}
       .body=${this.body}
@@ -69,7 +62,8 @@ class Hint extends LitElement implements HintProps {
       .offsetX=${this.offsetX}
       .offsetY=${this.offsetY}
       .onClose=${this.dismissible ? this.close : undefined}
-      .buttons=${buttons}
+      .primaryButton=${this.primaryButton}
+      .secondaryButton=${this.secondaryButton}
     ></flows-base-hint>`;
   }
 }

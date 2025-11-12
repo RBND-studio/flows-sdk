@@ -1,4 +1,4 @@
-import { log, type Placement } from "@flows/shared";
+import { type Action, log, type Placement } from "@flows/shared";
 import {
   arrow,
   autoUpdate,
@@ -16,24 +16,28 @@ import { Close16 } from "../icons/close-16";
 import { observeQuerySelector } from "../lib/query-selector";
 import { Text } from "./text";
 import { IconButton } from "./icon-button";
+import { ActionButton } from "./action-button";
 
 class BaseTooltip extends LitElement {
   @property()
   title: string;
   @property()
   body: string;
-  @property({ attribute: false })
-  buttons: unknown[];
-  @property({ attribute: false })
-  close?: () => void;
   @property()
   targetElement: string;
   @property()
   placement?: Placement;
   @property({ type: Boolean })
   overlay?: boolean;
+
   @property({ attribute: false })
   dots?: unknown;
+  @property({ attribute: false })
+  primaryButton?: Action;
+  @property({ attribute: false })
+  secondaryButton?: Action;
+  @property({ attribute: false })
+  onClose?: () => void;
 
   @query(".flows_basicsV2_tooltip_tooltip")
   tooltip: HTMLElement;
@@ -97,6 +101,12 @@ class BaseTooltip extends LitElement {
       return null;
     }
 
+    const buttons = [];
+    if (this.secondaryButton)
+      buttons.push(ActionButton({ action: this.secondaryButton, variant: "secondary" }));
+    if (this.primaryButton)
+      buttons.push(ActionButton({ action: this.primaryButton, variant: "primary" }));
+
     return html`
       <div class="flows_basicsV2_tooltip_root">
         ${this.overlay ? html`<div class="flows_basicsV2_tooltip_overlay"></div>` : null}
@@ -111,22 +121,22 @@ class BaseTooltip extends LitElement {
             className: "flows_basicsV2_tooltip_body",
             children: unsafeHTML(this.body),
           })}
-          ${this.dots || Boolean(this.buttons.length)
+          ${this.dots || Boolean(buttons.length)
             ? html` <div class="flows_basicsV2_tooltip_footer">
                 ${this.dots}
-                ${this.buttons.length
+                ${buttons.length
                   ? html`<div className="flows_basicsV2_tooltip_buttons_wrapper">
-                      <div className="flows_basicsV2_tooltip_buttons">${this.buttons}</div>
+                      <div className="flows_basicsV2_tooltip_buttons">${buttons}</div>
                     </div>`
                   : null}
               </div>`
             : null}
-          ${this.close
+          ${this.onClose
             ? IconButton({
                 "aria-label": "Close",
                 className: "flows_basicsV2_tooltip_close",
                 children: Close16(),
-                onClick: this.close,
+                onClick: this.onClose,
               })
             : null}
 

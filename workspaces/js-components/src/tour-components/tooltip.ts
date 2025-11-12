@@ -8,7 +8,6 @@ import {
 import { LitElement, type TemplateResult, html } from "lit";
 import { property } from "lit/decorators.js";
 import { defineBaseTooltip } from "../internal-components/base-tooltip";
-import { ActionButton } from "../internal-components/action-button";
 import { Dots } from "../internal-components/dots";
 
 export type TooltipProps = TourComponentProps<TourTooltipProps>;
@@ -58,21 +57,6 @@ class Tooltip extends LitElement implements TooltipProps {
   }
 
   render(): TemplateResult {
-    const primaryBtn = this.primaryButton
-      ? ActionButton({ action: this.primaryButton, variant: "primary" })
-      : null;
-    const secondaryBtn = this.secondaryButton
-      ? ActionButton({ action: this.secondaryButton, variant: "secondary" })
-      : null;
-
-    const buttons =
-      Boolean(primaryBtn) || Boolean(secondaryBtn)
-        ? [
-            secondaryBtn ?? html`<div aria-hidden="true"></div>`,
-            primaryBtn ?? html`<div aria-hidden="true"></div>`,
-          ]
-        : [];
-
     const dots = !this.hideProgress
       ? Dots({
           count: this.__flows.tourVisibleStepCount ?? 0,
@@ -86,8 +70,9 @@ class Tooltip extends LitElement implements TooltipProps {
       .targetElement=${this.targetElement}
       .placement=${this.placement}
       .overlay=${!this.hideOverlay}
-      .close=${this.dismissible ? this.cancel : undefined}
-      .buttons=${buttons}
+      .onClose=${this.dismissible ? this.cancel : undefined}
+      .primaryButton=${this.primaryButton}
+      .secondaryButton=${this.secondaryButton}
       .dots=${dots}
     ></flows-base-tooltip>`;
   }

@@ -9,7 +9,6 @@ import { html, LitElement } from "lit";
 import { property } from "lit/decorators.js";
 import { keyed } from "lit/directives/keyed.js";
 import { defineBaseHint } from "../internal-components/base-hint";
-import { ActionButton } from "../internal-components/action-button";
 import { Dots } from "../internal-components/dots";
 
 export type HintProps = TourComponentProps<TourHintProps>;
@@ -63,21 +62,6 @@ class Hint extends LitElement implements HintProps {
   }
 
   render(): unknown {
-    const primaryBtn = this.primaryButton
-      ? ActionButton({ action: this.primaryButton, variant: "primary" })
-      : null;
-    const secondaryBtn = this.secondaryButton
-      ? ActionButton({ action: this.secondaryButton, variant: "secondary" })
-      : null;
-
-    const buttons =
-      Boolean(primaryBtn) || Boolean(secondaryBtn)
-        ? [
-            secondaryBtn ?? html`<div aria-hidden="true"></div>`,
-            primaryBtn ?? html`<div aria-hidden="true"></div>`,
-          ]
-        : [];
-
     const dots = !this.hideProgress
       ? Dots({
           count: this.__flows.tourVisibleStepCount ?? 0,
@@ -96,7 +80,8 @@ class Hint extends LitElement implements HintProps {
         .offsetX=${this.offsetX}
         .offsetY=${this.offsetY}
         .onClose=${this.dismissible ? this.cancel : undefined}
-        .buttons=${buttons}
+        .primaryButton=${this.primaryButton}
+        .secondaryButton=${this.secondaryButton}
         .dots=${dots}
       ></flows-base-hint>`,
     );

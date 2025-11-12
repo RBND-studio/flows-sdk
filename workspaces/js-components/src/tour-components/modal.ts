@@ -72,7 +72,7 @@ class Modal extends LitElement implements ModalProps {
       overlay: !this.hideOverlay,
       position: this.position,
       size: this.size,
-      close: this.dismissible ? this.cancel : undefined,
+      onClose: this.dismissible ? this.cancel : undefined,
       dots,
     });
   }

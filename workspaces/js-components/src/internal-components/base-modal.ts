@@ -13,11 +13,11 @@ interface Props {
   overlay: boolean;
   position?: ModalPosition;
   size?: ModalSize;
-  dots?: TemplateResult;
 
+  dots?: TemplateResult;
   primaryButton?: Action;
   secondaryButton?: Action;
-  close?: () => void;
+  onClose?: () => void;
 }
 
 export const BaseModal = (props: Props): TemplateResult => {
@@ -29,7 +29,7 @@ export const BaseModal = (props: Props): TemplateResult => {
   const overlay = props.overlay
     ? html`<div
         class="flows_basicsV2_modal_overlay"
-        @click=${props.close}
+        @click=${props.onClose}
         aria-hidden="true"
       ></div>`
     : null;
@@ -56,12 +56,12 @@ export const BaseModal = (props: Props): TemplateResult => {
         ${buttons.length
           ? html`<div class=${"flows_basicsV2_modal_footer"}>${buttons}</div>`
           : null}
-        ${props.close
+        ${props.onClose
           ? IconButton({
               children: Close16(),
               "aria-label": "Close",
               className: "flows_basicsV2_modal_close",
-              onClick: props.close,
+              onClick: props.onClose,
             })
           : null}
       </div>

@@ -5,13 +5,14 @@ import {
   useFloating,
   autoUpdate as floatingAutoUpdate,
 } from "@floating-ui/react-dom";
-import { log, type Placement } from "@flows/shared";
+import { type Action, log, type Placement } from "@flows/shared";
 import { type ReactNode, useCallback, useEffect, useState, type FC } from "react";
 import { useQuerySelector } from "../hooks/use-query-selector";
 import { Close16 } from "../icons/close16";
 import { useFirstRender } from "../hooks/use-first-render";
 import { Text } from "./text";
 import { IconButton } from "./icon-button";
+import { ActionButton } from "./action-button";
 
 interface Props {
   title: string;
@@ -22,8 +23,9 @@ interface Props {
   offsetX?: number;
   offsetY?: number;
 
-  buttons?: ReactNode;
   dots?: ReactNode;
+  primaryButton?: Action;
+  secondaryButton?: Action;
   onClose?: () => void;
 }
 
@@ -100,6 +102,14 @@ export const BaseHint: FC<Props> = (props) => {
   // Avoid rendering on client render to prevent hydration issues
   if (firstRender) return null;
 
+  const buttons = [];
+  if (props.secondaryButton)
+    buttons.push(
+      <ActionButton key="secondary" action={props.secondaryButton} variant="secondary" />,
+    );
+  if (props.primaryButton)
+    buttons.push(<ActionButton key="primary" action={props.primaryButton} variant="primary" />);
+
   return (
     <>
       <button
@@ -129,12 +139,12 @@ export const BaseHint: FC<Props> = (props) => {
             className="flows_basicsV2_tooltip_body"
             dangerouslySetInnerHTML={{ __html: props.body }}
           />
-          {(props.dots ?? props.buttons) ? (
+          {(props.dots ?? buttons.length) ? (
             <div className="flows_basicsV2_tooltip_footer">
               {props.dots}
-              {props.buttons ? (
+              {buttons.length ? (
                 <div className="flows_basicsV2_tooltip_buttons_wrapper">
-                  <div className="flows_basicsV2_tooltip_buttons">{props.buttons}</div>
+                  <div className="flows_basicsV2_tooltip_buttons">{buttons}</div>
                 </div>
               ) : null}
             </div>

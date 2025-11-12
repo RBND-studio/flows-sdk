@@ -12,12 +12,13 @@ import {
   autoUpdate as floatingAutoUpdate,
 } from "@floating-ui/react-dom";
 import classNames from "classnames";
-import { log } from "@flows/shared";
+import { type Action, log } from "@flows/shared";
 import { Close16 } from "../icons/close16";
 import { useQuerySelector } from "../hooks/use-query-selector";
 import { useFirstRender } from "../hooks/use-first-render";
 import { Text } from "./text";
 import { IconButton } from "./icon-button";
+import { ActionButton } from "./action-button";
 
 const DISTANCE = 4;
 const ARROW_SIZE = 6;
@@ -29,11 +30,13 @@ interface Props {
   title: string;
   body: string;
   targetElement: string;
-  buttons?: ReactNode;
-  onClose?: () => void;
   placement?: Placement;
   overlay?: boolean;
+
   dots?: ReactNode;
+  primaryButton?: Action;
+  secondaryButton?: Action;
+  onClose?: () => void;
 }
 
 const autoUpdate: typeof floatingAutoUpdate = (ref, floating, update) =>
@@ -119,6 +122,14 @@ export const BaseTooltip: FC<Props> = (props) => {
     overlayRef.current.style.height = `${targetPosition.height}px`;
   }
 
+  const buttons = [];
+  if (props.secondaryButton)
+    buttons.push(
+      <ActionButton key="secondary" action={props.secondaryButton} variant="secondary" />,
+    );
+  if (props.primaryButton)
+    buttons.push(<ActionButton key="primary" action={props.primaryButton} variant="primary" />);
+
   return (
     <div className="flows_basicsV2_tooltip_root">
       {props.overlay ? <div className="flows_basicsV2_tooltip_overlay" ref={overlayRef} /> : null}
@@ -137,12 +148,12 @@ export const BaseTooltip: FC<Props> = (props) => {
           dangerouslySetInnerHTML={{ __html: props.body }}
         />
 
-        {(props.dots ?? props.buttons) ? (
+        {(props.dots ?? buttons.length) ? (
           <div className="flows_basicsV2_tooltip_footer">
             {props.dots}
-            {props.buttons ? (
+            {buttons.length ? (
               <div className="flows_basicsV2_tooltip_buttons_wrapper">
-                <div className="flows_basicsV2_tooltip_buttons">{props.buttons}</div>
+                <div className="flows_basicsV2_tooltip_buttons">{buttons}</div>
               </div>
             ) : null}
           </div>
