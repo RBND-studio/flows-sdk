@@ -17,11 +17,11 @@ export interface FlowsProperties {
    */
   workflowId: string;
   /**
-   * Total number of visible tour blocks (components) in the current tour.
+   * Total number of visible tour steps (components) in the current tour. Logic steps (e.g. wait) are not counted.
    */
   tourVisibleStepCount?: number;
   /**
-   * 0-based index of the currently visible tour block (component) in the current tour.
+   * 0-based index of the currently visible tour step (component) in the current tour. Logic steps (e.g. wait) are not counted.
    */
   tourVisibleStepIndex?: number;
 }

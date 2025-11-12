@@ -12,32 +12,7 @@ import { spreadProps } from "./spread-props";
 import { components, tourComponents } from "./components-store";
 import { FlowsSlot } from "./slot";
 
-/**
- * Render floating blocks at the end of the body element. This function needs to be called every time the floating blocks change.
- *
- * @param options - active blocks to render and the components to render them with
- * TODO: update example
- * @example
- * ```js
- * import { addFloatingBlocksChangeListener } from "@flows/js";
- * import { render } from "@flows/js-components";
- * import * as components from "@flows/js-components/components";
- * import * as tourComponents from "@flows/js-components/tour-components";
- *
- * const dispose = addFloatingBlocksChangeListener((blocks) => {
- *   render({
- *     blocks,
- *     components: { ...components },
- *     tourComponents: { ...tourComponents },
- *   });
- * });
- *
- * // Call `dispose` when you want to stop listening to the changes to avoid memory leaks
- * dispose();
- * ```
- */
-
-export class FlowsFloatingBlocks extends LitElement {
+class FlowsFloatingBlocks extends LitElement {
   @state()
   private _blocks: ActiveBlock[] = [];
   private _changeListenerDispose?: () => void;
@@ -90,6 +65,29 @@ export interface SetupJsComponentsOptions {
   tourComponents: TourComponents;
 }
 
+/**
+ * Defines custom elements for `flows-floating-blocks`, `flows-slot` and all the passed UI Components.
+ *
+ * @param options - components and tour components to use for rendering
+ * @example
+ * ```js
+ * import { setupJsComponents } from "@flows/js-components";
+ * import * as components from "@flows/js-components/components";
+ * import * as tourComponents from "@flows/js-components/tour-components";
+ *
+ * setupJsComponents({
+ *   components: { ...components },
+ *   tourComponents: { ...tourComponents },
+ * });
+ * ```
+ * And add `<flows-floating-blocks>` at the end of the `<body>` tag:
+ * ```html
+ * <body>
+ *   <!-- Your app content -->
+ *   <flows-floating-blocks></flows-floating-blocks>
+ * </body>
+ * ```
+ */
 export const setupJsComponents = (options: SetupJsComponentsOptions): void => {
   Object.entries(options.components).forEach(([name, Cmp]) => {
     components[name] = Cmp;
@@ -112,6 +110,9 @@ export const setupJsComponents = (options: SetupJsComponentsOptions): void => {
     }
   });
 
-  customElements.define("flows-floating-blocks", FlowsFloatingBlocks);
-  customElements.define("flows-slot", FlowsSlot);
+  const floatingBlocksTag = "flows-floating-blocks";
+  const slotTag = "flows-slot";
+  if (!customElements.get(floatingBlocksTag))
+    customElements.define(floatingBlocksTag, FlowsFloatingBlocks);
+  if (!customElements.get(slotTag)) customElements.define(slotTag, FlowsSlot);
 };
