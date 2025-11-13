@@ -1,6 +1,7 @@
-import { Block } from "@flows/shared";
+import { Block, PropertyMeta } from "@flows/shared";
 import { test, expect } from "@playwright/test";
 import { randomUUID } from "crypto";
+import { mockBlocksEndpoint } from "./utils";
 
 test.beforeEach(async ({ page }) => {
   await page.routeWebSocket(
@@ -9,22 +10,30 @@ test.beforeEach(async ({ page }) => {
   );
 });
 
-const block: Block = {
+const getBlock = ({ propertyMeta }: { propertyMeta: PropertyMeta[] }): Block => ({
   id: randomUUID(),
   workflowId: randomUUID(),
   type: "component",
-  componentType: "Modal",
-  data: { title: "Workflow block", body: "", continueText: "continue" },
-  exitNodes: [],
+  componentType: "BasicsV2Modal",
+  data: { title: "Workflow block", body: "" },
+  exitNodes: ["continue"],
   slottable: false,
-  propertyMeta: [],
-};
+  propertyMeta,
+});
 
 const run = (packageName: string) => {
   test(`${packageName} - shouldn't pass any methods without exit nodes`, async ({ page }) => {
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [block] } });
-    });
+    await mockBlocksEndpoint(page, [
+      getBlock({
+        propertyMeta: [
+          {
+            type: "action",
+            key: "primaryButton",
+            value: { label: "Continue" },
+          },
+        ],
+      }),
+    ]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Workflow block", { exact: true })).toBeVisible();
     let reqWasSent = false;
@@ -33,19 +42,23 @@ const run = (packageName: string) => {
         reqWasSent = true;
       }
     });
-    await page.getByText("continue", { exact: true }).click();
+    await page.getByText("Continue", { exact: true }).click();
     expect(reqWasSent).toBe(false);
   });
   test(`${packageName} - should pass methods with exit nodes and hide the block`, async ({
     page,
   }) => {
-    const b: Block = {
-      ...block,
-      exitNodes: ["continue"],
-    };
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [b] } });
-    });
+    await mockBlocksEndpoint(page, [
+      getBlock({
+        propertyMeta: [
+          {
+            type: "action",
+            key: "primaryButton",
+            value: { label: "Continue", exitNode: "continue" },
+          },
+        ],
+      }),
+    ]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Workflow block", { exact: true })).toBeVisible();
     const req = page.waitForRequest((req) => {
@@ -61,7 +74,7 @@ const run = (packageName: string) => {
         body.propertyKey === "continue"
       );
     });
-    await page.getByText("continue", { exact: true }).click();
+    await page.getByText("Continue", { exact: true }).click();
     await req;
     await expect(page.getByText("Workflow block", { exact: true })).toBeHidden({ timeout: 0 });
   });

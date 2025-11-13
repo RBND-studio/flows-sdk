@@ -24,42 +24,54 @@ const getTour = (tour_trigger?: TourTriggerExpression[]): Block => ({
       id: randomUUID(),
       workflowId: randomUUID(),
       type: "tour-component",
-      componentType: "Modal",
+      componentType: "BasicsV2Modal",
       data: {
         title: "Hello",
         body: "",
-        continueText: "Continue",
-        previousText: "Previous",
-        showCloseButton: true,
+        dismissible: true,
       },
       slottable: false,
+      propertyMeta: [
+        {
+          type: "action",
+          key: "primaryButton",
+          value: { label: "Continue", exitNode: "continue" },
+        },
+        {
+          type: "action",
+          key: "secondaryButton",
+          value: { label: "Previous", exitNode: "previous" },
+        },
+      ],
     },
     {
       id: randomUUID(),
       workflowId: randomUUID(),
       type: "tour-component",
-      componentType: "Modal",
+      componentType: "BasicsV2Modal",
       data: {
         title: "World",
         body: "",
-        continueText: "Continue",
-        previousText: "Previous",
-        showCloseButton: false,
+        dismissible: false,
       },
       slottable: false,
+      propertyMeta: [
+        {
+          type: "action",
+          key: "primaryButton",
+          value: { label: "Continue", exitNode: "continue" },
+        },
+        {
+          type: "action",
+          key: "secondaryButton",
+          value: { label: "Previous", exitNode: "previous" },
+        },
+      ],
     },
   ],
 });
 
 const run = (packageName: string) => {
-  test(`${packageName} - should show tour first step without previous button`, async ({ page }) => {
-    await mockBlocksEndpoint(page, [getTour()]);
-    await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("Hello", { exact: true })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Close" })).toBeVisible();
-    await expect(page.getByText("Continue", { exact: true })).toBeVisible();
-    await expect(page.getByText("Previous", { exact: true })).toBeHidden();
-  });
   test(`${packageName} - should be able to switch between tour steps`, async ({ page }) => {
     await mockBlocksEndpoint(page, [getTour()]);
     await page.goto(`/${packageName}.html`);

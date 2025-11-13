@@ -1,69 +1,70 @@
-import { close16 } from "../icons/close-16";
-import { type _Component } from "../types";
+import { html, type TemplateResult } from "lit";
+import { unsafeHTML } from "lit/directives/unsafe-html.js";
+import classNames from "classnames";
+import { type Action, type ModalPosition, type ModalSize } from "@flows/shared";
+import { Close16 } from "../icons/close-16";
+import { Text } from "./text";
+import { IconButton } from "./icon-button";
+import { ActionButton } from "./action-button";
 
 interface Props {
   title: string;
   body: string;
   overlay: boolean;
-  buttons: HTMLElement[];
-  close?: () => void;
+  position?: ModalPosition;
+  size?: ModalSize;
+
+  dots?: TemplateResult;
+  primaryButton?: Action;
+  secondaryButton?: Action;
+  onClose?: () => void;
 }
 
-export const BaseModal: _Component<Props> = (props) => {
-  const root = document.createElement("div");
+export const BaseModal = (props: Props): TemplateResult => {
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- value can be empty string ""
+  const position: ModalPosition = props.position || "center";
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- value can be empty string ""
+  const size: ModalSize = props.size || "small";
 
-  let overlay: HTMLDivElement | null = null;
-  if (props.overlay) {
-    overlay = document.createElement("div");
-    root.appendChild(overlay);
-    overlay.className = `flows_modal_overlay${props.close ? " flows_modal_clickable" : ""}`;
-    overlay.setAttribute("aria-hidden", "true");
-    if (props.close) overlay.addEventListener("click", props.close);
-  }
+  const overlay = props.overlay
+    ? html`<div
+        class="flows_basicsV2_modal_overlay"
+        @click=${props.onClose}
+        aria-hidden="true"
+      ></div>`
+    : null;
 
-  const modalWrapper = document.createElement("div");
-  root.appendChild(modalWrapper);
-  modalWrapper.className = "flows_modal_wrapper";
+  const buttons = [];
+  if (props.secondaryButton)
+    buttons.push(ActionButton({ action: props.secondaryButton, variant: "secondary" }));
+  if (props.primaryButton)
+    buttons.push(ActionButton({ action: props.primaryButton, variant: "primary" }));
 
-  const modal = document.createElement("div");
-  modalWrapper.appendChild(modal);
-  modal.className = "flows_modal_modal";
-
-  const title = document.createElement("p");
-  modal.appendChild(title);
-  title.className = "flows_text flows_text_title";
-  title.textContent = props.title;
-
-  const body = document.createElement("p");
-  modal.appendChild(body);
-  body.className = "flows_text flows_text_body";
-  body.innerHTML = props.body;
-
-  if (props.buttons.length) {
-    const footer = document.createElement("div");
-    modal.appendChild(footer);
-    footer.className = "flows_modal_footer";
-
-    props.buttons.forEach((button) => footer.appendChild(button));
-  }
-
-  let closeButton: HTMLButtonElement | null = null;
-  if (props.close) {
-    closeButton = document.createElement("button");
-    modal.appendChild(closeButton);
-    closeButton.className = "flows_iconButton flows_modal_close";
-    closeButton.setAttribute("aria-label", "Close");
-    closeButton.addEventListener("click", props.close);
-    closeButton.appendChild(close16());
-  }
-
-  return {
-    element: root,
-    cleanup: () => {
-      if (props.close) {
-        closeButton?.removeEventListener("click", props.close);
-        overlay?.removeEventListener("click", props.close);
-      }
-    },
-  };
+  return html`
+    ${overlay}
+    <div class="flows_basicsV2_modal_wrapper">
+      <div
+        class=${classNames(
+          "flows_basicsV2_modal_modal",
+          `flows_basicsV2_modal_${position}`,
+          `flows_basicsV2_modal_width_${size}`,
+        )}
+      >
+        ${Text({ variant: "title", children: props.title })}
+        ${Text({ variant: "body", children: unsafeHTML(props.body) })}
+        ${props.dots ? html`<div class="flows_basicsV2_modal_dots">${props.dots}</div>` : null}
+        ${buttons.length
+          ? html`<div class=${"flows_basicsV2_modal_footer"}>${buttons}</div>`
+          : null}
+        ${props.onClose
+          ? IconButton({
+              children: Close16(),
+              "aria-label": "Close",
+              className: "flows_basicsV2_modal_close",
+              onClick: props.onClose,
+            })
+          : null}
+      </div>
+    </div>
+  `;
 };

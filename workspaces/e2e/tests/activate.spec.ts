@@ -41,7 +41,7 @@ test.beforeEach(async ({ page }) => {
 const run = (packageName: string) => {
   test(`${packageName} - shouldn't call activate without matching component`, async ({ page }) => {
     const wrongCmpBlock = getBlock({ componentType: "WrongCmp" });
-    const modalBlock = getBlock({ componentType: "Modal" });
+    const modalBlock = getBlock({ componentType: "BasicsV2Modal" });
     await page.route("**/v2/sdk/blocks", (route) => {
       route.fulfill({ json: { blocks: [wrongCmpBlock, modalBlock] } });
     });
@@ -65,12 +65,12 @@ const run = (packageName: string) => {
       );
     });
 
-    await expect(page.locator(".flows_modal_modal")).toBeVisible();
+    await expect(page.locator(".flows_basicsV2_modal_modal")).toBeVisible();
     await modalReqPromise;
     await expect(wrongCmpReqWasSent).toBe(false);
   });
   test(`${packageName} - should call activate for workflow block`, async ({ page }) => {
-    const block = getBlock({ componentType: "Modal" });
+    const block = getBlock({ componentType: "BasicsV2Modal" });
     await page.route("**/v2/sdk/blocks", (route) => {
       route.fulfill({ json: { blocks: [block] } });
     });
@@ -90,7 +90,7 @@ const run = (packageName: string) => {
     });
   });
   test(`${packageName} - should call activate for tour block`, async ({ page }) => {
-    const block = getTour({ componentType: "Modal" });
+    const block = getTour({ componentType: "BasicsV2Modal" });
     await page.route("**/v2/sdk/blocks", (route) => {
       route.fulfill({ json: { blocks: [block] } });
     });

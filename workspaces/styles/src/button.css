@@ -1,34 +1,37 @@
-.flows_button {
-  border-radius: var(--flows-borderRadius-small);
+.flows_basicsV2_button {
+  border-radius: var(--flows-basicsV2-borderRadius-m);
   cursor: pointer;
   transition:
     background-color 120ms ease-in-out,
     border-color 120ms ease-in-out;
-  padding: 4px 8px;
-  font-family: var(--flows-font-family);
-  font-size: var(--flows-base-font-size);
-  line-height: var(--flows-base-line-height);
+  padding: 5px 15px;
+  font-family: var(--flows-basicsV2-font-family);
+  font-size: var(--flows-basicsV2-button-font-size);
+  line-height: var(--flows-basicsV2-button-line-height);
   font-weight: 600;
   white-space: nowrap;
   text-decoration: none;
+  text-align: center;
 }
 
-.flows_button_primary {
-  background-color: var(--flows-bg-primary);
-  border: var(--flows-border-primary);
-  color: var(--flows-fg-onPrimary);
+.flows_basicsV2_button_primary {
+  background-color: var(--flows-basicsV2-bg-primary);
+  border: var(--flows-basicsV2-border-primary);
+  color: var(--flows-basicsV2-fg-onPrimary);
+  background-image: var(--flows-basicsV2-primary-button-gradient);
+  box-shadow: var(--flows-basicsV2-primary-button-shadow);
 }
-.flows_button_primary:hover {
-  background-color: var(--flows-bg-primary-hover);
-  border: 1px solid var(--flows-bg-primary-hover);
+.flows_basicsV2_button_primary:hover {
+  background-color: var(--flows-basicsV2-bg-primary-hover);
 }
 
-.flows_button_secondary {
-  background-color: var(--flows-bg-subtle);
-  border: var(--flows-border-strong);
-  color: var(--flows-fg-default);
+.flows_basicsV2_button_secondary {
+  background-color: var(--flows-basicsV2-bg-subtle);
+  border: var(--flows-basicsV2-border-strong);
+  color: var(--flows-basicsV2-fg-default);
+  box-shadow: var(--flows-basicsV2-secondary-button-shadow);
 }
-.flows_button_secondary:hover {
-  background-color: var(--flows-bg-hover);
-  border: var(--flows-border-strong-hover);
+.flows_basicsV2_button_secondary:hover {
+  background-color: var(--flows-basicsV2-bg-hover);
+  border: var(--flows-basicsV2-border-strong-hover);
 }

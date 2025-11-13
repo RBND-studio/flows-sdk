@@ -20,7 +20,7 @@
     "product-adoption",
     "product-tours"
   ],
-  "version": "1.2.1",
+  "version": "1.2.2-canary.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/RBND-studio/flows-sdk.git"
@@ -38,7 +38,9 @@
     "prepare": "pnpm build"
   },
   "dependencies": {
-    "@floating-ui/dom": "^1.7.4"
+    "@floating-ui/dom": "^1.7.4",
+    "classnames": "^2.5.1",
+    "lit": "^3.3.1"
   },
   "devDependencies": {
     "@flows/js": "workspace:*",

@@ -1,7 +1,0 @@
-/* Temporary fix until we implement better rendering that reuses HTML elements */
-.flows_tooltip_tooltip,
-.flows_tooltip_overlay,
-.flows_modal_overlay,
-.flows_modal_modal {
-  animation: unset;
-}

@@ -1,44 +1,66 @@
-import { type ComponentProps } from "@flows/shared";
+import {
+  type ModalPosition,
+  type Action,
+  type ComponentProps,
+  type FlowsProperties,
+  type ModalProps as LibraryModalProps,
+  type ModalSize,
+} from "@flows/shared";
+import { LitElement } from "lit";
+import { property } from "lit/decorators.js";
 import { BaseModal } from "../internal-components/base-modal";
-import { type Component } from "../types";
 
-export type ModalProps = ComponentProps<{
+export type ModalProps = ComponentProps<LibraryModalProps>;
+
+class Modal extends LitElement implements ModalProps {
+  @property({ type: String })
   title: string;
+
+  @property({ type: String })
   body: string;
-  continueText?: string;
-  showCloseButton: boolean;
+
+  @property({ type: Object })
+  primaryButton?: Action;
+
+  @property({ type: Object })
+  secondaryButton?: Action;
+
+  @property({ type: Boolean })
+  dismissible: boolean;
+
+  @property({ type: Boolean })
   hideOverlay: boolean;
 
+  @property({ type: String })
+  position?: ModalPosition;
+
+  @property({ type: String })
+  size?: ModalSize;
+
+  @property({ type: Function })
   continue: () => void;
+
+  @property({ type: Function })
   close: () => void;
-}>;
 
-export const Modal: Component<ModalProps> = (props) => {
-  const buttons: HTMLElement[] = [];
+  __flows: FlowsProperties;
 
-  let continueButton: HTMLButtonElement | null = null;
-  if (props.continueText) {
-    continueButton = document.createElement("button");
-    buttons.push(continueButton);
-    continueButton.className = "flows_button flows_button_primary";
-    continueButton.textContent = props.continueText;
-    continueButton.addEventListener("click", props.continue);
+  createRenderRoot(): this {
+    return this;
   }
 
-  const result = BaseModal({
-    title: props.title,
-    body: props.body,
-    overlay: !props.hideOverlay,
-    buttons,
-    close: props.showCloseButton ? props.close : undefined,
-  });
+  render(): unknown {
+    return BaseModal({
+      title: this.title,
+      body: this.body,
+      primaryButton: this.primaryButton,
+      secondaryButton: this.secondaryButton,
+      overlay: !this.hideOverlay,
+      position: this.position,
+      size: this.size,
+      onClose: this.dismissible ? this.close : undefined,
+    });
+  }
+}
 
-  return {
-    element: result.element,
-    cleanup: () => {
-      continueButton?.removeEventListener("click", props.continue);
-
-      result.cleanup();
-    },
-  };
-};
+export const BasicsV2Modal = Modal;

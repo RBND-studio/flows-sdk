@@ -1,99 +1,120 @@
 :root {
   /* Colors */
-  --flows-bg-default: #ffffff;
-  --flows-bg-subtle: #fafafa;
-  --flows-bg-hover: #f0f0f0;
-  --flows-bg-primary: #067efd;
-  --flows-bg-primary-hover: #0d67ec;
-  --flows-bg-overlay: rgba(0, 0, 0, 0.4);
+  --flows-basicsV2-bg-default: #ffffff;
+  --flows-basicsV2-bg-subtle: #fafafa;
+  --flows-basicsV2-bg-strong: #eaeaea;
+  --flows-basicsV2-bg-hover: #f0f0f0;
+  --flows-basicsV2-bg-primary: #262626;
+  --flows-basicsV2-bg-primary-hover: #3b3b3b;
+  --flows-basicsV2-bg-overlay: rgba(0, 0, 0, 0.4);
 
-  --flows-fg-default: #1a1a1a;
-  --flows-fg-onPrimary: #ffffff;
+  --flows-basicsV2-fg-default: #1a1a1a;
+  --flows-basicsV2-fg-onPrimary: #ffffff;
 
-  --flows-borderWidth: 1px;
-  --flows-border: var(--flows-borderWidth) solid #d6d6d6;
-  --flows-border-strong: var(--flows-borderWidth) solid #ccc;
-  --flows-border-strong-hover: var(--flows-borderWidth) solid #bababa;
-  --flows-border-primary: var(--flows-borderWidth) solid #0d67ec;
+  --flows-basicsV2-borderWidth: 1px;
+  --flows-basicsV2-border: var(--flows-basicsV2-borderWidth) solid #d6d6d6;
+  --flows-basicsV2-border-strong: var(--flows-basicsV2-borderWidth) solid #ccc;
+  --flows-basicsV2-border-strong-hover: var(--flows-basicsV2-borderWidth) solid #bababa;
+  --flows-basicsV2-border-primary: var(--flows-basicsV2-borderWidth) solid #262626;
 
-  --flows-shadow:
+  --flows-basicsV2-shadow:
     0px 6px 18px rgba(0, 0, 0, 0.15), 0px 3px 8px rgba(0, 0, 0, 0.03),
     0px 0px 1px rgba(0, 0, 0, 0.05);
 
-  --flows-shadow-large:
+  --flows-basicsV2-shadow-large:
     0px 10px 48px rgba(0, 0, 0, 0.1), 0px 4px 24px rgba(0, 0, 0, 0.12),
     0px 0px 1px rgba(0, 0, 0, 0.05);
 
   /* Sizes */
-  --flows-borderRadius-xSmall: 3px;
-  --flows-borderRadius-small: 6px;
-  --flows-borderRadius-medium: 8px;
-  --flows-borderRadius-large: 12px;
+  --flows-basicsV2-borderRadius-xs: 3px;
+  --flows-basicsV2-borderRadius-m: 8px;
+  --flows-basicsV2-borderRadius-l: 12px;
+  --flows-basicsV2-borderRadius-xl: 16px;
 
-  --flows-size-xSmall: 4px;
-  --flows-size-small: 8px;
-  --flows-size-medium: 12px;
-  --flows-size-large: 20px;
+  --flows-basicsV2-size-xs: 2px;
+  --flows-basicsV2-size-s: 8px;
+  --flows-basicsV2-size-m: 12px;
+  --flows-basicsV2-size-l: 16px;
+  --flows-basicsV2-size-xl: 20px;
+  --flows-basicsV2-size-xxl: 24px;
 
   /* Typography */
-  --flows-font-family:
+  --flows-basicsV2-font-family:
     -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell,
     "Helvetica Neue", sans-serif;
 
-  --flows-base-font-size: 14px;
-  --flows-base-line-height: 20px;
+  --flows-basicsV2-base-font-size: 14px;
+  --flows-basicsV2-base-line-height: 20px;
 
-  --flows-title-font-size: 16px;
-  --flows-title-line-height: 24px;
-  --flows-title-font-weight: 600;
+  --flows-basicsV2-title-font-size: 16px;
+  --flows-basicsV2-title-line-height: 24px;
+  --flows-basicsV2-title-font-weight: 600;
 
   /* Elements */
-  --flows-zIndex: 1500;
+  --flows-basicsV2-zIndex: 1500;
 
-  --flows-tooltip-padding: var(--flows-size-large);
-  --flows-tooltip-overlayBackground: var(--flows-bg-overlay);
-  --flows-tooltip-overlayBorderRadius: var(--flows-borderRadius-medium);
-  --flows-tooltip-overlayPadding: 4px;
-  --flows-tooltip-minWidth: 200px;
-  --flows-tooltip-maxWidth: 320px;
+  --flows-basicsV2-tooltip-padding: var(--flows-basicsV2-size-xl);
+  --flows-basicsV2-tooltip-overlayBackground: var(--flows-basicsV2-bg-overlay);
+  --flows-basicsV2-tooltip-overlayBorderRadius: var(--flows-basicsV2-borderRadius-m);
+  --flows-basicsV2-tooltip-overlayPadding: 4px;
+  --flows-basicsV2-tooltip-minWidth: 200px;
+  --flows-basicsV2-tooltip-maxWidth: 320px;
 
-  --flows-modal-overlayBackground: var(--flows-bg-overlay);
-  --flows-modal-padding: var(--flows-size-large);
-  --flows-modal-minWidth: 320px;
-  --flows-modal-maxWidth: 640px;
+  --flows-basicsV2-modal-overlayBackground: var(--flows-basicsV2-bg-overlay);
+  --flows-basicsV2-modal-padding: var(--flows-basicsV2-size-xxl);
+  --flows-basicsV2-modal-minWidth: 320px;
+  --flows-basicsV2-modal-maxWidth: 640px;
+  --flows-basicsV2-modal-size-small: 420px;
+  --flows-basicsV2-modal-size-medium: 640px;
+  --flows-basicsV2-modal-button-max-width: 600px;
 
-  --flows-banner-screenEdgePadding: var(--flows-size-large);
-  --flows-banner-padding: var(--flows-size-large);
-  --flows-banner-minWidth: 200px;
-  --flows-banner-maxWidth: 320px;
+  --flows-basicsV2-banner-screenEdgePadding: var(--flows-basicsV2-size-xl);
+  --flows-basicsV2-banner-padding: var(--flows-basicsV2-size-xl);
+  --flows-basicsV2-banner-minWidth: 200px;
+  --flows-basicsV2-banner-maxWidth: 320px;
+
+  --flows-basicsV2-button-font-size: 15px;
+  --flows-basicsV2-button-line-height: 24px;
+  --flows-basicsV2-primary-button-gradient: linear-gradient(#ffffff14, #fff0);
+  --flows-basicsV2-primary-button-shadow: inset 0 1px #ffffff1f, 0 1px 2px #0a0d120d;
+  --flows-basicsV2-secondary-button-shadow: inset 0 -2px 0 0 #fafafa, 0 1px 2px 0 #0d0d0d0d;
+
+  --flows-basicsV2-progress-dots-size: 10px;
+  --flows-basicsV2-progress-dots-gap: 6px;
 }
 
 /* Dark mode */
 .dark {
-  --flows-bg-default: #1e1e1e;
-  --flows-bg-subtle: #262626;
-  --flows-bg-hover: #333333;
-  --flows-bg-primary: #357ddb;
-  --flows-bg-primary-hover: #3382e7;
-  --flows-bg-overlay: rgba(0, 0, 0, 0.6);
+  --flows-basicsV2-bg-default: #1e1e1e;
+  --flows-basicsV2-bg-subtle: #262626;
+  --flows-basicsV2-bg-strong: #303030;
+  --flows-basicsV2-bg-hover: #333333;
+  --flows-basicsV2-bg-primary: #f1f1f1;
+  --flows-basicsV2-bg-primary-hover: #dddddd;
+  --flows-basicsV2-bg-overlay: rgba(0, 0, 0, 0.6);
 
-  --flows-fg-default: #fafafa;
-  --flows-fg-onPrimary: #ffffff;
+  --flows-basicsV2-fg-default: #fafafa;
+  --flows-basicsV2-fg-onPrimary: #1e1e1e;
 
-  --flows-border: 1px solid #3d3d3d;
-  --flows-border-strong: 1px solid #4a4a4a;
-  --flows-border-strong-hover: 1px solid #616161;
-  --flows-border-primary: 1px solid #468ff1;
+  --flows-basicsV2-border: 1px solid #3d3d3d;
+  --flows-basicsV2-border-strong: 1px solid #4a4a4a;
+  --flows-basicsV2-border-strong-hover: 1px solid #616161;
+  --flows-basicsV2-border-primary: 1px solid #f1f1f1;
 
-  --flows-shadow:
+  --flows-basicsV2-shadow:
     0px 4px 12px rgba(0, 0, 0, 0.2), 0px 2px 6px rgba(0, 0, 0, 0.25), 0px 1px 1px rgba(0, 0, 0, 0.2);
-  --flows-shadow-large:
+  --flows-basicsV2-shadow-large:
     0px 1px 1px rgba(0, 0, 0, 0.2), 0px 2px 8px rgba(0, 0, 0, 0.2), 0px 4px 12px rgba(0, 0, 0, 0.2),
     0px 4px 20px rgba(0, 0, 0, 0.2), 0px 4px 40px rgba(0, 0, 0, 0.15);
+
+  /* Elements */
+  --flows-basicsV2-primary-button-gradient: linear-gradient(#fff0, #0000001a);
+  --flows-basicsV2-primary-button-shadow: inset 0 1px #ffffff1f;
+  --flows-basicsV2-secondary-button-shadow: unset;
 }
 
 /* Animation */
-@keyframes flows-scaleIn {
+@keyframes flows-basicsV2-scaleIn {
   from {
     opacity: 0;
     transform: scale(0.95);
@@ -103,7 +124,7 @@
     transform: scale(1);
   }
 }
-@keyframes flows-scaleOut {
+@keyframes flows-basicsV2-scaleOut {
   from {
     opacity: 1;
     transform: scale(1);
@@ -114,7 +135,7 @@
   }
 }
 
-@keyframes flows-fadeIn {
+@keyframes flows-basicsV2-fadeIn {
   from {
     opacity: 0;
   }
@@ -123,14 +144,14 @@
   }
 }
 
-@keyframes flows-ping {
+@keyframes flows-basicsV2-ping {
   0% {
     transform: scale(1);
     opacity: 0.75;
   }
   75%,
   to {
-    transform: scale(2);
+    transform: scale(2.5);
     opacity: 0;
   }
 }

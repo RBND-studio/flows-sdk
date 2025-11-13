@@ -41,7 +41,7 @@ const getBlocks = (): Block[] => {
       slottable: false,
       exitNodes: [],
       type: "component",
-      componentType: "Modal",
+      componentType: "BasicsV2Modal",
     },
   ];
 };
@@ -58,7 +58,7 @@ const run = (packageName: string) => {
         {
           id: blocks[0]?.id,
           type: "component",
-          component: "Modal",
+          component: "BasicsV2Modal",
           props: {
             __flows: {
               id: blocks[0]?.id,

@@ -1,51 +1,71 @@
-import { type ComponentProps, type Placement } from "@flows/shared";
-import { BaseHint } from "../internal-components/base-hint";
-import { type Component } from "../types";
+import {
+  type FlowsProperties,
+  type ComponentProps,
+  type Placement,
+  type HintProps as LibraryHintProps,
+  type Action,
+} from "@flows/shared";
+import { html, LitElement, type TemplateResult } from "lit";
+import { property } from "lit/decorators.js";
+import { defineBaseHint } from "../internal-components/base-hint";
 
-export type HintProps = ComponentProps<{
+export type HintProps = ComponentProps<LibraryHintProps>;
+
+defineBaseHint();
+
+class Hint extends LitElement implements HintProps {
+  @property({ type: String })
   title: string;
-  body: string;
-  continueText?: string;
-  showCloseButton: boolean;
 
+  @property({ type: String })
+  body: string;
+
+  @property({ type: Object })
+  primaryButton?: Action;
+
+  @property({ type: Object })
+  secondaryButton?: Action;
+
+  @property({ type: Boolean })
+  dismissible: boolean;
+
+  @property({ type: String })
   targetElement: string;
+
+  @property({ type: String })
   placement?: Placement;
+
+  @property({ type: Number })
   offsetX?: number;
+
+  @property({ type: Number })
   offsetY?: number;
 
+  @property({ type: Function })
   continue: () => void;
+
+  @property({ type: Function })
   close: () => void;
-}>;
 
-export const Hint: Component<HintProps> = (props) => {
-  const buttons: HTMLElement[] = [];
+  __flows: FlowsProperties;
 
-  let continueButton: HTMLButtonElement | null = null;
-  if (props.continueText) {
-    continueButton = document.createElement("button");
-    buttons.push(continueButton);
-    continueButton.className = "flows_button flows_button_primary";
-    continueButton.textContent = props.continueText;
-    continueButton.addEventListener("click", props.continue);
+  createRenderRoot(): this {
+    return this;
   }
 
-  const result = BaseHint({
-    title: props.title,
-    body: props.body,
-    targetElement: props.targetElement,
-    offsetX: props.offsetX,
-    offsetY: props.offsetY,
-    placement: props.placement,
-    buttons,
-    onClose: props.showCloseButton ? props.close : undefined,
-  });
+  render(): TemplateResult {
+    return html`<flows-base-hint
+      .title=${this.title}
+      .body=${this.body}
+      .targetElement=${this.targetElement}
+      .placement=${this.placement}
+      .offsetX=${this.offsetX}
+      .offsetY=${this.offsetY}
+      .onClose=${this.dismissible ? this.close : undefined}
+      .primaryButton=${this.primaryButton}
+      .secondaryButton=${this.secondaryButton}
+    ></flows-base-hint>`;
+  }
+}
 
-  return {
-    element: result.element,
-    cleanup: () => {
-      result.cleanup();
-
-      continueButton?.removeEventListener("click", props.continue);
-    },
-  };
-};
+export const BasicsV2Hint = Hint;

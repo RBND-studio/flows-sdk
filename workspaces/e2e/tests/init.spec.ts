@@ -16,7 +16,7 @@ const getBlock = (): Block => ({
   id: randomUUID(),
   workflowId: randomUUID(),
   type: "component",
-  componentType: "Modal",
+  componentType: "BasicsV2Modal",
   data: { title: "Hello world", body: "" },
   exitNodes: [],
   slottable: false,

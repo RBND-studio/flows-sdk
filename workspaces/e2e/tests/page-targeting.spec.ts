@@ -13,7 +13,7 @@ const floatingWorkflowBlock: Block = {
   id: randomUUID(),
   workflowId: randomUUID(),
   type: "component",
-  componentType: "Modal",
+  componentType: "BasicsV2Modal",
   data: { title: "Workflow block", body: "" },
   exitNodes: [],
   slottable: false,
@@ -47,7 +47,7 @@ const floatingTourBlock: TourStep = {
   id: randomUUID(),
   workflowId: randomUUID(),
   type: "tour-component",
-  componentType: "Modal",
+  componentType: "BasicsV2Modal",
   data: { title: "Tour block", body: "" },
   slottable: false,
 };

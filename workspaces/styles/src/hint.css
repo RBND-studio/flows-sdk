@@ -1,18 +1,22 @@
-.flows_hint_hotspot {
+.flows_basicsV2_hint_hotspot {
   position: absolute;
-  background-color: var(--flows-bg-primary);
+  background-color: var(--flows-basicsV2-bg-primary);
   border-radius: 50%;
   transition: background-color 120ms ease-in-out;
-  z-index: var(--flows-zIndex);
-  width: 16px;
-  height: 16px;
+  z-index: var(--flows-basicsV2-zIndex);
+  width: var(--flows-basicsV2-size-l);
+  height: var(--flows-basicsV2-size-l);
+  cursor: pointer;
+  border: var(--flows-basicsV2-border-primary);
+  background-image: var(--flows-basicsV2-primary-button-gradient);
+  box-shadow: var(--flows-basicsV2-primary-button-shadow);
 }
 
-.flows_hint_hotspot:hover {
-  background-color: var(--flows-bg-primary-hover);
+.flows_basicsV2_hint_hotspot:hover {
+  background-color: var(--flows-basicsV2-bg-primary-hover);
 }
 
-.flows_hint_hotspot::after {
+.flows_basicsV2_hint_hotspot::after {
   content: "";
   position: absolute;
   width: 100%;
@@ -20,20 +24,20 @@
   top: 0;
   left: 0;
   border-radius: 50%;
-  background-color: var(--flows-bg-primary);
-  animation: flows-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  background-color: var(--flows-basicsV2-bg-primary);
+  animation: flows-basicsV2-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
 
-.flows_hint_tooltip.flows_hint_tooltip {
+.flows_basicsV2_hint_tooltip.flows_basicsV2_hint_tooltip {
   transition: none;
 }
 
-.flows_hint_tooltip {
+.flows_basicsV2_hint_tooltip {
   /* Increment z-index by 1 to ensure the tooltip appears above the other hint hotspot buttons. */
-  z-index: calc(var(--flows-zIndex) + 1);
+  z-index: calc(var(--flows-basicsV2-zIndex) + 1);
 }
 
-.flows_hint_tooltip[data-open="false"] {
-  animation: flows-scaleOut 150ms ease-out;
+.flows_basicsV2_hint_tooltip[data-open="false"] {
+  animation: flows-basicsV2-scaleOut 150ms ease-out;
   opacity: 0;
 }
