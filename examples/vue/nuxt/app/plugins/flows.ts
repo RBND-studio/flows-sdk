@@ -7,11 +7,11 @@ import * as components from "@flows/js-components/components";
 import * as tourComponents from "@flows/js-components/tour-components";
 import "@flows/js-components/index.css";
 
-import VueCard from "~/components/card.vue";
-import VueTourCard from "~/components/tour-card.vue";
+import VueBanner from "~/components/banner.vue";
+import VueTourBanner from "~/components/tour-banner.vue";
 
-const Card = defineCustomElement(VueCard);
-const TourCard = defineCustomElement(VueTourCard);
+const Banner = defineCustomElement(VueBanner);
+const TourBanner = defineCustomElement(VueTourBanner);
 
 export default defineNuxtPlugin({
   name: "flows",
@@ -26,13 +26,13 @@ export default defineNuxtPlugin({
       setupJsComponents({
         components: {
           ...components,
-          // Example of custom "Card" component
-          Card: Card as any,
+          // Example of custom "Banner" component
+          Banner: Banner as any,
         },
         tourComponents: {
           ...tourComponents,
-          // Example of custom "Card" component for tours
-          Card: TourCard as any,
+          // Example of custom "Banner" component for tours
+          Banner: TourBanner as any,
         },
       });
     },

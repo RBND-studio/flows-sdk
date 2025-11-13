@@ -4,27 +4,30 @@ An example project showcasing how to use Flows with Nuxt to build native product
 
 ![Cover](./cover.png)
 
-This example extends the Nuxt starter project with the [`@flows/js`](https://www.npmjs.com/package/@flows/js) package and shows custom Modal component that is using [`primevue`](https://primevue.org) Dialog under the hood.
+This example extends the Nuxt starter project with the [`@flows/js`](https://www.npmjs.com/package/@flows/js) and [`@flows/js-components](https://www.npmjs.com/package/@flows/js-components) packages to demonstrate how to integrate Flows into your application.
 
 ## Features
 
 ### Flows plugin
 
-In [`plugins/flows.ts`](./plugins/flows.ts) you can find Flows plugin that is calling on `app:mounted` in the browser.
+In [`plugins/flows.ts`](./app/plugins/flows.ts) you can find Flows plugin being initialized during `app:mounted` hook in the browser.
 
-### Floating blocks
+### Pre-built components
 
-In [`blocks.vue`](./components/flows/blocks.vue) you can see a component that takes care of rendering of floating blocks. The component needs to be added at the end of the body element in our case in [`app.vue`](./app.vue).
-
-### Flows slot
-
-The `<FlowsSlot>` component lets you render Flows UI elements dynamically within your application. You can add placeholder UI for empty states. Refer to [`slot.vue`](./components/flows/slot.vue) for implementation and to [`app.vue`](./app.vue) for example usage.
+The @flows/js-components package includes ready-to-use components to build in-app experiences. Refer to [`plugins/flows.ts`](./app/plugins/flows.ts) to learn how to import and use these components.
 
 ### Custom components
 
-Modal [`component`](./components/flows/components/modal.vue) and [`tour component`](./components/flows/tour/modal.vue) demonstrates how to implement default block template.
+Extend Flows by creating your own components for workflows and tours:
+
+- **Workflow block:** The [`banner.vue`](./app/components/banner.vue) file demonstrates a custom `Banner` component with `title`, `body`, and a `close` prop connected to an exit node.
+- **Tour block:** The [`tour-banner.vue`](./app/components/tour-banner.vue) file shows how to build a `TourBanner` component. It accepts `title` and `body` props, as well as `continue`, `previous` and `cancel` for navigation between tour steps.
 
 For detailed instructions on building custom components, see the [custom components documentation](https://flows.sh/docs/components/custom).
+
+### Flows slots
+
+The `<flows-slot>` element lets you render Flows UI elements dynamically within your application. You can add placeholder UI for empty states. You can add placeholder UI for empty states. See [app.vue](./app/app.vue) for an example.
 
 ## Documentation
 
