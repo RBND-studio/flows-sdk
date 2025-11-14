@@ -10,7 +10,7 @@ This example extends the Nuxt starter project with the [`@flows/js`](https://www
 
 ### Flows plugin
 
-In [`plugins/flows.ts`](./app/plugins/flows.ts) you can find Flows plugin being initialized during `app:mounted` hook in the browser.
+In [`plugins/flows.ts`](./app/plugins/flows.ts) you can find Flows plugin being initialized during `app:mounted` hook in the browser. Because `@flows/js-components` is using HTML custom elements for rendering, we need to add `isCustomElement` in [`nuxt.config.ts`](./nuxt.config.ts).
 
 ### Pre-built components
 
