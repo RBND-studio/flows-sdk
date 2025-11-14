@@ -4,7 +4,7 @@ An example project showcasing how to use Flows with Nuxt to build native product
 
 ![Cover](./cover.png)
 
-This example extends the Nuxt starter project with the [`@flows/js`](https://www.npmjs.com/package/@flows/js) and [`@flows/js-components](https://www.npmjs.com/package/@flows/js-components) packages to demonstrate how to integrate Flows into your application.
+This example extends the Nuxt starter project with the [`@flows/js`](https://www.npmjs.com/package/@flows/js) and [`@flows/js-components`](https://www.npmjs.com/package/@flows/js-components) packages to demonstrate how to integrate Flows into your application.
 
 ## Features
 
@@ -14,7 +14,7 @@ In [`plugins/flows.ts`](./app/plugins/flows.ts) you can find Flows plugin being 
 
 ### Pre-built components
 
-The @flows/js-components package includes ready-to-use components to build in-app experiences. Refer to [`plugins/flows.ts`](./app/plugins/flows.ts) to learn how to import and use these components.
+The `@flows/js-components` package includes ready-to-use components to build in-app experiences. Refer to [`plugins/flows.ts`](./app/plugins/flows.ts) to learn how to import and use these components.
 
 ### Custom components
 
