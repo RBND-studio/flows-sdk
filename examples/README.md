@@ -6,7 +6,7 @@ This directory contains examples of flows that can be used as a starting point f
 
 - [React Next.js](./react/next) - A simple example of how to use Flows with React and Next.js.
 - [React Vite](./react/vite) - A simple example of how to use Flows with React and Vite.
-- [Vue Nuxt](./vue/nuxt-custom-components) - A simple example of how to use Flows with Vue and Nuxt and custom components.
+- [Vue Nuxt](./vue/nuxt) - A simple example of how to use Flows with Vue and Nuxt.
 - [Angular](./angular) - A simple example of how to use Flows with Angular and custom components.
 - [JavaScript CDN](./js/cdn) - A simple example of how to use Flows with JavaScript without NPM by loading global script from CDN.
 
