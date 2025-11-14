@@ -23,7 +23,7 @@ Extend Flows by creating your own components for workflows and tours:
 - **Workflow block:** The [`banner.vue`](./app/components/banner.vue) file demonstrates a custom `Banner` component with `title`, `body`, and a `close` prop connected to an exit node.
 - **Tour block:** The [`tour-banner.vue`](./app/components/tour-banner.vue) file shows how to build a `TourBanner` component. It accepts `title` and `body` props, as well as `continue`, `previous` and `cancel` for navigation between tour steps.
 
-For detailed instructions on building custom components, see the [custom components documentation](https://flows.sh/docs/components/custom).
+Note that to use these custom components you need to define them in your Flows organization with the same properties and exit nodes as described above. For detailed instructions on building custom components, see the [custom components documentation](https://flows.sh/docs/components/custom).
 
 ### Flows slots
 
