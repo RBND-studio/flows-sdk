@@ -42,7 +42,7 @@ We provide a set of templates to help you get started with Flows.
 
 - [Next.js template](./examples/react/next)
 - [Vite template](./examples/react/vite)
-- [Vue template](./examples/vue/nuxt-custom-components)
+- [Vue Nuxt template](./examples/vue/nuxt)
 - [Angular template](./examples/angular)
 
 ## Get started for free
