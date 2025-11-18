@@ -1,15 +1,17 @@
 import {
   addFloatingBlocksChangeListener,
+  type addSlotBlocksChangeListener,
   getCurrentFloatingBlocks,
-  type ActiveBlock,
+  type getCurrentSlotBlocks,
 } from "@flows/js";
 import { LitElement } from "lit";
 import { state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
 import { html, unsafeStatic } from "lit/static-html.js";
+import { type ActiveBlock } from "@flows/shared";
 import { type Components, type TourComponents } from "./types";
 import { spreadProps } from "./spread-props";
-import { components, tourComponents } from "./components-store";
+import { components, jsMethods, tourComponents } from "./components-store";
 import { FlowsSlot } from "./slot";
 
 class FlowsFloatingBlocks extends LitElement {
@@ -20,8 +22,13 @@ class FlowsFloatingBlocks extends LitElement {
   connectedCallback(): void {
     super.connectedCallback();
 
-    this._blocks = getCurrentFloatingBlocks();
-    this._changeListenerDispose = addFloatingBlocksChangeListener((blocks) => {
+    const _getCurrentFloatingBlocks =
+      jsMethods.getCurrentFloatingBlocks ?? getCurrentFloatingBlocks;
+    const _addFloatingBlocksChangeListener =
+      jsMethods.addFloatingBlocksChangeListener ?? addFloatingBlocksChangeListener;
+
+    this._blocks = _getCurrentFloatingBlocks();
+    this._changeListenerDispose = _addFloatingBlocksChangeListener((blocks) => {
       this._blocks = blocks;
     });
   }
@@ -63,6 +70,23 @@ class FlowsFloatingBlocks extends LitElement {
 export interface SetupJsComponentsOptions {
   components: Components;
   tourComponents: TourComponents;
+
+  /**
+   * Optional method from `@flows/js` useful when its reference cannot be imported directly. e.g. in CDN usage.
+   */
+  addFloatingBlocksChangeListener?: typeof addFloatingBlocksChangeListener;
+  /**
+   * Optional method from `@flows/js` useful when its reference cannot be imported directly. e.g. in CDN usage.
+   */
+  getCurrentFloatingBlocks?: typeof getCurrentFloatingBlocks;
+  /**
+   * Optional method from `@flows/js` useful when its reference cannot be imported directly. e.g. in CDN usage.
+   */
+  addSlotBlocksChangeListener?: typeof addSlotBlocksChangeListener;
+  /**
+   * Optional method from `@flows/js` useful when its reference cannot be imported directly. e.g. in CDN usage.
+   */
+  getCurrentSlotBlocks?: typeof getCurrentSlotBlocks;
 }
 
 /**
@@ -89,6 +113,14 @@ export interface SetupJsComponentsOptions {
  * ```
  */
 export const setupJsComponents = (options: SetupJsComponentsOptions): void => {
+  if (options.addFloatingBlocksChangeListener)
+    jsMethods.addFloatingBlocksChangeListener = options.addFloatingBlocksChangeListener;
+  if (options.getCurrentFloatingBlocks)
+    jsMethods.getCurrentFloatingBlocks = options.getCurrentFloatingBlocks;
+  if (options.addSlotBlocksChangeListener)
+    jsMethods.addSlotBlocksChangeListener = options.addSlotBlocksChangeListener;
+  if (options.getCurrentSlotBlocks) jsMethods.getCurrentSlotBlocks = options.getCurrentSlotBlocks;
+
   Object.entries(options.components).forEach(([name, Cmp]) => {
     components[name] = Cmp;
 
