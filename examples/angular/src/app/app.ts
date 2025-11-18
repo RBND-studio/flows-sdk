@@ -7,6 +7,7 @@ import { FlowsService } from './flows.service';
   imports: [RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css',
+  // Tell Angular we'll be using custom elements in this component (<flows-floating-blocks> and <flows-slot>)
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class App {
