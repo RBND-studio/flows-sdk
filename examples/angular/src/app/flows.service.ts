@@ -18,7 +18,7 @@ import { TourBanner as AngularTourBanner } from './tour-banner/tour-banner';
 export class FlowsService {
   init(injector: Injector) {
     init({
-      organizationId: '9fc72ef7-2978-4f74-86fc-75a608c39728',
+      organizationId: 'YOUR_ORGANIZATION_ID',
       userId: 'YOUR_USER_ID',
       environment: 'production',
     });
