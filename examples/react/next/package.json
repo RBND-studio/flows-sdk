@@ -3,28 +3,28 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
-    "@flows/react": "*",
-    "@flows/react-components": "*",
-    "next": "15.4.1",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "@flows/react": "^1.18.0",
+    "@flows/react-components": "^2.0.0",
+    "next": "^16.0.3",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@tailwindcss/postcss": "^4.1.11",
-    "@types/node": "^20",
-    "@types/react": "^19.1",
-    "@types/react-dom": "^19.1",
+    "@tailwindcss/postcss": "^4.1.17",
+    "@types/node": "^22",
+    "@types/react": "^19.2",
+    "@types/react-dom": "^19.2",
     "eslint": "^9",
-    "eslint-config-next": "15.4.1",
-    "postcss": "^8",
-    "tailwindcss": "^4.1.11",
-    "typescript": "^5"
+    "eslint-config-next": "^16.0.3",
+    "postcss": "^8.5",
+    "tailwindcss": "^4.1.17",
+    "typescript": "^5.9"
   }
 }

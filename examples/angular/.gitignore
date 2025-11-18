@@ -36,10 +36,8 @@ yarn-error.log
 /libpeerconnection.log
 testem.log
 /typings
+__screenshots__/
 
 # System files
 .DS_Store
 Thumbs.db
-
-# gitignore package-lock.json so the latest version is always installed
-package-lock.json

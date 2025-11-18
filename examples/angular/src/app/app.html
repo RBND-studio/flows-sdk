@@ -1,3 +1,12 @@
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+<!-- * * * * * * * * * * * The content below * * * * * * * * * * * -->
+<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * -->
+<!-- * * * * * * * * * * and can be replaced.  * * * * * * * * * * -->
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+<!-- * * * * * * * * * Delete the template below * * * * * * * * * -->
+<!-- * * * * * * * to get started with your project! * * * * * * * -->
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+
 <style>
   :host {
     --bright-blue: oklch(51.01% 0.274 263.83);
@@ -28,17 +37,17 @@
     --pill-accent: var(--bright-blue);
 
     font-family:
-      "Inter",
+      'Inter',
       -apple-system,
       BlinkMacSystemFont,
-      "Segoe UI",
+      'Segoe UI',
       Roboto,
       Helvetica,
       Arial,
       sans-serif,
-      "Apple Color Emoji",
-      "Segoe UI Emoji",
-      "Segoe UI Symbol";
+      'Apple Color Emoji',
+      'Segoe UI Emoji',
+      'Segoe UI Symbol';
     box-sizing: border-box;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -52,17 +61,17 @@
     letter-spacing: -0.125rem;
     margin: 0;
     font-family:
-      "Inter Tight",
+      'Inter Tight',
       -apple-system,
       BlinkMacSystemFont,
-      "Segoe UI",
+      'Segoe UI',
       Roboto,
       Helvetica,
       Arial,
       sans-serif,
-      "Apple Color Emoji",
-      "Segoe UI Emoji",
-      "Segoe UI Symbol";
+      'Apple Color Emoji',
+      'Segoe UI Emoji',
+      'Segoe UI Symbol';
   }
 
   p {
@@ -133,6 +142,7 @@
     line-height: 1.4rem;
     letter-spacing: -0.00875rem;
     text-decoration: none;
+    white-space: nowrap;
   }
 
   .pill:hover {
@@ -143,11 +153,15 @@
     --pill-accent: var(--bright-blue);
   }
   .pill-group .pill:nth-child(6n + 2) {
+    --pill-accent: var(--electric-violet);
+  }
+  .pill-group .pill:nth-child(6n + 3) {
     --pill-accent: var(--french-violet);
   }
-  .pill-group .pill:nth-child(6n + 3),
+
   .pill-group .pill:nth-child(6n + 4),
-  .pill-group .pill:nth-child(6n + 5) {
+  .pill-group .pill:nth-child(6n + 5),
+  .pill-group .pill:nth-child(6n + 6) {
     --pill-accent: var(--hot-red);
   }
 
@@ -227,31 +241,26 @@
           <clipPath id="a"><path fill="#fff" d="M0 0h982v239H0z" /></clipPath>
         </defs>
       </svg>
-      <h1>Hello, {{ title }}</h1>
+      <h1>Hello, {{ title() }}</h1>
       <p>Congratulations! Your app is running. 🎉</p>
-
-      <!-- Slot with optional placeholder -->
-      <flows-slot slotId="my-slot">
-        <div style="border: 1px solid #ccc; padding: 16px; margin-top: 16px">
-          <h2 style="margin-top: 0">Placeholder</h2>
-          <p>This is a placeholder for the slot</p>
-        </div>
-      </flows-slot>
-      <!--  -->
     </div>
     <div class="divider" role="separator" aria-label="Divider"></div>
     <div class="right-side">
       <div class="pill-group">
         @for (
           item of [
-            { title: "Explore the Docs", link: "https://angular.dev" },
-            { title: "Learn with Tutorials", link: "https://angular.dev/tutorials" },
-            { title: "CLI Docs", link: "https://angular.dev/tools/cli" },
+            { title: 'Explore the Docs', link: 'https://angular.dev' },
+            { title: 'Learn with Tutorials', link: 'https://angular.dev/tutorials' },
             {
-              title: "Angular Language Service",
-              link: "https://angular.dev/tools/language-service",
+              title: 'Prompt and best practices for AI',
+              link: 'https://angular.dev/ai/develop-with-ai',
             },
-            { title: "Angular DevTools", link: "https://angular.dev/tools/devtools" },
+            { title: 'CLI Docs', link: 'https://angular.dev/tools/cli' },
+            {
+              title: 'Angular Language Service',
+              link: 'https://angular.dev/tools/language-service',
+            },
+            { title: 'Angular DevTools', link: 'https://angular.dev/tools/devtools' },
           ];
           track item.title
         ) {
@@ -331,8 +340,22 @@
   </div>
 </main>
 
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+<!-- * * * * * * * * * * * The content above * * * * * * * * * * * * -->
+<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * * -->
+<!-- * * * * * * * * * * and can be replaced.  * * * * * * * * * * * -->
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+<!-- * * * * * * * * * * End of Placeholder  * * * * * * * * * * * * -->
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+
+<!-- Flows Slot with optional placeholder -->
+<flows-slot data-slot-id="my-slot">
+  <div data-placeholder>
+    <h2>Placeholder</h2>
+    <p>This is a placeholder for the slot</p>
+  </div>
+</flows-slot>
+
 <router-outlet />
 
-<!-- Render floating blocks globally at the end of the <body /> -->
-<flows-blocks />
-<!--  -->
+<flows-floating-blocks></flows-floating-blocks>

@@ -4,29 +4,30 @@ An example project showcasing how to use Flows with Angular to build native prod
 
 ![Cover](./cover.png)
 
-This example extends the Angular starter project with the [`@flows/js`](https://www.npmjs.com/package/@flows/js) package and shows custom Modal component.
+This example extends the Angular starter project with the [`@flows/js`](https://www.npmjs.com/package/@flows/js) and [`@flows/js-components`](https://www.npmjs.com/package/@flows/js-components) packages to demonstrate how to integrate Flows into your application.
 
 ## Features
 
 ### Flows service
 
-In [`flows.service.ts`](./src/app/flows/flows.service.ts) you can find Flows service that is imported to [`app.component.ts`](./src/app/app.component.ts) and initialized in the browser during the `ngOnInit()` lifecycle method.
+In [`flows.service.ts`](./src/app/flows.service.ts) you can find Flows service that is imported to [`app.ts`](./src/app/app.ts) and is initialized in the browser during the `ngOnInit()` lifecycle method.
 
-### Floating blocks
+### Pre-built components
 
-In [`flows-blocks.component.ts`](./src/app/flows/flows-blocks/flows-blocks.component.ts) you can see a component that takes care of rendering of floating blocks. The component needs to be added at the end of the body element in our case in [`app.component.html`](./src/app/app.component.html).
-
-### Flows slot
-
-The `<flows-slot>` component lets you render Flows UI elements dynamically within your application. You can add placeholder UI for empty states. Refer to [`flows-slot.component.ts`](./src/app/flows/flows-slot/flows-slot.component.ts) for implementation and to [`app.component.html`](./src/app/app.component.html) for example usage.
+The `@flows/js-components` package includes ready-to-use components to build in-app experiences. Refer to [`flows.service.ts`](./src/app/flows.service.ts) to learn how to import and use these components.
 
 ### Custom components
 
-Modal [`component`](./src/app/flows/components/modal/flows-components-modal.component.ts) and [`tour component`](./src/app/flows/tour-components/modal/flows-tour-components-modal.component.ts) demonstrates how to implement default block template.
+Extend Flows by creating your own components for workflows and tours:
 
-In [`styles.css`](./src/styles.css) you can find all the styles copy-pasted from `@flows/js-components` stylesheet needed for the Modal and Tooltip component.
+- **Workflow block:** The [`banner.ts`](./src/app/banner/banner.ts) file demonstrates a custom `Banner` component with `title`, `body`, and a `close` prop connected to an exit node.
+- **Tour block:** The [`tour-banner.ts`](./src/app/tour-banner/tour-banner.ts) file shows how to build a `TourBanner` component. It accepts `title` and `body` props, as well as `continue`, `previous` and `cancel` for navigation between tour steps.
 
-For detailed instructions on building custom components, see the [custom components documentation](https://flows.sh/docs/components/custom).
+Note that to use these custom components you need to define them in your Flows organization with the same properties and exit nodes as described above. For detailed instructions on building custom components, see the [custom components documentation](https://flows.sh/docs/components/custom).
+
+### Flows slots
+
+The `<flows-slot>` element lets you render Flows UI elements dynamically within your application. You can add placeholder UI for empty states. You can add placeholder UI for empty states. See [app.html](./src/app/app.html) for an example.
 
 ## Documentation
 
