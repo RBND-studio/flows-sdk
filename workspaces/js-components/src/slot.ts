@@ -1,10 +1,11 @@
-import { type ActiveBlock, addSlotBlocksChangeListener, getCurrentSlotBlocks } from "@flows/js";
+import { addSlotBlocksChangeListener, getCurrentSlotBlocks } from "@flows/js";
 import { LitElement } from "lit";
 import { property, query, state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
 import { html, unsafeStatic } from "lit/static-html.js";
+import { type ActiveBlock } from "@flows/shared";
 import { spreadProps } from "./spread-props";
-import { components, tourComponents } from "./components-store";
+import { components, jsMethods, tourComponents } from "./components-store";
 
 export class FlowsSlot extends LitElement {
   @state()
@@ -17,8 +18,12 @@ export class FlowsSlot extends LitElement {
   connectedCallback(): void {
     super.connectedCallback();
 
-    this._blocks = getCurrentSlotBlocks(this.slotId);
-    this._changeListenerDispose = addSlotBlocksChangeListener(this.slotId, (blocks) => {
+    const _getCurrentSlotBlocks = jsMethods.getCurrentSlotBlocks ?? getCurrentSlotBlocks;
+    const _addSlotBlocksChangeListener =
+      jsMethods.addSlotBlocksChangeListener ?? addSlotBlocksChangeListener;
+
+    this._blocks = _getCurrentSlotBlocks(this.slotId);
+    this._changeListenerDispose = _addSlotBlocksChangeListener(this.slotId, (blocks) => {
       this._blocks = blocks;
     });
   }
