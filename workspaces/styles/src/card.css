@@ -1,0 +1,19 @@
+.flows_basicsV2_card {
+  background-color: var(--flows-basicsV2-bg-default);
+}
+
+.flows_basicsV2_card_footer {
+  margin-top: var(--flows-basicsV2-size-xxl);
+  margin-right: auto;
+  margin-left: auto;
+  max-width: var(--flows-basicsV2-modal-button-max-width);
+  display: flex;
+  flex-wrap: wrap-reverse;
+  gap: var(--flows-basicsV2-size-m);
+}
+
+.flows_basicsV2_card_dots {
+  margin-top: var(--flows-basicsV2-size-xxl);
+  display: flex;
+  justify-content: center;
+}
