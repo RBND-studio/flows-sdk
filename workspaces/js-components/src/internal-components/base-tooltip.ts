@@ -9,7 +9,7 @@ import {
   type Side,
 } from "@floating-ui/dom";
 import { html, LitElement, type PropertyValues, type TemplateResult } from "lit";
-import classNames from "classnames";
+import { clsx } from "clsx";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import { property, query, queryAll, state } from "lit/decorators.js";
 import { Close16 } from "../icons/close-16";
@@ -141,13 +141,10 @@ class BaseTooltip extends LitElement {
             : null}
 
           <div
-            class=${classNames(
-              "flows_basicsV2_tooltip_arrow",
-              "flows_basicsV2_tooltip_arrow-bottom",
-            )}
+            class=${clsx("flows_basicsV2_tooltip_arrow", "flows_basicsV2_tooltip_arrow-bottom")}
           ></div>
           <div
-            class=${classNames("flows_basicsV2_tooltip_arrow", "flows_basicsV2_tooltip_arrow-top")}
+            class=${clsx("flows_basicsV2_tooltip_arrow", "flows_basicsV2_tooltip_arrow-top")}
           ></div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import { clsx } from "clsx";
 import { html, type TemplateResult } from "lit";
 import { type unsafeHTML } from "lit/directives/unsafe-html.js";
 
@@ -9,9 +9,7 @@ interface Props {
 }
 
 export const Text = ({ children, variant, className }: Props): TemplateResult => {
-  return html`<p
-    class=${classNames("flows_basicsV2_text", `flows_basicsV2_text_${variant}`, className)}
-  >
+  return html`<p class=${clsx("flows_basicsV2_text", `flows_basicsV2_text_${variant}`, className)}>
     ${children}
   </p>`;
 };

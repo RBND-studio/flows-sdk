@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import { clsx } from "clsx";
 import { type FC, useMemo } from "react";
 
 interface Props {
@@ -20,7 +20,7 @@ export const Dots: FC<Props> = ({ count, index }) => {
       {dots.map((item) => (
         <div
           key={item}
-          className={classNames(
+          className={clsx(
             "flows_basicsV2_dots_dot",
             item === index && "flows_basicsV2_dots_dot_active",
           )}
