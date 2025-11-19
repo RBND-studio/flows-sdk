@@ -1,5 +1,5 @@
 import { type ButtonVariant } from "@flows/shared";
-import classNames from "classnames";
+import { clsx } from "clsx";
 import { type FC, type ReactNode } from "react";
 
 interface Props {
@@ -17,7 +17,7 @@ export const Button: FC<Props> = ({ className, variant, ...props }) => {
   return (
     <Cmp
       type={Cmp === "button" ? "button" : undefined}
-      className={classNames("flows_basicsV2_button", `flows_basicsV2_button_${variant}`, className)}
+      className={clsx("flows_basicsV2_button", `flows_basicsV2_button_${variant}`, className)}
       {...props}
     />
   );

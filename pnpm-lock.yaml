@@ -136,9 +136,9 @@ importers:
       '@floating-ui/dom':
         specifier: ^1.7.4
         version: 1.7.4
-      classnames:
-        specifier: ^2.5.1
-        version: 2.5.1
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
       lit:
         specifier: ^3.3.1
         version: 3.3.1
@@ -222,9 +222,9 @@ importers:
       '@floating-ui/react-dom':
         specifier: ^2.1.6
         version: 2.1.6(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      classnames:
-        specifier: ^2.5.1
-        version: 2.5.1
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
       react:
         specifier: '>=17.0.2'
         version: 19.1.1
@@ -2056,9 +2056,6 @@ packages:
 
   cjs-module-lexer@2.1.0:
     resolution: {integrity: sha512-UX0OwmYRYQQetfrLEZeewIFFI+wSTofC+pMBLNuH3RUuu/xzG1oz84UCEDOSoQlN3fZ4+AzmV50ZYvGqkMh9yA==}
-
-  classnames@2.5.1:
-    resolution: {integrity: sha512-saHYOzhIQs6wy2sVxTM6bUDsQO4F50V9RQ22qBpEdCW+I+/Wmke2HOl6lS6dTpdxVhb88/I6+Hs+438c3lfUow==}
 
   clean-regexp@1.0.0:
     resolution: {integrity: sha512-GfisEZEJvzKrmGWkvfhgzcz/BllN1USeqD2V6tg14OAOgaCD2Z/PUEuxnAZ/nPvmaHRG7a8y77p1T/IRQ4D1Hw==}
@@ -6290,8 +6287,6 @@ snapshots:
   ci-info@4.3.0: {}
 
   cjs-module-lexer@2.1.0: {}
-
-  classnames@2.5.1: {}
 
   clean-regexp@1.0.0:
     dependencies:

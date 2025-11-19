@@ -11,7 +11,7 @@ import {
   type Placement,
   autoUpdate as floatingAutoUpdate,
 } from "@floating-ui/react-dom";
-import classNames from "classnames";
+import { clsx } from "clsx";
 import { type Action, log } from "@flows/shared";
 import { Close16 } from "../icons/close16";
 import { useQuerySelector } from "../hooks/use-query-selector";
@@ -170,14 +170,11 @@ export const BaseTooltip: FC<Props> = (props) => {
         ) : null}
 
         <div
-          className={classNames(
-            "flows_basicsV2_tooltip_arrow",
-            "flows_basicsV2_tooltip_arrow-bottom",
-          )}
+          className={clsx("flows_basicsV2_tooltip_arrow", "flows_basicsV2_tooltip_arrow-bottom")}
           ref={bottomArrowRef}
         />
         <div
-          className={classNames("flows_basicsV2_tooltip_arrow", "flows_basicsV2_tooltip_arrow-top")}
+          className={clsx("flows_basicsV2_tooltip_arrow", "flows_basicsV2_tooltip_arrow-top")}
           ref={topArrowRef}
         />
       </div>
