@@ -2,6 +2,6 @@ packages:
   - workspaces/*
 
 onlyBuiltDependencies:
-  - '@swc/core'
+  - "@swc/core"
   - esbuild
   - unrs-resolver
