@@ -1,5 +1,5 @@
 import { type ReactNode, type FC } from "react";
-import classNames from "classnames";
+import { clsx } from "clsx";
 import { type Action, type ModalPosition, type ModalSize } from "@flows/shared";
 import { Close16 } from "../icons/close16";
 import { Text } from "./text";
@@ -41,7 +41,7 @@ export const BaseModal: FC<Props> = (props) => {
 
       <div className="flows_basicsV2_modal_wrapper">
         <div
-          className={classNames(
+          className={clsx(
             "flows_basicsV2_modal_modal",
             `flows_basicsV2_modal_${position}`,
             `flows_basicsV2_modal_width_${size}`,

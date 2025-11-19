@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import { clsx } from "clsx";
 import { type TemplateResult, html } from "lit";
 import { ifDefined } from "lit/directives/if-defined.js";
 
@@ -19,7 +19,7 @@ export const IconButton = ({
     type="button"
     @click=${onClick}
     aria-label=${ifDefined(ariaLabel)}
-    class=${classNames("flows_basicsV2_iconButton", className)}
+    class=${clsx("flows_basicsV2_iconButton", className)}
   >
     ${children}
   </button>`;

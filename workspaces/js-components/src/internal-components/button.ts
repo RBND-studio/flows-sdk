@@ -1,5 +1,5 @@
 import { type ButtonVariant } from "@flows/shared";
-import classNames from "classnames";
+import { clsx } from "clsx";
 import { type TemplateResult } from "lit";
 import { html, literal } from "lit/static-html.js";
 
@@ -28,7 +28,7 @@ export const Button = ({
   return html`
     <${tag}
       type=${tag === buttonLiteral ? "button" : undefined}
-      class=${classNames("flows_basicsV2_button", `flows_basicsV2_button_${variant}`, className)}
+      class=${clsx("flows_basicsV2_button", `flows_basicsV2_button_${variant}`, className)}
       @click=${onClick}
       target=${target}
       href=${href}
