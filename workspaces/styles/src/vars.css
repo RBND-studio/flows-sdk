@@ -81,6 +81,8 @@
 
   --flows-basicsV2-progress-dots-size: 10px;
   --flows-basicsV2-progress-dots-gap: 6px;
+
+  --flows-basicsV2-card-padding: var(--flows-basicsV2-size-xl);
 }
 
 /* Dark mode */

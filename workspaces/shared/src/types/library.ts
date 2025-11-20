@@ -127,6 +127,9 @@ export interface CardProps {
   primaryButton?: Action;
   secondaryButton?: Action;
 
+  dismissible: boolean;
+  width?: string;
+
   close: () => void;
 }
 
@@ -136,5 +139,7 @@ export interface TourCardProps {
   primaryButton?: Action;
   secondaryButton?: Action;
 
+  dismissible: boolean;
+  width?: string;
   hideProgress: boolean;
 }

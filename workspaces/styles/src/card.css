@@ -1,19 +1,52 @@
 .flows_basicsV2_card {
   background-color: var(--flows-basicsV2-bg-default);
+  border: var(--flows-basicsV2-border);
+  color: var(--flows-basicsV2-fg-default);
+  border-radius: var(--flows-basicsV2-borderRadius-l);
+  padding: var(--flows-basicsV2-card-padding);
+  position: relative;
 }
 
 .flows_basicsV2_card_footer {
-  margin-top: var(--flows-basicsV2-size-xxl);
-  margin-right: auto;
-  margin-left: auto;
-  max-width: var(--flows-basicsV2-modal-button-max-width);
+  margin-top: var(--flows-basicsV2-size-l);
   display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  column-gap: var(--flows-basicsV2-size-s);
+  row-gap: var(--flows-basicsV2-size-l);
+}
+
+.flows_basicsV2_card_buttons_wrapper {
+  flex: 1;
+  flex-basis: auto;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.flows_basicsV2_card_buttons_wrapper .flows_basicsV2_card_buttons {
   flex-wrap: wrap-reverse;
-  gap: var(--flows-basicsV2-size-m);
+}
+
+.flows_basicsV2_card_buttons {
+  display: flex;
+  gap: var(--flows-basicsV2-size-s);
+  flex-wrap: wrap;
+}
+
+.flows_basicsV2_card_buttons button,
+.flows_basicsV2_modal_footer a {
+  flex: 1;
 }
 
 .flows_basicsV2_card_dots {
   margin-top: var(--flows-basicsV2-size-xxl);
   display: flex;
   justify-content: center;
+}
+
+.flows_basicsV2_card_close {
+  position: absolute;
+  top: var(--flows-basicsV2-size-xl);
+  right: var(--flows-basicsV2-size-xl);
 }

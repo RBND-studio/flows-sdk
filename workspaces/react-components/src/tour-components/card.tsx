@@ -20,6 +20,9 @@ const Card: FC<CardProps> = (props) => {
       primaryButton={props.primaryButton}
       secondaryButton={props.secondaryButton}
       dots={dots}
+      onClose={props.dismissible ? props.cancel : undefined}
+      tour
+      width={props.width}
     />
   );
 };
