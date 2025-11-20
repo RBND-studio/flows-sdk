@@ -2,10 +2,9 @@ import { addSlotBlocksChangeListener, getCurrentSlotBlocks } from "@flows/js";
 import { LitElement } from "lit";
 import { property, query, state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
-import { html, unsafeStatic } from "lit/static-html.js";
 import { type ActiveBlock } from "@flows/shared";
-import { spreadProps } from "./spread-props";
-import { components, jsMethods, tourComponents } from "./components-store";
+import { jsMethods } from "./components-store";
+import { Block } from "./block";
 
 export class FlowsSlot extends LitElement {
   @state()
@@ -51,17 +50,7 @@ export class FlowsSlot extends LitElement {
       this._blocks,
       (b) => b.id,
       (block) => {
-        const Cmp = (() => {
-          if (block.type === "component") return components[block.component];
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- We need to check if the block is a tour component
-          if (block.type === "tour-component") return tourComponents[block.component];
-          return null;
-        })();
-        if (!Cmp) return null;
-        const tagName = customElements.getName(Cmp);
-        if (!tagName) return null;
-
-        return html`<${unsafeStatic(tagName)} ${spreadProps(block.props)} />`;
+        return Block({ block });
       },
     );
   }

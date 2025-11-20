@@ -7,12 +7,11 @@ import {
 import { LitElement } from "lit";
 import { state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
-import { html, unsafeStatic } from "lit/static-html.js";
-import { type ActiveBlock } from "@flows/shared";
+import { getBlockRenderKey, type ActiveBlock } from "@flows/shared";
 import { type Components, type TourComponents } from "./types";
-import { spreadProps } from "./spread-props";
 import { components, jsMethods, tourComponents } from "./components-store";
 import { FlowsSlot } from "./slot";
+import { Block } from "./block";
 
 class FlowsFloatingBlocks extends LitElement {
   @state()
@@ -44,26 +43,9 @@ class FlowsFloatingBlocks extends LitElement {
   }
 
   render(): unknown {
-    return repeat(
-      this._blocks,
-      (b) => {
-        if (b.type === "tour-component") return b.tourBlockId;
-        return b.id;
-      },
-      (block) => {
-        const Cmp = (() => {
-          if (block.type === "component") return components[block.component];
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- We need to check if the block is a tour component
-          if (block.type === "tour-component") return tourComponents[block.component];
-          return null;
-        })();
-        if (!Cmp) return null;
-        const tagName = customElements.getName(Cmp);
-        if (!tagName) return null;
-
-        return html`<${unsafeStatic(tagName)} ${spreadProps(block.props)} />`;
-      },
-    );
+    return repeat(this._blocks, getBlockRenderKey, (block) => {
+      return Block({ block });
+    });
   }
 }
 
