@@ -10,7 +10,7 @@ This example extends the Angular starter project with the [`@flows/js`](https://
 
 ### Flows service
 
-In [`flows.service.ts`](./src/app/flows.service.ts) you can find Flows service that is imported to [`app.ts`](./src/app/app.ts) and is initialized in the browser during the `ngOnInit()` lifecycle method.
+In [`flows.service.ts`](./src/app/flows.service.ts) you can find Flows service that is imported to [`app.ts`](./src/app/app.ts) and is initialized in the browser during the `ngOnInit()` lifecycle method. In [`app.html`](./src/app/app.html) - `<flows-floating-blocks>` is added to render floating components.
 
 ### Pre-built components
 

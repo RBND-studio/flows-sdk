@@ -1,6 +1,5 @@
 import { type TemplateResult } from "lit";
-import { type Action } from "@flows/js";
-import { type ButtonVariant } from "@flows/shared";
+import { type Action, type ButtonVariant } from "@flows/shared";
 import { Button } from "./button";
 
 interface Props {
