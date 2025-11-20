@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import { clsx } from "clsx";
 import { html, type TemplateResult } from "lit";
 import { repeat } from "lit/directives/repeat.js";
 
@@ -18,7 +18,7 @@ export const Dots = ({ count, index }: Props): TemplateResult => {
         dots,
         (item) =>
           html`<div
-            class=${classNames(
+            class=${clsx(
               "flows_basicsV2_dots_dot",
               item === index && "flows_basicsV2_dots_dot_active",
             )}

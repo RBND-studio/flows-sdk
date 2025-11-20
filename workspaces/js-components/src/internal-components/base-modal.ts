@@ -1,6 +1,6 @@
 import { html, type TemplateResult } from "lit";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
-import classNames from "classnames";
+import { clsx } from "clsx";
 import { type Action, type ModalPosition, type ModalSize } from "@flows/shared";
 import { Close16 } from "../icons/close-16";
 import { Text } from "./text";
@@ -44,7 +44,7 @@ export const BaseModal = (props: Props): TemplateResult => {
     ${overlay}
     <div class="flows_basicsV2_modal_wrapper">
       <div
-        class=${classNames(
+        class=${clsx(
           "flows_basicsV2_modal_modal",
           `flows_basicsV2_modal_${position}`,
           `flows_basicsV2_modal_width_${size}`,
