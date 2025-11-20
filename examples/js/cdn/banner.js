@@ -16,7 +16,6 @@ export class Banner extends LitElement {
       <div>
         <h2>${this.title}</h2>
         <p>${this.body}</p>
-        <button @click=${() => this.count++}>${this.count}</button>
 
         <button @click=${this.close}>Close</button>
       </div>
