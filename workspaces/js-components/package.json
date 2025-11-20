@@ -54,7 +54,7 @@
     "typescript": "^5.9.3"
   },
   "peerDependencies": {
-    "@flows/js": "*"
+    "@flows/js": ">=1.18.0"
   },
   "exports": {
     ".": {

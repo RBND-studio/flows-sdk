@@ -5,3 +5,5 @@ onlyBuiltDependencies:
   - "@swc/core"
   - esbuild
   - unrs-resolver
+
+engineStrict: true
