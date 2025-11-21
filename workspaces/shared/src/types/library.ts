@@ -130,6 +130,7 @@ export interface CardProps {
   dismissible: boolean;
   width?: string;
 
+  continue: () => void;
   close: () => void;
 }
 

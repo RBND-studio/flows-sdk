@@ -30,6 +30,9 @@ class Card extends LitElement implements CardProps {
   width?: string;
 
   @property({ type: Function })
+  continue: () => void;
+
+  @property({ type: Function })
   close: () => void;
 
   __flows: FlowsProperties;
