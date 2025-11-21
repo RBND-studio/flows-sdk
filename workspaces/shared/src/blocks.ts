@@ -12,19 +12,23 @@ export const applyUpdateMessageToBlocksState = (
   return [...blocks.filter((b) => !exitedOrUpdatedBlockIdsSet.has(b.id)), ...message.updatedBlocks];
 };
 
-const logSlottableError = (b: Block | TourStep): void => {
-  if (b.slottable && !b.slotId)
-    log.error(
-      `Encountered workflow block "${b.componentType}" that is slottable but has no slotId`,
-    );
+const logSlottableError = (b: Block | TourStep, type: "component" | "tour-component"): void => {
+  if (b.slottable && !b.slotId) {
+    if (type === "component")
+      log.error(
+        `Encountered workflow block "${b.componentType}" that is slottable but has no slotId`,
+      );
+    if (type === "tour-component")
+      log.error(`Encountered tour block "${b.componentType}" that is slottable but has no slotId`);
+  }
 };
 
 export const logSlottableBlocksError = (blocks: Block[]): void => {
   blocks.forEach((b) => {
-    logSlottableError(b);
+    logSlottableError(b, "component");
 
     b.tourBlocks?.forEach((tb) => {
-      logSlottableError(tb);
+      logSlottableError(tb, "tour-component");
     });
   });
 };
