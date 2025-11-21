@@ -2,7 +2,7 @@ import { addSlotBlocksChangeListener, getCurrentSlotBlocks } from "@flows/js";
 import { LitElement } from "lit";
 import { property, query, state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
-import { type ActiveBlock } from "@flows/shared";
+import { getBlockRenderKey, type ActiveBlock } from "@flows/shared";
 import { jsMethods } from "./components-store";
 import { Block } from "./block";
 
@@ -46,12 +46,8 @@ export class FlowsSlot extends LitElement {
       else this.placeholderElement.hidden = false;
     }
 
-    return repeat(
-      this._blocks,
-      (b) => b.id,
-      (block) => {
-        return Block({ block });
-      },
-    );
+    return repeat(this._blocks, getBlockRenderKey, (block) => {
+      return Block({ block });
+    });
   }
 }
