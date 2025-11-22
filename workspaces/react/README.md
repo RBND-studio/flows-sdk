@@ -38,14 +38,10 @@ const App = () => {
   return (
     <FlowsProvider
       organizationId="your-organization-id" // Find this in Settings > General
-      environment="production" // Default environment
       userId="your-user-id" // Identify the user
-      tourComponents={{
-        ...tourComponents,
-      }}
-      components={{
-        ...components,
-      }}
+      environment="production" // Default environment
+      components={{ ...components }}
+      tourComponents={{ ...tourComponents }}
     >
       {/* Your app code here */}
     </FlowsProvider>
