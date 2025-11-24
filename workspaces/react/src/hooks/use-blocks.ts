@@ -4,11 +4,11 @@ import {
   log,
   type UserProperties,
   type Block,
-  type TourStep,
   type BlockUpdatesPayload,
   type LanguageOption,
   getUserLanguage,
   applyUpdateMessageToBlocksState,
+  logSlottableBlocksError,
 } from "@flows/shared";
 import { packageAndVersion } from "../lib/constants";
 import { type RemoveBlock, type UpdateBlock } from "../flows-context";
@@ -106,13 +106,7 @@ export const useBlocks = ({
 
   // Log error about slottable blocks without slotId
   useEffect(() => {
-    blocks.forEach((b) => {
-      logSlottableError(b);
-
-      b.tourBlocks?.forEach((tb) => {
-        logSlottableError(tb);
-      });
-    });
+    logSlottableBlocksError(blocks);
   }, [blocks]);
 
   const removeBlock: RemoveBlock = useCallback((blockId) => {
@@ -129,11 +123,4 @@ export const useBlocks = ({
   }, []);
 
   return { blocks, error, wsError, removeBlock, updateBlock };
-};
-
-const logSlottableError = (b: Block | TourStep): void => {
-  if (b.slottable && !b.slotId)
-    log.error(
-      `Encountered workflow block "${b.componentType}" that is slottable but has no slotId`,
-    );
 };
