@@ -36,7 +36,7 @@ export const BaseCard = (props: Props): TemplateResult => {
 
   return html`
     <div class="flows_basicsV2_card" style="width: 100%; max-width: ${cardWidth}">
-      ${Text({ variant: "title", children: props.title })}
+      ${Text({ variant: "title", className: "flows_basicsV2_card_title", children: props.title })}
       ${Text({ variant: "body", children: unsafeHTML(props.body) })}
       ${!props.tour && buttons.length
         ? html`<div class="flows_basicsV2_card_footer">

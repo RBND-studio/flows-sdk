@@ -43,7 +43,9 @@ export const BaseCard: FC<Props> = (props) => {
         maxWidth: cardWidth,
       }}
     >
-      <Text variant="title">{props.title}</Text>
+      <Text variant="title" className="flows_basicsV2_card_title">
+        {props.title}
+      </Text>
       <Text variant="body" dangerouslySetInnerHTML={{ __html: props.body }} />
 
       {!props.tour && buttons.length ? (

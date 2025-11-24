@@ -7,6 +7,12 @@
   position: relative;
 }
 
+.flows_basicsV2_card_title {
+  /* Space between title and close button */
+  margin-right: 24px;
+  margin-bottom: var(--flows-basicsV2-size-xs);
+}
+
 .flows_basicsV2_card_footer {
   margin-top: var(--flows-basicsV2-size-l);
   display: flex;

@@ -50,8 +50,16 @@ export const BaseModal = (props: Props): TemplateResult => {
           `flows_basicsV2_modal_width_${size}`,
         )}
       >
-        ${Text({ variant: "title", children: props.title })}
-        ${Text({ variant: "body", children: unsafeHTML(props.body) })}
+        ${Text({
+          variant: "title",
+          className: "flows_basicsV2_modal_title",
+          children: props.title,
+        })}
+        ${Text({
+          variant: "body",
+          className: "flows_basicsV2_modal_body",
+          children: unsafeHTML(props.body),
+        })}
         ${props.dots ? html`<div class="flows_basicsV2_modal_dots">${props.dots}</div>` : null}
         ${buttons.length
           ? html`<div class=${"flows_basicsV2_modal_footer"}>${buttons}</div>`
