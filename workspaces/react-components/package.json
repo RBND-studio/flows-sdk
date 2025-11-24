@@ -1,6 +1,6 @@
 {
   "name": "@flows/react-components",
-  "version": "2.0.1-canary.0",
+  "version": "2.1.0",
   "description": "Built-in components for Flows React SDK",
   "keywords": [
     "react",
