@@ -18,6 +18,6 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "es-toolkit": "^1.41.0"
+    "es-toolkit": "^1.42.0"
   }
 }
