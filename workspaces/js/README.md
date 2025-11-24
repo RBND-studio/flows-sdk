@@ -24,6 +24,40 @@ For full setup instructions, see our [Quickstart guide](https://flows.sh/docs/qu
 npm install @flows/js @flows/js-components
 ```
 
+`@flows/js` SDK handles the lightweight embedding of Flows, while `@flows/js-components` provides a set of built-in components to get you started quickly. Alternatively, you can [bring your own components](https://flows.sh/docs/create-custom-components).
+
+Call `init` and `setupJsComponents` and pass in your [Organization ID](https://app.flows.sh/r/org/settings) and [Environment](https://app.flows.sh/r/org/environments).
+
+```js
+import { init } from "@flows/js";
+import { setupJsComponents } from "@flows/js-components";
+import * as components from "@flows/js-components/components";
+import * as tourComponents from "@flows/js-components/tour-components";
+
+// Depending on your setup, link the CSS, copy-paste it to your codebase, or import it in your JS files
+import "@flows/js-components/dist/index.css"
+
+init({
+  organizationId: "YOUR_ORGANIZATION_ID", // Find this in Settings > General
+  userId: "YOUR_USER_ID", // Identify the user
+  environment: "production", // Default environment
+});
+setupJsComponents({
+  components: { ...components },
+  tourComponents: { ...tourComponents },
+});`
+```
+
+Add `<flows-floating-blocks>` at the end of the `<body>` to handle rendering of floating components.
+
+```html
+<body>
+  <!-- Your app code -->
+
+  <flows-floating-blocks></flows-floating-blocks>
+</body>
+```
+
 ## Features
 
 Meet Flows, the flexible platform for building in-app experiences. Focus on your product, not creating one-off logic.
