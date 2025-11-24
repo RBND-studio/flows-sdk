@@ -37,8 +37,8 @@ import "@flows/react-components/index.css";
 const App = () => {
   return (
     <FlowsProvider
-      organizationId="your-organization-id" // Find this in Settings > General
-      userId="your-user-id" // Identify the user
+      organizationId="YOUR_ORGANIZATION_ID" // Find this in Settings > General
+      userId="YOUR_USER_ID" // Identify the user
       environment="production" // Default environment
       components={{ ...components }}
       tourComponents={{ ...tourComponents }}
