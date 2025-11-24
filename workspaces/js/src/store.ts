@@ -1,5 +1,5 @@
-import { type BlockUpdatesPayload, type Block } from "@flows/shared";
-import { computed, signal } from "@preact/signals-core";
+import { type BlockUpdatesPayload, type Block, logSlottableBlocksError } from "@flows/shared";
+import { computed, effect, signal } from "@preact/signals-core";
 import { type FlowsOptions } from "./types/configuration";
 
 type Configuration = Omit<FlowsOptions, "apiUrl"> & { apiUrl: string };
@@ -12,6 +12,12 @@ export const pathname = signal<string>();
 export const blocksState = signal<Block[] | null>(null);
 export const blocks = computed(() => blocksState.value ?? []);
 export const pendingMessages = signal<BlockUpdatesPayload[]>([]);
+
+// Log error about slottable blocks without slotId
+effect(() => {
+  const blocksValue = blocks.value;
+  logSlottableBlocksError(blocksValue);
+});
 
 export const blocksError = signal(false);
 export const wsError = signal(false);

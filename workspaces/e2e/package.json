@@ -16,7 +16,7 @@
     "lit": "^3.3.1"
   },
   "devDependencies": {
-    "@playwright/test": "^1.56.0",
+    "@playwright/test": "^1.56.1",
     "@types/node": "^22.17.2",
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",

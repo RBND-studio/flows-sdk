@@ -118,3 +118,29 @@ export interface TourHintProps {
   dismissible: boolean;
   hideProgress: boolean;
 }
+
+// Card
+
+export interface CardProps {
+  title: string;
+  body: string;
+  primaryButton?: Action;
+  secondaryButton?: Action;
+
+  dismissible: boolean;
+  width?: string;
+
+  continue: () => void;
+  close: () => void;
+}
+
+export interface TourCardProps {
+  title: string;
+  body: string;
+  primaryButton?: Action;
+  secondaryButton?: Action;
+
+  dismissible: boolean;
+  width?: string;
+  hideProgress: boolean;
+}
