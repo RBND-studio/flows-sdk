@@ -19,7 +19,7 @@
   "devDependencies": {
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
-    "@commitlint/types": "^20.0.0",
+    "@commitlint/types": "^20.2.0",
     "@vercel/style-guide": "^6.0.0",
     "concurrently": "^9.2.1",
     "eslint": "8.57.1",

@@ -10,16 +10,16 @@ importers:
     devDependencies:
       '@commitlint/cli':
         specifier: ^20.1.0
-        version: 20.1.0(@types/node@24.3.0)(typescript@5.9.3)
+        version: 20.1.0(@types/node@24.10.1)(typescript@5.9.3)
       '@commitlint/config-conventional':
         specifier: ^20.0.0
         version: 20.0.0
       '@commitlint/types':
-        specifier: ^20.0.0
-        version: 20.0.0
+        specifier: ^20.2.0
+        version: 20.2.0
       '@vercel/style-guide':
         specifier: ^6.0.0
-        version: 6.0.0(eslint@8.57.1)(jest@30.2.0(@types/node@24.3.0))(prettier@3.6.2)(typescript@5.9.3)
+        version: 6.0.0(eslint@8.57.1)(jest@30.2.0(@types/node@24.10.1))(prettier@3.6.2)(typescript@5.9.3)
       concurrently:
         specifier: ^9.2.1
         version: 9.2.1
@@ -563,8 +563,8 @@ packages:
     resolution: {integrity: sha512-drXaPSP2EcopukrUXvUXmsQMu3Ey/FuJDc/5oiW4heoCfoE5BdLQyuc7veGeE3aoQaTVqZnh4D5WTWe2vefYKg==}
     engines: {node: '>=v18'}
 
-  '@commitlint/types@20.0.0':
-    resolution: {integrity: sha512-bVUNBqG6aznYcYjTjnc3+Cat/iBgbgpflxbIBTnsHTX0YVpnmINPEkSRWymT2Q8aSH3Y7aKnEbunilkYe8TybA==}
+  '@commitlint/types@20.2.0':
+    resolution: {integrity: sha512-KTy0OqRDLR5y/zZMnizyx09z/rPlPC/zKhYgH8o/q6PuAjoQAKlRfY4zzv0M64yybQ//6//4H1n14pxaLZfUnA==}
     engines: {node: '>=v18'}
 
   '@csstools/color-helpers@5.1.0':
@@ -1411,8 +1411,8 @@ packages:
   '@types/babel__traverse@7.28.0':
     resolution: {integrity: sha512-8PvcXf70gTDZBgt9ptxJ8elBeBjcLOAcOtoO/mPJjtji1+CdGbHgm77om1GrsPxsiE+uXIpNSK64UYaIwQXd4Q==}
 
-  '@types/conventional-commits-parser@5.0.1':
-    resolution: {integrity: sha512-7uz5EHdzz2TqoMfV7ee61Egf5y6NkcO4FB/1iCCQnbeiI1F3xzv3vK5dBCXUCLQgGYS+mUeigK1iKQzvED+QnQ==}
+  '@types/conventional-commits-parser@5.0.2':
+    resolution: {integrity: sha512-BgT2szDXnVypgpNxOK8aL5SGjUdaQbC++WZNjF1Qge3Og2+zhHj+RWhmehLhYyvQwqAmvezruVfOf8+3m74W+g==}
 
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
@@ -1441,8 +1441,8 @@ packages:
   '@types/node@22.17.2':
     resolution: {integrity: sha512-gL6z5N9Jm9mhY+U2KXZpteb+09zyffliRkZyZOHODGATyC5B1Jt/7TzuuiLkFsSUMLbS1OLmlj/E+/3KF4Q/4w==}
 
-  '@types/node@24.3.0':
-    resolution: {integrity: sha512-aPTXCrfwnDLj4VvXrm+UUCQjNEvJgNA8s5F1cvwQU+3KNltTOkBm1j30uNLyqqPNe7gE3KFzImYoZEfLhp4Yow==}
+  '@types/node@24.10.1':
+    resolution: {integrity: sha512-GNWcUTRBgIRJD5zj+Tq0fKOJ5XZajIiBroOF0yvj2bSU1WvNdYS/dn9UxwsujGW4JX06dnHyjV2y9rRaybH0iQ==}
 
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
@@ -4104,8 +4104,8 @@ packages:
   undici-types@6.21.0:
     resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
 
-  undici-types@7.10.0:
-    resolution: {integrity: sha512-t5Fy/nfn+14LuOc2KNYg75vZqClpAiqscVvMygNnlsHBFpSXdJaYtXMcdNLpl/Qvc3P2cB3s6lOV51nqsFq4ag==}
+  undici-types@7.16.0:
+    resolution: {integrity: sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==}
 
   unicorn-magic@0.1.0:
     resolution: {integrity: sha512-lRfVq8fE8gz6QMBuDM6a+LO3IAzTi05H6gCVaUpir2E1Rwpo4ZUog45KpNXKC/Mn3Yb9UDuHumeFTo9iV/D9FQ==}
@@ -4567,13 +4567,13 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
-  '@commitlint/cli@20.1.0(@types/node@24.3.0)(typescript@5.9.3)':
+  '@commitlint/cli@20.1.0(@types/node@24.10.1)(typescript@5.9.3)':
     dependencies:
       '@commitlint/format': 20.0.0
       '@commitlint/lint': 20.0.0
-      '@commitlint/load': 20.1.0(@types/node@24.3.0)(typescript@5.9.3)
+      '@commitlint/load': 20.1.0(@types/node@24.10.1)(typescript@5.9.3)
       '@commitlint/read': 20.0.0
-      '@commitlint/types': 20.0.0
+      '@commitlint/types': 20.2.0
       tinyexec: 1.0.1
       yargs: 17.7.2
     transitivePeerDependencies:
@@ -4582,17 +4582,17 @@ snapshots:
 
   '@commitlint/config-conventional@20.0.0':
     dependencies:
-      '@commitlint/types': 20.0.0
+      '@commitlint/types': 20.2.0
       conventional-changelog-conventionalcommits: 7.0.2
 
   '@commitlint/config-validator@20.0.0':
     dependencies:
-      '@commitlint/types': 20.0.0
+      '@commitlint/types': 20.2.0
       ajv: 8.17.1
 
   '@commitlint/ensure@20.0.0':
     dependencies:
-      '@commitlint/types': 20.0.0
+      '@commitlint/types': 20.2.0
       lodash.camelcase: 4.3.0
       lodash.kebabcase: 4.1.1
       lodash.snakecase: 4.1.1
@@ -4603,12 +4603,12 @@ snapshots:
 
   '@commitlint/format@20.0.0':
     dependencies:
-      '@commitlint/types': 20.0.0
+      '@commitlint/types': 20.2.0
       chalk: 5.6.2
 
   '@commitlint/is-ignored@20.0.0':
     dependencies:
-      '@commitlint/types': 20.0.0
+      '@commitlint/types': 20.2.0
       semver: 7.7.2
 
   '@commitlint/lint@20.0.0':
@@ -4616,17 +4616,17 @@ snapshots:
       '@commitlint/is-ignored': 20.0.0
       '@commitlint/parse': 20.0.0
       '@commitlint/rules': 20.0.0
-      '@commitlint/types': 20.0.0
+      '@commitlint/types': 20.2.0
 
-  '@commitlint/load@20.1.0(@types/node@24.3.0)(typescript@5.9.3)':
+  '@commitlint/load@20.1.0(@types/node@24.10.1)(typescript@5.9.3)':
     dependencies:
       '@commitlint/config-validator': 20.0.0
       '@commitlint/execute-rule': 20.0.0
       '@commitlint/resolve-extends': 20.1.0
-      '@commitlint/types': 20.0.0
+      '@commitlint/types': 20.2.0
       chalk: 5.6.2
       cosmiconfig: 9.0.0(typescript@5.9.3)
-      cosmiconfig-typescript-loader: 6.1.0(@types/node@24.3.0)(cosmiconfig@9.0.0(typescript@5.9.3))(typescript@5.9.3)
+      cosmiconfig-typescript-loader: 6.1.0(@types/node@24.10.1)(cosmiconfig@9.0.0(typescript@5.9.3))(typescript@5.9.3)
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
       lodash.uniq: 4.5.0
@@ -4638,14 +4638,14 @@ snapshots:
 
   '@commitlint/parse@20.0.0':
     dependencies:
-      '@commitlint/types': 20.0.0
+      '@commitlint/types': 20.2.0
       conventional-changelog-angular: 7.0.0
       conventional-commits-parser: 5.0.0
 
   '@commitlint/read@20.0.0':
     dependencies:
       '@commitlint/top-level': 20.0.0
-      '@commitlint/types': 20.0.0
+      '@commitlint/types': 20.2.0
       git-raw-commits: 4.0.0
       minimist: 1.2.8
       tinyexec: 1.0.1
@@ -4653,7 +4653,7 @@ snapshots:
   '@commitlint/resolve-extends@20.1.0':
     dependencies:
       '@commitlint/config-validator': 20.0.0
-      '@commitlint/types': 20.0.0
+      '@commitlint/types': 20.2.0
       global-directory: 4.0.1
       import-meta-resolve: 4.2.0
       lodash.mergewith: 4.6.2
@@ -4664,7 +4664,7 @@ snapshots:
       '@commitlint/ensure': 20.0.0
       '@commitlint/message': 20.0.0
       '@commitlint/to-lines': 20.0.0
-      '@commitlint/types': 20.0.0
+      '@commitlint/types': 20.2.0
 
   '@commitlint/to-lines@20.0.0': {}
 
@@ -4672,9 +4672,9 @@ snapshots:
     dependencies:
       find-up: 7.0.0
 
-  '@commitlint/types@20.0.0':
+  '@commitlint/types@20.2.0':
     dependencies:
-      '@types/conventional-commits-parser': 5.0.1
+      '@types/conventional-commits-parser': 5.0.2
       chalk: 5.6.2
 
   '@csstools/color-helpers@5.1.0': {}
@@ -5472,7 +5472,7 @@ snapshots:
     dependencies:
       '@babel/types': 7.28.4
 
-  '@types/conventional-commits-parser@5.0.1':
+  '@types/conventional-commits-parser@5.0.2':
     dependencies:
       '@types/node': 22.17.2
 
@@ -5507,9 +5507,9 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
-  '@types/node@24.3.0':
+  '@types/node@24.10.1':
     dependencies:
-      undici-types: 7.10.0
+      undici-types: 7.16.0
 
   '@types/normalize-package-data@2.4.4': {}
 
@@ -5718,7 +5718,7 @@ snapshots:
   '@unrs/resolver-binding-win32-x64-msvc@1.11.1':
     optional: true
 
-  '@vercel/style-guide@6.0.0(eslint@8.57.1)(jest@30.2.0(@types/node@24.3.0))(prettier@3.6.2)(typescript@5.9.3)':
+  '@vercel/style-guide@6.0.0(eslint@8.57.1)(jest@30.2.0(@types/node@24.10.1))(prettier@3.6.2)(typescript@5.9.3)':
     dependencies:
       '@babel/core': 7.28.3
       '@babel/eslint-parser': 7.28.0(@babel/core@7.28.3)(eslint@8.57.1)
@@ -5730,9 +5730,9 @@ snapshots:
       eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0)(eslint@8.57.1)
       eslint-plugin-eslint-comments: 3.2.0(eslint@8.57.1)
       eslint-plugin-import: 2.32.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1)(eslint@8.57.1)
-      eslint-plugin-jest: 27.9.0(@typescript-eslint/eslint-plugin@7.18.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(jest@30.2.0(@types/node@24.3.0))(typescript@5.9.3)
+      eslint-plugin-jest: 27.9.0(@typescript-eslint/eslint-plugin@7.18.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(jest@30.2.0(@types/node@24.10.1))(typescript@5.9.3)
       eslint-plugin-jsx-a11y: 6.10.2(eslint@8.57.1)
-      eslint-plugin-playwright: 1.8.3(eslint-plugin-jest@27.9.0(@typescript-eslint/eslint-plugin@7.18.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(jest@30.2.0(@types/node@24.3.0))(typescript@5.9.3))(eslint@8.57.1)
+      eslint-plugin-playwright: 1.8.3(eslint-plugin-jest@27.9.0(@typescript-eslint/eslint-plugin@7.18.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(jest@30.2.0(@types/node@24.10.1))(typescript@5.9.3))(eslint@8.57.1)
       eslint-plugin-react: 7.37.5(eslint@8.57.1)
       eslint-plugin-react-hooks: 4.6.2(eslint@8.57.1)
       eslint-plugin-testing-library: 6.5.0(eslint@8.57.1)(typescript@5.9.3)
@@ -6142,9 +6142,9 @@ snapshots:
     dependencies:
       browserslist: 4.25.3
 
-  cosmiconfig-typescript-loader@6.1.0(@types/node@24.3.0)(cosmiconfig@9.0.0(typescript@5.9.3))(typescript@5.9.3):
+  cosmiconfig-typescript-loader@6.1.0(@types/node@24.10.1)(cosmiconfig@9.0.0(typescript@5.9.3))(typescript@5.9.3):
     dependencies:
-      '@types/node': 24.3.0
+      '@types/node': 24.10.1
       cosmiconfig: 9.0.0(typescript@5.9.3)
       jiti: 2.6.1
       typescript: 5.9.3
@@ -6524,13 +6524,13 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-plugin-jest@27.9.0(@typescript-eslint/eslint-plugin@7.18.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(jest@30.2.0(@types/node@24.3.0))(typescript@5.9.3):
+  eslint-plugin-jest@27.9.0(@typescript-eslint/eslint-plugin@7.18.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(jest@30.2.0(@types/node@24.10.1))(typescript@5.9.3):
     dependencies:
       '@typescript-eslint/utils': 5.62.0(eslint@8.57.1)(typescript@5.9.3)
       eslint: 8.57.1
     optionalDependencies:
       '@typescript-eslint/eslint-plugin': 7.18.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3)
-      jest: 30.2.0(@types/node@24.3.0)
+      jest: 30.2.0(@types/node@24.10.1)
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -6554,12 +6554,12 @@ snapshots:
       safe-regex-test: 1.1.0
       string.prototype.includes: 2.0.1
 
-  eslint-plugin-playwright@1.8.3(eslint-plugin-jest@27.9.0(@typescript-eslint/eslint-plugin@7.18.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(jest@30.2.0(@types/node@24.3.0))(typescript@5.9.3))(eslint@8.57.1):
+  eslint-plugin-playwright@1.8.3(eslint-plugin-jest@27.9.0(@typescript-eslint/eslint-plugin@7.18.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(jest@30.2.0(@types/node@24.10.1))(typescript@5.9.3))(eslint@8.57.1):
     dependencies:
       eslint: 8.57.1
       globals: 13.24.0
     optionalDependencies:
-      eslint-plugin-jest: 27.9.0(@typescript-eslint/eslint-plugin@7.18.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(jest@30.2.0(@types/node@24.3.0))(typescript@5.9.3)
+      eslint-plugin-jest: 27.9.0(@typescript-eslint/eslint-plugin@7.18.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(jest@30.2.0(@types/node@24.10.1))(typescript@5.9.3)
 
   eslint-plugin-react-hooks@4.6.2(eslint@8.57.1):
     dependencies:
@@ -7277,7 +7277,7 @@ snapshots:
       - supports-color
       - ts-node
 
-  jest-cli@30.2.0(@types/node@24.3.0):
+  jest-cli@30.2.0(@types/node@24.10.1):
     dependencies:
       '@jest/core': 30.2.0
       '@jest/test-result': 30.2.0
@@ -7285,7 +7285,7 @@ snapshots:
       chalk: 4.1.2
       exit-x: 0.2.2
       import-local: 3.2.0
-      jest-config: 30.2.0(@types/node@24.3.0)
+      jest-config: 30.2.0(@types/node@24.10.1)
       jest-util: 30.2.0
       jest-validate: 30.2.0
       yargs: 17.7.2
@@ -7329,7 +7329,7 @@ snapshots:
       - babel-plugin-macros
       - supports-color
 
-  jest-config@30.2.0(@types/node@24.3.0):
+  jest-config@30.2.0(@types/node@24.10.1):
     dependencies:
       '@babel/core': 7.28.4
       '@jest/get-type': 30.1.0
@@ -7356,7 +7356,7 @@ snapshots:
       slash: 3.0.0
       strip-json-comments: 3.1.1
     optionalDependencies:
-      '@types/node': 24.3.0
+      '@types/node': 24.10.1
     transitivePeerDependencies:
       - babel-plugin-macros
       - supports-color
@@ -7643,12 +7643,12 @@ snapshots:
       - supports-color
       - ts-node
 
-  jest@30.2.0(@types/node@24.3.0):
+  jest@30.2.0(@types/node@24.10.1):
     dependencies:
       '@jest/core': 30.2.0
       '@jest/types': 30.2.0
       import-local: 3.2.0
-      jest-cli: 30.2.0(@types/node@24.3.0)
+      jest-cli: 30.2.0(@types/node@24.10.1)
     transitivePeerDependencies:
       - '@types/node'
       - babel-plugin-macros
@@ -8722,7 +8722,7 @@ snapshots:
 
   undici-types@6.21.0: {}
 
-  undici-types@7.10.0: {}
+  undici-types@7.16.0: {}
 
   unicorn-magic@0.1.0: {}
 
