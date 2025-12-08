@@ -74,8 +74,7 @@ const run = (packageName: string) => {
     await page.route("**/v2/sdk/blocks", (route) => {
       route.fulfill({ json: { blocks: [block] } });
     });
-    await page.goto(`/${packageName}.html?noCurrentBlocks=true`);
-    await page.waitForRequest((req) => {
+    const reqPromise = page.waitForRequest((req) => {
       const body = req.postDataJSON();
       const headers = req.headers();
       return (
@@ -88,14 +87,15 @@ const run = (packageName: string) => {
         body.blockId === block.id
       );
     });
+    await page.goto(`/${packageName}.html?noCurrentBlocks=true`);
+    await reqPromise;
   });
   test(`${packageName} - should call activate for tour block`, async ({ page }) => {
     const block = getTour({ componentType: "BasicsV2Modal" });
     await page.route("**/v2/sdk/blocks", (route) => {
       route.fulfill({ json: { blocks: [block] } });
     });
-    await page.goto(`/${packageName}.html?noCurrentBlocks=true`);
-    await page.waitForRequest((req) => {
+    const reqPromise = page.waitForRequest((req) => {
       const body = req.postDataJSON();
       const headers = req.headers();
       return (
@@ -108,6 +108,8 @@ const run = (packageName: string) => {
         body.blockId === block.tourBlocks?.[0]?.id
       );
     });
+    await page.goto(`/${packageName}.html?noCurrentBlocks=true`);
+    await reqPromise;
   });
 };
 

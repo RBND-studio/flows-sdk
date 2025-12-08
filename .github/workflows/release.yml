@@ -40,10 +40,10 @@ jobs:
           token: ${{ steps.app-token.outputs.token }}
           # Make sure the value of GITHUB_TOKEN will not be persisted in repo's config
           persist-credentials: false
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061
       - uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
           cache: "pnpm"
       - run: git remote set-url origin https://flows-bot[bot]:${{ steps.app-token.outputs.token }}@github.com/${{ github.repository }}
       - run: git config user.name "flows-bot[bot]"
