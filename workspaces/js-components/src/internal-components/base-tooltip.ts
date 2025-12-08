@@ -1,4 +1,3 @@
-import { type Action, log, type Placement } from "@flows/shared";
 import {
   arrow,
   autoUpdate,
@@ -8,15 +7,18 @@ import {
   shift,
   type Side,
 } from "@floating-ui/dom";
-import { html, LitElement, type PropertyValues, type TemplateResult } from "lit";
+import { type Action, log, type Placement } from "@flows/shared";
 import { clsx } from "clsx";
-import { unsafeHTML } from "lit/directives/unsafe-html.js";
+// eslint-disable-next-line import/no-named-as-default -- correct import
+import DOMPurify from "dompurify";
+import { html, LitElement, type PropertyValues, type TemplateResult } from "lit";
 import { property, query, queryAll, state } from "lit/decorators.js";
+import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import { Close16 } from "../icons/close-16";
 import { observeQuerySelector } from "../lib/query-selector";
-import { Text } from "./text";
-import { IconButton } from "./icon-button";
 import { ActionButton } from "./action-button";
+import { IconButton } from "./icon-button";
+import { Text } from "./text";
 
 class BaseTooltip extends LitElement {
   @property()
@@ -119,7 +121,7 @@ class BaseTooltip extends LitElement {
           ${Text({
             variant: "body",
             className: "flows_basicsV2_tooltip_body",
-            children: unsafeHTML(this.body),
+            children: unsafeHTML(DOMPurify.sanitize(this.body)),
           })}
           ${this.dots || Boolean(buttons.length)
             ? html` <div class="flows_basicsV2_tooltip_footer">

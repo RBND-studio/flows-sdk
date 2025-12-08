@@ -1,24 +1,26 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState, type FC, type ReactNode } from "react";
 import {
-  useFloating,
-  shift,
-  offset,
   arrow,
   flip,
-  type Side,
-  type Placement,
   autoUpdate as floatingAutoUpdate,
+  offset,
+  shift,
+  useFloating,
+  type Placement,
+  type Side,
 } from "@floating-ui/react-dom";
+import { log, type Action } from "@flows/shared";
 import { clsx } from "clsx";
-import { type Action, log } from "@flows/shared";
-import { Close16 } from "../icons/close16";
-import { useQuerySelector } from "../hooks/use-query-selector";
+import { useCallback, useEffect, useMemo, useRef, useState, type FC, type ReactNode } from "react";
+// eslint-disable-next-line import/no-named-as-default -- correct import
+import DOMPurify from "dompurify";
 import { useFirstRender } from "../hooks/use-first-render";
-import { Text } from "./text";
-import { IconButton } from "./icon-button";
+import { useQuerySelector } from "../hooks/use-query-selector";
+import { Close16 } from "../icons/close16";
 import { ActionButton } from "./action-button";
+import { IconButton } from "./icon-button";
+import { Text } from "./text";
 
 const DISTANCE = 4;
 const ARROW_SIZE = 6;
@@ -145,7 +147,7 @@ export const BaseTooltip: FC<Props> = (props) => {
         <Text
           variant="body"
           className="flows_basicsV2_tooltip_body"
-          dangerouslySetInnerHTML={{ __html: props.body }}
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(props.body) }}
         />
 
         {(props.dots ?? buttons.length) ? (

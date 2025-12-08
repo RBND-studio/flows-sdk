@@ -1,11 +1,13 @@
+import { type Action, type ModalPosition, type ModalSize } from "@flows/shared";
+import { clsx } from "clsx";
+// eslint-disable-next-line import/no-named-as-default -- correct import
+import DOMPurify from "dompurify";
 import { html, type TemplateResult } from "lit";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
-import { clsx } from "clsx";
-import { type Action, type ModalPosition, type ModalSize } from "@flows/shared";
 import { Close16 } from "../icons/close-16";
-import { Text } from "./text";
-import { IconButton } from "./icon-button";
 import { ActionButton } from "./action-button";
+import { IconButton } from "./icon-button";
+import { Text } from "./text";
 
 interface Props {
   title: string;
@@ -58,7 +60,7 @@ export const BaseModal = (props: Props): TemplateResult => {
         ${Text({
           variant: "body",
           className: "flows_basicsV2_modal_body",
-          children: unsafeHTML(props.body),
+          children: unsafeHTML(DOMPurify.sanitize(props.body)),
         })}
         ${props.dots ? html`<div class="flows_basicsV2_modal_dots">${props.dots}</div>` : null}
         ${buttons.length
