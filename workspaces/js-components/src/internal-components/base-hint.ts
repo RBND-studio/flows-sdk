@@ -168,7 +168,12 @@ class BaseHint extends LitElement {
               ${Text({
                 className: "flows_basicsV2_tooltip_body",
                 variant: "body",
-                children: unsafeHTML(DOMPurify.sanitize(this.body)),
+                children: unsafeHTML(
+                  DOMPurify.sanitize(this.body, {
+                    FORCE_BODY: true,
+                    ADD_ATTR: ["target"],
+                  }),
+                ),
               })}
               ${this.dots || Boolean(buttons.length)
                 ? html` <div class="flows_basicsV2_tooltip_footer">

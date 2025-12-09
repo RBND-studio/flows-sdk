@@ -48,7 +48,15 @@ export const BaseCard: FC<Props> = (props) => {
       <Text variant="title" className="flows_basicsV2_card_title">
         {props.title}
       </Text>
-      <Text variant="body" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(props.body) }} />
+      <Text
+        variant="body"
+        dangerouslySetInnerHTML={{
+          __html: DOMPurify.sanitize(props.body, {
+            FORCE_BODY: true,
+            ADD_ATTR: ["target"],
+          }),
+        }}
+      />
 
       {!props.tour && buttons.length ? (
         <div className="flows_basicsV2_card_footer">

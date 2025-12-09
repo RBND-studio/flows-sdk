@@ -55,7 +55,12 @@ export const BaseModal: FC<Props> = (props) => {
           <Text
             className="flows_basicsV2_modal_body"
             variant="body"
-            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(props.body) }}
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(props.body, {
+                FORCE_BODY: true,
+                ADD_ATTR: ["target"],
+              }),
+            }}
           />
 
           {props.dots ? <div className="flows_basicsV2_modal_dots">{props.dots}</div> : null}

@@ -121,7 +121,12 @@ class BaseTooltip extends LitElement {
           ${Text({
             variant: "body",
             className: "flows_basicsV2_tooltip_body",
-            children: unsafeHTML(DOMPurify.sanitize(this.body)),
+            children: unsafeHTML(
+              DOMPurify.sanitize(this.body, {
+                FORCE_BODY: true,
+                ADD_ATTR: ["target"],
+              }),
+            ),
           })}
           ${this.dots || Boolean(buttons.length)
             ? html` <div class="flows_basicsV2_tooltip_footer">

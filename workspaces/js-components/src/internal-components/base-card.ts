@@ -39,7 +39,15 @@ export const BaseCard = (props: Props): TemplateResult => {
   return html`
     <div class="flows_basicsV2_card" style="width: 100%; max-width: ${cardWidth}">
       ${Text({ variant: "title", className: "flows_basicsV2_card_title", children: props.title })}
-      ${Text({ variant: "body", children: unsafeHTML(DOMPurify.sanitize(props.body)) })}
+      ${Text({
+        variant: "body",
+        children: unsafeHTML(
+          DOMPurify.sanitize(props.body, {
+            FORCE_BODY: true,
+            ADD_ATTR: ["target"],
+          }),
+        ),
+      })}
       ${!props.tour && buttons.length
         ? html`<div class="flows_basicsV2_card_footer">
             <div class="flows_basicsV2_card_buttons">${buttons}</div>

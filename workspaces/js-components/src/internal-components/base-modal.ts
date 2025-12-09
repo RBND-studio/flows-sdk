@@ -60,7 +60,12 @@ export const BaseModal = (props: Props): TemplateResult => {
         ${Text({
           variant: "body",
           className: "flows_basicsV2_modal_body",
-          children: unsafeHTML(DOMPurify.sanitize(props.body)),
+          children: unsafeHTML(
+            DOMPurify.sanitize(props.body, {
+              FORCE_BODY: true,
+              ADD_ATTR: ["target"],
+            }),
+          ),
         })}
         ${props.dots ? html`<div class="flows_basicsV2_modal_dots">${props.dots}</div>` : null}
         ${buttons.length

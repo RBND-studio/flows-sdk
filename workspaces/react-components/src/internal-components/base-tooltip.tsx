@@ -147,7 +147,12 @@ export const BaseTooltip: FC<Props> = (props) => {
         <Text
           variant="body"
           className="flows_basicsV2_tooltip_body"
-          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(props.body) }}
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(props.body, {
+              FORCE_BODY: true,
+              ADD_ATTR: ["target"],
+            }),
+          }}
         />
 
         {(props.dots ?? buttons.length) ? (
