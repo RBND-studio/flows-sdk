@@ -52,9 +52,9 @@
     "@flows/styles": "workspace:*",
     "@swc/core": "^1.15.3",
     "@types/jest": "^30.0.0",
-    "@types/node": "^22.17.2",
+    "@types/node": "^24",
     "jest": "^30.2.0",
-    "ts-jest": "^29.4.5",
+    "ts-jest": "^29.4.6",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3"
   },
@@ -62,7 +62,7 @@
     "@lit-labs/preact-signals": "^1.0.3",
     "@preact/signals-core": "^1.12.1",
     "clsx": "^2.1.1",
-    "es-toolkit": "^1.41.0",
+    "es-toolkit": "^1.42.0",
     "lit": "^3.3.1"
   }
 }

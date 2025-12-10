@@ -1,10 +1,12 @@
 import { type Action } from "@flows/shared";
+// eslint-disable-next-line import/no-named-as-default -- correct import
+import DOMPurify from "dompurify";
 import { html, type TemplateResult } from "lit";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import { Close16 } from "../icons/close-16";
-import { Text } from "./text";
-import { IconButton } from "./icon-button";
 import { ActionButton } from "./action-button";
+import { IconButton } from "./icon-button";
+import { Text } from "./text";
 
 interface Props {
   title: string;
@@ -37,7 +39,15 @@ export const BaseCard = (props: Props): TemplateResult => {
   return html`
     <div class="flows_basicsV2_card" style="width: 100%; max-width: ${cardWidth}">
       ${Text({ variant: "title", className: "flows_basicsV2_card_title", children: props.title })}
-      ${Text({ variant: "body", children: unsafeHTML(props.body) })}
+      ${Text({
+        variant: "body",
+        children: unsafeHTML(
+          DOMPurify.sanitize(props.body, {
+            FORCE_BODY: true,
+            ADD_ATTR: ["target"],
+          }),
+        ),
+      })}
       ${!props.tour && buttons.length
         ? html`<div class="flows_basicsV2_card_footer">
             <div class="flows_basicsV2_card_buttons">${buttons}</div>

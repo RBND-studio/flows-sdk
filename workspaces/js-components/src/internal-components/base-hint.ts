@@ -1,13 +1,15 @@
-import { type Action, log, type Placement } from "@flows/shared";
 import { autoUpdate, computePosition, flip, offset, shift } from "@floating-ui/dom";
+import { type Action, log, type Placement } from "@flows/shared";
 import { html, LitElement, type PropertyValues, type TemplateResult } from "lit";
-import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import { property, query, queryAll, state } from "lit/decorators.js";
+import { unsafeHTML } from "lit/directives/unsafe-html.js";
+// eslint-disable-next-line import/no-named-as-default -- correct import
+import DOMPurify from "dompurify";
 import { Close16 } from "../icons/close-16";
 import { observeQuerySelector } from "../lib/query-selector";
-import { Text } from "./text";
-import { IconButton } from "./icon-button";
 import { ActionButton } from "./action-button";
+import { IconButton } from "./icon-button";
+import { Text } from "./text";
 
 const CLOSE_TIMEOUT = 300;
 const BOUNDARY_PADDING = 8;
@@ -166,7 +168,12 @@ class BaseHint extends LitElement {
               ${Text({
                 className: "flows_basicsV2_tooltip_body",
                 variant: "body",
-                children: unsafeHTML(this.body),
+                children: unsafeHTML(
+                  DOMPurify.sanitize(this.body, {
+                    FORCE_BODY: true,
+                    ADD_ATTR: ["target"],
+                  }),
+                ),
               })}
               ${this.dots || Boolean(buttons.length)
                 ? html` <div class="flows_basicsV2_tooltip_footer">

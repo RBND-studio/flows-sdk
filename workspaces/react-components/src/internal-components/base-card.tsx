@@ -1,9 +1,11 @@
 import { type Action } from "@flows/shared";
-import { type ReactNode, type FC } from "react";
+import { type FC, type ReactNode } from "react";
+// eslint-disable-next-line import/no-named-as-default -- correct import
+import DOMPurify from "dompurify";
 import { Close16 } from "../icons/close16";
-import { Text } from "./text";
 import { ActionButton } from "./action-button";
 import { IconButton } from "./icon-button";
+import { Text } from "./text";
 
 interface Props {
   title: string;
@@ -46,7 +48,15 @@ export const BaseCard: FC<Props> = (props) => {
       <Text variant="title" className="flows_basicsV2_card_title">
         {props.title}
       </Text>
-      <Text variant="body" dangerouslySetInnerHTML={{ __html: props.body }} />
+      <Text
+        variant="body"
+        dangerouslySetInnerHTML={{
+          __html: DOMPurify.sanitize(props.body, {
+            FORCE_BODY: true,
+            ADD_ATTR: ["target"],
+          }),
+        }}
+      />
 
       {!props.tour && buttons.length ? (
         <div className="flows_basicsV2_card_footer">

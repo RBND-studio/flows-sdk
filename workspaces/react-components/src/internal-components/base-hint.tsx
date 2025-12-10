@@ -1,18 +1,20 @@
 import {
   flip,
+  autoUpdate as floatingAutoUpdate,
   offset,
   shift,
   useFloating,
-  autoUpdate as floatingAutoUpdate,
 } from "@floating-ui/react-dom";
 import { type Action, log, type Placement } from "@flows/shared";
-import { type ReactNode, useCallback, useEffect, useState, type FC } from "react";
+import { type FC, type ReactNode, useCallback, useEffect, useState } from "react";
+// eslint-disable-next-line import/no-named-as-default -- correct import
+import DOMPurify from "dompurify";
+import { useFirstRender } from "../hooks/use-first-render";
 import { useQuerySelector } from "../hooks/use-query-selector";
 import { Close16 } from "../icons/close16";
-import { useFirstRender } from "../hooks/use-first-render";
-import { Text } from "./text";
-import { IconButton } from "./icon-button";
 import { ActionButton } from "./action-button";
+import { IconButton } from "./icon-button";
+import { Text } from "./text";
 
 interface Props {
   title: string;
@@ -137,7 +139,12 @@ export const BaseHint: FC<Props> = (props) => {
           <Text
             variant="body"
             className="flows_basicsV2_tooltip_body"
-            dangerouslySetInnerHTML={{ __html: props.body }}
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(props.body, {
+                FORCE_BODY: true,
+                ADD_ATTR: ["target"],
+              }),
+            }}
           />
           {(props.dots ?? buttons.length) ? (
             <div className="flows_basicsV2_tooltip_footer">

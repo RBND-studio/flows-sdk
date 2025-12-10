@@ -1,10 +1,12 @@
-import { type ReactNode, type FC } from "react";
-import { clsx } from "clsx";
 import { type Action, type ModalPosition, type ModalSize } from "@flows/shared";
+import { clsx } from "clsx";
+import { type FC, type ReactNode } from "react";
+// eslint-disable-next-line import/no-named-as-default -- correct import
+import DOMPurify from "dompurify";
 import { Close16 } from "../icons/close16";
-import { Text } from "./text";
-import { IconButton } from "./icon-button";
 import { ActionButton } from "./action-button";
+import { IconButton } from "./icon-button";
+import { Text } from "./text";
 
 interface Props {
   title: string;
@@ -53,7 +55,12 @@ export const BaseModal: FC<Props> = (props) => {
           <Text
             className="flows_basicsV2_modal_body"
             variant="body"
-            dangerouslySetInnerHTML={{ __html: props.body }}
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(props.body, {
+                FORCE_BODY: true,
+                ADD_ATTR: ["target"],
+              }),
+            }}
           />
 
           {props.dots ? <div className="flows_basicsV2_modal_dots">{props.dots}</div> : null}

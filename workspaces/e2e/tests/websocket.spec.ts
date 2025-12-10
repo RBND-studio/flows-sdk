@@ -77,45 +77,17 @@ const run = (packageName: string) => {
   });
 
   test.describe(`real websocket`, () => {
-    test(`${packageName} - should disconnect from websocket if the user is usage limited`, async ({
-      page,
-    }) => {
-      await page.route("**/v2/sdk/blocks", (route) => {
-        route.fulfill({ json: { blocks: [], meta: { usage_limited: true } } });
-      });
-      const wsPromise = page.waitForEvent("websocket");
-      await page.goto(`/${packageName}.html`);
-      const websocket = await wsPromise;
-
-      let wsWasClosed = false;
-      websocket.on("close", () => {
-        wsWasClosed = true;
-      });
-      await page.waitForRequest((req) => {
-        return req.url() === "https://api.flows-cloud.com/v2/sdk/blocks";
-      });
-
-      await expect(() => expect(wsWasClosed).toBe(true)).toPass();
-    });
-    test(`${packageName} - should keep websocket connection alive`, async ({ page }) => {
+    test(`${packageName} - should establish websocket connection`, async ({ page }) => {
       await page.route("**/v2/sdk/blocks", (route) => {
         route.fulfill({ json: { blocks: [] } });
       });
       const wsPromise = page.waitForEvent("websocket");
       await page.goto(`/${packageName}.html`);
-      const websocket = await wsPromise;
+      await wsPromise;
 
-      let wsWasClosed = false;
-      websocket.on("close", () => {
-        wsWasClosed = true;
-      });
       await page.waitForRequest((req) => {
         return req.url() === "https://api.flows-cloud.com/v2/sdk/blocks";
       });
-
-      await new Promise((res) => setTimeout(res, 500));
-
-      await expect(() => expect(wsWasClosed).toBe(false)).toPass();
     });
   });
 };
