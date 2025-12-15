@@ -51,7 +51,7 @@
   "dependencies": {
     "@floating-ui/react-dom": "^2.1.6",
     "clsx": "^2.1.1",
-    "dompurify": "^3.3.0"
+    "dompurify": "^3.3.1"
   },
   "peerDependencies": {
     "@flows/react": ">=1.18.0",
