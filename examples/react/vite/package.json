@@ -10,8 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@flows/react": "^1.18.0",
-    "@flows/react-components": "^2.0.0",
+    "@flows/react": "^1.18.2",
+    "@flows/react-components": "^2.2.0",
     "react": "^19.2.1",
     "react-dom": "^19.2.1"
   },
