@@ -73,11 +73,11 @@ importers:
         specifier: ^5.0.4
         version: 5.1.2(vite@7.2.7(@types/node@22.19.1)(jiti@2.6.1)(yaml@2.4.5))
       react:
-        specifier: 19.1.1
-        version: 19.1.1
+        specifier: 19.2.3
+        version: 19.2.3
       react-dom:
         specifier: 19.1.1
-        version: 19.1.1(react@19.1.1)
+        version: 19.1.1(react@19.2.3)
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -221,10 +221,10 @@ importers:
     dependencies:
       '@floating-ui/react-dom':
         specifier: ^2.1.6
-        version: 2.1.6(react-dom@19.2.1(react@19.1.1))(react@19.1.1)
+        version: 2.1.6(react-dom@19.2.1(react@19.2.3))(react@19.2.3)
       '@flows/react':
         specifier: '>=1.18.0'
-        version: 1.18.0(react@19.1.1)
+        version: 1.18.0(react@19.2.3)
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -233,7 +233,7 @@ importers:
         version: 3.3.1
       react:
         specifier: '>=17.0.2'
-        version: 19.1.1
+        version: 19.2.3
     devDependencies:
       '@flows/shared':
         specifier: workspace:*
@@ -3616,6 +3616,10 @@ packages:
     resolution: {integrity: sha512-w8nqGImo45dmMIfljjMwOGtbmC/mk4CMYhWIicdSflH91J9TyCyczcPFXJzrZ/ZXcgGRFeP6BU0BEJTw6tZdfQ==}
     engines: {node: '>=0.10.0'}
 
+  react@19.2.3:
+    resolution: {integrity: sha512-Ku/hhYbVjOQnXDZFv2+RibmLFGwFdeeKHFcOTlrt7xplBnya5OGn/hIRDsqDiSUcfORsDC7MPxwork8jBwsIWA==}
+    engines: {node: '>=0.10.0'}
+
   read-pkg-up@7.0.1:
     resolution: {integrity: sha512-zK0TB7Xd6JpCLmlLmufqykGE+/TlOePD6qKClNW7hHDKFh/J7/7gCWGR7joEQEW1bKq3a3yUZSObOoWLFQ4ohg==}
     engines: {node: '>=8'}
@@ -5093,19 +5097,19 @@ snapshots:
       '@floating-ui/core': 1.7.3
       '@floating-ui/utils': 0.2.10
 
-  '@floating-ui/react-dom@2.1.6(react-dom@19.2.1(react@19.1.1))(react@19.1.1)':
+  '@floating-ui/react-dom@2.1.6(react-dom@19.2.1(react@19.2.3))(react@19.2.3)':
     dependencies:
       '@floating-ui/dom': 1.7.4
-      react: 19.1.1
-      react-dom: 19.2.1(react@19.1.1)
+      react: 19.2.3
+      react-dom: 19.2.1(react@19.2.3)
 
   '@floating-ui/utils@0.2.10': {}
 
-  '@flows/react@1.18.0(react@19.1.1)':
+  '@flows/react@1.18.0(react@19.2.3)':
     dependencies:
       clsx: 2.1.1
       es-toolkit: 1.42.0
-      react: 19.1.1
+      react: 19.2.3
 
   '@humanwhocodes/config-array@0.13.0':
     dependencies:
@@ -8292,14 +8296,14 @@ snapshots:
 
   queue-microtask@1.2.3: {}
 
-  react-dom@19.1.1(react@19.1.1):
+  react-dom@19.1.1(react@19.2.3):
     dependencies:
-      react: 19.1.1
+      react: 19.2.3
       scheduler: 0.26.0
 
-  react-dom@19.2.1(react@19.1.1):
+  react-dom@19.2.1(react@19.2.3):
     dependencies:
-      react: 19.1.1
+      react: 19.2.3
       scheduler: 0.27.0
 
   react-is@16.13.1: {}
@@ -8309,6 +8313,8 @@ snapshots:
   react-refresh@0.18.0: {}
 
   react@19.1.1: {}
+
+  react@19.2.3: {}
 
   read-pkg-up@7.0.1:
     dependencies:
