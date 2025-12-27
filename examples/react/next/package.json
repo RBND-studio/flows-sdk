@@ -11,18 +11,18 @@
   "dependencies": {
     "@flows/react": "^1.18.2",
     "@flows/react-components": "^2.2.0",
-    "next": "^16.0.7",
-    "react": "^19.2.1",
-    "react-dom": "^19.2.1"
+    "next": "^16.1.1",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4.1.17",
-    "@types/node": "^22",
+    "@types/node": "^24",
     "@types/react": "^19.2",
     "@types/react-dom": "^19.2",
     "eslint": "^9",
-    "eslint-config-next": "^16.0.7",
+    "eslint-config-next": "^16.1.1",
     "postcss": "^8.5",
     "tailwindcss": "^4.1.17",
     "typescript": "^5.9"
