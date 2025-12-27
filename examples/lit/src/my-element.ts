@@ -4,6 +4,15 @@ import litLogo from "./assets/lit.svg";
 import viteLogo from "/vite.svg";
 import "./index.css";
 
+import { init } from "@flows/js";
+import { setupJsComponents } from "@flows/js-components";
+import * as components from "@flows/js-components/components";
+import * as tourComponents from "@flows/js-components/tour-components";
+
+import "@flows/js-components/index.css";
+import { Banner } from "./banner";
+import { TourBanner } from "./tour-banner";
+
 /**
  * An example element.
  *
@@ -24,6 +33,26 @@ export class MyElement extends LitElement {
   @property({ type: Number })
   count = 0;
 
+  connectedCallback(): void {
+    super.connectedCallback();
+
+    init({
+      organizationId: "YOUR_ORGANIZATION_ID",
+      userId: "YOUR_USER_ID",
+      environment: "production",
+    });
+    setupJsComponents({
+      components: {
+        ...components,
+        Banner,
+      },
+      tourComponents: {
+        ...tourComponents,
+        Banner: TourBanner,
+      },
+    });
+  }
+
   render() {
     return html`
       <div>
@@ -39,6 +68,14 @@ export class MyElement extends LitElement {
         <button @click=${this._onClick} part="button">count is ${this.count}</button>
       </div>
       <p class="read-the-docs">${this.docsHint}</p>
+
+      <!-- Slot with optional placeholder -->
+      <flows-slot data-slot-id="my-slot">
+        <div data-placeholder>
+          <h2>Placeholder</h2>
+          <p>This is a placeholder for the slot</p>
+        </div>
+      </flows-slot>
     `;
   }
 
