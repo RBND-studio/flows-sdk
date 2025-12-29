@@ -2,8 +2,7 @@
 
 An example project showcasing how to use Flows with Svelte Kit to build native product growth experiences.
 
-<!-- TODO: add cover -->
-<!-- ![Cover](./cover.png) -->
+![Cover](./cover.png)
 
 This example extends the Svelte Kit starter project with the [`@flows/js`](https://www.npmjs.com/package/@flows/js) and [`@flows/js-components`](https://www.npmjs.com/package/@flows/js-components) packages to demonstrate how to integrate Flows into your application.
 
