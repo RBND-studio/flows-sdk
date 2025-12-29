@@ -44,6 +44,8 @@ We provide a set of templates to help you get started with Flows.
 - [Vite template](./examples/react/vite)
 - [Vue Nuxt template](./examples/vue/nuxt)
 - [Angular template](./examples/angular)
+- [Svelte template](./examples/svelte)
+- [Lit template](./examples/lit)
 
 ## Get started for free
 
