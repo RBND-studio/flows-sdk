@@ -39,7 +39,7 @@ export const floatingItems = computed(() => {
     .flatMap((block) =>
       blockToActiveBlock({
         block,
-        templateUserProperties: configValue?.templateUserProperties ?? {},
+        userProperties: configValue?.userProperties ?? {},
       }),
     );
   const floatingTourBlocks = visibleTours.value

@@ -1,8 +1,4 @@
-import {
-  type TemplateUserProperties,
-  type LanguageOption,
-  type UserProperties,
-} from "@flows/shared";
+import { type LanguageOption, type UserProperties } from "@flows/shared";
 
 export interface FlowsOptions {
   /**
@@ -21,10 +17,6 @@ export interface FlowsOptions {
    * Object with custom [user properties](https://flows.sh/docs/users/properties). Values can be string, number, boolean, or date.
    */
   userProperties?: UserProperties;
-  /**
-   * TODO:
-   */
-  templateUserProperties?: TemplateUserProperties;
   /**
    * Custom API URL useful when using proxy to send Flows requests through your own domain.
    */

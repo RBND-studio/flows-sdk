@@ -4,7 +4,7 @@
  * @param templateProperties - properties to replace in the template
  * @returns `"Hello John!"` if `templateProperties` does not have `name` key, otherwise replaces with the value from `templateProperties`
  */
-export const template = (value: string, templateProperties: Record<string, string>): string => {
+export const template = (value: string, templateProperties: Record<string, unknown>): string => {
   // eslint-disable-next-line prefer-named-capture-group -- we don't need named groups here
   return value.replace(/\{\{([\s\S]+?)\}\}/g, (templateVar) => {
     const [templateKey, defaultValue] = templateVar
@@ -17,7 +17,11 @@ export const template = (value: string, templateProperties: Record<string, strin
 
     const replacementValue = templateProperties[templateKey];
 
-    if (typeof replacementValue === "string") {
+    if (
+      typeof replacementValue === "string" ||
+      typeof replacementValue === "number" ||
+      typeof replacementValue === "boolean"
+    ) {
       return replacementValue.toString();
     }
 

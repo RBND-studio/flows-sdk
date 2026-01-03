@@ -6,7 +6,7 @@ import {
   type Action,
   type TourComponentProps,
   type TourStep,
-  type TemplateUserProperties,
+  type UserProperties,
 } from "./types";
 import { template } from "./template";
 
@@ -22,7 +22,7 @@ export const createComponentProps = (props: {
   removeBlock: (blockId: string) => void;
   exitNodeCb: ExitNodeCb;
   setStateMemory: SetStateMemory;
-  templateUserProperties: TemplateUserProperties;
+  userProperties: UserProperties;
 }): ComponentProps<object> => {
   const { block, exitNodeCb, removeBlock, setStateMemory } = props;
 
@@ -50,7 +50,7 @@ export const createComponentProps = (props: {
       }
 
       if (typeof value === "string") {
-        _data[key] = template(value, props.templateUserProperties);
+        _data[key] = template(value, props.userProperties);
       }
     });
 
@@ -92,11 +92,11 @@ export const createComponentProps = (props: {
       const actionValue = propMeta.value;
 
       const propValue: Action = {
-        label: template(actionValue.label, props.templateUserProperties),
+        label: template(actionValue.label, props.userProperties),
         openInNew: actionValue.openInNew,
       };
       if (actionValue.url !== undefined) {
-        propValue.url = template(actionValue.url, props.templateUserProperties);
+        propValue.url = template(actionValue.url, props.userProperties);
       }
 
       const exitNode = actionValue.exitNode;

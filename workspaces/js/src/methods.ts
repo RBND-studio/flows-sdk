@@ -27,7 +27,7 @@ const addActiveSlotBlocksComputed = (slotId: string): ReadonlySignal<ActiveBlock
       if (isBlock(item))
         return blockToActiveBlock({
           block: item,
-          templateUserProperties: configValue?.templateUserProperties ?? {},
+          userProperties: configValue?.userProperties ?? {},
         });
       return tourToActiveBlock(item.block, item.currentBlockIndex);
     });
