@@ -1,5 +1,9 @@
 import { type FC, type ReactNode } from "react";
-import { type LanguageOption, type UserProperties } from "@flows/shared";
+import {
+  type TemplateUserProperties,
+  type LanguageOption,
+  type UserProperties,
+} from "@flows/shared";
 import { type TourComponents, type Components } from "./types";
 import { FlowsContext } from "./flows-context";
 import { useRunningTours } from "./hooks/use-running-tours";
@@ -29,6 +33,12 @@ export interface FlowsProviderProps {
    * Object with custom [user properties](https://flows.sh/docs/users/properties). Values can be string, number, boolean, or date.
    */
   userProperties?: UserProperties;
+  /**
+   * Properties used for interpolation of string properties.
+   *
+   * When entering following string in the cloud editor `"Hello {{ name | World }}!"` and passing `{ name: "John" }` as `templateUserProperties`, the rendered string will be `"Hello John!"`. If `name` is not provided in `templateUserProperties`, it will fallback to default `"World"` value. The default value is optional, `"Hello {{ name }}!"` is also valid.
+   */
+  templateUserProperties?: TemplateUserProperties;
   /**
    * Custom API URL useful when using proxy to send Flows requests through your own domain.
    */
@@ -107,6 +117,7 @@ const FlowsProviderInner: FC<Props> = ({
   components,
   tourComponents,
   userProperties,
+  templateUserProperties = {},
   language,
   debug,
   onDebugShortcut,
@@ -136,6 +147,7 @@ const FlowsProviderInner: FC<Props> = ({
         tourComponents,
         removeBlock,
         updateBlock,
+        templateUserProperties,
       }}
     >
       {children}

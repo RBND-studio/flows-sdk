@@ -48,14 +48,16 @@ const useVisibleTours = (): RunningTour[] => {
 export const useCurrentFloatingBlocks = (): ActiveBlock[] => {
   const visibleBlocks = useVisibleBlocks();
   const visibleTours = useVisibleTours();
-  const { removeBlock, updateBlock } = useFlowsContext();
+  const { removeBlock, updateBlock, templateUserProperties } = useFlowsContext();
 
   const floatingBlocks = useMemo(
     () =>
       visibleBlocks
         .filter((b) => !b.slottable)
-        .flatMap((block) => blockToActiveBlock({ block, removeBlock, updateBlock })),
-    [removeBlock, updateBlock, visibleBlocks],
+        .flatMap((block) =>
+          blockToActiveBlock({ block, removeBlock, updateBlock, templateUserProperties }),
+        ),
+    [removeBlock, templateUserProperties, updateBlock, visibleBlocks],
   );
   const floatingTourBlocks = useMemo(
     () =>
@@ -86,7 +88,7 @@ const getSlotIndex = (item: Block | RunningTour): number => {
 export const useCurrentSlotBlocks = (slotId: string): ActiveBlock[] => {
   const visibleBlocks = useVisibleBlocks();
   const visibleTours = useVisibleTours();
-  const { removeBlock, updateBlock } = useFlowsContext();
+  const { removeBlock, updateBlock, templateUserProperties } = useFlowsContext();
 
   const sortedActiveBlocks = useMemo(() => {
     const slotBlocks = visibleBlocks.filter((b) => b.slottable && getSlot(b) === slotId);
@@ -96,10 +98,16 @@ export const useCurrentSlotBlocks = (slotId: string): ActiveBlock[] => {
     return [...slotBlocks, ...slotTourBlocks]
       .sort((a, b) => getSlotIndex(a) - getSlotIndex(b))
       .flatMap((item) => {
-        if (isBlock(item)) return blockToActiveBlock({ block: item, removeBlock, updateBlock });
+        if (isBlock(item))
+          return blockToActiveBlock({
+            block: item,
+            removeBlock,
+            updateBlock,
+            templateUserProperties,
+          });
         return tourBlockToActiveBlock(item);
       });
-  }, [removeBlock, slotId, updateBlock, visibleBlocks, visibleTours]);
+  }, [removeBlock, slotId, templateUserProperties, updateBlock, visibleBlocks, visibleTours]);
 
   return sortedActiveBlocks;
 };

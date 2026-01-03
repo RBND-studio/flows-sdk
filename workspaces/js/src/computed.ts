@@ -1,6 +1,6 @@
 import { computed } from "@preact/signals-core";
 import { pathnameMatch } from "@flows/shared";
-import { blocks, pathname, runningTours } from "./store";
+import { blocks, config, pathname, runningTours } from "./store";
 import { blockToActiveBlock, tourToActiveBlock } from "./lib/active-block";
 
 export const visibleBlocks = computed(() =>
@@ -32,9 +32,16 @@ export const visibleTours = computed(() => {
 });
 
 export const floatingItems = computed(() => {
+  const configValue = config.value;
+
   const floatingBlocks = visibleBlocks.value
     .filter((b) => !b.slottable)
-    .flatMap(blockToActiveBlock);
+    .flatMap((block) =>
+      blockToActiveBlock({
+        block,
+        templateUserProperties: configValue?.templateUserProperties ?? {},
+      }),
+    );
   const floatingTourBlocks = visibleTours.value
     .filter((t) => {
       const activeStep = t.block.tourBlocks?.at(t.currentBlockIndex);
