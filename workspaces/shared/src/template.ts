@@ -5,26 +5,52 @@
  * @returns `"Hello John!"` if `templateProperties` does not have `name` key, otherwise replaces with the value from `templateProperties`
  */
 export const template = (value: string, templateProperties: Record<string, unknown>): string => {
-  // eslint-disable-next-line prefer-named-capture-group -- we don't need named groups here
-  return value.replace(/\{\{([\s\S]+?)\}\}/g, (templateVar) => {
-    const [templateKey, defaultValue] = templateVar
-      .replace(/\{\{|\}\}/g, "")
-      .trim()
-      .split("|")
-      .map((s) => s.trim());
+  let result = "";
+  let cursor = 0;
 
-    if (!templateKey) return templateVar;
+  while (cursor < value.length) {
+    const start = value.indexOf("{{", cursor);
+    if (start === -1) {
+      result += value.slice(cursor);
+      break;
+    }
+
+    result += value.slice(cursor, start);
+
+    const end = value.indexOf("}}", start + 2);
+    if (end === -1) {
+      result += value.slice(start);
+      break;
+    }
+
+    const rawInside = value.slice(start + 2, end);
+    const inside = rawInside.trim();
+
+    const pipeIndex = inside.indexOf("|");
+    const templateKey = (pipeIndex === -1 ? inside : inside.slice(0, pipeIndex)).trim();
+    const defaultValue = pipeIndex === -1 ? undefined : inside.slice(pipeIndex + 1).trim();
+
+    const templateVar = value.slice(start, end + 2);
+    if (!templateKey) {
+      result += templateVar;
+      cursor = end + 2;
+      continue;
+    }
 
     const replacementValue = templateProperties[templateKey];
-
     if (
       typeof replacementValue === "string" ||
       typeof replacementValue === "number" ||
       typeof replacementValue === "boolean"
     ) {
-      return replacementValue.toString();
+      result += replacementValue.toString();
+      cursor = end + 2;
+      continue;
     }
 
-    return defaultValue ?? "";
-  });
+    result += defaultValue ?? "";
+    cursor = end + 2;
+  }
+
+  return result;
 };
