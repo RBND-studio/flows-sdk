@@ -5,12 +5,19 @@ import {
   type SetStateMemory,
   createActiveBlockProxy,
   createTourComponentProps,
+  type UserProperties,
 } from "@flows/shared";
 import { removeBlock, updateBlock } from "../store";
 import { nextTourStep, previousTourStep, cancelTour } from "./tour";
 import { sendActivate, sendEvent } from "./api";
 
-export const blockToActiveBlock = (block: Block): ActiveBlock | [] => {
+export const blockToActiveBlock = ({
+  block,
+  userProperties,
+}: {
+  block: Block;
+  userProperties: UserProperties;
+}): ActiveBlock | [] => {
   if (!block.componentType) return [];
 
   const setStateMemory: SetStateMemory = async ({ blockId, key, value }) => {
@@ -32,6 +39,7 @@ export const blockToActiveBlock = (block: Block): ActiveBlock | [] => {
 
   const props = createComponentProps({
     block,
+    userProperties,
     removeBlock,
     exitNodeCb: ({ key, blockId }) => sendEvent({ name: "transition", blockId, propertyKey: key }),
     setStateMemory,

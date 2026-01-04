@@ -106,7 +106,7 @@ const FlowsProviderInner: FC<Props> = ({
   userId,
   components,
   tourComponents,
-  userProperties,
+  userProperties = {},
   language,
   debug,
   onDebugShortcut,
@@ -130,6 +130,7 @@ const FlowsProviderInner: FC<Props> = ({
   return (
     <FlowsContext.Provider
       value={{
+        userProperties,
         blocks,
         components,
         runningTours,
