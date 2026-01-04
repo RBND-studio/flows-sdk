@@ -63,6 +63,6 @@
     "@preact/signals-core": "^1.12.1",
     "clsx": "^2.1.1",
     "es-toolkit": "^1.43.0",
-    "lit": "^3.3.1"
+    "lit": "^3.3.2"
   }
 }
