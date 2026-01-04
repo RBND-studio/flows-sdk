@@ -110,6 +110,7 @@ export const TourController: FC = () => {
     debouncedCallback();
     return () => {
       observer.disconnect();
+      debouncedCallback.cancel();
     };
     // Watch pathname to check on each pathname change
   }, [pathname, relevantTours]);
