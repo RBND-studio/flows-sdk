@@ -1,6 +1,6 @@
 import { computed, effect, type ReadonlySignal } from "@preact/signals-core";
 import { type ActiveBlock, type Block } from "@flows/shared";
-import { type RunningTour } from "./store";
+import { config, type RunningTour } from "./store";
 import { blockToActiveBlock, tourToActiveBlock } from "./lib/active-block";
 import { sendEvent } from "./lib/api";
 import { floatingItems, slotBlocks, visibleTours } from "./computed";
@@ -15,6 +15,8 @@ const getSlotIndex = (item: Block | (RunningTour & { block: Block })): number =>
 const computedActiveBlocksBySlotId = new Map<string, ReadonlySignal<ActiveBlock[]>>();
 const addActiveSlotBlocksComputed = (slotId: string): ReadonlySignal<ActiveBlock[]> => {
   const newComputed = computed(() => {
+    const configValue = config.value;
+
     const workflowBlocks = slotBlocks.value.filter((b) => b.slottable && b.slotId === slotId);
     const tours = visibleTours.value.filter((t) => {
       const activeStep = t.block.tourBlocks?.at(t.currentBlockIndex);
@@ -22,7 +24,11 @@ const addActiveSlotBlocksComputed = (slotId: string): ReadonlySignal<ActiveBlock
     });
     const sorted = [...workflowBlocks, ...tours].sort((a, b) => getSlotIndex(a) - getSlotIndex(b));
     return sorted.flatMap((item) => {
-      if (isBlock(item)) return blockToActiveBlock(item);
+      if (isBlock(item))
+        return blockToActiveBlock({
+          block: item,
+          userProperties: configValue?.userProperties ?? {},
+        });
       return tourToActiveBlock(item.block, item.currentBlockIndex);
     });
   });

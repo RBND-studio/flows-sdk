@@ -5,6 +5,7 @@ import {
   type Block,
   createActiveBlockProxy,
   createTourComponentProps,
+  type UserProperties,
 } from "@flows/shared";
 import { type RemoveBlock, type UpdateBlock, type RunningTour } from "../flows-context";
 import { sendActivate, sendEvent } from "./api";
@@ -13,10 +14,12 @@ export const blockToActiveBlock = ({
   block,
   removeBlock,
   updateBlock,
+  userProperties,
 }: {
   block: Block;
   removeBlock: RemoveBlock;
   updateBlock: UpdateBlock;
+  userProperties: UserProperties;
 }): ActiveBlock | [] => {
   if (!block.componentType) return [];
 
@@ -39,6 +42,7 @@ export const blockToActiveBlock = ({
 
   const props = createComponentProps({
     block,
+    userProperties,
     removeBlock,
     exitNodeCb: ({ key, blockId }) => sendEvent({ name: "transition", blockId, propertyKey: key }),
     setStateMemory,
