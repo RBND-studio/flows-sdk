@@ -25,6 +25,9 @@ import { DebugSection } from "./debug-section";
 import { PathnamePanel } from "./panels/pathname-panel";
 
 export interface DebugPanelProps {
+  /**
+   * Opens the debug panel by default (when it gets enabled)
+   */
   forceOpen: boolean;
 
   organizationId: string;

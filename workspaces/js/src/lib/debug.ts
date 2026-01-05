@@ -59,9 +59,16 @@ export const createKeydownDebugListener =
     if (shortcutMatcher(e)) {
       const newValue = !debugPanelOpen.value.enabled;
       sessionStorage.setItem(debugEnabledSessionStorageKey, String(newValue));
+
+      // Info log for user feedback
       if (newValue) log.info(`Debug mode enabled`);
       else log.info(`Debug mode disabled`);
-      debugPanelOpen.value = { enabled: newValue, forceOpen: newValue };
+
+      debugPanelOpen.value = {
+        enabled: newValue,
+        // Force open is set to true when enabling debug mode via keyboard shortcut
+        forceOpen: newValue,
+      };
     }
   };
 

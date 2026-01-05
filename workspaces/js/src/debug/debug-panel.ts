@@ -25,6 +25,9 @@ import { X } from "./icons/x";
 import { PathnamePanel } from "./panels/pathname-panel";
 
 export class DebugPanel extends SignalWatcher(LitElement) {
+  /**
+   * Opens the debug panel by default (when it gets enabled)
+   */
   @property({ type: Boolean })
   forceOpen = false;
 

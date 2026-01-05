@@ -39,9 +39,16 @@ const DebugInner: FC<Props> = ({ enabled: forceEnabled, onDebugKeydown, ...props
         setDebugState((prev) => {
           const newValue = !prev.enabled;
           sessionStorage.setItem(debugEnabledSessionStorageKey, String(newValue));
+
+          // Info log for user feedback
           if (newValue) log.info(`Debug mode enabled`);
           else log.info(`Debug mode disabled`);
-          return { enabled: newValue, forceOpen: newValue };
+
+          return {
+            enabled: newValue,
+            // Force open is set to true when enabling debug mode via keyboard shortcut
+            forceOpen: newValue,
+          };
         });
       }
     };
