@@ -1,4 +1,5 @@
 import { set } from "es-toolkit/compat";
+import { mapValues } from "es-toolkit";
 import {
   type ComponentProps,
   type Block,
@@ -7,6 +8,7 @@ import {
   type TourComponentProps,
   type TourStep,
   type UserProperties,
+  type PropertyMeta,
 } from "./types";
 import { template } from "./template";
 
@@ -17,6 +19,26 @@ export type SetStateMemory = (props: {
 }) => Promise<void>;
 export type ExitNodeCb = (props: { key: string; blockId: string }) => Promise<void>;
 
+const createActionBase = ({
+  propMeta,
+  userProperties,
+}: {
+  propMeta: PropertyMeta & { type: "action" };
+  userProperties: UserProperties;
+}): Action => {
+  const actionValue = propMeta.value;
+
+  const propValue: Action = {
+    label: template(actionValue.label, userProperties),
+    openInNew: actionValue.openInNew,
+  };
+  if (actionValue.url !== undefined) {
+    propValue.url = template(actionValue.url, userProperties);
+  }
+
+  return propValue;
+};
+
 export const createComponentProps = (props: {
   block: Block;
   removeBlock: (blockId: string) => void;
@@ -26,7 +48,8 @@ export const createComponentProps = (props: {
 }): ComponentProps<object> => {
   const { block, exitNodeCb, removeBlock, setStateMemory } = props;
 
-  const processData = ({
+  // TODO: remove this function when backend stops sending f__exit_nodes in favor of propertyMeta
+  const processExitNodes = ({
     properties,
     parentKey,
   }: {
@@ -34,25 +57,6 @@ export const createComponentProps = (props: {
     parentKey?: string;
   }): Record<string, unknown> => {
     const _data = { ...properties };
-
-    // Recursively process nested objects
-    Object.entries(properties).forEach(([key, value]) => {
-      if (Array.isArray(value)) {
-        _data[key] = value.map((item: Record<string, unknown>, index) => {
-          if (typeof item === "object") {
-            return processData({
-              properties: item,
-              parentKey: [parentKey, key, index].filter((x) => x !== undefined).join("."),
-            });
-          }
-          return item;
-        });
-      }
-
-      if (typeof value === "string") {
-        _data[key] = template(value, props.userProperties);
-      }
-    });
 
     // Add exit node methods
     delete _data.f__exit_nodes;
@@ -65,10 +69,53 @@ export const createComponentProps = (props: {
       _data[exitNode] = cb;
     });
 
+    // Recursively process nested objects
+    Object.entries(properties).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        _data[key] = value.map((item: Record<string, unknown>, index) => {
+          if (typeof item === "object") {
+            return processExitNodes({
+              properties: item,
+              parentKey: [parentKey, key, index].filter((x) => x !== undefined).join("."),
+            });
+          }
+
+          return item;
+        });
+      }
+    });
+
     return _data;
   };
 
-  const data = processData({ properties: block.data });
+  const dataWithExitNodes = processExitNodes({ properties: block.data });
+
+  const processData = ({ value, parentKey }: { value: unknown; parentKey: string }): unknown => {
+    if (typeof value === "string") {
+      return template(value, props.userProperties);
+    }
+
+    if (Array.isArray(value)) {
+      return value.map((item: unknown, index) => {
+        if (item && typeof item === "object") {
+          return mapValues(item as Record<string, unknown>, (v, key) => {
+            const childParentKey = [parentKey, index, key].join(".");
+            return processData({
+              value: v,
+              parentKey: childParentKey,
+            });
+          });
+        }
+        return item;
+      });
+    }
+
+    return value;
+  };
+
+  const data = mapValues(dataWithExitNodes, (value, key) => {
+    return processData({ value, parentKey: key });
+  });
 
   for (const propMeta of block.propertyMeta ?? []) {
     if (propMeta.type === "state-memory") {
@@ -89,17 +136,9 @@ export const createComponentProps = (props: {
       set(data, propMeta.key, blockStateProps);
     }
     if (propMeta.type === "action") {
-      const actionValue = propMeta.value;
+      const propValue = createActionBase({ propMeta, userProperties: props.userProperties });
 
-      const propValue: Action = {
-        label: template(actionValue.label, props.userProperties),
-        openInNew: actionValue.openInNew,
-      };
-      if (actionValue.url !== undefined) {
-        propValue.url = template(actionValue.url, props.userProperties);
-      }
-
-      const exitNode = actionValue.exitNode;
+      const exitNode = propMeta.value.exitNode;
       if (exitNode) {
         propValue.callAction = () => {
           // Don't remove block for block triggers
@@ -136,6 +175,7 @@ export const createTourComponentProps = ({
   tourSteps,
   tourStep,
   currentIndex,
+  userProperties,
   handleCancel,
   handleContinue,
   handlePrevious,
@@ -143,30 +183,42 @@ export const createTourComponentProps = ({
   tourSteps: TourStep[];
   tourStep: TourStep;
   currentIndex: number;
+  userProperties: UserProperties;
   handleContinue: () => void;
   handlePrevious: () => void;
   handleCancel: () => void;
 }): TourComponentProps<object> => {
   const isFirstStep = currentIndex === 0;
 
-  const data = { ...tourStep.data };
+  const processData = (value: unknown): unknown => {
+    if (typeof value === "string") {
+      return template(value, userProperties);
+    }
+    if (Array.isArray(value)) {
+      return value.map((item: unknown) => {
+        if (item && typeof item === "object") {
+          return mapValues(item, processData);
+        }
+
+        return item;
+      });
+    }
+
+    return value;
+  };
+
+  const data = mapValues(tourStep.data, processData);
 
   for (const propMeta of tourStep.propertyMeta ?? []) {
     if (propMeta.type === "action") {
-      const actionValue = propMeta.value;
+      const propValue = createActionBase({ propMeta, userProperties });
 
-      const propValue: Action = {
-        label: actionValue.label,
-        url: actionValue.url,
-        openInNew: actionValue.openInNew,
-      };
-
-      if (actionValue.exitNode) {
+      if (propMeta.value.exitNode) {
         // eslint-disable-next-line @typescript-eslint/require-await -- needed for the callAction to return Promise
         propValue.callAction = async () => {
-          if (actionValue.exitNode === "continue") handleContinue();
-          if (actionValue.exitNode === "previous") handlePrevious();
-          if (actionValue.exitNode === "cancel") handleCancel();
+          if (propMeta.value.exitNode === "continue") handleContinue();
+          if (propMeta.value.exitNode === "previous") handlePrevious();
+          if (propMeta.value.exitNode === "cancel") handleCancel();
         };
       }
 

@@ -47,7 +47,13 @@ export const floatingItems = computed(() => {
       const activeStep = t.block.tourBlocks?.at(t.currentBlockIndex);
       return !activeStep?.slottable;
     })
-    .flatMap((tour) => tourToActiveBlock(tour.block, tour.currentBlockIndex));
+    .flatMap((tour) =>
+      tourToActiveBlock({
+        block: tour.block,
+        currentIndex: tour.currentBlockIndex,
+        userProperties: configValue?.userProperties ?? {},
+      }),
+    );
   return [...floatingBlocks, ...floatingTourBlocks];
 });
 
