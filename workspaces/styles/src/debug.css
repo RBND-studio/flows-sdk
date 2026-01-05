@@ -60,6 +60,7 @@
 
 .flows-debug {
   position: fixed;
+  z-index: 10000;
   color: var(--flows-debug-fg-default);
 }
 :where(.flows-debug) hr {

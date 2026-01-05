@@ -25,6 +25,8 @@ import { DebugSection } from "./debug-section";
 import { PathnamePanel } from "./panels/pathname-panel";
 
 export interface DebugPanelProps {
+  forceOpen: boolean;
+
   organizationId: string;
   environment: string;
   userId: string;
@@ -35,6 +37,7 @@ export interface DebugPanelProps {
 }
 
 const DebugPanel: FC<DebugPanelProps> = ({
+  forceOpen,
   blocksError,
   wsError,
   environment,
@@ -42,7 +45,7 @@ const DebugPanel: FC<DebugPanelProps> = ({
   userId,
   userProperties,
 }) => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(forceOpen);
   const toggleOpen = (): void => {
     setOpen((p) => !p);
   };

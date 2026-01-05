@@ -1,5 +1,5 @@
 import { html, LitElement, type TemplateResult } from "lit";
-import { state } from "lit/decorators.js";
+import { property, state } from "lit/decorators.js";
 import debugStyles from "@flows/styles/debug.css";
 import {
   booleanToString,
@@ -25,6 +25,9 @@ import { X } from "./icons/x";
 import { PathnamePanel } from "./panels/pathname-panel";
 
 export class DebugPanel extends SignalWatcher(LitElement) {
+  @property({ type: Boolean })
+  forceOpen = false;
+
   @state()
   private accessor _open = false;
 
@@ -45,6 +48,12 @@ export class DebugPanel extends SignalWatcher(LitElement) {
 
   private _handlePageChange(page?: PanelPage): void {
     this._page = page;
+  }
+
+  connectedCallback(): void {
+    super.connectedCallback();
+
+    this._open = this.forceOpen;
   }
 
   // Disable shadow DOM to use global CSS
