@@ -58,7 +58,13 @@ export const blockToActiveBlock = ({
   return createActiveBlockProxy(activeBlock, sendActivate);
 };
 
-export const tourBlockToActiveBlock = (tour: RunningTour): ActiveBlock | [] => {
+export const tourBlockToActiveBlock = ({
+  tour,
+  userProperties,
+}: {
+  tour: RunningTour;
+  userProperties: UserProperties;
+}): ActiveBlock | [] => {
   const activeStep = tour.activeStep;
   if (!activeStep?.componentType) return [];
 
@@ -66,6 +72,7 @@ export const tourBlockToActiveBlock = (tour: RunningTour): ActiveBlock | [] => {
     tourSteps: tour.block.tourBlocks ?? [],
     tourStep: activeStep,
     currentIndex: tour.currentBlockIndex,
+    userProperties,
     handleCancel: tour.cancel,
     handleContinue: tour.continue,
     handlePrevious: tour.previous,

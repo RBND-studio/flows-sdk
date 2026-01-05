@@ -29,7 +29,11 @@ const addActiveSlotBlocksComputed = (slotId: string): ReadonlySignal<ActiveBlock
           block: item,
           userProperties: configValue?.userProperties ?? {},
         });
-      return tourToActiveBlock(item.block, item.currentBlockIndex);
+      return tourToActiveBlock({
+        block: item.block,
+        currentIndex: item.currentBlockIndex,
+        userProperties: configValue?.userProperties ?? {},
+      });
     });
   });
   computedActiveBlocksBySlotId.set(slotId, newComputed);

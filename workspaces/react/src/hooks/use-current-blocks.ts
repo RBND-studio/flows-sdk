@@ -66,8 +66,8 @@ export const useCurrentFloatingBlocks = (): ActiveBlock[] => {
           const activeStep = tour.activeStep;
           return activeStep && !activeStep.slottable;
         })
-        .flatMap(tourBlockToActiveBlock),
-    [visibleTours],
+        .flatMap((tour) => tourBlockToActiveBlock({ tour, userProperties })),
+    [userProperties, visibleTours],
   );
 
   return [...floatingBlocks, ...floatingTourBlocks];
@@ -105,7 +105,7 @@ export const useCurrentSlotBlocks = (slotId: string): ActiveBlock[] => {
             updateBlock,
             userProperties,
           });
-        return tourBlockToActiveBlock(item);
+        return tourBlockToActiveBlock({ tour: item, userProperties });
       });
   }, [removeBlock, slotId, userProperties, updateBlock, visibleBlocks, visibleTours]);
 
