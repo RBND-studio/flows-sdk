@@ -55,7 +55,15 @@ export const blockToActiveBlock = ({
   return createActiveBlockProxy(activeBlock, sendActivate);
 };
 
-export const tourToActiveBlock = (block: Block, currentIndex: number): ActiveBlock | [] => {
+export const tourToActiveBlock = ({
+  block,
+  currentIndex,
+  userProperties,
+}: {
+  block: Block;
+  currentIndex: number;
+  userProperties: UserProperties;
+}): ActiveBlock | [] => {
   const tourBlocks = block.tourBlocks;
   if (!tourBlocks?.length) return [];
   const activeStep = tourBlocks.at(currentIndex);
@@ -65,6 +73,7 @@ export const tourToActiveBlock = (block: Block, currentIndex: number): ActiveBlo
     tourSteps: tourBlocks,
     tourStep: activeStep,
     currentIndex,
+    userProperties,
     handleContinue: () => {
       nextTourStep(block, currentIndex);
     },
