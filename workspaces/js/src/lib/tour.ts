@@ -54,12 +54,16 @@ export const previousTourStep = (tourBlock: Block, currentIndex: number): void =
 
   if (isFirstStep) return;
   const newIndex = currentIndex - 1;
-  updateTourState(tourBlock.id, (t) => ({ ...t, currentBlockIndex: newIndex }));
   void sendEvent({
     name: "tour-update",
     blockId: tourBlock.id,
     properties: { currentTourIndex: newIndex },
   });
+
+  // Update the step with a timeout to avoid navigation with href from the previous step
+  setTimeout(() => {
+    updateTourState(tourBlock.id, (t) => ({ ...t, currentBlockIndex: newIndex }));
+  }, 0);
 };
 
 export const nextTourStep = (tourBlock: Block, currentIndex: number): void => {
@@ -70,12 +74,16 @@ export const nextTourStep = (tourBlock: Block, currentIndex: number): void => {
     void sendEvent({ name: "transition", blockId: tourBlock.id, propertyKey: "complete" });
   } else {
     const newIndex = currentIndex + 1;
-    updateTourState(tourBlock.id, (t) => ({ ...t, currentBlockIndex: newIndex }));
     void sendEvent({
       name: "tour-update",
       blockId: tourBlock.id,
       properties: { currentTourIndex: newIndex },
     });
+
+    // Update the step with a timeout to avoid navigation with href from the next step
+    setTimeout(() => {
+      updateTourState(tourBlock.id, (t) => ({ ...t, currentBlockIndex: newIndex }));
+    }, 0);
   }
 };
 

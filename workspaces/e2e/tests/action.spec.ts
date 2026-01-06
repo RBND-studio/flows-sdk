@@ -1,7 +1,7 @@
-import { Block, PropertyMeta } from "@flows/shared";
+import { Block, PropertyMeta, TourStep } from "@flows/shared";
 import { expect, test } from "@playwright/test";
 import { randomUUID } from "crypto";
-import { mockBlocksEndpoint } from "./utils";
+import { getTour, mockBlocksEndpoint } from "./utils";
 
 test.beforeEach(async ({ page }) => {
   await page.routeWebSocket(
@@ -29,27 +29,16 @@ const getBlock = (actionValue: PropertyMeta["value"] & { label: string }): Block
   componentType: "Action",
 });
 
-const getTour = (actionValue: PropertyMeta["value"] & { label: string }): Block => ({
+const getTourStep = (actionValue: (PropertyMeta & { type: "action" })["value"]): TourStep => ({
   id: randomUUID(),
   workflowId: randomUUID(),
-  type: "tour",
-  data: {},
-  propertyMeta: [],
+  type: "tour-component",
+  componentType: "Action",
   slottable: false,
-  exitNodes: [],
-  tourBlocks: [
-    {
-      id: randomUUID(),
-      workflowId: randomUUID(),
-      type: "tour-component",
-      componentType: "Action",
-      slottable: false,
-      data: {
-        title: "Action Tour Title",
-      },
-      propertyMeta: [{ key: "action", type: "action", value: actionValue }],
-    },
-  ],
+  data: {
+    title: "Action Tour Title",
+  },
+  propertyMeta: [{ key: "action", type: "action", value: actionValue }],
 });
 
 const run = (packageName: string) => {
@@ -95,9 +84,13 @@ const run = (packageName: string) => {
     test(`${packageName} - url`, async ({ page }) => {
       mockBlocksEndpoint(page, [
         getTour({
-          label: "Example",
-          url: "https://example.com",
-          openInNew: true,
+          tourBlocks: [
+            getTourStep({
+              label: "Example",
+              url: "https://example.com",
+              openInNew: true,
+            }),
+          ],
         }),
       ]);
       await page.goto(`/${packageName}.html`);
@@ -107,10 +100,38 @@ const run = (packageName: string) => {
       await expect(linkEl).toHaveAttribute("href", "https://example.com");
       await expect(linkEl).toHaveAttribute("target", "_blank");
     });
+    test(`${packageName} - should navigate to URL from current step`, async ({ page }) => {
+      mockBlocksEndpoint(page, [
+        getTour({
+          tourBlocks: [
+            getTourStep({
+              label: "Continue",
+              exitNode: "continue",
+              url: "/step1",
+            }),
+            getTourStep({
+              label: "Continue",
+              exitNode: "continue",
+              url: "/step2",
+            }),
+          ],
+        }),
+      ]);
+      await page.goto(`/${packageName}.html`);
+      await expect(page.getByText("Action Tour Title", { exact: true })).toBeVisible();
+      const linkEl = page.getByText("Continue", { exact: true });
+      await expect(linkEl).toBeVisible();
+      await linkEl.click();
+      expect(page.url()).toContain("/step1");
+    });
     test(`${packageName} - transition`, async ({ page }) => {
       const block = getTour({
-        label: "TransitionBtn",
-        exitNode: "continue",
+        tourBlocks: [
+          getTourStep({
+            label: "TransitionBtn",
+            exitNode: "continue",
+          }),
+        ],
       });
       mockBlocksEndpoint(page, [block]);
       await page.goto(`/${packageName}.html`);
