@@ -1,9 +1,11 @@
+import { querySelectorDeep } from "@flows/shared";
+
 export function observeQuerySelector<T extends Element>(
   selector: string | null,
   cb: (element: T | null) => void,
 ): () => void {
   const publishChange = (): void => {
-    const element = selector ? document.querySelector<T>(selector) : null;
+    const element = selector ? querySelectorDeep<T>(selector) : null;
     cb(element);
   };
 

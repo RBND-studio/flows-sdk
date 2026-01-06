@@ -6,5 +6,6 @@ export * from "./language";
 export * from "./log";
 export * from "./matchers";
 export * from "./pathname";
+export * from "./query-selector-shadow-dom";
 export * from "./tour-trigger";
 export * from "./types";

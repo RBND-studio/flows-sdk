@@ -1,9 +1,10 @@
+import { querySelectorDeep } from "@flows/shared";
 import { useState, useEffect } from "react";
 
 const querySelector = <E extends Element = Element>(selector: string): E | null => {
   if (typeof window === "undefined") return null;
 
-  return document.querySelector(selector);
+  return querySelectorDeep(selector);
 };
 
 /**

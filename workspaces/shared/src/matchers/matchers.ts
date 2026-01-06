@@ -9,6 +9,7 @@ import {
   $regex,
   $startsWith,
 } from "../primitive-matchers";
+import { querySelectorAllDeep, querySelectorDeep } from "../query-selector-shadow-dom";
 
 export const pathnameMatch = ({
   operator,
@@ -43,17 +44,17 @@ export const elementContains = ({
   value?: string;
 }): boolean => {
   if (!value) return false;
-  return Array.from(document.querySelectorAll(value)).some((el) => el.contains(eventTarget));
+  return Array.from(querySelectorAllDeep(value)).some((el) => el.contains(eventTarget));
 };
 
 export const elementExists = (selector: unknown): boolean => {
   if (typeof selector !== "string") return false;
   if (!selector.trim()) return true;
-  return Boolean(document.querySelector(selector));
+  return Boolean(querySelectorDeep(selector));
 };
 
 export const elementNotExists = (selector: unknown): boolean => {
   if (typeof selector !== "string") return false;
   if (!selector.trim()) return true;
-  return !document.querySelector(selector);
+  return !querySelectorDeep(selector);
 };

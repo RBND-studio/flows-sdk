@@ -1,5 +1,5 @@
 import { log } from "./log";
-import { elementContains, pathnameMatch } from "./matchers";
+import { elementContains, elementExists, elementNotExists, pathnameMatch } from "./matchers";
 import { type TourTrigger, type TourTriggerType } from "./types";
 
 interface Context {
@@ -38,20 +38,10 @@ export const tourTriggerMatch = (
       });
     }
     if (type === "dom-element") {
-      const value = exp.value;
-      // The dom-element type needs a value to match the selector
-      if (typeof value !== "string") return false;
-      if (!value) return true;
-
-      return Boolean(document.querySelector(value));
+      return elementExists(exp.value);
     }
     if (type === "not-dom-element") {
-      const value = exp.value;
-      // The not-dom-element type needs a value to ensure no matching selector exists
-      if (typeof value !== "string") return false;
-      if (!value) return true;
-
-      return !document.querySelector(value);
+      return elementNotExists(exp.value);
     }
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- we may add more types in the future
     if (type === "click") {
