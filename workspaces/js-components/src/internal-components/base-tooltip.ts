@@ -47,6 +47,9 @@ class BaseTooltip extends LitElement {
   @queryAll(".flows_basicsV2_tooltip_arrow")
   arrows: [HTMLElement, HTMLElement];
 
+  @query(".flows_basicsV2_tooltip_overlay")
+  overlayElement: HTMLElement | null;
+
   @state()
   private _reference: Element | null = null;
 
@@ -85,7 +88,7 @@ class BaseTooltip extends LitElement {
           reference,
           tooltip,
           arrowEls: this.arrows,
-          overlay: null,
+          overlay: this.overlayElement,
           placement: this.placement,
         }),
       { animationFrame: true },
