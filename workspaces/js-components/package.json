@@ -28,7 +28,7 @@
   "license": "MIT",
   "sideEffects": false,
   "scripts": {
-    "dev": "tsup --watch --env.NODE_ENV development",
+    "dev": "tsup --env.NODE_ENV development",
     "build": "tsup --env.NODE_ENV production && node scripts/rename-global-modules.js",
     "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",

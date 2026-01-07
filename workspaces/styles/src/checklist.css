@@ -1,0 +1,95 @@
+.flows_basicsV2_checklist {
+  position: fixed;
+  z-index: var(--flows-basicsV2-zIndex);
+  display: flex;
+  flex-direction: column;
+  gap: var(--flows-basicsV2-size-m);
+}
+
+.flows_basicsV2_checklist[data-position="bottom-right"] {
+  right: var(--flows-basicsV2-size-l);
+  bottom: var(--flows-basicsV2-size-l);
+  flex-direction: column-reverse;
+  align-items: flex-end;
+}
+.flows_basicsV2_checklist[data-position="bottom-left"] {
+  left: var(--flows-basicsV2-size-l);
+  bottom: var(--flows-basicsV2-size-l);
+  flex-direction: column-reverse;
+}
+.flows_basicsV2_checklist[data-position="top-right"] {
+  right: var(--flows-basicsV2-size-l);
+  top: var(--flows-basicsV2-size-l);
+  align-items: flex-end;
+}
+.flows_basicsV2_checklist[data-position="top-left"] {
+  left: var(--flows-basicsV2-size-l);
+  top: var(--flows-basicsV2-size-l);
+}
+
+.flows_basicsV2_checklist_widget_button {
+  cursor: pointer;
+  padding: var(--flows-basicsV2-size-xs) var(--flows-basicsV2-size-s);
+  background-color: var(--flows-basicsV2-bg-default);
+  border-radius: var(--flows-basicsV2-borderRadius-xs);
+  color: var(--flows-basicsV2-fg-default);
+}
+.flows_basicsV2_checklist_widget_button:hover {
+  background-color: var(--flows-basicsV2-bg-hover);
+}
+
+.flows_basicsV2_checklist_popover {
+  position: relative;
+  background-color: var(--flows-basicsV2-bg-default);
+  padding: var(--flows-basicsV2-size-l);
+  border-radius: var(--flows-basicsV2-borderRadius-m);
+  color: var(--flows-basicsV2-fg-default);
+}
+.flows_basicsV2_checklist_popover[data-open="false"] {
+  animation: flows-basicsV2-scaleOut 150ms ease-out;
+  opacity: 0;
+}
+
+.flows_basicsV2_checklist_title {
+  /* Space between title and close button */
+  margin-right: 24px;
+  margin-bottom: var(--flows-basicsV2-size-xs);
+}
+
+.flows_basicsV2_checklist_items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--flows-basicsV2-size-s);
+}
+
+.flows_basicsV2_checklist_item {
+  border: 1px solid #ccc;
+  background-color: #ddd;
+}
+
+.flows_basicsV2_checklist_item_expand_button {
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  gap: var(--flows-basicsV2-size-m);
+}
+
+.flows_basicsV2_checklist_item_content {
+  height: 0;
+  overflow: hidden;
+  transition: height 150ms ease-in-out;
+}
+.flows_basicsV2_checklist_item_content[data-expanded="true"] {
+  height: var(--flows-content-height);
+}
+
+.flows_basicsV2_checklist_item_buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.flows_basicsV2_checklist_close {
+  position: absolute;
+  top: var(--flows-basicsV2-size-l);
+  right: var(--flows-basicsV2-size-l);
+}

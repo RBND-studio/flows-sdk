@@ -1,4 +1,4 @@
-import { type Action } from "./components";
+import { type StateMemory, type Action } from "./components";
 
 export type Placement =
   | "top"
@@ -143,4 +143,28 @@ export interface TourCardProps {
   dismissible: boolean;
   width?: string;
   hideProgress: boolean;
+}
+
+// Checklist
+
+export interface ChecklistItem {
+  title: string;
+  description: string;
+  primaryButton?: Action;
+  secondaryButton?: Action;
+  completed: StateMemory;
+}
+
+export interface ChecklistProps {
+  widgetTitle: string;
+
+  position: "bottom-left" | "bottom-right" | "top-left" | "top-right";
+
+  popupTitle: string;
+  popupDescription: string;
+  items: ChecklistItem[];
+  secondaryButton?: Action;
+
+  complete: () => void;
+  close: () => void;
 }
