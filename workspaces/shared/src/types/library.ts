@@ -26,7 +26,8 @@ export type ModalPosition =
   | "bottom-right";
 export type ModalSize = "small" | "medium" | "auto";
 
-export type ButtonVariant = "primary" | "secondary";
+export type ButtonVariant = "primary" | "secondary" | "text";
+export type ButtonSize = "default" | "small";
 
 // Tooltip
 export interface TooltipProps {
@@ -163,7 +164,7 @@ export interface ChecklistProps {
   popupTitle: string;
   popupDescription: string;
   items: ChecklistItem[];
-  secondaryButton?: Action;
+  skipButton?: Action;
 
   complete: () => void;
   close: () => void;

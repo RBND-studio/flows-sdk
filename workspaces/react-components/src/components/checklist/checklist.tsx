@@ -1,18 +1,25 @@
 import { type ComponentProps, type ChecklistProps as LibraryChecklistProps } from "@flows/shared";
 import { type FC, useCallback, useState } from "react";
 import { Text } from "../../internal-components/text";
-import { IconButton } from "../../internal-components/icon-button";
-import { Close16 } from "../../icons/close16";
 import { ActionButton } from "../../internal-components/action-button";
+import { Chevron16 } from "../../icons/chevron16";
+import { Rocket16 } from "../../icons/rocket16";
 import { ChecklistItem } from "./checklist-item";
+import { ChecklistProgress } from "./checklist-progress";
 
 export type ChecklistProps = ComponentProps<LibraryChecklistProps>;
 
 const CLOSE_TIMEOUT = 300;
 
+// TODO: @VojtechVidra - please make it so that only one item can be expanded at a time
+// TODO: @VojtechVidra - fix vertical overflow when screen is small
+
 const Checklist: FC<ChecklistProps> = (props) => {
-  const [checklistOpen, setChecklistOpen] = useState(true);
+  const [checklistOpen, setChecklistOpen] = useState(false);
   const [checklistClosing, setChecklistClosing] = useState(false);
+
+  const totalItems = props.items.length;
+  const completedItems = props.items.filter((item) => item.completed.value).length;
 
   const handleOpen = useCallback(() => {
     setChecklistOpen(true);
@@ -32,7 +39,13 @@ const Checklist: FC<ChecklistProps> = (props) => {
         className="flows_basicsV2_checklist_widget_button"
         onClick={checklistOpen ? handleClose : handleOpen}
       >
+        <Rocket16 aria-hidden="true" />
         {props.widgetTitle}
+        <Chevron16
+          className="flows_basicsV2_checklist_widget_button_chevron"
+          data-open={checklistOpen && !checklistClosing ? "true" : "false"}
+          aria-hidden="true"
+        />
       </button>
 
       {checklistOpen ? (
@@ -40,28 +53,26 @@ const Checklist: FC<ChecklistProps> = (props) => {
           className="flows_basicsV2_checklist_popover"
           data-open={!checklistClosing ? "true" : "false"}
         >
-          <Text variant="title" className="flows_basicsV2_checklist_title">
-            {props.popupTitle}
-          </Text>
-          <Text variant="body">{props.popupDescription}</Text>
+          <div className="flows_basicsV2_checklist_header">
+            <Text variant="title" className="flows_basicsV2_checklist_title">
+              {props.popupTitle}
+            </Text>
+            <Text variant="body">{props.popupDescription}</Text>
+          </div>
+
+          <ChecklistProgress completedItems={completedItems} totalItems={totalItems} />
 
           <div className="flows_basicsV2_checklist_items">
             {props.items.map((item, index) => (
               // eslint-disable-next-line react/no-array-index-key -- the list order and length won't change
               <ChecklistItem key={index} {...item} />
             ))}
+            {props.skipButton ? (
+              <div className="flows_basicsV2_checklist_skip_button">
+                <ActionButton variant="text" action={props.skipButton} />{" "}
+              </div>
+            ) : null}
           </div>
-
-          {props.secondaryButton ? (
-            <ActionButton variant="secondary" action={props.secondaryButton} />
-          ) : null}
-          <IconButton
-            aria-label="Close"
-            className="flows_basicsV2_checklist_close"
-            onClick={props.close}
-          >
-            <Close16 />
-          </IconButton>
         </div>
       ) : null}
     </div>

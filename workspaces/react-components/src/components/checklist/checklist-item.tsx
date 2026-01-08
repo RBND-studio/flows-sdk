@@ -1,7 +1,9 @@
 import { type ChecklistItem as ChecklistItemType } from "@flows/shared";
-import { type FC, useCallback, useEffect, useRef, useState } from "react";
+import { type FC, type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { Text } from "../../internal-components/text";
 import { ActionButton } from "../../internal-components/action-button";
+import { Check16 } from "../../icons/check16";
+import { Chevron16 } from "../../icons/chevron16";
 
 type Props = ChecklistItemType;
 
@@ -22,32 +24,52 @@ export const ChecklistItem: FC<Props> = (props) => {
   }, []);
 
   return (
-    <div className="flows_basicsV2_checklist_item">
+    <div className="flows_basicsV2_checklist_item" data-expanded={expanded ? "true" : "false"}>
       <button
         type="button"
         className="flows_basicsV2_checklist_item_expand_button"
         onClick={toggleExpanded}
-      >
-        <input type="checkbox" onChange={() => null} checked={props.completed.value} />
-        {props.title}
-      </button>
-      <div
-        ref={expandRef}
-        className="flows_basicsV2_checklist_item_content"
         data-expanded={expanded ? "true" : "false"}
       >
-        <Text variant="body">{props.description}</Text>
-        {(props.primaryButton ?? props.secondaryButton) ? (
-          <div className="flows_basicsV2_checklist_item_buttons">
-            {props.primaryButton ? (
-              <ActionButton action={props.primaryButton} variant="primary" />
-            ) : null}
-            {props.secondaryButton ? (
-              <ActionButton action={props.secondaryButton} variant="secondary" />
-            ) : null}
-          </div>
-        ) : null}
+        <Indicator completed={props.completed.value} />
+        <span className="flows_basicsV2_checklist_item_title">{props.title}</span>
+        <Chevron16
+          className="flows_basicsV2_checklist_item_chevron"
+          data-expanded={expanded ? "true" : "false"}
+          aria-hidden="true"
+        />
+      </button>
+      <div
+        className="flows_basicsV2_checklist_item_content"
+        ref={expandRef}
+        data-expanded={expanded ? "true" : "false"}
+      >
+        <div className="flows_basicsV2_checklist_item_content_inner">
+          {props.description ? <Text variant="body">{props.description}</Text> : null}
+          {(props.primaryButton ?? props.secondaryButton) ? (
+            <div className="flows_basicsV2_checklist_item_buttons">
+              {props.primaryButton ? (
+                <ActionButton action={props.primaryButton} variant="primary" size="small" />
+              ) : null}
+              {props.secondaryButton ? (
+                <ActionButton action={props.secondaryButton} variant="secondary" size="small" />
+              ) : null}
+            </div>
+          ) : null}
+        </div>
       </div>
     </div>
   );
+};
+
+const Indicator = ({ completed }: { completed: boolean }): ReactNode => {
+  if (completed) {
+    return (
+      <div className="flows_basicsV2_checklist_item_indicator flows_basicsV2_checklist_item_indicator_completed">
+        <Check16 />
+      </div>
+    );
+  }
+
+  return <div className="flows_basicsV2_checklist_item_indicator" />;
 };
