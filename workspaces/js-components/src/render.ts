@@ -106,6 +106,9 @@ export const setupJsComponents = (options: SetupJsComponentsOptions): void => {
   Object.entries(options.components).forEach(([name, Cmp]) => {
     components[name] = Cmp;
 
+    // Component may be already defined
+    if (customElements.getName(Cmp)) return;
+
     const tagName = `flows-${name.toLowerCase()}`;
     if (!customElements.get(tagName)) {
       customElements.define(tagName, Cmp);
@@ -115,7 +118,7 @@ export const setupJsComponents = (options: SetupJsComponentsOptions): void => {
   Object.entries(options.tourComponents).forEach(([name, Cmp]) => {
     tourComponents[name] = Cmp;
 
-    // Component may be already defined if it's also used for `components`
+    // Component may be already defined
     if (customElements.getName(Cmp)) return;
 
     const tagName = `flows-tour-${name.toLowerCase()}`;
