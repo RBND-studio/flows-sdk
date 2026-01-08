@@ -14,6 +14,14 @@ export default function Home() {
         </a>{" "}
         to learn how to build SolidStart apps.
       </p>
+
+      {/*  Flows Slot with optional placeholder */}
+      <flows-slot data-slot-id="my-slot">
+        <div data-placeholder>
+          <h2>Placeholder</h2>
+          <p>This is a placeholder for the slot</p>
+        </div>
+      </flows-slot>
     </main>
   );
 }
