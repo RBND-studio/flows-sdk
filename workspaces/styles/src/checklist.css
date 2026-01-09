@@ -86,6 +86,8 @@
   max-width: var(--flows-basicsV2-checklist-popover-maxWidth);
   max-height: calc(100vh - 86px);
   overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--flows-basicsV2-checklist-scrollbar-color);
 }
 
 .flows_basicsV2_checklist_popover[data-open="false"] {
