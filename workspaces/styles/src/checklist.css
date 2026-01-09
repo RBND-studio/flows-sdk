@@ -84,6 +84,8 @@
   position: relative;
   animation: flows-basicsV2-scaleIn 150ms ease-out;
   max-width: var(--flows-basicsV2-checklist-popover-maxWidth);
+  max-height: calc(100vh - 86px);
+  overflow-y: auto;
 }
 
 .flows_basicsV2_checklist_popover[data-open="false"] {
@@ -210,7 +212,7 @@
 .flows_basicsV2_checklist_progress_bar {
   flex: 1;
   height: 8px;
-  background-color: var(--flows-basicsV2-bg-subtle);
+  background-color: var(--flows-basicsV2-bg-strong);
   border-radius: var(--flows-basicsV2-borderRadius-m);
   overflow: hidden;
 }

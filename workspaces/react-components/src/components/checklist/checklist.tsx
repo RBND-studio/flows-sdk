@@ -11,12 +11,13 @@ export type ChecklistProps = ComponentProps<LibraryChecklistProps>;
 
 const CLOSE_TIMEOUT = 300;
 
-// TODO: @VojtechVidra - please make it so that only one item can be expanded at a time
-// TODO: @VojtechVidra - fix vertical overflow when screen is small
-
 const Checklist: FC<ChecklistProps> = (props) => {
   const [checklistOpen, setChecklistOpen] = useState(false);
   const [checklistClosing, setChecklistClosing] = useState(false);
+  const [expandedItemIndex, setExpandedItemIndex] = useState<number | null>(null);
+  const toggleExpanded = useCallback((index: number) => {
+    setExpandedItemIndex((currentIndex) => (currentIndex === index ? null : index));
+  }, []);
 
   const totalItems = props.items.length;
   const completedItems = props.items.filter((item) => item.completed.value).length;
@@ -64,8 +65,14 @@ const Checklist: FC<ChecklistProps> = (props) => {
 
           <div className="flows_basicsV2_checklist_items">
             {props.items.map((item, index) => (
-              // eslint-disable-next-line react/no-array-index-key -- the list order and length won't change
-              <ChecklistItem key={index} {...item} />
+              <ChecklistItem
+                // eslint-disable-next-line react/no-array-index-key -- the list order and length won't change
+                key={index}
+                index={index}
+                expanded={expandedItemIndex === index}
+                toggleExpanded={toggleExpanded}
+                {...item}
+              />
             ))}
             {props.skipButton ? (
               <div className="flows_basicsV2_checklist_skip_button">

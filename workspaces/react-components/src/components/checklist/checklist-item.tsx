@@ -1,17 +1,20 @@
 import { type ChecklistItem as ChecklistItemType } from "@flows/shared";
-import { type FC, type ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import { type FC, type ReactNode, useCallback, useEffect, useRef } from "react";
 import { Text } from "../../internal-components/text";
 import { ActionButton } from "../../internal-components/action-button";
 import { Check16 } from "../../icons/check16";
 import { Chevron16 } from "../../icons/chevron16";
 
-type Props = ChecklistItemType;
+type Props = ChecklistItemType & {
+  index: number;
+  expanded: boolean;
+  toggleExpanded: (index: number) => void;
+};
 
 export const ChecklistItem: FC<Props> = (props) => {
-  const [expanded, setExpanded] = useState(false);
   const toggleExpanded = useCallback(() => {
-    setExpanded((prev) => !prev);
-  }, []);
+    props.toggleExpanded(props.index);
+  }, [props]);
 
   const expandRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -24,25 +27,28 @@ export const ChecklistItem: FC<Props> = (props) => {
   }, []);
 
   return (
-    <div className="flows_basicsV2_checklist_item" data-expanded={expanded ? "true" : "false"}>
+    <div
+      className="flows_basicsV2_checklist_item"
+      data-expanded={props.expanded ? "true" : "false"}
+    >
       <button
         type="button"
         className="flows_basicsV2_checklist_item_expand_button"
         onClick={toggleExpanded}
-        data-expanded={expanded ? "true" : "false"}
+        data-expanded={props.expanded ? "true" : "false"}
       >
         <Indicator completed={props.completed.value} />
         <span className="flows_basicsV2_checklist_item_title">{props.title}</span>
         <Chevron16
           className="flows_basicsV2_checklist_item_chevron"
-          data-expanded={expanded ? "true" : "false"}
+          data-expanded={props.expanded ? "true" : "false"}
           aria-hidden="true"
         />
       </button>
       <div
         className="flows_basicsV2_checklist_item_content"
         ref={expandRef}
-        data-expanded={expanded ? "true" : "false"}
+        data-expanded={props.expanded ? "true" : "false"}
       >
         <div className="flows_basicsV2_checklist_item_content_inner">
           {props.description ? <Text variant="body">{props.description}</Text> : null}
