@@ -118,4 +118,4 @@ const run = (packageName: string) => {
 };
 
 run("react");
-// run("js");
+run("js");

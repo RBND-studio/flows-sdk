@@ -26,6 +26,8 @@ export type ModalPosition =
   | "bottom-right";
 export type ModalSize = "small" | "medium" | "auto";
 
+export type ChecklistPosition = "bottom-left" | "bottom-right" | "top-left" | "top-right";
+
 export type ButtonVariant = "primary" | "secondary" | "text";
 export type ButtonSize = "default" | "small";
 
@@ -159,7 +161,7 @@ export interface ChecklistItem {
 export interface ChecklistProps {
   widgetTitle: string;
 
-  position: "bottom-left" | "bottom-right" | "top-left" | "top-right";
+  position: ChecklistPosition;
 
   popupTitle: string;
   popupDescription: string;

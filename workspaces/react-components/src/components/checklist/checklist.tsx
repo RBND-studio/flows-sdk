@@ -1,5 +1,5 @@
 import { type ComponentProps, type ChecklistProps as LibraryChecklistProps } from "@flows/shared";
-import { type FC, useCallback, useState } from "react";
+import { type FC, useCallback, useMemo, useRef, useState } from "react";
 import { Text } from "../../internal-components/text";
 import { ActionButton } from "../../internal-components/action-button";
 import { Chevron16 } from "../../icons/chevron16";
@@ -19,26 +19,37 @@ const Checklist: FC<ChecklistProps> = (props) => {
     setExpandedItemIndex((currentIndex) => (currentIndex === index ? null : index));
   }, []);
 
-  const totalItems = props.items.length;
-  const completedItems = props.items.filter((item) => item.completed.value).length;
+  const completedItems = useMemo(
+    () => props.items.filter((item) => item.completed.value),
+    [props.items],
+  );
 
-  const handleOpen = useCallback(() => {
-    setChecklistOpen(true);
-  }, []);
-  const handleClose = useCallback(() => {
-    setChecklistClosing(true);
-    setTimeout(() => {
-      setChecklistOpen(false);
+  const closeTimeoutRef = useRef<number>(null);
+  const handleClick = useCallback(() => {
+    if (checklistOpen && !checklistClosing) {
+      setChecklistClosing(true);
+      closeTimeoutRef.current = window.setTimeout(() => {
+        setChecklistOpen(false);
+        setChecklistClosing(false);
+        closeTimeoutRef.current = null;
+      }, CLOSE_TIMEOUT);
+    } else {
+      const closeTimeout = closeTimeoutRef.current;
+      if (closeTimeout !== null) {
+        window.clearTimeout(closeTimeout);
+        closeTimeoutRef.current = null;
+      }
       setChecklistClosing(false);
-    }, CLOSE_TIMEOUT);
-  }, []);
+      setChecklistOpen(true);
+    }
+  }, [checklistClosing, checklistOpen]);
 
   return (
     <div className="flows_basicsV2_checklist" data-position={props.position}>
       <button
         type="button"
         className="flows_basicsV2_checklist_widget_button"
-        onClick={checklistOpen ? handleClose : handleOpen}
+        onClick={handleClick}
       >
         <Rocket16 aria-hidden="true" />
         {props.widgetTitle}
@@ -61,7 +72,10 @@ const Checklist: FC<ChecklistProps> = (props) => {
             <Text variant="body">{props.popupDescription}</Text>
           </div>
 
-          <ChecklistProgress completedItems={completedItems} totalItems={totalItems} />
+          <ChecklistProgress
+            completedItems={completedItems.length}
+            totalItems={props.items.length}
+          />
 
           <div className="flows_basicsV2_checklist_items">
             {props.items.map((item, index) => (
@@ -76,7 +90,7 @@ const Checklist: FC<ChecklistProps> = (props) => {
             ))}
             {props.skipButton ? (
               <div className="flows_basicsV2_checklist_skip_button">
-                <ActionButton variant="text" action={props.skipButton} />{" "}
+                <ActionButton variant="text" action={props.skipButton} />
               </div>
             ) : null}
           </div>

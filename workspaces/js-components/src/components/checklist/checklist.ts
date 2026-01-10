@@ -1,0 +1,146 @@
+import {
+  type Action,
+  type ChecklistItem as ChecklistItemType,
+  type ChecklistPosition,
+  type ComponentProps,
+  type FlowsProperties,
+  type ChecklistProps as LibraryChecklistProps,
+} from "@flows/shared";
+import { html, LitElement } from "lit";
+import { property, state } from "lit/decorators.js";
+import { repeat } from "lit/directives/repeat.js";
+import { Rocket16 } from "../../icons/rocket-16";
+import { Chevron16 } from "../../icons/chevron-16";
+import { Text } from "../../internal-components/text";
+import { ActionButton } from "../../internal-components/action-button";
+import { ChecklistProgress } from "./checklist-progress";
+import { ChecklistItem } from "./checklist-item";
+
+export type ChecklistProps = ComponentProps<LibraryChecklistProps>;
+
+const CLOSE_TIMEOUT = 300;
+
+class Checklist extends LitElement implements ChecklistProps {
+  @property()
+  widgetTitle: string;
+
+  @property()
+  position: ChecklistPosition;
+
+  @property()
+  popupTitle: string;
+
+  @property()
+  popupDescription: string;
+
+  @property({ type: Array })
+  items: ChecklistItemType[];
+
+  @property({ type: Object })
+  skipButton?: Action;
+
+  @property({ type: Function })
+  complete: () => void;
+
+  @property({ type: Function })
+  close: () => void;
+
+  __flows: FlowsProperties;
+
+  @state()
+  private accessor _checklistOpen = false;
+
+  @state()
+  private accessor _checklistClosing = false;
+
+  @state()
+  private accessor _expandedItemIndex: number | null = null;
+
+  private _closeTimeout: number | null = null;
+  handleClick(): void {
+    if (this._checklistOpen && !this._checklistClosing) {
+      this._checklistClosing = true;
+      this._closeTimeout = window.setTimeout(() => {
+        this._checklistOpen = false;
+        this._checklistClosing = false;
+        this._closeTimeout = null;
+      }, CLOSE_TIMEOUT);
+    } else {
+      this._checklistOpen = true;
+      this._checklistClosing = false;
+      window.clearTimeout(this._closeTimeout ?? undefined);
+      this._closeTimeout = null;
+    }
+  }
+
+  handleToggleExpanded(index: number): void {
+    this._expandedItemIndex = this._expandedItemIndex === index ? null : index;
+  }
+
+  createRenderRoot(): this {
+    return this;
+  }
+
+  render(): unknown {
+    return html`
+      <div class="flows_basicsV2_checklist" data-position=${this.position}>
+        <button
+          type="button"
+          class="flows_basicsV2_checklist_widget_button"
+          @click=${this.handleClick.bind(this)}
+        >
+          ${Rocket16({ "aria-hidden": "true" })} ${this.widgetTitle}
+          ${Chevron16({
+            "aria-hidden": "true",
+            "data-open": this._checklistOpen && !this._checklistClosing ? "true" : "false",
+            className: "flows_basicsV2_checklist_widget_button_chevron",
+          })}
+        </button>
+
+        ${this._checklistOpen
+          ? html`
+              <div
+                class="flows_basicsV2_checklist_popover"
+                data-open=${!this._checklistClosing ? "true" : "false"}
+              >
+                <div class="flows_basicsV2_checklist_header">
+                  ${Text({
+                    variant: "title",
+                    className: "flows_basicsV2_checklist_title",
+                    children: this.popupTitle,
+                  })}
+                  ${Text({ variant: "body", children: this.popupDescription })}
+                </div>
+
+                ${ChecklistProgress({
+                  totalItems: this.items.length,
+                  completedItems: this.items.filter((item) => item.completed.value).length,
+                })}
+
+                <div class="flows_basicsV2_checklist_items">
+                  ${repeat(
+                    this.items,
+                    (_item, index) => index,
+                    (item, index) =>
+                      ChecklistItem({
+                        ...item,
+                        index,
+                        expanded: this._expandedItemIndex === index,
+                        toggleExpanded: this.handleToggleExpanded.bind(this),
+                      }),
+                  )}
+                  ${this.skipButton
+                    ? html`<div class="flows_basicsV2_checklist_skip_button">
+                        ${ActionButton({ variant: "text", action: this.skipButton })}
+                      </div>`
+                    : null}
+                </div>
+              </div>
+            `
+          : null}
+      </div>
+    `;
+  }
+}
+
+export const BasicsV2Checklist = Checklist;
