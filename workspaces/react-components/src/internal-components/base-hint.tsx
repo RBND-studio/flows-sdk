@@ -6,7 +6,7 @@ import {
   useFloating,
 } from "@floating-ui/react-dom";
 import { type Action, log, type Placement } from "@flows/shared";
-import { type FC, type ReactNode, useCallback, useEffect, useState } from "react";
+import { type FC, type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 // eslint-disable-next-line import/no-named-as-default -- correct import
 import DOMPurify from "dompurify";
 import { useFirstRender } from "../hooks/use-first-render";
@@ -41,8 +41,21 @@ const autoUpdate: typeof floatingAutoUpdate = (ref, floating, update) =>
 export const BaseHint: FC<Props> = (props) => {
   const firstRender = useFirstRender();
   const [tooltipOpen, setTooltipOpen] = useState(false);
+  const [tooltipClosing, setTooltipClosing] = useState(false);
+  const closeTimeoutRef = useRef<number>(null);
   const handleOpen = useCallback(() => {
     setTooltipOpen(true);
+    setTooltipClosing(false);
+    window.clearTimeout(closeTimeoutRef.current ?? undefined);
+    closeTimeoutRef.current = null;
+  }, []);
+  const handleClose = useCallback(() => {
+    setTooltipClosing(true);
+    closeTimeoutRef.current = window.setTimeout(() => {
+      setTooltipOpen(false);
+      setTooltipClosing(false);
+      closeTimeoutRef.current = null;
+    }, CLOSE_TIMEOUT);
   }, []);
 
   const reference = useQuerySelector(props.targetElement);
@@ -66,15 +79,6 @@ export const BaseHint: FC<Props> = (props) => {
     ],
   });
   const tooltipRef = tooltipFloating.refs.floating;
-
-  const [tooltipClosing, setTooltipClosing] = useState(false);
-  const handleClose = useCallback(() => {
-    setTooltipClosing(true);
-    setTimeout(() => {
-      setTooltipOpen(false);
-      setTooltipClosing(false);
-    }, CLOSE_TIMEOUT);
-  }, []);
 
   useEffect(() => {
     const handleWindowClick = (e: MouseEvent): void => {
@@ -123,7 +127,7 @@ export const BaseHint: FC<Props> = (props) => {
         aria-label="Open hint"
         type="button"
         className="flows_basicsV2_hint_hotspot"
-        onClick={tooltipOpen ? handleClose : handleOpen}
+        onClick={tooltipOpen && !tooltipClosing ? handleClose : handleOpen}
       />
 
       {tooltipOpen ? (
