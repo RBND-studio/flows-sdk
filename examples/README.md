@@ -10,6 +10,7 @@ This directory contains examples of flows that can be used as a starting point f
 - [Angular](./angular) - A simple example of how to use Flows with Angular.
 - [SvelteKit](./svelte) - A simple example of how to use Flows with SvelteKit.
 - [Lit](./lit) - A simple example of how to use Flows with Lit.
+- [SolidJS](./solid) - A simple example of how to use Flows with SolidJS.
 - [JavaScript CDN](./js/cdn) - A simple example of how to use Flows with JavaScript without NPM by loading global script from CDN.
 
 ## Reporting Issues
