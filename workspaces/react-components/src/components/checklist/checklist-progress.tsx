@@ -11,7 +11,13 @@ export const ChecklistProgress: FC<Props> = (props) => {
       <p className="flows_basicsV2_checklist_progress_text">
         {props.completedItems} / {props.totalItems}
       </p>
-      <div className="flows_basicsV2_checklist_progress_bar">
+      <div
+        className="flows_basicsV2_checklist_progress_bar"
+        aria-valuemin={0}
+        aria-valuemax={props.totalItems}
+        aria-valuenow={props.completedItems}
+        role="progressbar"
+      >
         <div
           className="flows_basicsV2_checklist_progress_bar_filled"
           style={{
