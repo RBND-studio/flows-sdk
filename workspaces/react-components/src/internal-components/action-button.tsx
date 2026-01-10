@@ -6,12 +6,14 @@ interface Props {
   action: Action;
   variant: ButtonVariant;
   size?: ButtonSize;
+  onClick?: () => void;
 }
 
-export const ActionButton: FC<Props> = ({ action, variant, size }) => {
+export const ActionButton: FC<Props> = ({ action, variant, size, onClick }) => {
   const handleClick = useCallback(() => {
+    onClick?.();
     void action.callAction?.();
-  }, [action]);
+  }, [action, onClick]);
 
   return (
     <Button

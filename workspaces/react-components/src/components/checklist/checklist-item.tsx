@@ -26,6 +26,14 @@ export const ChecklistItem: FC<Props> = (props) => {
     }
   }, []);
 
+  const handlePrimaryButtonClick = useCallback(() => {
+    const firstStateMemoryTrigger = props.completed.triggers.at(0);
+    // Complete the item if it's manual trigger only
+    if (props.completed.triggers.length === 1 && firstStateMemoryTrigger?.type === "manual") {
+      props.completed.setValue(true);
+    }
+  }, [props.completed]);
+
   return (
     <div
       className="flows_basicsV2_checklist_item"
@@ -55,7 +63,12 @@ export const ChecklistItem: FC<Props> = (props) => {
           {(props.primaryButton ?? props.secondaryButton) ? (
             <div className="flows_basicsV2_checklist_item_buttons">
               {props.primaryButton ? (
-                <ActionButton action={props.primaryButton} variant="primary" size="small" />
+                <ActionButton
+                  onClick={handlePrimaryButtonClick}
+                  action={props.primaryButton}
+                  variant="primary"
+                  size="small"
+                />
               ) : null}
               {props.secondaryButton ? (
                 <ActionButton action={props.secondaryButton} variant="secondary" size="small" />

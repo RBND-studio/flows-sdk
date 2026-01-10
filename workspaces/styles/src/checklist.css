@@ -110,7 +110,7 @@
   gap: var(--flows-basicsV2-size-xs);
   padding-left: var(--flows-basicsV2-size-s);
   padding-right: var(--flows-basicsV2-size-s);
-  padding-bottom: var(--flows-basicsV2-size-m);
+  padding-bottom: var(--flows-basicsV2-size-s);
 }
 
 .flows_basicsV2_checklist_item {
