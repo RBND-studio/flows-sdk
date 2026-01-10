@@ -27,6 +27,18 @@
   left: var(--flows-basicsV2-size-l);
   top: var(--flows-basicsV2-size-l);
 }
+.flows_basicsV2_checklist[data-position="top-right"]
+  .flows_basicsV2_checklist_widget_button_chevron,
+.flows_basicsV2_checklist[data-position="top-left"]
+  .flows_basicsV2_checklist_widget_button_chevron {
+  transform: rotate(180deg);
+}
+.flows_basicsV2_checklist[data-position="top-right"]
+  .flows_basicsV2_checklist_widget_button_chevron[data-open="true"],
+.flows_basicsV2_checklist[data-position="top-left"]
+  .flows_basicsV2_checklist_widget_button_chevron[data-open="true"] {
+  transform: rotate(0deg);
+}
 
 .flows_basicsV2_checklist_widget_button {
   cursor: pointer;

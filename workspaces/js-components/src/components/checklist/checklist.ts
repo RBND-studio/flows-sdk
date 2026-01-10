@@ -7,7 +7,7 @@ import {
   type ChecklistProps as LibraryChecklistProps,
 } from "@flows/shared";
 import { html, LitElement } from "lit";
-import { property, state } from "lit/decorators.js";
+import { property, queryAll, state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
 import { Rocket16 } from "../../icons/rocket-16";
 import { Chevron16 } from "../../icons/chevron-16";
@@ -75,6 +75,14 @@ class Checklist extends LitElement implements ChecklistProps {
 
   handleToggleExpanded(index: number): void {
     this._expandedItemIndex = this._expandedItemIndex === index ? null : index;
+  }
+
+  @queryAll(".flows_basicsV2_checklist_item_content")
+  itemContentElements: NodeListOf<HTMLElement>;
+  updated(): void {
+    this.itemContentElements.forEach((el) => {
+      el.style.setProperty("--flows-content-height", `${el.scrollHeight}px`);
+    });
   }
 
   createRenderRoot(): this {
