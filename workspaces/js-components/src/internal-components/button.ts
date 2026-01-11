@@ -1,4 +1,4 @@
-import { type ButtonVariant } from "@flows/shared";
+import { type ButtonSize, type ButtonVariant } from "@flows/shared";
 import { clsx } from "clsx";
 import { type TemplateResult } from "lit";
 import { html, literal } from "lit/static-html.js";
@@ -8,6 +8,7 @@ interface Props {
   children?: string;
   onClick?: () => void;
   variant: ButtonVariant;
+  size?: ButtonSize;
   href?: string;
   target?: "_blank";
 }
@@ -18,6 +19,7 @@ const aLiteral = literal`a`;
 export const Button = ({
   className,
   variant,
+  size = "default",
   children,
   onClick,
   href,
@@ -28,7 +30,12 @@ export const Button = ({
   return html`
     <${tag}
       type=${tag === buttonLiteral ? "button" : undefined}
-      class=${clsx("flows_basicsV2_button", `flows_basicsV2_button_${variant}`, className)}
+      class=${clsx(
+        "flows_basicsV2_button",
+        `flows_basicsV2_button_${variant}`,
+        `flows_basicsV2_button_size_${size}`,
+        className,
+      )}
       @click=${onClick}
       target=${target}
       href=${href}
