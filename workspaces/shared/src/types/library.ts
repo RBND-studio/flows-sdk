@@ -161,11 +161,11 @@ export interface ChecklistItem {
 export interface ChecklistProps {
   widgetTitle: string;
 
-  position: ChecklistPosition;
-
   popupTitle: string;
   popupDescription: string;
   items: ChecklistItem[];
+
+  position: ChecklistPosition;
   skipButton?: Action;
 
   complete: () => void;

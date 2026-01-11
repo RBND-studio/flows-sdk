@@ -221,6 +221,7 @@
   line-height: var(--flows-basicsV2-base-line-height);
   font-family: var(--flows-basicsV2-font-family);
   flex-shrink: 0;
+  margin: 0;
 }
 
 .flows_basicsV2_checklist_progress_bar {
