@@ -4,7 +4,7 @@ import {
   type ChecklistPosition,
   type ComponentProps,
   type FlowsProperties,
-  type ChecklistProps as LibraryChecklistProps,
+  type FloatingChecklistProps as LibraryFloatingChecklistProps,
 } from "@flows/shared";
 import { html, LitElement } from "lit";
 import { property, queryAll, state } from "lit/decorators.js";
@@ -16,11 +16,11 @@ import { ActionButton } from "../../internal-components/action-button";
 import { ChecklistProgress } from "./checklist-progress";
 import { ChecklistItem } from "./checklist-item";
 
-export type ChecklistProps = ComponentProps<LibraryChecklistProps>;
+export type FloatingChecklistProps = ComponentProps<LibraryFloatingChecklistProps>;
 
 const CLOSE_TIMEOUT = 300;
 
-class Checklist extends LitElement implements ChecklistProps {
+class FloatingChecklist extends LitElement implements FloatingChecklistProps {
   @property()
   widgetTitle: string;
 
@@ -86,7 +86,7 @@ class Checklist extends LitElement implements ChecklistProps {
     this._expandedItemIndex = this._expandedItemIndex === index ? null : index;
   }
 
-  @queryAll(".flows_basicsV2_checklist_item_content")
+  @queryAll(".flows_basicsV2_floating_checklist_item_content")
   itemContentElements: NodeListOf<HTMLElement>;
   updated(): void {
     this.itemContentElements.forEach((el) => {
@@ -103,30 +103,30 @@ class Checklist extends LitElement implements ChecklistProps {
     const isCompleted = this.items.length === completedItems.length;
 
     return html`
-      <div class="flows_basicsV2_checklist" data-position=${this.position}>
+      <div class="flows_basicsV2_floating_checklist" data-position=${this.position}>
         <button
           type="button"
-          class="flows_basicsV2_checklist_widget_button"
+          class="flows_basicsV2_floating_checklist_widget_button"
           @click=${this.handleClick.bind(this)}
         >
           ${Rocket16({ "aria-hidden": "true" })} ${this.widgetTitle}
           ${Chevron16({
             "aria-hidden": "true",
             "data-open": this._checklistOpen && !this._checklistClosing ? "true" : "false",
-            className: "flows_basicsV2_checklist_widget_button_chevron",
+            className: "flows_basicsV2_floating_checklist_widget_button_chevron",
           })}
         </button>
 
         ${this._checklistOpen
           ? html`
               <div
-                class="flows_basicsV2_checklist_popover"
+                class="flows_basicsV2_floating_checklist_popover"
                 data-open=${!this._checklistClosing ? "true" : "false"}
               >
-                <div class="flows_basicsV2_checklist_header">
+                <div class="flows_basicsV2_floating_checklist_header">
                   ${Text({
                     variant: "title",
-                    className: "flows_basicsV2_checklist_title",
+                    className: "flows_basicsV2_floating_checklist_title",
                     children: this.popupTitle,
                   })}
                   ${Text({ variant: "body", children: this.popupDescription })}
@@ -137,7 +137,7 @@ class Checklist extends LitElement implements ChecklistProps {
                   completedItems: completedItems.length,
                 })}
                 ${!isCompleted &&
-                html`<div class="flows_basicsV2_checklist_items">
+                html`<div class="flows_basicsV2_floating_checklist_items">
                   ${repeat(
                     this.items,
                     (_item, index) => index,
@@ -150,13 +150,13 @@ class Checklist extends LitElement implements ChecklistProps {
                       }),
                   )}
                   ${this.skipButton
-                    ? html`<div class="flows_basicsV2_checklist_skip_button">
+                    ? html`<div class="flows_basicsV2_floating_checklist_skip_button">
                         ${ActionButton({ variant: "text", action: this.skipButton })}
                       </div>`
                     : null}
                 </div>`}
                 ${isCompleted &&
-                html`<div class="flows_basicsV2_checklist_completed">
+                html`<div class="flows_basicsV2_floating_checklist_completed">
                   <!-- TODO: add the content -->
                 </div> `}
               </div>
@@ -167,4 +167,4 @@ class Checklist extends LitElement implements ChecklistProps {
   }
 }
 
-export const BasicsV2Checklist = Checklist;
+export const BasicsV2FloatingChecklist = FloatingChecklist;

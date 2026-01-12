@@ -7,19 +7,19 @@ interface Props {
 
 export const ChecklistProgress: FC<Props> = (props) => {
   return (
-    <div className="flows_basicsV2_checklist_progress">
-      <p className="flows_basicsV2_checklist_progress_text">
+    <div className="flows_basicsV2_floating_checklist_progress">
+      <p className="flows_basicsV2_floating_checklist_progress_text">
         {props.completedItems} / {props.totalItems}
       </p>
       <div
-        className="flows_basicsV2_checklist_progress_bar"
+        className="flows_basicsV2_floating_checklist_progress_bar"
         aria-valuemin={0}
         aria-valuemax={props.totalItems}
         aria-valuenow={props.completedItems}
         role="progressbar"
       >
         <div
-          className="flows_basicsV2_checklist_progress_bar_filled"
+          className="flows_basicsV2_floating_checklist_progress_bar_filled"
           style={{
             width: `${(props.completedItems / props.totalItems) * 100}%`,
           }}

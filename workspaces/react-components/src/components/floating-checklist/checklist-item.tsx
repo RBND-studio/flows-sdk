@@ -36,32 +36,32 @@ export const ChecklistItem: FC<Props> = (props) => {
 
   return (
     <div
-      className="flows_basicsV2_checklist_item"
+      className="flows_basicsV2_floating_checklist_item"
       data-expanded={props.expanded ? "true" : "false"}
     >
       <button
         type="button"
-        className="flows_basicsV2_checklist_item_expand_button"
+        className="flows_basicsV2_floating_checklist_item_expand_button"
         onClick={toggleExpanded}
         data-expanded={props.expanded ? "true" : "false"}
       >
         <Indicator completed={props.completed.value} />
-        <span className="flows_basicsV2_checklist_item_title">{props.title}</span>
+        <span className="flows_basicsV2_floating_checklist_item_title">{props.title}</span>
         <Chevron16
-          className="flows_basicsV2_checklist_item_chevron"
+          className="flows_basicsV2_floating_checklist_item_chevron"
           data-expanded={props.expanded ? "true" : "false"}
           aria-hidden="true"
         />
       </button>
       <div
-        className="flows_basicsV2_checklist_item_content"
+        className="flows_basicsV2_floating_checklist_item_content"
         ref={expandRef}
         data-expanded={props.expanded ? "true" : "false"}
       >
-        <div className="flows_basicsV2_checklist_item_content_inner">
+        <div className="flows_basicsV2_floating_checklist_item_content_inner">
           {props.description ? <Text variant="body">{props.description}</Text> : null}
           {(props.primaryButton ?? props.secondaryButton) ? (
-            <div className="flows_basicsV2_checklist_item_buttons">
+            <div className="flows_basicsV2_floating_checklist_item_buttons">
               {props.primaryButton ? (
                 <ActionButton
                   onClick={handlePrimaryButtonClick}
@@ -84,11 +84,11 @@ export const ChecklistItem: FC<Props> = (props) => {
 const Indicator = ({ completed }: { completed: boolean }): ReactNode => {
   if (completed) {
     return (
-      <div className="flows_basicsV2_checklist_item_indicator flows_basicsV2_checklist_item_indicator_completed">
+      <div className="flows_basicsV2_floating_checklist_item_indicator flows_basicsV2_floating_checklist_item_indicator_completed">
         <Check16 />
       </div>
     );
   }
 
-  return <div className="flows_basicsV2_checklist_item_indicator" />;
+  return <div className="flows_basicsV2_floating_checklist_item_indicator" />;
 };

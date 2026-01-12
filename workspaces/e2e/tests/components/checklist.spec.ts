@@ -62,7 +62,7 @@ const run = (packageName: string) => {
     await page.goto(`/${packageName}.html`);
     const checklistWidget = page.getByRole("button", { name: "Widget title" });
     await expect(checklistWidget).toBeVisible();
-    const checklistPopover = page.locator(".flows_basicsV2_checklist_popover");
+    const checklistPopover = page.locator(".flows_basicsV2_floating_checklist_popover");
     await expect(checklistPopover).toBeHidden();
     await checklistWidget.click();
     await expect(checklistPopover).toBeVisible();
@@ -77,7 +77,7 @@ const run = (packageName: string) => {
 - link "Learn more":
   - /url: https://example.com
 - button "Skip checklist"`);
-    const checklistItemContent = page.locator(".flows_basicsV2_checklist_item_content");
+    const checklistItemContent = page.locator(".flows_basicsV2_floating_checklist_item_content");
     await expect(checklistItemContent).toBeHidden();
     const checklistItemButton = page.getByRole("button", { name: "Item 1" });
     await checklistItemButton.click();
@@ -110,10 +110,10 @@ const run = (packageName: string) => {
     ]);
     await page.goto(`/${packageName}.html`);
     await page.getByRole("button", { name: "Widget title" }).click();
-    await expect(page.locator(".flows_basicsV2_checklist_popover")).toBeVisible();
-    await expect(page.locator(".flows_basicsV2_checklist_skip_button")).toBeHidden();
+    await expect(page.locator(".flows_basicsV2_floating_checklist_popover")).toBeVisible();
+    await expect(page.locator(".flows_basicsV2_floating_checklist_skip_button")).toBeHidden();
     await page.getByRole("button", { name: "Item 1" }).click();
-    await expect(page.locator(".flows_basicsV2_checklist_item_buttons")).toBeHidden();
+    await expect(page.locator(".flows_basicsV2_floating_checklist_item_buttons")).toBeHidden();
   });
 };
 

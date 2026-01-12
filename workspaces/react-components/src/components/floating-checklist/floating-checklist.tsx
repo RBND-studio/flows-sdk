@@ -1,4 +1,7 @@
-import { type ComponentProps, type ChecklistProps as LibraryChecklistProps } from "@flows/shared";
+import {
+  type ComponentProps,
+  type FloatingChecklistProps as LibraryFloatingChecklistProps,
+} from "@flows/shared";
 import { type FC, useCallback, useMemo, useRef, useState } from "react";
 import { Text } from "../../internal-components/text";
 import { ActionButton } from "../../internal-components/action-button";
@@ -7,11 +10,11 @@ import { Rocket16 } from "../../icons/rocket16";
 import { ChecklistItem } from "./checklist-item";
 import { ChecklistProgress } from "./checklist-progress";
 
-export type ChecklistProps = ComponentProps<LibraryChecklistProps>;
+export type FloatingChecklistProps = ComponentProps<LibraryFloatingChecklistProps>;
 
 const CLOSE_TIMEOUT = 300;
 
-const Checklist: FC<ChecklistProps> = (props) => {
+const FloatingChecklist: FC<FloatingChecklistProps> = (props) => {
   const [checklistOpen, setChecklistOpen] = useState(false);
   const [checklistClosing, setChecklistClosing] = useState(false);
   const [expandedItemIndex, setExpandedItemIndex] = useState<number | null>(null);
@@ -46,16 +49,16 @@ const Checklist: FC<ChecklistProps> = (props) => {
   }, [checklistClosing, checklistOpen]);
 
   return (
-    <div className="flows_basicsV2_checklist" data-position={props.position}>
+    <div className="flows_basicsV2_floating_checklist" data-position={props.position}>
       <button
         type="button"
-        className="flows_basicsV2_checklist_widget_button"
+        className="flows_basicsV2_floating_checklist_widget_button"
         onClick={handleClick}
       >
         <Rocket16 aria-hidden="true" />
         {props.widgetTitle}
         <Chevron16
-          className="flows_basicsV2_checklist_widget_button_chevron"
+          className="flows_basicsV2_floating_checklist_widget_button_chevron"
           data-open={checklistOpen && !checklistClosing ? "true" : "false"}
           aria-hidden="true"
         />
@@ -63,11 +66,11 @@ const Checklist: FC<ChecklistProps> = (props) => {
 
       {checklistOpen ? (
         <div
-          className="flows_basicsV2_checklist_popover"
+          className="flows_basicsV2_floating_checklist_popover"
           data-open={!checklistClosing ? "true" : "false"}
         >
-          <div className="flows_basicsV2_checklist_header">
-            <Text variant="title" className="flows_basicsV2_checklist_title">
+          <div className="flows_basicsV2_floating_checklist_header">
+            <Text variant="title" className="flows_basicsV2_floating_checklist_title">
               {props.popupTitle}
             </Text>
             <Text variant="body">{props.popupDescription}</Text>
@@ -79,7 +82,7 @@ const Checklist: FC<ChecklistProps> = (props) => {
           />
 
           {!isCompleted && (
-            <div className="flows_basicsV2_checklist_items">
+            <div className="flows_basicsV2_floating_checklist_items">
               {props.items.map((item, index) => (
                 <ChecklistItem
                   // eslint-disable-next-line react/no-array-index-key -- the list order and length won't change
@@ -91,14 +94,14 @@ const Checklist: FC<ChecklistProps> = (props) => {
                 />
               ))}
               {props.skipButton ? (
-                <div className="flows_basicsV2_checklist_skip_button">
+                <div className="flows_basicsV2_floating_checklist_skip_button">
                   <ActionButton variant="text" action={props.skipButton} />
                 </div>
               ) : null}
             </div>
           )}
           {isCompleted ? (
-            <div className="flows_basicsV2_checklist_completed">
+            <div className="flows_basicsV2_floating_checklist_completed">
               <Text variant="title">{props.completedTitle}</Text>
               <Text variant="body">{props.completedDescription}</Text>
               {props.completeButton ? (
@@ -112,4 +115,4 @@ const Checklist: FC<ChecklistProps> = (props) => {
   );
 };
 
-export const BasicsV2Checklist = Checklist;
+export const BasicsV2FloatingChecklist = FloatingChecklist;

@@ -25,29 +25,32 @@ export const ChecklistItem = (props: Props): TemplateResult => {
   };
 
   return html`
-    <div class="flows_basicsV2_checklist_item" data-expanded=${props.expanded ? "true" : "false"}>
+    <div
+      class="flows_basicsV2_floating_checklist_item"
+      data-expanded=${props.expanded ? "true" : "false"}
+    >
       <button
         type="button"
-        class="flows_basicsV2_checklist_item_expand_button"
+        class="flows_basicsV2_floating_checklist_item_expand_button"
         @click=${handleClick}
         data-expanded=${props.expanded ? "true" : "false"}
       >
         ${Indicator({ completed: props.completed.value })}
-        <span class="flows_basicsV2_checklist_item_title">${props.title}</span>
+        <span class="flows_basicsV2_floating_checklist_item_title">${props.title}</span>
         ${Chevron16({
-          className: "flows_basicsV2_checklist_item_chevron",
+          className: "flows_basicsV2_floating_checklist_item_chevron",
           "data-expanded": props.expanded ? "true" : "false",
           "aria-hidden": "true",
         })}
       </button>
       <div
-        class="flows_basicsV2_checklist_item_content"
+        class="flows_basicsV2_floating_checklist_item_content"
         data-expanded=${props.expanded ? "true" : "false"}
       >
-        <div class="flows_basicsV2_checklist_item_content_inner">
+        <div class="flows_basicsV2_floating_checklist_item_content_inner">
           ${props.description ? Text({ variant: "body", children: props.description }) : null}
           ${(props.primaryButton ?? props.secondaryButton)
-            ? html`<div class="flows_basicsV2_checklist_item_buttons">
+            ? html`<div class="flows_basicsV2_floating_checklist_item_buttons">
                 ${props.primaryButton
                   ? ActionButton({
                       action: props.primaryButton,
@@ -74,11 +77,11 @@ export const ChecklistItem = (props: Props): TemplateResult => {
 const Indicator = (props: { completed: boolean }): TemplateResult => {
   if (props.completed) {
     return html` <div
-      class="flows_basicsV2_checklist_item_indicator flows_basicsV2_checklist_item_indicator_completed"
+      class="flows_basicsV2_floating_checklist_item_indicator flows_basicsV2_floating_checklist_item_indicator_completed"
     >
       ${Check16()}
     </div>`;
   }
 
-  return html` <div class="flows_basicsV2_checklist_item_indicator"></div> `;
+  return html` <div class="flows_basicsV2_floating_checklist_item_indicator"></div> `;
 };

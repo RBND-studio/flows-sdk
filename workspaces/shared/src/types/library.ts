@@ -158,7 +158,7 @@ export interface ChecklistItem {
   completed: StateMemory;
 }
 
-export interface ChecklistProps {
+export interface FloatingChecklistProps {
   widgetTitle: string;
 
   popupTitle: string;
