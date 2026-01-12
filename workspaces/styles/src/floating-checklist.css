@@ -224,20 +224,6 @@
   margin: 0;
 }
 
-.flows_basicsV2_floating_checklist_progress_bar {
-  flex: 1;
-  height: 8px;
-  background-color: var(--flows-basicsV2-bg-strong);
-  border-radius: var(--flows-basicsV2-borderRadius-m);
-  overflow: hidden;
-}
-
-.flows_basicsV2_floating_checklist_progress_bar_filled {
-  height: 100%;
-  background-color: var(--flows-basicsV2-bg-primary);
-  transition: width 150ms ease-in-out;
-}
-
 .flows_basicsV2_floating_checklist_completed {
   padding: 0 var(--flows-basicsV2-size-l);
   padding-top: var(--flows-basicsV2-size-s);

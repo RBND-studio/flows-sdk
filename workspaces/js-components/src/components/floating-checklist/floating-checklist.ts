@@ -157,7 +157,25 @@ class FloatingChecklist extends LitElement implements FloatingChecklistProps {
                 </div>`}
                 ${isCompleted &&
                 html`<div class="flows_basicsV2_floating_checklist_completed">
-                  <!-- TODO: add the content -->
+                  <div class="flows_basicsV2_floating_checklist_completed_inner">
+                    ${Text({
+                      variant: "title",
+                      children: this.completedTitle,
+                      className: "flows_basicsV2_floating_checklist_completed_title",
+                    })}
+                    ${Text({
+                      variant: "body",
+                      children: this.completedDescription,
+                      className: "flows_basicsV2_floating_checklist_completed_description",
+                    })}
+                    ${this.completeButton
+                      ? ActionButton({
+                          variant: "primary",
+                          size: "small",
+                          action: this.completeButton,
+                        })
+                      : null}
+                  </div>
                 </div> `}
               </div>
             `

@@ -1,4 +1,5 @@
 import { html, type TemplateResult } from "lit";
+import { Progress } from "../../internal-components/progress";
 
 interface Props {
   totalItems: number;
@@ -11,18 +12,7 @@ export const ChecklistProgress = (props: Props): TemplateResult => {
       <p class="flows_basicsV2_floating_checklist_progress_text">
         ${props.completedItems} / ${props.totalItems}
       </p>
-      <div
-        class="flows_basicsV2_floating_checklist_progress_bar"
-        aria-valuemin=${0}
-        aria-valuemax=${props.totalItems}
-        aria-valuenow=${props.completedItems}
-        role="progressbar"
-      >
-        <div
-          class="flows_basicsV2_floating_checklist_progress_bar_filled"
-          style="width: ${(props.completedItems / props.totalItems) * 100}%"
-        ></div>
-      </div>
+      ${Progress({ max: props.totalItems, value: props.completedItems })}
     </div>
   `;
 };

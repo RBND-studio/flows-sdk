@@ -7,9 +7,16 @@ interface Props {
   variant: ButtonVariant;
   size?: ButtonSize;
   onClick?: () => void;
+  className?: string;
 }
 
-export const ActionButton = ({ action, variant, onClick, size }: Props): TemplateResult => {
+export const ActionButton = ({
+  action,
+  variant,
+  onClick,
+  size,
+  className,
+}: Props): TemplateResult => {
   const handleClick = (): void => {
     onClick?.();
     void action.callAction?.();
@@ -22,5 +29,6 @@ export const ActionButton = ({ action, variant, onClick, size }: Props): Templat
     target: action.openInNew ? "_blank" : undefined,
     onClick: handleClick,
     children: action.label,
+    className,
   });
 };

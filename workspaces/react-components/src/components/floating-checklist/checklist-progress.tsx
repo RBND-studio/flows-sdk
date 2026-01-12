@@ -1,4 +1,5 @@
 import { type FC } from "react";
+import { Progress } from "../../internal-components/progress";
 
 interface Props {
   totalItems: number;
@@ -11,20 +12,7 @@ export const ChecklistProgress: FC<Props> = (props) => {
       <p className="flows_basicsV2_floating_checklist_progress_text">
         {props.completedItems} / {props.totalItems}
       </p>
-      <div
-        className="flows_basicsV2_floating_checklist_progress_bar"
-        aria-valuemin={0}
-        aria-valuemax={props.totalItems}
-        aria-valuenow={props.completedItems}
-        role="progressbar"
-      >
-        <div
-          className="flows_basicsV2_floating_checklist_progress_bar_filled"
-          style={{
-            width: `${(props.completedItems / props.totalItems) * 100}%`,
-          }}
-        />
-      </div>
+      <Progress max={props.totalItems} value={props.completedItems} />
     </div>
   );
 };
