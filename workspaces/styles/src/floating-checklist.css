@@ -239,8 +239,26 @@
 }
 
 .flows_basicsV2_floating_checklist_completed {
+  padding: 0 var(--flows-basicsV2-size-l);
+  padding-top: var(--flows-basicsV2-size-s);
+  padding-bottom: var(--flows-basicsV2-size-l);
+}
+
+.flows_basicsV2_floating_checklist_completed_inner {
   display: flex;
   flex-direction: column;
   gap: var(--flows-basicsV2-size-xs);
+  border: var(--flows-basicsV2-border);
   padding: var(--flows-basicsV2-size-l);
+  border-radius: var(--flows-basicsV2-borderRadius-m);
+  text-align: center;
+  background-color: var(--flows-basicsV2-bg-subtle);
+}
+
+.flows_basicsV2_floating_checklist_completed_title {
+  margin-bottom: var(--flows-basicsV2-size-xs);
+}
+
+.flows_basicsV2_floating_checklist_completed_button {
+  margin-top: var(--flows-basicsV2-size-m);
 }

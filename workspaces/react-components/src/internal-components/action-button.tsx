@@ -7,9 +7,10 @@ interface Props {
   variant: ButtonVariant;
   size?: ButtonSize;
   onClick?: () => void;
+  className?: string;
 }
 
-export const ActionButton: FC<Props> = ({ action, variant, size, onClick }) => {
+export const ActionButton: FC<Props> = ({ action, variant, size, onClick, className }) => {
   const handleClick = useCallback(() => {
     onClick?.();
     void action.callAction?.();
@@ -22,6 +23,7 @@ export const ActionButton: FC<Props> = ({ action, variant, size, onClick }) => {
       href={action.url}
       target={action.openInNew ? "_blank" : undefined}
       onClick={handleClick}
+      className={className}
     >
       {action.label}
     </Button>

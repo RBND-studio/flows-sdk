@@ -102,11 +102,25 @@ const FloatingChecklist: FC<FloatingChecklistProps> = (props) => {
           )}
           {isCompleted ? (
             <div className="flows_basicsV2_floating_checklist_completed">
-              <Text variant="title">{props.completedTitle}</Text>
-              <Text variant="body">{props.completedDescription}</Text>
-              {props.completeButton ? (
-                <ActionButton variant="primary" size="small" action={props.completeButton} />
-              ) : null}
+              <div className="flows_basicsV2_floating_checklist_completed_inner">
+                <Text variant="title" className="flows_basicsV2_floating_checklist_completed_title">
+                  {props.completedTitle}
+                </Text>
+                <Text
+                  variant="body"
+                  className="flows_basicsV2_floating_checklist_completed_description"
+                >
+                  {props.completedDescription}
+                </Text>
+                {props.completeButton ? (
+                  <ActionButton
+                    variant="primary"
+                    size="small"
+                    action={props.completeButton}
+                    className="flows_basicsV2_floating_checklist_completed_button"
+                  />
+                ) : null}
+              </div>
             </div>
           ) : null}
         </div>
