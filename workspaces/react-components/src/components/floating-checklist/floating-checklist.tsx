@@ -15,6 +15,9 @@ export type FloatingChecklistProps = ComponentProps<LibraryFloatingChecklistProp
 const CLOSE_TIMEOUT = 300;
 
 const FloatingChecklist: FC<FloatingChecklistProps> = (props) => {
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- value can be empty string ""
+  const position = props.position || "bottom-right";
+
   const [checklistOpen, setChecklistOpen] = useState(false);
   const [checklistClosing, setChecklistClosing] = useState(false);
   const [expandedItemIndex, setExpandedItemIndex] = useState<number | null>(null);
@@ -49,7 +52,7 @@ const FloatingChecklist: FC<FloatingChecklistProps> = (props) => {
   }, [checklistClosing, checklistOpen]);
 
   return (
-    <div className="flows_basicsV2_floating_checklist" data-position={props.position}>
+    <div className="flows_basicsV2_floating_checklist" data-position={position}>
       <button
         type="button"
         className="flows_basicsV2_floating_checklist_widget_button"

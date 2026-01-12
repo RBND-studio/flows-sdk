@@ -170,7 +170,7 @@ export interface FloatingChecklistProps {
 
   items: ChecklistItem[];
 
-  position: ChecklistPosition;
+  position?: ChecklistPosition;
   skipButton?: Action;
 
   complete: () => void;

@@ -25,7 +25,7 @@ class FloatingChecklist extends LitElement implements FloatingChecklistProps {
   widgetTitle: string;
 
   @property()
-  position: ChecklistPosition;
+  position?: ChecklistPosition;
 
   @property()
   popupTitle: string;
@@ -99,11 +99,14 @@ class FloatingChecklist extends LitElement implements FloatingChecklistProps {
   }
 
   render(): unknown {
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- value can be empty string ""
+    const position = this.position || "bottom-right";
+
     const completedItems = this.items.filter((item) => item.completed.value);
     const isCompleted = this.items.length === completedItems.length;
 
     return html`
-      <div class="flows_basicsV2_floating_checklist" data-position=${this.position}>
+      <div class="flows_basicsV2_floating_checklist" data-position=${position}>
         <button
           type="button"
           class="flows_basicsV2_floating_checklist_widget_button"
