@@ -15,7 +15,7 @@ const getBlock = ({ propertyMeta }: { propertyMeta?: PropertyMeta[] }): Block =>
   id: randomUUID(),
   workflowId: randomUUID(),
   type: "component",
-  componentType: "BasicsV2Checklist",
+  componentType: "BasicsV2FloatingChecklist",
   slottable: false,
   data: {
     widgetTitle: "Widget title",
