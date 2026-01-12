@@ -163,6 +163,11 @@ export interface ChecklistProps {
 
   popupTitle: string;
   popupDescription: string;
+
+  completedTitle: string;
+  completedDescription: string;
+  completeButton?: Action;
+
   items: ChecklistItem[];
 
   position: ChecklistPosition;

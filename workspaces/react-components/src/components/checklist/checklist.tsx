@@ -23,6 +23,7 @@ const Checklist: FC<ChecklistProps> = (props) => {
     () => props.items.filter((item) => item.completed.value),
     [props.items],
   );
+  const isCompleted = props.items.length === completedItems.length;
 
   const closeTimeoutRef = useRef<number>(null);
   const handleClick = useCallback(() => {
@@ -77,23 +78,34 @@ const Checklist: FC<ChecklistProps> = (props) => {
             totalItems={props.items.length}
           />
 
-          <div className="flows_basicsV2_checklist_items">
-            {props.items.map((item, index) => (
-              <ChecklistItem
-                // eslint-disable-next-line react/no-array-index-key -- the list order and length won't change
-                key={index}
-                index={index}
-                expanded={expandedItemIndex === index}
-                toggleExpanded={toggleExpanded}
-                {...item}
-              />
-            ))}
-            {props.skipButton ? (
-              <div className="flows_basicsV2_checklist_skip_button">
-                <ActionButton variant="text" action={props.skipButton} />
-              </div>
-            ) : null}
-          </div>
+          {!isCompleted && (
+            <div className="flows_basicsV2_checklist_items">
+              {props.items.map((item, index) => (
+                <ChecklistItem
+                  // eslint-disable-next-line react/no-array-index-key -- the list order and length won't change
+                  key={index}
+                  index={index}
+                  expanded={expandedItemIndex === index}
+                  toggleExpanded={toggleExpanded}
+                  {...item}
+                />
+              ))}
+              {props.skipButton ? (
+                <div className="flows_basicsV2_checklist_skip_button">
+                  <ActionButton variant="text" action={props.skipButton} />
+                </div>
+              ) : null}
+            </div>
+          )}
+          {isCompleted ? (
+            <div className="flows_basicsV2_checklist_completed">
+              <Text variant="title">{props.completedTitle}</Text>
+              <Text variant="body">{props.completedDescription}</Text>
+              {props.completeButton ? (
+                <ActionButton variant="primary" size="small" action={props.completeButton} />
+              ) : null}
+            </div>
+          ) : null}
         </div>
       ) : null}
     </div>

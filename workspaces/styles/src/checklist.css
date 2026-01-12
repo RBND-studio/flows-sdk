@@ -237,3 +237,10 @@
   background-color: var(--flows-basicsV2-bg-primary);
   transition: width 150ms ease-in-out;
 }
+
+.flows_basicsV2_checklist_completed {
+  display: flex;
+  flex-direction: column;
+  gap: var(--flows-basicsV2-size-xs);
+  padding: var(--flows-basicsV2-size-l);
+}
