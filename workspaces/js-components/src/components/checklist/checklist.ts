@@ -33,6 +33,15 @@ class Checklist extends LitElement implements ChecklistProps {
   @property()
   popupDescription: string;
 
+  @property()
+  completedTitle: string;
+
+  @property()
+  completedDescription: string;
+
+  @property({ type: Object })
+  completeButton?: Action;
+
   @property({ type: Array })
   items: ChecklistItemType[];
 
@@ -90,6 +99,9 @@ class Checklist extends LitElement implements ChecklistProps {
   }
 
   render(): unknown {
+    const completedItems = this.items.filter((item) => item.completed.value);
+    const isCompleted = this.items.length === completedItems.length;
+
     return html`
       <div class="flows_basicsV2_checklist" data-position=${this.position}>
         <button
@@ -122,10 +134,10 @@ class Checklist extends LitElement implements ChecklistProps {
 
                 ${ChecklistProgress({
                   totalItems: this.items.length,
-                  completedItems: this.items.filter((item) => item.completed.value).length,
+                  completedItems: completedItems.length,
                 })}
-
-                <div class="flows_basicsV2_checklist_items">
+                ${!isCompleted &&
+                html`<div class="flows_basicsV2_checklist_items">
                   ${repeat(
                     this.items,
                     (_item, index) => index,
@@ -142,7 +154,11 @@ class Checklist extends LitElement implements ChecklistProps {
                         ${ActionButton({ variant: "text", action: this.skipButton })}
                       </div>`
                     : null}
-                </div>
+                </div>`}
+                ${isCompleted &&
+                html`<div class="flows_basicsV2_checklist_completed">
+                  <!-- TODO: add the content -->
+                </div> `}
               </div>
             `
           : null}
