@@ -40,7 +40,7 @@ class FloatingChecklist extends LitElement implements FloatingChecklistProps {
   completedDescription: string;
 
   @property({ type: Object })
-  completeButton?: Action;
+  completedButton?: Action;
 
   prevItems: ChecklistItemType[] | null = null;
   @property({ type: Array })
@@ -193,11 +193,11 @@ class FloatingChecklist extends LitElement implements FloatingChecklistProps {
                       children: this.completedDescription,
                       className: "flows_basicsV2_floating_checklist_completed_description",
                     })}
-                    ${this.completeButton
+                    ${this.completedButton
                       ? ActionButton({
                           variant: "primary",
                           size: "small",
-                          action: this.completeButton,
+                          action: this.completedButton,
                         })
                       : null}
                   </div>

@@ -1,4 +1,4 @@
-import { Block, ChecklistItem, ChecklistPosition, PropertyMeta } from "@flows/shared";
+import { Block, ChecklistPosition, PropertyMeta } from "@flows/shared";
 import test, { expect } from "@playwright/test";
 import { randomUUID } from "crypto";
 import { mockBlocksEndpoint } from "../utils";
@@ -15,9 +15,9 @@ const skipButton: PropertyMeta = {
   key: "skipButton",
   value: { label: "Skip checklist", exitNode: "close" },
 };
-const completeButton: PropertyMeta = {
+const completedButton: PropertyMeta = {
   type: "action",
-  key: "completeButton",
+  key: "completedButton",
   value: { label: "Complete checklist", exitNode: "complete" },
 };
 const primaryButton: PropertyMeta = {
@@ -68,7 +68,7 @@ const getBlock = ({
   exitNodes: ["complete", "close"],
   propertyMeta: propertyMeta ?? [
     skipButton,
-    completeButton,
+    completedButton,
     primaryButton,
     secondaryButton,
     completedStateMemory,
@@ -139,7 +139,7 @@ const run = (packageName: string) => {
       getBlock({
         propertyMeta: [
           skipButton,
-          completeButton,
+          completedButton,
           primaryButton,
           secondaryButton,
           {
@@ -190,7 +190,7 @@ const run = (packageName: string) => {
         ],
         propertyMeta: [
           skipButton,
-          completeButton,
+          completedButton,
           primaryButton,
           secondaryButton,
           completedStateMemory,

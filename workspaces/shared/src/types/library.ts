@@ -166,7 +166,7 @@ export interface FloatingChecklistProps {
 
   completedTitle: string;
   completedDescription: string;
-  completeButton?: Action;
+  completedButton?: Action;
 
   items: ChecklistItem[];
 

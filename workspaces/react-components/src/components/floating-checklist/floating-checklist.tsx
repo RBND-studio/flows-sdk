@@ -139,11 +139,11 @@ const FloatingChecklist: FC<FloatingChecklistProps> = (props) => {
                 >
                   {props.completedDescription}
                 </Text>
-                {props.completeButton ? (
+                {props.completedButton ? (
                   <ActionButton
                     variant="primary"
                     size="small"
-                    action={props.completeButton}
+                    action={props.completedButton}
                     className="flows_basicsV2_floating_checklist_completed_button"
                   />
                 ) : null}
