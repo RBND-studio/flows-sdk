@@ -1,7 +1,7 @@
 import { html, type TemplateResult } from "lit";
 
 export const Check16 = (): TemplateResult => {
-  return html` <svg
+  return html`<svg
     height="16"
     viewBox="0 0 16 16"
     width="16"

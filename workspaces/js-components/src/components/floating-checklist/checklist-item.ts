@@ -76,12 +76,12 @@ export const ChecklistItem = (props: Props): TemplateResult => {
 
 const Indicator = (props: { completed: boolean }): TemplateResult => {
   if (props.completed) {
-    return html` <div
+    return html`<div
       class="flows_basicsV2_floating_checklist_item_indicator flows_basicsV2_floating_checklist_item_indicator_completed"
     >
       ${Check16()}
     </div>`;
   }
 
-  return html` <div class="flows_basicsV2_floating_checklist_item_indicator"></div> `;
+  return html`<div class="flows_basicsV2_floating_checklist_item_indicator"></div>`;
 };

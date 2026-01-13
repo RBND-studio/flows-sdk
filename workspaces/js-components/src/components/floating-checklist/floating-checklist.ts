@@ -201,7 +201,7 @@ class FloatingChecklist extends LitElement implements FloatingChecklistProps {
                         })
                       : null}
                   </div>
-                </div> `}
+                </div>`}
               </div>
             `
           : null}
