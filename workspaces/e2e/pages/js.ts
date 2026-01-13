@@ -20,6 +20,7 @@ const apiUrl = new URLSearchParams(window.location.search).get("apiUrl") ?? unde
 const noCurrentBlocks =
   new URLSearchParams(window.location.search).get("noCurrentBlocks") === "true";
 const language = new URLSearchParams(window.location.search).get("language") as LanguageOption;
+const organizationId = new URLSearchParams(window.location.search).get("organizationId");
 
 class Card extends LitElement {
   @property({ type: String })
@@ -110,7 +111,7 @@ class Action extends LitElement {
 
 init({
   environment: "prod",
-  organizationId: "orgId",
+  organizationId: organizationId ?? "orgId",
   userId: "testUserId",
   language,
   apiUrl,
