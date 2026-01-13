@@ -42,6 +42,7 @@ class FloatingChecklist extends LitElement implements FloatingChecklistProps {
   @property({ type: Object })
   completeButton?: Action;
 
+  prevItems: ChecklistItemType[] | null = null;
   @property({ type: Array })
   items: ChecklistItemType[];
 
@@ -88,10 +89,31 @@ class FloatingChecklist extends LitElement implements FloatingChecklistProps {
 
   @queryAll(".flows_basicsV2_floating_checklist_item_content")
   itemContentElements: NodeListOf<HTMLElement>;
-  updated(): void {
+  updated(changedProperties: Map<string, unknown>): void {
     this.itemContentElements.forEach((el) => {
       el.style.setProperty("--flows-content-height", `${el.scrollHeight}px`);
     });
+
+    if (changedProperties.has("items")) {
+      if (this.prevItems !== null) {
+        this.items.forEach((item, index) => {
+          const prevItem = this.prevItems?.at(index);
+
+          // Close the expanded item if it was completed
+          if (
+            prevItem &&
+            !prevItem.completed.value &&
+            item.completed.value &&
+            this._expandedItemIndex === index
+          ) {
+            this._expandedItemIndex = null;
+          }
+        });
+      }
+
+      // Store previous items to compare on next update
+      this.prevItems = this.items;
+    }
   }
 
   createRenderRoot(): this {

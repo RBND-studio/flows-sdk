@@ -1,8 +1,9 @@
 import {
   type ComponentProps,
   type FloatingChecklistProps as LibraryFloatingChecklistProps,
+  type ChecklistItem as ChecklistItemType,
 } from "@flows/shared";
-import { type FC, useCallback, useMemo, useRef, useState } from "react";
+import { type FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Text } from "../../internal-components/text";
 import { ActionButton } from "../../internal-components/action-button";
 import { Chevron16 } from "../../icons/chevron16";
@@ -24,6 +25,29 @@ const FloatingChecklist: FC<FloatingChecklistProps> = (props) => {
   const toggleExpanded = useCallback((index: number) => {
     setExpandedItemIndex((currentIndex) => (currentIndex === index ? null : index));
   }, []);
+
+  const prevItemsRef = useRef<ChecklistItemType[]>(null);
+  useEffect(() => {
+    const prevItems = prevItemsRef.current;
+    if (prevItems) {
+      props.items.forEach((item, index) => {
+        const prevItem = prevItems.at(index);
+
+        // Close the expanded item if it was completed
+        if (
+          prevItem &&
+          !prevItem.completed.value &&
+          item.completed.value &&
+          expandedItemIndex === index
+        ) {
+          setExpandedItemIndex(null);
+        }
+      });
+    }
+
+    // Store previous items to compare on next update
+    prevItemsRef.current = props.items;
+  }, [expandedItemIndex, props.items]);
 
   const completedItems = useMemo(
     () => props.items.filter((item) => item.completed.value),
