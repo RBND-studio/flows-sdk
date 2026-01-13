@@ -1,22 +1,34 @@
 import { type TemplateResult } from "lit";
-import { type Action, type ButtonVariant } from "@flows/shared";
+import { type ButtonSize, type Action, type ButtonVariant } from "@flows/shared";
 import { Button } from "./button";
 
 interface Props {
   action: Action;
   variant: ButtonVariant;
+  size?: ButtonSize;
+  onClick?: () => void;
+  className?: string;
 }
 
-export const ActionButton = ({ action, variant }: Props): TemplateResult => {
+export const ActionButton = ({
+  action,
+  variant,
+  onClick,
+  size,
+  className,
+}: Props): TemplateResult => {
   const handleClick = (): void => {
+    onClick?.();
     void action.callAction?.();
   };
 
   return Button({
     variant,
+    size,
     href: action.url,
     target: action.openInNew ? "_blank" : undefined,
     onClick: handleClick,
     children: action.label,
+    className,
   });
 };

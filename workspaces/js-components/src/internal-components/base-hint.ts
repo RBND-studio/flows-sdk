@@ -176,7 +176,7 @@ class BaseHint extends LitElement {
                 ),
               })}
               ${this.dots || Boolean(buttons.length)
-                ? html` <div class="flows_basicsV2_tooltip_footer">
+                ? html`<div class="flows_basicsV2_tooltip_footer">
                     ${this.dots}
                     ${buttons.length
                       ? html`<div className="flows_basicsV2_tooltip_buttons_wrapper">

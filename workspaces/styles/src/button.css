@@ -35,3 +35,19 @@
   background-color: var(--flows-basicsV2-bg-hover);
   border: var(--flows-basicsV2-border-strong-hover);
 }
+
+.flows_basicsV2_button_text {
+  color: var(--flows-basicsV2-fg-muted);
+  padding: 0;
+  font-size: 12px;
+  line-height: 16px;
+}
+.flows_basicsV2_button_text:hover {
+  text-decoration: underline;
+}
+
+.flows_basicsV2_button_size_small {
+  padding: 4px 9px;
+  font-size: var(--flows-basicsV2-button-small-font-size);
+  line-height: var(--flows-basicsV2-button-small-line-height);
+}
