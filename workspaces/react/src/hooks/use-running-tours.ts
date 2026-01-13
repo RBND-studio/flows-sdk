@@ -35,7 +35,7 @@ export const useRunningTours = ({ blocks, removeBlock }: Props): RunningTour[] =
       const runningTourBlockIds = new Set(runningToursRef.current.map((t) => t.blockId));
       tourBlocks.forEach((block) => {
         if (runningTourBlockIds.has(block.id)) return;
-        const triggerMatch = tourTriggerMatch(block.tour_trigger, ctx);
+        const triggerMatch = tourTriggerMatch(block, ctx);
         if (!triggerMatch) return;
 
         setRunningTours((prev) => {
