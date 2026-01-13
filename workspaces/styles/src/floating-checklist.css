@@ -95,11 +95,11 @@
   box-shadow: var(--flows-basicsV2-shadow-large);
   position: relative;
   animation: flows-basicsV2-scaleIn 150ms ease-out;
-  max-width: var(--flows-basicsV2-checklist-popover-maxWidth);
+  max-width: var(--flows-basicsV2-floating-checklist-popover-maxWidth);
   max-height: calc(100vh - 86px);
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: var(--flows-basicsV2-checklist-scrollbar-color);
+  scrollbar-color: var(--flows-basicsV2-floating-checklist-scrollbar-color);
 }
 
 .flows_basicsV2_floating_checklist_popover[data-open="false"] {
