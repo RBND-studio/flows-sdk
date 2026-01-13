@@ -27,7 +27,7 @@ const startToursIfNeeded = (
 
   tourBlocksValue.forEach((block) => {
     if (runningTourBlockIds.has(block.id)) return;
-    const triggerMatch = tourTriggerMatch(block.tour_trigger, ctx);
+    const triggerMatch = tourTriggerMatch(block, ctx);
     if (!triggerMatch) return;
 
     runningTours.value = [
