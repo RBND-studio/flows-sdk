@@ -185,47 +185,46 @@ class FloatingChecklist extends LitElement implements FloatingChecklistProps {
                   totalItems: this.items.length,
                   completedItems: completedItems.length,
                 })}
-                ${!isCompleted &&
-                html`<div class="flows_basicsV2_floating_checklist_items">
-                  ${repeat(
-                    this.items,
-                    (_item, index) => index,
-                    (item, index) =>
-                      ChecklistItem({
-                        ...item,
-                        index,
-                        expanded: this._expandedItemIndex === index,
-                        toggleExpanded: this.handleToggleExpanded.bind(this),
-                      }),
-                  )}
-                  ${this.skipButton
-                    ? html`<div class="flows_basicsV2_floating_checklist_skip_button">
-                        ${ActionButton({ variant: "text", action: this.skipButton })}
-                      </div>`
-                    : null}
-                </div>`}
-                ${isCompleted &&
-                html`<div class="flows_basicsV2_floating_checklist_completed">
-                  <div class="flows_basicsV2_floating_checklist_completed_inner">
-                    ${Text({
-                      variant: "title",
-                      children: this.completedTitle,
-                      className: "flows_basicsV2_floating_checklist_completed_title",
-                    })}
-                    ${Text({
-                      variant: "body",
-                      children: this.completedDescription,
-                      className: "flows_basicsV2_floating_checklist_completed_description",
-                    })}
-                    ${this.completedButton
-                      ? ActionButton({
-                          variant: "primary",
-                          size: "small",
-                          action: this.completedButton,
-                        })
-                      : null}
-                  </div>
-                </div>`}
+                ${!isCompleted
+                  ? html`<div class="flows_basicsV2_floating_checklist_items">
+                      ${repeat(
+                        this.items,
+                        (_item, index) => index,
+                        (item, index) =>
+                          ChecklistItem({
+                            ...item,
+                            index,
+                            expanded: this._expandedItemIndex === index,
+                            toggleExpanded: this.handleToggleExpanded.bind(this),
+                          }),
+                      )}
+                      ${this.skipButton
+                        ? html`<div class="flows_basicsV2_floating_checklist_skip_button">
+                            ${ActionButton({ variant: "text", action: this.skipButton })}
+                          </div>`
+                        : null}
+                    </div>`
+                  : html`<div class="flows_basicsV2_floating_checklist_completed">
+                      <div class="flows_basicsV2_floating_checklist_completed_inner">
+                        ${Text({
+                          variant: "title",
+                          children: this.completedTitle,
+                          className: "flows_basicsV2_floating_checklist_completed_title",
+                        })}
+                        ${Text({
+                          variant: "body",
+                          children: this.completedDescription,
+                          className: "flows_basicsV2_floating_checklist_completed_description",
+                        })}
+                        ${this.completedButton
+                          ? ActionButton({
+                              variant: "primary",
+                              size: "small",
+                              action: this.completedButton,
+                            })
+                          : null}
+                      </div>
+                    </div>`}
               </div>
             `
           : null}
