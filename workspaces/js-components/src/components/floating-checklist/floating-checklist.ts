@@ -27,6 +27,9 @@ class FloatingChecklist extends LitElement implements FloatingChecklistProps {
   @property()
   position?: ChecklistPosition;
 
+  @property({ type: Boolean })
+  defaultOpen = false;
+
   @property()
   popupTitle: string;
 
@@ -94,9 +97,13 @@ class FloatingChecklist extends LitElement implements FloatingChecklistProps {
   connectedCallback(): void {
     super.connectedCallback();
 
-    // Set initial open state from session storage
+    // Set initial open state from session storage or defaultOpen prop
     const storedValue = window.sessionStorage.getItem(this.sessionStorageOpenKey);
-    this._checklistOpen = storedValue === "true";
+    if (storedValue !== null) {
+      this._checklistOpen = storedValue === "true";
+    } else {
+      this._checklistOpen = this.defaultOpen;
+    }
   }
 
   @queryAll(".flows_basicsV2_floating_checklist_item_content")

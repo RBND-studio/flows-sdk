@@ -27,11 +27,15 @@ const FloatingChecklist: FC<FloatingChecklistProps> = (props) => {
     setExpandedItemIndex((currentIndex) => (currentIndex === index ? null : index));
   }, []);
 
-  // Set initial open state from session storage
+  // Set initial open state from session storage or defaultOpen prop
   useEffect(() => {
     const storedValue = window.sessionStorage.getItem(sessionStorageOpenKey);
-    setChecklistOpen(storedValue === "true");
-  }, [sessionStorageOpenKey]);
+    if (storedValue !== null) {
+      setChecklistOpen(storedValue === "true");
+    } else {
+      setChecklistOpen(props.defaultOpen);
+    }
+  }, [props.defaultOpen, sessionStorageOpenKey]);
   // Store open state in session storage
   useEffect(() => {
     window.sessionStorage.setItem(sessionStorageOpenKey, String(checklistOpen));

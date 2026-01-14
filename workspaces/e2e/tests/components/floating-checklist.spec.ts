@@ -41,10 +41,12 @@ const getBlock = ({
   propertyMeta,
   position,
   items,
+  defaultOpen,
 }: {
   propertyMeta?: PropertyMeta[];
   position?: ChecklistPosition;
   items?: { title: string; description: string }[];
+  defaultOpen?: boolean;
 }): Block => ({
   id: randomUUID(),
   workflowId: randomUUID(),
@@ -56,6 +58,7 @@ const getBlock = ({
     popupTitle: "Popup title",
     popupDescription: "This is a description",
     position,
+    defaultOpen: defaultOpen ?? false,
     items: items ?? [
       {
         title: "Item 1",
@@ -219,20 +222,22 @@ const run = (packageName: string) => {
     ).toHaveCount(2);
     await expect(page.getByText("1 / 2", { exact: true })).toBeVisible();
   });
-  test(`${packageName} - should persist open state in session storage`, async ({ page }) => {
-    await mockBlocksEndpoint(page, [getBlock({})]);
+  test(`${packageName} - default open and should persist open state in session storage`, async ({
+    page,
+  }) => {
+    await mockBlocksEndpoint(page, [getBlock({ defaultOpen: true })]);
     await page.goto(`/${packageName}.html`);
     const checklistWidget = page.getByRole("button", { name: "Widget title" });
     const checklistPopover = page.locator(".flows_basicsV2_floating_checklist_popover");
-    await expect(checklistPopover).toBeHidden();
-    await checklistWidget.click();
-    await expect(checklistPopover).toBeVisible();
-    await page.reload();
     await expect(checklistPopover).toBeVisible();
     await checklistWidget.click();
     await expect(checklistPopover).toBeHidden();
     await page.reload();
     await expect(checklistPopover).toBeHidden();
+    await checklistWidget.click();
+    await expect(checklistPopover).toBeVisible();
+    await page.reload();
+    await expect(checklistPopover).toBeVisible();
   });
 };
 
