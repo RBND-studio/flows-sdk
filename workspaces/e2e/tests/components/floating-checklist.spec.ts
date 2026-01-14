@@ -219,6 +219,21 @@ const run = (packageName: string) => {
     ).toHaveCount(2);
     await expect(page.getByText("1 / 2", { exact: true })).toBeVisible();
   });
+  test(`${packageName} - should persist open state in session storage`, async ({ page }) => {
+    await mockBlocksEndpoint(page, [getBlock({})]);
+    await page.goto(`/${packageName}.html`);
+    const checklistWidget = page.getByRole("button", { name: "Widget title" });
+    const checklistPopover = page.locator(".flows_basicsV2_floating_checklist_popover");
+    await expect(checklistPopover).toBeHidden();
+    await checklistWidget.click();
+    await expect(checklistPopover).toBeVisible();
+    await page.reload();
+    await expect(checklistPopover).toBeVisible();
+    await checklistWidget.click();
+    await expect(checklistPopover).toBeHidden();
+    await page.reload();
+    await expect(checklistPopover).toBeHidden();
+  });
 };
 
 run("react");

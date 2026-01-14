@@ -55,8 +55,12 @@ class FloatingChecklist extends LitElement implements FloatingChecklistProps {
   @property({ type: Function })
   close: () => void;
 
+  @property({ type: Object })
   __flows: FlowsProperties;
 
+  get sessionStorageOpenKey(): string {
+    return `floating-checklist-open-${this.__flows.id}`;
+  }
   @state()
   private accessor _checklistOpen = false;
 
@@ -87,12 +91,25 @@ class FloatingChecklist extends LitElement implements FloatingChecklistProps {
     this._expandedItemIndex = this._expandedItemIndex === index ? null : index;
   }
 
+  connectedCallback(): void {
+    super.connectedCallback();
+
+    // Set initial open state from session storage
+    const storedValue = window.sessionStorage.getItem(this.sessionStorageOpenKey);
+    this._checklistOpen = storedValue === "true";
+  }
+
   @queryAll(".flows_basicsV2_floating_checklist_item_content")
   itemContentElements: NodeListOf<HTMLElement>;
   updated(changedProperties: Map<string, unknown>): void {
     this.itemContentElements.forEach((el) => {
       el.style.setProperty("--flows-content-height", `${el.scrollHeight}px`);
     });
+
+    // Store open state in session storage
+    if (changedProperties.has("_checklistOpen")) {
+      window.sessionStorage.setItem(this.sessionStorageOpenKey, String(this._checklistOpen));
+    }
 
     if (changedProperties.has("items")) {
       if (this.prevItems !== null) {

@@ -18,6 +18,7 @@ const CLOSE_TIMEOUT = 300;
 const FloatingChecklist: FC<FloatingChecklistProps> = (props) => {
   // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- value can be empty string ""
   const position = props.position || "bottom-right";
+  const sessionStorageOpenKey = `floating-checklist-open-${props.__flows.id}`;
 
   const [checklistOpen, setChecklistOpen] = useState(false);
   const [checklistClosing, setChecklistClosing] = useState(false);
@@ -25,6 +26,16 @@ const FloatingChecklist: FC<FloatingChecklistProps> = (props) => {
   const toggleExpanded = useCallback((index: number) => {
     setExpandedItemIndex((currentIndex) => (currentIndex === index ? null : index));
   }, []);
+
+  // Set initial open state from session storage
+  useEffect(() => {
+    const storedValue = window.sessionStorage.getItem(sessionStorageOpenKey);
+    setChecklistOpen(storedValue === "true");
+  }, [sessionStorageOpenKey]);
+  // Store open state in session storage
+  useEffect(() => {
+    window.sessionStorage.setItem(sessionStorageOpenKey, String(checklistOpen));
+  }, [checklistOpen, sessionStorageOpenKey]);
 
   const prevItemsRef = useRef<ChecklistItemType[]>(null);
   useEffect(() => {
