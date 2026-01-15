@@ -1,5 +1,8 @@
 import { type ChecklistItem as ChecklistItemType } from "@flows/shared";
+// eslint-disable-next-line import/no-named-as-default -- correct import
+import DOMPurify from "dompurify";
 import { html, type TemplateResult } from "lit";
+import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import { Check16 } from "../../icons/check-16";
 import { Chevron16 } from "../../icons/chevron-16";
 import { Text } from "../../internal-components/text";
@@ -36,7 +39,14 @@ export const ChecklistItem = (props: Props): TemplateResult => {
         data-expanded=${props.expanded ? "true" : "false"}
       >
         ${Indicator({ completed: props.completed.value })}
-        <span class="flows_basicsV2_floating_checklist_item_title">${props.title}</span>
+        <span class="flows_basicsV2_floating_checklist_item_title">
+          ${unsafeHTML(
+            DOMPurify.sanitize(props.title, {
+              FORCE_BODY: true,
+              ADD_ATTR: ["target"],
+            }),
+          )}
+        </span>
         ${Chevron16({
           className: "flows_basicsV2_floating_checklist_item_chevron",
           "data-expanded": props.expanded ? "true" : "false",
@@ -48,7 +58,17 @@ export const ChecklistItem = (props: Props): TemplateResult => {
         data-expanded=${props.expanded ? "true" : "false"}
       >
         <div class="flows_basicsV2_floating_checklist_item_content_inner">
-          ${props.description ? Text({ variant: "body", children: props.description }) : null}
+          ${props.description
+            ? Text({
+                variant: "body",
+                children: unsafeHTML(
+                  DOMPurify.sanitize(props.description, {
+                    FORCE_BODY: true,
+                    ADD_ATTR: ["target"],
+                  }),
+                ),
+              })
+            : null}
           ${(props.primaryButton ?? props.secondaryButton)
             ? html`<div class="flows_basicsV2_floating_checklist_item_buttons">
                 ${props.primaryButton
