@@ -27,6 +27,9 @@ class FloatingChecklist extends LitElement implements FloatingChecklistProps {
   @property()
   position?: ChecklistPosition;
 
+  @property({ type: Boolean })
+  defaultOpen = false;
+
   @property()
   popupTitle: string;
 
@@ -55,8 +58,12 @@ class FloatingChecklist extends LitElement implements FloatingChecklistProps {
   @property({ type: Function })
   close: () => void;
 
+  @property({ type: Object })
   __flows: FlowsProperties;
 
+  get sessionStorageOpenKey(): string {
+    return `floating-checklist-open-${this.__flows.id}`;
+  }
   @state()
   private accessor _checklistOpen = false;
 
@@ -87,12 +94,29 @@ class FloatingChecklist extends LitElement implements FloatingChecklistProps {
     this._expandedItemIndex = this._expandedItemIndex === index ? null : index;
   }
 
+  connectedCallback(): void {
+    super.connectedCallback();
+
+    // Set initial open state from session storage or defaultOpen prop
+    const storedValue = window.sessionStorage.getItem(this.sessionStorageOpenKey);
+    if (storedValue !== null) {
+      this._checklistOpen = storedValue === "true";
+    } else {
+      this._checklistOpen = this.defaultOpen;
+    }
+  }
+
   @queryAll(".flows_basicsV2_floating_checklist_item_content")
   itemContentElements: NodeListOf<HTMLElement>;
   updated(changedProperties: Map<string, unknown>): void {
     this.itemContentElements.forEach((el) => {
       el.style.setProperty("--flows-content-height", `${el.scrollHeight}px`);
     });
+
+    // Store open state in session storage
+    if (changedProperties.has("_checklistOpen")) {
+      window.sessionStorage.setItem(this.sessionStorageOpenKey, String(this._checklistOpen));
+    }
 
     if (changedProperties.has("items")) {
       if (this.prevItems !== null) {
@@ -161,47 +185,46 @@ class FloatingChecklist extends LitElement implements FloatingChecklistProps {
                   totalItems: this.items.length,
                   completedItems: completedItems.length,
                 })}
-                ${!isCompleted &&
-                html`<div class="flows_basicsV2_floating_checklist_items">
-                  ${repeat(
-                    this.items,
-                    (_item, index) => index,
-                    (item, index) =>
-                      ChecklistItem({
-                        ...item,
-                        index,
-                        expanded: this._expandedItemIndex === index,
-                        toggleExpanded: this.handleToggleExpanded.bind(this),
-                      }),
-                  )}
-                  ${this.skipButton
-                    ? html`<div class="flows_basicsV2_floating_checklist_skip_button">
-                        ${ActionButton({ variant: "text", action: this.skipButton })}
-                      </div>`
-                    : null}
-                </div>`}
-                ${isCompleted &&
-                html`<div class="flows_basicsV2_floating_checklist_completed">
-                  <div class="flows_basicsV2_floating_checklist_completed_inner">
-                    ${Text({
-                      variant: "title",
-                      children: this.completedTitle,
-                      className: "flows_basicsV2_floating_checklist_completed_title",
-                    })}
-                    ${Text({
-                      variant: "body",
-                      children: this.completedDescription,
-                      className: "flows_basicsV2_floating_checklist_completed_description",
-                    })}
-                    ${this.completedButton
-                      ? ActionButton({
-                          variant: "primary",
-                          size: "small",
-                          action: this.completedButton,
-                        })
-                      : null}
-                  </div>
-                </div>`}
+                ${!isCompleted
+                  ? html`<div class="flows_basicsV2_floating_checklist_items">
+                      ${repeat(
+                        this.items,
+                        (_item, index) => index,
+                        (item, index) =>
+                          ChecklistItem({
+                            ...item,
+                            index,
+                            expanded: this._expandedItemIndex === index,
+                            toggleExpanded: this.handleToggleExpanded.bind(this),
+                          }),
+                      )}
+                      ${this.skipButton
+                        ? html`<div class="flows_basicsV2_floating_checklist_skip_button">
+                            ${ActionButton({ variant: "text", action: this.skipButton })}
+                          </div>`
+                        : null}
+                    </div>`
+                  : html`<div class="flows_basicsV2_floating_checklist_completed">
+                      <div class="flows_basicsV2_floating_checklist_completed_inner">
+                        ${Text({
+                          variant: "title",
+                          children: this.completedTitle,
+                          className: "flows_basicsV2_floating_checklist_completed_title",
+                        })}
+                        ${Text({
+                          variant: "body",
+                          children: this.completedDescription,
+                          className: "flows_basicsV2_floating_checklist_completed_description",
+                        })}
+                        ${this.completedButton
+                          ? ActionButton({
+                              variant: "primary",
+                              size: "small",
+                              action: this.completedButton,
+                            })
+                          : null}
+                      </div>
+                    </div>`}
               </div>
             `
           : null}
