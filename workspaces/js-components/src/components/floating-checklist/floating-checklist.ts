@@ -6,9 +6,12 @@ import {
   type FlowsProperties,
   type FloatingChecklistProps as LibraryFloatingChecklistProps,
 } from "@flows/shared";
+// eslint-disable-next-line import/no-named-as-default -- correct import
+import DOMPurify from "dompurify";
 import { html, LitElement } from "lit";
 import { property, queryAll, state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
+import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import { Rocket16 } from "../../icons/rocket-16";
 import { Chevron16 } from "../../icons/chevron-16";
 import { Text } from "../../internal-components/text";
@@ -173,12 +176,29 @@ class FloatingChecklist extends LitElement implements FloatingChecklistProps {
                 data-open=${!this._checklistClosing ? "true" : "false"}
               >
                 <div class="flows_basicsV2_floating_checklist_header">
-                  ${Text({
-                    variant: "title",
-                    className: "flows_basicsV2_floating_checklist_title",
-                    children: this.popupTitle,
-                  })}
-                  ${Text({ variant: "body", children: this.popupDescription })}
+                  ${this.popupTitle
+                    ? Text({
+                        variant: "title",
+                        className: "flows_basicsV2_floating_checklist_title",
+                        children: unsafeHTML(
+                          DOMPurify.sanitize(this.popupTitle, {
+                            FORCE_BODY: true,
+                            ADD_ATTR: ["target"],
+                          }),
+                        ),
+                      })
+                    : null}
+                  ${this.popupDescription
+                    ? Text({
+                        variant: "body",
+                        children: unsafeHTML(
+                          DOMPurify.sanitize(this.popupDescription, {
+                            FORCE_BODY: true,
+                            ADD_ATTR: ["target"],
+                          }),
+                        ),
+                      })
+                    : null}
                 </div>
 
                 ${ChecklistProgress({

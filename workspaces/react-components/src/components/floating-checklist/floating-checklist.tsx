@@ -4,6 +4,8 @@ import {
   type ChecklistItem as ChecklistItemType,
 } from "@flows/shared";
 import { type FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
+// eslint-disable-next-line import/no-named-as-default -- correct import
+import DOMPurify from "dompurify";
 import { Text } from "../../internal-components/text";
 import { ActionButton } from "../../internal-components/action-button";
 import { Chevron16 } from "../../icons/chevron16";
@@ -118,10 +120,29 @@ const FloatingChecklist: FC<FloatingChecklistProps> = (props) => {
           data-open={!checklistClosing ? "true" : "false"}
         >
           <div className="flows_basicsV2_floating_checklist_header">
-            <Text variant="title" className="flows_basicsV2_floating_checklist_title">
-              {props.popupTitle}
-            </Text>
-            <Text variant="body">{props.popupDescription}</Text>
+            {props.popupTitle ? (
+              <Text
+                variant="title"
+                className="flows_basicsV2_floating_checklist_title"
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(props.popupTitle, {
+                    FORCE_BODY: true,
+                    ADD_ATTR: ["target"],
+                  }),
+                }}
+              />
+            ) : null}
+            {props.popupDescription ? (
+              <Text
+                variant="body"
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(props.popupDescription, {
+                    FORCE_BODY: true,
+                    ADD_ATTR: ["target"],
+                  }),
+                }}
+              />
+            ) : null}
           </div>
 
           <ChecklistProgress
