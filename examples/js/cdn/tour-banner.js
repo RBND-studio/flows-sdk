@@ -4,8 +4,8 @@ export class TourBanner extends LitElement {
   title = "";
   body = "";
 
-  continue = () => {};
   previous = () => {};
+  continue = () => {};
   cancel = () => {};
 
   // Disable shadow DOM
@@ -19,7 +19,8 @@ export class TourBanner extends LitElement {
         <h2>${this.title}</h2>
         <p>${this.body}</p>
 
-        <button @click=${this.previous}>Previous</button>
+        <!-- In the first step the previous function is undefined -->
+        ${!!this.previous && html`<button @click=${this.previous}>Previous</button>`}
         <button @click=${this.continue}>Continue</button>
         <button @click=${this.cancel}>Cancel</button>
       </div>

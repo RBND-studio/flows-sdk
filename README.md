@@ -46,6 +46,7 @@ We provide a set of templates to help you get started with Flows.
 - [Angular template](./examples/angular)
 - [Svelte template](./examples/svelte)
 - [Lit template](./examples/lit)
+- [SolidJS template](./examples/solid)
 
 ## Get started for free
 
