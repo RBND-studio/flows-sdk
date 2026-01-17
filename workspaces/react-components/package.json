@@ -1,6 +1,6 @@
 {
   "name": "@flows/react-components",
-  "version": "2.2.0",
+  "version": "2.4.1",
   "description": "Built-in components for Flows React SDK",
   "keywords": [
     "react",
@@ -21,7 +21,7 @@
     "product-tours"
   ],
   "scripts": {
-    "dev": "tsup --watch --env.NODE_ENV development",
+    "dev": "tsup --env.NODE_ENV development",
     "build": "tsup --env.NODE_ENV production",
     "lint": "eslint src",
     "tsc": "tsc -p tsconfig.json",

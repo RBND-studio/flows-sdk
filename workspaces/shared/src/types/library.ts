@@ -1,4 +1,4 @@
-import { type Action } from "./components";
+import { type StateMemory, type Action } from "./components";
 
 export type Placement =
   | "top"
@@ -26,7 +26,10 @@ export type ModalPosition =
   | "bottom-right";
 export type ModalSize = "small" | "medium" | "auto";
 
-export type ButtonVariant = "primary" | "secondary";
+export type ChecklistPosition = "bottom-left" | "bottom-right" | "top-left" | "top-right";
+
+export type ButtonVariant = "primary" | "secondary" | "text";
+export type ButtonSize = "default" | "small";
 
 // Tooltip
 export interface TooltipProps {
@@ -143,4 +146,34 @@ export interface TourCardProps {
   dismissible: boolean;
   width?: string;
   hideProgress: boolean;
+}
+
+// Checklist
+
+export interface ChecklistItem {
+  title: string;
+  description: string;
+  primaryButton?: Action;
+  secondaryButton?: Action;
+  completed: StateMemory;
+}
+
+export interface FloatingChecklistProps {
+  widgetTitle: string;
+
+  popupTitle: string;
+  popupDescription: string;
+
+  completedTitle: string;
+  completedDescription: string;
+  completedButton?: Action;
+
+  items: ChecklistItem[];
+
+  position?: ChecklistPosition;
+  defaultOpen: boolean;
+  skipButton?: Action;
+
+  complete: () => void;
+  close: () => void;
 }
