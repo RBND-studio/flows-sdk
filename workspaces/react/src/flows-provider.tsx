@@ -1,6 +1,6 @@
 import { type FC, type ReactNode } from "react";
 import { type LanguageOption, type UserProperties } from "@flows/shared";
-import { type TourComponents, type Components } from "./types";
+import { type TourComponents, type Components, type LinkComponentProps } from "./types";
 import { FlowsContext } from "./flows-context";
 import { useRunningTours } from "./hooks/use-running-tours";
 import { useBlocks } from "./hooks/use-blocks";
@@ -80,6 +80,17 @@ export interface FlowsProviderProps {
    */
   onDebugShortcut?: (event: KeyboardEvent) => boolean;
 
+  /**
+   * Custom Link component used for navigation between pages without full page reloads. For example Link from "next/link".
+   *
+   * The LinkComponent will be used for all URLs without domain and without "openInNew" (target="_blank").
+   * - `/about` - internal link, use LinkComponent
+   * - `?search=test` - internal link, use LinkComponent
+   * - `https://example.com` - external link, use standard `<a>` element
+   * - `/about` with `openInNew` - external link, use standard `<a>` element with `target="_blank"`
+   */
+  LinkComponent: FC<LinkComponentProps>;
+
   children: ReactNode;
 }
 
@@ -110,6 +121,7 @@ const FlowsProviderInner: FC<Props> = ({
   language,
   debug,
   onDebugShortcut,
+  LinkComponent,
 }) => {
   globalConfig.apiUrl = apiUrl;
   globalConfig.environment = environment;
@@ -137,6 +149,7 @@ const FlowsProviderInner: FC<Props> = ({
         tourComponents,
         removeBlock,
         updateBlock,
+        LinkComponent,
       }}
     >
       {children}
