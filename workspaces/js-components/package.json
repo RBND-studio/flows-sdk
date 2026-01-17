@@ -20,7 +20,7 @@
     "product-adoption",
     "product-tours"
   ],
-  "version": "2.2.3",
+  "version": "2.4.1",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/RBND-studio/flows-sdk.git"
@@ -28,7 +28,7 @@
   "license": "MIT",
   "sideEffects": false,
   "scripts": {
-    "dev": "tsup --watch --env.NODE_ENV development",
+    "dev": "tsup --env.NODE_ENV development",
     "build": "tsup --env.NODE_ENV production && node scripts/rename-global-modules.js",
     "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",
