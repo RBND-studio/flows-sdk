@@ -140,9 +140,7 @@ const FlowsProviderInner: FC<Props> = ({
   const runningTours = useRunningTours({ blocks, removeBlock });
 
   useEffect(() => {
-    if (LinkComponent) {
-      window.__flows_LinkComponent = LinkComponent;
-    }
+    window.__flows_LinkComponent = LinkComponent;
   }, [LinkComponent]);
 
   return (

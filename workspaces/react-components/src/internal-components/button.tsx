@@ -43,7 +43,11 @@ export const Button: FC<Props> = ({
     href &&
     isInternalLink(href, props.target)
   ) {
-    return <LinkComponent className={className} {...props} href={href} />;
+    return (
+      <LinkComponent href={href} className={className} onClick={props.onClick}>
+        {props.children}
+      </LinkComponent>
+    );
   }
 
   const Cmp = props.href ? "a" : "button";

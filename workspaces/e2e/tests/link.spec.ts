@@ -10,7 +10,7 @@ test.beforeEach(async ({ page }) => {
   );
 });
 
-const getBlock = (): Block => ({
+const getBlock = ({ url, openInNew }: { url: string; openInNew?: boolean }): Block => ({
   id: randomUUID(),
   workflowId: randomUUID(),
   type: "component",
@@ -24,17 +24,51 @@ const getBlock = (): Block => ({
       type: "action",
       value: {
         label: "Go to another page",
-        url: "/another-page",
+        url,
+        openInNew,
       },
     },
   ],
 });
 
-test("react link component navigation", async ({ page }) => {
-  await mockBlocksEndpoint(page, [getBlock()]);
-  await page.goto(`/react.html?LinkComponent=true`);
-  await expect(page.getByText("My modal", { exact: true })).toBeVisible();
-  await page.getByText("Go to another page", { exact: true }).click();
-  // The example app uses HashRouter
-  expect(page).toHaveURL(`/react.html?LinkComponent=true#/another-page`);
+test.describe("react", () => {
+  test("link component navigation", async ({ page }) => {
+    await mockBlocksEndpoint(page, [getBlock({ url: "/another-page" })]);
+    await page.goto(`/react.html?LinkComponent=true`);
+    await expect(page.getByText("My modal", { exact: true })).toBeVisible();
+    await page.getByText("Go to another page", { exact: true }).click();
+    // The example app uses HashRouter
+    expect(page).toHaveURL(`/react.html?LinkComponent=true#/another-page`);
+  });
+  test("should use link with relative urls", async ({ page }) => {
+    await mockBlocksEndpoint(page, [getBlock({ url: "?search=test" })]);
+    await page.goto(`/react.html?LinkComponent=true`);
+    await expect(page.getByText("My modal", { exact: true })).toBeVisible();
+    await page.getByText("Go to another page", { exact: true }).click();
+    expect(page).toHaveURL(`/react.html?LinkComponent=true#/?search=test`);
+  });
+  test("should fallback to <a> without link component", async ({ page }) => {
+    await mockBlocksEndpoint(page, [getBlock({ url: "/another-page" })]);
+    await page.goto(`/react.html`);
+    await expect(page.getByText("My modal", { exact: true })).toBeVisible();
+    await page.getByText("Go to another page", { exact: true }).click();
+    expect(page).toHaveURL(`/another-page`);
+  });
+  test("shouldn't use link component with target blank", async ({ page }) => {
+    await mockBlocksEndpoint(page, [getBlock({ url: "/another-page", openInNew: true })]);
+    await page.goto(`/react.html?LinkComponent=true`);
+    await expect(page.getByText("My modal", { exact: true })).toBeVisible();
+    await page.getByText("Go to another page", { exact: true }).click();
+    const newTabPromise = page.waitForEvent("popup");
+    expect(page).toHaveURL(`/react.html?LinkComponent=true`);
+    const newTab = await newTabPromise;
+    expect(newTab).toHaveURL("/another-page");
+  });
+  test("shouldn't use link component for external links", async ({ page }) => {
+    await mockBlocksEndpoint(page, [getBlock({ url: "https://example.com" })]);
+    await page.goto(`/react.html?LinkComponent=true`);
+    await expect(page.getByText("My modal", { exact: true })).toBeVisible();
+    await page.getByText("Go to another page", { exact: true }).click();
+    expect(page).toHaveURL(`https://example.com`);
+  });
 });
