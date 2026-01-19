@@ -1,4 +1,4 @@
-import { type Action, type ButtonSize, type ButtonVariant } from "@flows/shared";
+import { type ButtonVariant, type Action, type ButtonSize } from "@flows/shared";
 import { useCallback, type FC } from "react";
 import { Button } from "./button";
 

@@ -57,7 +57,7 @@ export const useCurrentFloatingBlocks = (): ActiveBlock[] => {
         .flatMap((block) =>
           blockToActiveBlock({ block, removeBlock, updateBlock, userProperties }),
         ),
-    [visibleBlocks, removeBlock, updateBlock, userProperties],
+    [removeBlock, userProperties, updateBlock, visibleBlocks],
   );
   const floatingTourBlocks = useMemo(
     () =>
