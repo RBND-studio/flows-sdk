@@ -48,16 +48,16 @@ const useVisibleTours = (): RunningTour[] => {
 export const useCurrentFloatingBlocks = (): ActiveBlock[] => {
   const visibleBlocks = useVisibleBlocks();
   const visibleTours = useVisibleTours();
-  const { removeBlock, updateBlock, userProperties, LinkComponent } = useFlowsContext();
+  const { removeBlock, updateBlock, userProperties } = useFlowsContext();
 
   const floatingBlocks = useMemo(
     () =>
       visibleBlocks
         .filter((b) => !b.slottable)
         .flatMap((block) =>
-          blockToActiveBlock({ block, removeBlock, updateBlock, userProperties, LinkComponent }),
+          blockToActiveBlock({ block, removeBlock, updateBlock, userProperties }),
         ),
-    [visibleBlocks, removeBlock, updateBlock, userProperties, LinkComponent],
+    [visibleBlocks, removeBlock, updateBlock, userProperties],
   );
   const floatingTourBlocks = useMemo(
     () =>

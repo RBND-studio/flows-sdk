@@ -1,4 +1,4 @@
-import { type LinkComponentType, type ChecklistItem as ChecklistItemType } from "@flows/shared";
+import { type ChecklistItem as ChecklistItemType } from "@flows/shared";
 import { type FC, type ReactNode, useCallback, useEffect, useRef } from "react";
 // eslint-disable-next-line import/no-named-as-default -- correct import
 import DOMPurify from "dompurify";
@@ -11,8 +11,6 @@ type Props = ChecklistItemType & {
   index: number;
   expanded: boolean;
   toggleExpanded: (index: number) => void;
-
-  LinkComponent?: LinkComponentType;
 };
 
 export const ChecklistItem: FC<Props> = (props) => {
@@ -90,16 +88,10 @@ export const ChecklistItem: FC<Props> = (props) => {
                   action={props.primaryButton}
                   variant="primary"
                   size="small"
-                  LinkComponent={props.LinkComponent}
                 />
               ) : null}
               {props.secondaryButton ? (
-                <ActionButton
-                  action={props.secondaryButton}
-                  variant="secondary"
-                  size="small"
-                  LinkComponent={props.LinkComponent}
-                />
+                <ActionButton action={props.secondaryButton} variant="secondary" size="small" />
               ) : null}
             </div>
           ) : null}

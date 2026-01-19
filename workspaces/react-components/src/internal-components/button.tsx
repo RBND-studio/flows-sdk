@@ -1,4 +1,4 @@
-import { type ButtonSize, type ButtonVariant, type LinkComponentType } from "@flows/shared";
+import { type ButtonSize, type ButtonVariant } from "@flows/shared";
 import { clsx } from "clsx";
 import { type FC, type ReactNode } from "react";
 
@@ -10,7 +10,6 @@ interface Props {
   size?: ButtonSize;
   href?: string;
   target?: "_blank";
-  LinkComponent?: LinkComponentType;
 }
 
 const isInternalLink = (href: string, target?: Props["target"]): boolean => {
@@ -27,7 +26,6 @@ export const Button: FC<Props> = ({
   className: classNameProp,
   variant,
   size = "default",
-  LinkComponent,
   ...props
 }) => {
   const className = clsx(
@@ -37,8 +35,14 @@ export const Button: FC<Props> = ({
     classNameProp,
   );
 
+  const LinkComponent = window.__flows_LinkComponent;
   const href = props.href;
-  if (LinkComponent && href && isInternalLink(href, props.target)) {
+  if (
+    LinkComponent &&
+    typeof LinkComponent === "function" &&
+    href &&
+    isInternalLink(href, props.target)
+  ) {
     return <LinkComponent className={className} {...props} href={href} />;
   }
 

@@ -1,5 +1,5 @@
-import { type FC, type ReactNode } from "react";
-import { type LinkComponentType, type LanguageOption, type UserProperties } from "@flows/shared";
+import { useEffect, type FC, type ReactNode } from "react";
+import { type LanguageOption, type UserProperties, type LinkComponentProps } from "@flows/shared";
 import { type TourComponents, type Components } from "./types";
 import { FlowsContext } from "./flows-context";
 import { useRunningTours } from "./hooks/use-running-tours";
@@ -89,7 +89,7 @@ export interface FlowsProviderProps {
    * - `https://example.com` - external link, use standard `<a>` element
    * - `/about` with `openInNew` - external link, use standard `<a>` element with `target="_blank"`
    */
-  LinkComponent?: LinkComponentType;
+  LinkComponent?: FC<LinkComponentProps>;
 
   children: ReactNode;
 }
@@ -139,6 +139,12 @@ const FlowsProviderInner: FC<Props> = ({
 
   const runningTours = useRunningTours({ blocks, removeBlock });
 
+  useEffect(() => {
+    if (LinkComponent) {
+      window.__flows_LinkComponent = LinkComponent;
+    }
+  }, [LinkComponent]);
+
   return (
     <FlowsContext.Provider
       value={{
@@ -149,7 +155,6 @@ const FlowsProviderInner: FC<Props> = ({
         tourComponents,
         removeBlock,
         updateBlock,
-        LinkComponent,
       }}
     >
       {children}

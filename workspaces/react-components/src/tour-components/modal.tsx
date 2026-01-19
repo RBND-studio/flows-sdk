@@ -24,7 +24,6 @@ const Modal: FC<ModalProps> = (props) => {
       position={props.position}
       size={props.size}
       dots={dots}
-      LinkComponent={props.__flows.LinkComponent}
     />
   );
 };

@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any -- needed for loose types */
 
-import { type LinkComponentType } from "./react";
-
 /**
  * Properties provided by Flows based on block and block template setup.
  */
@@ -26,10 +24,6 @@ export interface FlowsProperties {
    * 0-based index of the currently visible tour step (component) in the current tour. Logic steps (e.g. wait) are not counted.
    */
   tourVisibleStepIndex?: number;
-  /**
-   * Custom Link component used for client side navigation. Available only if provided to the FlowsProvider in the React SDK.
-   */
-  LinkComponent?: LinkComponentType;
 }
 
 export type ComponentProps<T extends Record<string, any> = any> = {

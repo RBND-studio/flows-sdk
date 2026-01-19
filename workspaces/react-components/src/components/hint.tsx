@@ -16,7 +16,6 @@ const Hint: FC<HintProps> = (props) => {
       onClose={props.dismissible ? props.close : undefined}
       primaryButton={props.primaryButton}
       secondaryButton={props.secondaryButton}
-      LinkComponent={props.__flows.LinkComponent}
     />
   );
 };

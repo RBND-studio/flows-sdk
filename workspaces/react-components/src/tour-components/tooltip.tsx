@@ -24,7 +24,6 @@ const Tooltip: FC<TooltipProps> = (props) => {
       primaryButton={props.primaryButton}
       secondaryButton={props.secondaryButton}
       dots={dots}
-      LinkComponent={props.__flows.LinkComponent}
     />
   );
 };
