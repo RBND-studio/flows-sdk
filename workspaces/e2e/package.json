@@ -13,7 +13,8 @@
     "@flows/react": "workspace:*",
     "@flows/react-components": "workspace:*",
     "@flows/shared": "workspace:*",
-    "lit": "^3.3.2"
+    "lit": "^3.3.2",
+    "react-router": "^7.12.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.57.0",
