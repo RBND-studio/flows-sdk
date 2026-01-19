@@ -1,6 +1,6 @@
 import { type FC, type ReactNode } from "react";
-import { type LanguageOption, type UserProperties } from "@flows/shared";
-import { type TourComponents, type Components, type LinkComponentProps } from "./types";
+import { type LinkComponentType, type LanguageOption, type UserProperties } from "@flows/shared";
+import { type TourComponents, type Components } from "./types";
 import { FlowsContext } from "./flows-context";
 import { useRunningTours } from "./hooks/use-running-tours";
 import { useBlocks } from "./hooks/use-blocks";
@@ -89,7 +89,7 @@ export interface FlowsProviderProps {
    * - `https://example.com` - external link, use standard `<a>` element
    * - `/about` with `openInNew` - external link, use standard `<a>` element with `target="_blank"`
    */
-  LinkComponent: FC<LinkComponentProps>;
+  LinkComponent?: LinkComponentType;
 
   children: ReactNode;
 }

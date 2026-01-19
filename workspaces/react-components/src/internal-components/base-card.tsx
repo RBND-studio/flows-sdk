@@ -1,4 +1,4 @@
-import { type Action } from "@flows/shared";
+import { type LinkComponentType, type Action } from "@flows/shared";
 import { type FC, type ReactNode } from "react";
 // eslint-disable-next-line import/no-named-as-default -- correct import
 import DOMPurify from "dompurify";
@@ -18,15 +18,29 @@ interface Props {
   tour: boolean;
 
   onClose?: () => void;
+
+  LinkComponent?: LinkComponentType;
 }
 
 export const BaseCard: FC<Props> = (props) => {
   const buttons = [];
   if (props.primaryButton)
-    buttons.push(<ActionButton key="primary" action={props.primaryButton} variant="primary" />);
+    buttons.push(
+      <ActionButton
+        key="primary"
+        action={props.primaryButton}
+        variant="primary"
+        LinkComponent={props.LinkComponent}
+      />,
+    );
   if (props.secondaryButton)
     buttons.push(
-      <ActionButton key="secondary" action={props.secondaryButton} variant="secondary" />,
+      <ActionButton
+        key="secondary"
+        action={props.secondaryButton}
+        variant="secondary"
+        LinkComponent={props.LinkComponent}
+      />,
     );
 
   if (props.tour) buttons.reverse();

@@ -27,6 +27,7 @@ const Hint: FC<HintProps> = (props) => {
       dots={dots}
       // Needed to avoid reusing html elements between tour steps. Otherwise the tooltip exit animation is triggered.
       key={props.__flows.id}
+      LinkComponent={props.__flows.LinkComponent}
     />
   );
 };

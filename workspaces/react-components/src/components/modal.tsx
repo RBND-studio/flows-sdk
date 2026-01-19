@@ -15,6 +15,7 @@ const Modal: FC<ModalProps> = (props) => {
       onClose={props.dismissible ? props.close : undefined}
       position={props.position}
       size={props.size}
+      LinkComponent={props.__flows.LinkComponent}
     />
   );
 };

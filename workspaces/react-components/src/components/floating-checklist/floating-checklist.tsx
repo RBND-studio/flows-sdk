@@ -164,7 +164,11 @@ const FloatingChecklist: FC<FloatingChecklistProps> = (props) => {
               ))}
               {props.skipButton ? (
                 <div className="flows_basicsV2_floating_checklist_skip_button">
-                  <ActionButton variant="text" action={props.skipButton} />
+                  <ActionButton
+                    variant="text"
+                    action={props.skipButton}
+                    LinkComponent={props.__flows.LinkComponent}
+                  />
                 </div>
               ) : null}
             </div>
@@ -187,6 +191,7 @@ const FloatingChecklist: FC<FloatingChecklistProps> = (props) => {
                     size="small"
                     action={props.completedButton}
                     className="flows_basicsV2_floating_checklist_completed_button"
+                    LinkComponent={props.__flows.LinkComponent}
                   />
                 ) : null}
               </div>

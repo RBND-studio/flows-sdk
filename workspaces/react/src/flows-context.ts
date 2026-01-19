@@ -1,6 +1,11 @@
-import { createContext, type FC, useContext } from "react";
-import { type Block, type TourStep, type UserProperties } from "@flows/shared";
-import { type LinkComponentProps, type Components, type TourComponents } from "./types";
+import { createContext, useContext } from "react";
+import {
+  type LinkComponentType,
+  type Block,
+  type TourStep,
+  type UserProperties,
+} from "@flows/shared";
+import { type Components, type TourComponents } from "./types";
 
 export interface RunningTour {
   block: Block;
@@ -22,7 +27,7 @@ export interface IFlowsContext {
   runningTours: RunningTour[];
   removeBlock: RemoveBlock;
   updateBlock: UpdateBlock;
-  LinkComponent?: FC<LinkComponentProps>;
+  LinkComponent?: LinkComponentType;
 }
 
 // eslint-disable-next-line -- necessary for noop

@@ -9,6 +9,7 @@ import {
   type TourStep,
   type UserProperties,
   type PropertyMeta,
+  type LinkComponentType,
 } from "./types";
 import { template } from "./template";
 
@@ -45,6 +46,7 @@ export const createComponentProps = (props: {
   exitNodeCb: ExitNodeCb;
   setStateMemory: SetStateMemory;
   userProperties: UserProperties;
+  LinkComponent?: LinkComponentType;
 }): ComponentProps<object> => {
   const { block, exitNodeCb, removeBlock, setStateMemory } = props;
 
@@ -165,6 +167,7 @@ export const createComponentProps = (props: {
       id: block.id,
       key: block.key,
       workflowId: block.workflowId,
+      LinkComponent: props.LinkComponent,
     },
     ...data,
     ...methods,
@@ -179,6 +182,7 @@ export const createTourComponentProps = ({
   handleCancel,
   handleContinue,
   handlePrevious,
+  LinkComponent,
 }: {
   tourSteps: TourStep[];
   tourStep: TourStep;
@@ -187,6 +191,7 @@ export const createTourComponentProps = ({
   handleContinue: () => void;
   handlePrevious: () => void;
   handleCancel: () => void;
+  LinkComponent?: LinkComponentType;
 }): TourComponentProps<object> => {
   const isFirstStep = currentIndex === 0;
 
@@ -236,6 +241,7 @@ export const createTourComponentProps = ({
       workflowId: tourStep.workflowId,
       tourVisibleStepCount: visibleTourSteps.length,
       tourVisibleStepIndex,
+      LinkComponent,
     },
     ...data,
     continue: handleContinue,

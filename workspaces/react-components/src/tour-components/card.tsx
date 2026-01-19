@@ -23,6 +23,7 @@ const Card: FC<CardProps> = (props) => {
       onClose={props.dismissible ? props.cancel : undefined}
       tour
       width={props.width}
+      LinkComponent={props.__flows.LinkComponent}
     />
   );
 };

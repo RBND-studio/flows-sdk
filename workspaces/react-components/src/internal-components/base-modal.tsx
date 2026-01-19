@@ -1,4 +1,9 @@
-import { type Action, type ModalPosition, type ModalSize } from "@flows/shared";
+import {
+  type LinkComponentType,
+  type Action,
+  type ModalPosition,
+  type ModalSize,
+} from "@flows/shared";
 import { clsx } from "clsx";
 import { type FC, type ReactNode } from "react";
 // eslint-disable-next-line import/no-named-as-default -- correct import
@@ -19,6 +24,8 @@ interface Props {
   primaryButton?: Action;
   secondaryButton?: Action;
   onClose?: () => void;
+
+  LinkComponent?: LinkComponentType;
 }
 
 export const BaseModal: FC<Props> = (props) => {
@@ -30,10 +37,22 @@ export const BaseModal: FC<Props> = (props) => {
   const buttons = [];
   if (props.secondaryButton)
     buttons.push(
-      <ActionButton key="secondary" action={props.secondaryButton} variant="secondary" />,
+      <ActionButton
+        key="secondary"
+        action={props.secondaryButton}
+        variant="secondary"
+        LinkComponent={props.LinkComponent}
+      />,
     );
   if (props.primaryButton)
-    buttons.push(<ActionButton key="primary" action={props.primaryButton} variant="primary" />);
+    buttons.push(
+      <ActionButton
+        key="primary"
+        action={props.primaryButton}
+        variant="primary"
+        LinkComponent={props.LinkComponent}
+      />,
+    );
 
   return (
     <>

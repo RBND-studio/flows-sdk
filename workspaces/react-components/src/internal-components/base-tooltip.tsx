@@ -10,7 +10,7 @@ import {
   type Placement,
   type Side,
 } from "@floating-ui/react-dom";
-import { log, type Action } from "@flows/shared";
+import { type LinkComponentType, log, type Action } from "@flows/shared";
 import { clsx } from "clsx";
 import { useCallback, useEffect, useMemo, useRef, useState, type FC, type ReactNode } from "react";
 // eslint-disable-next-line import/no-named-as-default -- correct import
@@ -39,6 +39,8 @@ interface Props {
   primaryButton?: Action;
   secondaryButton?: Action;
   onClose?: () => void;
+
+  LinkComponent?: LinkComponentType;
 }
 
 const autoUpdate: typeof floatingAutoUpdate = (ref, floating, update) =>
@@ -127,10 +129,22 @@ export const BaseTooltip: FC<Props> = (props) => {
   const buttons = [];
   if (props.secondaryButton)
     buttons.push(
-      <ActionButton key="secondary" action={props.secondaryButton} variant="secondary" />,
+      <ActionButton
+        key="secondary"
+        action={props.secondaryButton}
+        variant="secondary"
+        LinkComponent={props.LinkComponent}
+      />,
     );
   if (props.primaryButton)
-    buttons.push(<ActionButton key="primary" action={props.primaryButton} variant="primary" />);
+    buttons.push(
+      <ActionButton
+        key="primary"
+        action={props.primaryButton}
+        variant="primary"
+        LinkComponent={props.LinkComponent}
+      />,
+    );
 
   return (
     <div className="flows_basicsV2_tooltip_root">

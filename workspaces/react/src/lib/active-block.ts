@@ -6,6 +6,7 @@ import {
   createActiveBlockProxy,
   createTourComponentProps,
   type UserProperties,
+  type LinkComponentType,
 } from "@flows/shared";
 import { type RemoveBlock, type UpdateBlock, type RunningTour } from "../flows-context";
 import { sendActivate, sendEvent } from "./api";
@@ -15,11 +16,13 @@ export const blockToActiveBlock = ({
   removeBlock,
   updateBlock,
   userProperties,
+  LinkComponent,
 }: {
   block: Block;
   removeBlock: RemoveBlock;
   updateBlock: UpdateBlock;
   userProperties: UserProperties;
+  LinkComponent?: LinkComponentType;
 }): ActiveBlock | [] => {
   if (!block.componentType) return [];
 
@@ -46,6 +49,7 @@ export const blockToActiveBlock = ({
     removeBlock,
     exitNodeCb: ({ key, blockId }) => sendEvent({ name: "transition", blockId, propertyKey: key }),
     setStateMemory,
+    LinkComponent,
   });
 
   const activeBlock: ActiveBlock = {
@@ -61,9 +65,11 @@ export const blockToActiveBlock = ({
 export const tourBlockToActiveBlock = ({
   tour,
   userProperties,
+  LinkComponent,
 }: {
   tour: RunningTour;
   userProperties: UserProperties;
+  LinkComponent?: LinkComponentType;
 }): ActiveBlock | [] => {
   const activeStep = tour.activeStep;
   if (!activeStep?.componentType) return [];
@@ -76,6 +82,7 @@ export const tourBlockToActiveBlock = ({
     handleCancel: tour.cancel,
     handleContinue: tour.continue,
     handlePrevious: tour.previous,
+    LinkComponent,
   });
 
   const activeBlock: ActiveBlock = {

@@ -5,7 +5,7 @@ import {
   shift,
   useFloating,
 } from "@floating-ui/react-dom";
-import { type Action, log, type Placement } from "@flows/shared";
+import { type Action, type LinkComponentType, log, type Placement } from "@flows/shared";
 import { type FC, type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 // eslint-disable-next-line import/no-named-as-default -- correct import
 import DOMPurify from "dompurify";
@@ -29,6 +29,8 @@ interface Props {
   primaryButton?: Action;
   secondaryButton?: Action;
   onClose?: () => void;
+
+  LinkComponent?: LinkComponentType;
 }
 
 const CLOSE_TIMEOUT = 300;
@@ -111,10 +113,22 @@ export const BaseHint: FC<Props> = (props) => {
   const buttons = [];
   if (props.secondaryButton)
     buttons.push(
-      <ActionButton key="secondary" action={props.secondaryButton} variant="secondary" />,
+      <ActionButton
+        key="secondary"
+        action={props.secondaryButton}
+        variant="secondary"
+        LinkComponent={props.LinkComponent}
+      />,
     );
   if (props.primaryButton)
-    buttons.push(<ActionButton key="primary" action={props.primaryButton} variant="primary" />);
+    buttons.push(
+      <ActionButton
+        key="primary"
+        action={props.primaryButton}
+        variant="primary"
+        LinkComponent={props.LinkComponent}
+      />,
+    );
 
   return (
     <>

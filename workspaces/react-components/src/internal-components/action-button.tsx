@@ -1,4 +1,9 @@
-import { type ButtonVariant, type Action, type ButtonSize } from "@flows/shared";
+import {
+  type Action,
+  type ButtonSize,
+  type ButtonVariant,
+  type LinkComponentType,
+} from "@flows/shared";
 import { useCallback, type FC } from "react";
 import { Button } from "./button";
 
@@ -8,9 +13,17 @@ interface Props {
   size?: ButtonSize;
   onClick?: () => void;
   className?: string;
+  LinkComponent?: LinkComponentType;
 }
 
-export const ActionButton: FC<Props> = ({ action, variant, size, onClick, className }) => {
+export const ActionButton: FC<Props> = ({
+  action,
+  variant,
+  size,
+  onClick,
+  className,
+  LinkComponent,
+}) => {
   const handleClick = useCallback(() => {
     onClick?.();
     void action.callAction?.();
@@ -24,6 +37,7 @@ export const ActionButton: FC<Props> = ({ action, variant, size, onClick, classN
       target={action.openInNew ? "_blank" : undefined}
       onClick={handleClick}
       className={className}
+      LinkComponent={LinkComponent}
     >
       {action.label}
     </Button>
