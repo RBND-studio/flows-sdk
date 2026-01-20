@@ -47,6 +47,15 @@ test.describe("react", () => {
     await page.getByText("Go to another page", { exact: true }).click();
     await expect(page).toHaveURL(`/react.html?LinkComponent=true#/?search=test`);
   });
+  test("should support personalization", async ({ page }) => {
+    await mockBlocksEndpoint(page, [getBlock({ url: "/{{ email }}" })]);
+    await page.goto(`/react.html?LinkComponent=true`);
+    await expect(page.getByText("My modal", { exact: true })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Go to another page" })).toHaveAttribute(
+      "href",
+      "#/test@flows.sh",
+    );
+  });
   test("should fallback to <a> without link component", async ({ page }) => {
     await mockBlocksEndpoint(page, [getBlock({ url: "/another-page" })]);
     await page.goto(`/react.html`);
