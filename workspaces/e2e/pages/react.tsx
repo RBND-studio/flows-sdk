@@ -8,6 +8,7 @@ import {
   StateMemory as IStateMemory,
   useCurrentFloatingBlocks,
   Action as IAction,
+  LinkComponentType,
 } from "@flows/react";
 import { FC, StrictMode } from "react";
 import { createRoot } from "react-dom/client";
@@ -123,13 +124,11 @@ const AnotherPage: FC = () => {
   );
 };
 
-const LinkComponent: FC<LinkComponentProps> = ({ href, children, className, onClick }) => {
-  return (
-    <Link to={href} className={className} onClick={onClick}>
-      {children}
-    </Link>
-  );
-};
+const LinkComponent: LinkComponentType = ({ href, children, className, onClick }) => (
+  <Link to={href} className={className} onClick={onClick}>
+    {children}
+  </Link>
+);
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
