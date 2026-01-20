@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Link from "next/link";
 import "./globals.css";
 
 import { FlowsProvider } from "@flows/react";
@@ -45,6 +46,7 @@ export default function RootLayout({
             ...tourComponents,
             Banner: TourBanner,
           }}
+          LinkComponent={Link}
         >
           {children}
         </FlowsProvider>
