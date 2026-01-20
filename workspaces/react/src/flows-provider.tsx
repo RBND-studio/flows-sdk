@@ -83,7 +83,7 @@ export interface FlowsProviderProps {
   /**
    * Custom Link component used for client-side navigation when using components from `@flows/react-components`. Otherwise each link click will result in a full page reload.
    *
-   * Expects link component from your router, for example Link from "next/link". The LinkComponent should accept `href`, `className`, `onClick` and `children` props and render html <a> element.
+   * Expects link component from your router, for example Link from "next/link". The LinkComponent should accept `href`, `className`, `onClick` and `children` props and render html `<a>` element.
    *
    * The LinkComponent will be used for all URLs without domain and without "openInNew" (target="_blank").
    * - `/about` - internal link, use LinkComponent
