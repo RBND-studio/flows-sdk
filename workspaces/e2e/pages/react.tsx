@@ -8,20 +8,25 @@ import {
   StateMemory as IStateMemory,
   useCurrentFloatingBlocks,
   Action as IAction,
+  LinkComponentType,
 } from "@flows/react";
 import { FC, StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
+import { HashRouter, Link, Route, Routes } from "react-router";
+
 import * as components from "@flows/react-components";
 import * as tourComponents from "@flows/react-components/tour";
 import "@flows/react-components/index.css";
-import { LanguageOption } from "@flows/shared";
+import { LanguageOption, LinkComponentProps } from "@flows/shared";
 
 const apiUrl = new URLSearchParams(window.location.search).get("apiUrl") ?? undefined;
 const noUserId = new URLSearchParams(window.location.search).get("noUserId") === "true";
 const noCurrentBlocks =
   new URLSearchParams(window.location.search).get("noCurrentBlocks") === "true";
 const language = new URLSearchParams(window.location.search).get("language") as LanguageOption;
+const enableLinkComponent =
+  new URLSearchParams(window.location.search).get("LinkComponent") === "true";
 
 const Card: FC<ComponentProps<{ text: string }>> = (props) => (
   <div
@@ -87,7 +92,7 @@ const Action: FC<ComponentProps<{ title: string; action: IAction }>> = (props) =
   );
 };
 
-const App: FC = () => {
+const Home: FC = () => {
   const floatingBlocks = useCurrentFloatingBlocks();
 
   const handleChangeLocation = () => {
@@ -111,22 +116,42 @@ const App: FC = () => {
   );
 };
 
+const AnotherPage: FC = () => {
+  return (
+    <>
+      <h1>Another Page</h1>
+    </>
+  );
+};
+
+const LinkComponent: LinkComponentType = ({ href, children, className, onClick }) => (
+  <Link to={href} className={className} onClick={onClick}>
+    {children}
+  </Link>
+);
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <FlowsProvider
-      organizationId="orgId"
-      environment="prod"
-      userId={noUserId ? null : "testUserId"}
-      language={language}
-      userProperties={{
-        email: "test@flows.sh",
-        age: 10,
-      }}
-      apiUrl={apiUrl}
-      components={{ ...components, Card, BlockTrigger, StateMemory, Action }}
-      tourComponents={{ ...tourComponents, Card, Action }}
-    >
-      <App />
-    </FlowsProvider>
+    <HashRouter>
+      <FlowsProvider
+        organizationId="orgId"
+        environment="prod"
+        userId={noUserId ? null : "testUserId"}
+        language={language}
+        userProperties={{
+          email: "test@flows.sh",
+          age: 10,
+        }}
+        apiUrl={apiUrl}
+        components={{ ...components, Card, BlockTrigger, StateMemory, Action }}
+        tourComponents={{ ...tourComponents, Card, Action }}
+        LinkComponent={enableLinkComponent ? LinkComponent : undefined}
+      >
+        <Routes>
+          <Route index element={<Home />} />
+          <Route path="/another-page" element={<AnotherPage />} />
+        </Routes>
+      </FlowsProvider>
+    </HashRouter>
   </StrictMode>,
 );

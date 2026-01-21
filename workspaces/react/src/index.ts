@@ -5,6 +5,8 @@ export type {
   ComponentProps,
   FlowsProperties,
   LanguageOption,
+  LinkComponentProps,
+  LinkComponentType,
   Locale,
   StateMemory,
   TourComponentProps,
