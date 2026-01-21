@@ -1,0 +1,23 @@
+{
+  "name": "example-basic",
+  "type": "module",
+  "scripts": {
+    "dev": "vinxi dev",
+    "build": "vinxi build",
+    "start": "vinxi start",
+    "version": "vinxi version"
+  },
+  "dependencies": {
+    "@flows/js": "^1.19.2",
+    "@flows/js-components": "^2.2.3",
+    "@solidjs/meta": "^0.29.4",
+    "@solidjs/router": "^0.15.4",
+    "@solidjs/start": "^1.2.1",
+    "solid-element": "^1.9.1",
+    "solid-js": "^1.9.10",
+    "vinxi": "^0.5.10"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}

@@ -2,7 +2,8 @@
   <h2>{{ title }}</h2>
   <p>{{ body }}</p>
 
-  <button (click)="previous()">Previous</button>
+  <!-- In the first step the previous function is undefined -->
+  <button *ngIf="!!previous" (click)="previous()">Previous</button>
   <button (click)="continue()">Continue</button>
   <button (click)="cancel()">Cancel</button>
 </div>

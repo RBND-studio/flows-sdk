@@ -27,7 +27,7 @@ Note that to use these custom components you need to define them in your Flows o
 
 ### Flows slots
 
-The `<flows-slot>` element lets you render Flows UI elements dynamically within your application. You can add placeholder UI for empty states. You can add placeholder UI for empty states. See [app.vue](./app/app.vue) for an example.
+The `<flows-slot>` element lets you render Flows UI elements dynamically within your application. You can add placeholder UI for empty states. You can add placeholder UI for empty states. See [`app.vue`](./app/app.vue) for an example.
 
 ## Documentation
 

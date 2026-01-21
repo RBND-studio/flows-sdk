@@ -14,6 +14,7 @@ const props = defineProps<Props>();
     <h2>{{ props.title }}</h2>
     <p>{{ props.body }}</p>
 
+    <!--  In the first step the previous function is undefined -->
     <button v-if="!!props.previous" @click="props.previous">Previous</button>
     <button @click="props.continue">Continue</button>
     <button @click="props.cancel">Cancel</button>
