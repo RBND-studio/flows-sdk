@@ -1,5 +1,5 @@
-import { type FC, type ReactNode } from "react";
-import { type LanguageOption, type UserProperties } from "@flows/shared";
+import { useEffect, type FC, type ReactNode } from "react";
+import { type LanguageOption, type UserProperties, type LinkComponentType } from "@flows/shared";
 import { type TourComponents, type Components } from "./types";
 import { FlowsContext } from "./flows-context";
 import { useRunningTours } from "./hooks/use-running-tours";
@@ -80,6 +80,37 @@ export interface FlowsProviderProps {
    */
   onDebugShortcut?: (event: KeyboardEvent) => boolean;
 
+  /**
+   * Custom Link component used for client-side navigation when using components from `@flows/react-components`. Otherwise each link click will result in a full page reload.
+   *
+   * Expects link component from your router, for example Link from "next/link". The LinkComponent should accept `href`, `className`, `onClick` and `children` props and render html `<a>` element.
+   *
+   * The LinkComponent will be used for all URLs without domain and without "openInNew" (target="_blank").
+   * - `/about` - internal link, use LinkComponent
+   * - `?search=test` - internal link, use LinkComponent
+   * - `https://example.com` - external link, use standard `<a>` element
+   * - `/about` with `openInNew` - external link, use standard `<a>` element with `target="_blank"`
+   *
+   * @example
+   * ```tsx
+   * import { Link } from "react-router";
+   * import { LinkComponentType } from "@flows/react";
+   *
+   * // Adapt "react-router" Link to Flows LinkComponentType
+   * const LinkComponent: LinkComponentType = ({ href, children, className, onClick }) => (
+   *   <Link to={href} className={className} onClick={onClick}>
+   *     {children}
+   *   </Link>
+   * )
+   *
+   * // Pass the LinkComponent to FlowsProvider
+   * <FlowsProvider
+   *   LinkComponent={LinkComponent}
+   * />
+   * ```
+   */
+  LinkComponent?: LinkComponentType;
+
   children: ReactNode;
 }
 
@@ -110,6 +141,7 @@ const FlowsProviderInner: FC<Props> = ({
   language,
   debug,
   onDebugShortcut,
+  LinkComponent,
 }) => {
   globalConfig.apiUrl = apiUrl;
   globalConfig.environment = environment;
@@ -126,6 +158,10 @@ const FlowsProviderInner: FC<Props> = ({
   });
 
   const runningTours = useRunningTours({ blocks, removeBlock });
+
+  useEffect(() => {
+    window.__flows_LinkComponent = LinkComponent;
+  }, [LinkComponent]);
 
   return (
     <FlowsContext.Provider
