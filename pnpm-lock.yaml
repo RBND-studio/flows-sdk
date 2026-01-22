@@ -100,8 +100,8 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       es-toolkit:
-        specifier: ^1.43.0
-        version: 1.43.0
+        specifier: ^1.44.0
+        version: 1.44.0
       lit:
         specifier: ^3.3.2
         version: 3.3.2
@@ -183,8 +183,8 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       es-toolkit:
-        specifier: ^1.43.0
-        version: 1.43.0
+        specifier: ^1.44.0
+        version: 1.44.0
       react:
         specifier: '>=17.0.2'
         version: 19.2.3
@@ -272,8 +272,8 @@ importers:
   workspaces/shared:
     dependencies:
       es-toolkit:
-        specifier: ^1.43.0
-        version: 1.43.0
+        specifier: ^1.44.0
+        version: 1.44.0
     devDependencies:
       '@types/jest':
         specifier: ^30.0.0
@@ -2018,8 +2018,8 @@ packages:
     resolution: {integrity: sha512-w+5mJ3GuFL+NjVtJlvydShqE1eN3h3PbI7/5LAsYJP/2qtuMXjfL2LpHSRqo4b4eSF5K/DH1JXKUAHSB2UW50g==}
     engines: {node: '>= 0.4'}
 
-  es-toolkit@1.43.0:
-    resolution: {integrity: sha512-SKCT8AsWvYzBBuUqMk4NPwFlSdqLpJwmy6AP322ERn8W2YLIB6JBXnwMI2Qsh2gfphT3q7EKAxKb23cvFHFwKA==}
+  es-toolkit@1.44.0:
+    resolution: {integrity: sha512-6penXeZalaV88MM3cGkFZZfOoLGWshWWfdy0tWw/RlVVyhvMaWSBTOvXNeiW3e5FwdS5ePW0LGEu17zT139ktg==}
 
   esbuild@0.27.0:
     resolution: {integrity: sha512-jd0f4NHbD6cALCyGElNpGAOtWxSq46l9X/sWB0Nzd5er4Kz2YTm+Vl0qKFT9KUJvD8+fiO8AvoHhFvEatfVixA==}
@@ -4540,7 +4540,7 @@ snapshots:
   '@flows/react@1.18.0(react@19.2.3)':
     dependencies:
       clsx: 2.1.1
-      es-toolkit: 1.43.0
+      es-toolkit: 1.44.0
       react: 19.2.3
 
   '@humanwhocodes/config-array@0.13.0':
@@ -5973,7 +5973,7 @@ snapshots:
       is-date-object: 1.1.0
       is-symbol: 1.1.1
 
-  es-toolkit@1.43.0: {}
+  es-toolkit@1.44.0: {}
 
   esbuild@0.27.0:
     optionalDependencies:

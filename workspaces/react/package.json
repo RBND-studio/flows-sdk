@@ -60,6 +60,6 @@
   },
   "dependencies": {
     "clsx": "^2.1.1",
-    "es-toolkit": "^1.43.0"
+    "es-toolkit": "^1.44.0"
   }
 }
