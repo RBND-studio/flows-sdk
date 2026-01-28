@@ -79,14 +79,17 @@ const FloatingChecklist: FC<FloatingChecklistProps> = (props) => {
   const isCompleted = props.items.length === completedItems.length;
 
   const closeTimeoutRef = useRef<number>(null);
+  const handleClose = useCallback(() => {
+    setChecklistClosing(true);
+    closeTimeoutRef.current = window.setTimeout(() => {
+      setChecklistOpen(false);
+      setChecklistClosing(false);
+      closeTimeoutRef.current = null;
+    }, CLOSE_TIMEOUT);
+  }, []);
   const handleClick = useCallback(() => {
     if (checklistOpen && !checklistClosing) {
-      setChecklistClosing(true);
-      closeTimeoutRef.current = window.setTimeout(() => {
-        setChecklistOpen(false);
-        setChecklistClosing(false);
-        closeTimeoutRef.current = null;
-      }, CLOSE_TIMEOUT);
+      handleClose();
     } else {
       const closeTimeout = closeTimeoutRef.current;
       if (closeTimeout !== null) {
@@ -96,7 +99,10 @@ const FloatingChecklist: FC<FloatingChecklistProps> = (props) => {
       setChecklistClosing(false);
       setChecklistOpen(true);
     }
-  }, [checklistClosing, checklistOpen]);
+  }, [checklistClosing, checklistOpen, handleClose]);
+  const handleItemClick = useCallback(() => {
+    if (props.hideOnClick) handleClose();
+  }, [handleClose, props.hideOnClick]);
 
   return (
     <div className="flows_basicsV2_floating_checklist" data-position={position}>
@@ -159,6 +165,7 @@ const FloatingChecklist: FC<FloatingChecklistProps> = (props) => {
                   index={index}
                   expanded={expandedItemIndex === index}
                   toggleExpanded={toggleExpanded}
+                  onClick={handleItemClick}
                   {...item}
                 />
               ))}

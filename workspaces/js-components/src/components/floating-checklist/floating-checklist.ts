@@ -33,6 +33,9 @@ class FloatingChecklist extends LitElement implements FloatingChecklistProps {
   @property({ type: Boolean })
   defaultOpen = false;
 
+  @property({ type: Boolean })
+  hideOnClick = false;
+
   @property()
   popupTitle: string;
 
@@ -77,20 +80,28 @@ class FloatingChecklist extends LitElement implements FloatingChecklistProps {
   private accessor _expandedItemIndex: number | null = null;
 
   private _closeTimeout: number | null = null;
+  handleClose(): void {
+    this._checklistClosing = true;
+    this._closeTimeout = window.setTimeout(() => {
+      this._checklistOpen = false;
+      this._checklistClosing = false;
+      this._closeTimeout = null;
+    }, CLOSE_TIMEOUT);
+  }
+
   handleClick(): void {
     if (this._checklistOpen && !this._checklistClosing) {
-      this._checklistClosing = true;
-      this._closeTimeout = window.setTimeout(() => {
-        this._checklistOpen = false;
-        this._checklistClosing = false;
-        this._closeTimeout = null;
-      }, CLOSE_TIMEOUT);
+      this.handleClose();
     } else {
       this._checklistOpen = true;
       this._checklistClosing = false;
       window.clearTimeout(this._closeTimeout ?? undefined);
       this._closeTimeout = null;
     }
+  }
+
+  handleItemClick(): void {
+    if (this.hideOnClick) this.handleClose();
   }
 
   handleToggleExpanded(index: number): void {
@@ -216,6 +227,7 @@ class FloatingChecklist extends LitElement implements FloatingChecklistProps {
                             index,
                             expanded: this._expandedItemIndex === index,
                             toggleExpanded: this.handleToggleExpanded.bind(this),
+                            onClick: this.handleItemClick.bind(this),
                           }),
                       )}
                       ${this.skipButton

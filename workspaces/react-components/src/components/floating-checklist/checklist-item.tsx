@@ -11,9 +11,12 @@ type Props = ChecklistItemType & {
   index: number;
   expanded: boolean;
   toggleExpanded: (index: number) => void;
+  onClick: () => void;
 };
 
 export const ChecklistItem: FC<Props> = (props) => {
+  const { onClick } = props;
+
   const toggleExpanded = useCallback(() => {
     props.toggleExpanded(props.index);
   }, [props]);
@@ -34,7 +37,8 @@ export const ChecklistItem: FC<Props> = (props) => {
     if (props.completed.triggers.length === 1 && firstStateMemoryTrigger?.type === "manual") {
       props.completed.setValue(true);
     }
-  }, [props.completed]);
+    onClick();
+  }, [props.completed, onClick]);
 
   return (
     <div
@@ -91,7 +95,12 @@ export const ChecklistItem: FC<Props> = (props) => {
                 />
               ) : null}
               {props.secondaryButton ? (
-                <ActionButton action={props.secondaryButton} variant="secondary" size="small" />
+                <ActionButton
+                  action={props.secondaryButton}
+                  onClick={onClick}
+                  variant="secondary"
+                  size="small"
+                />
               ) : null}
             </div>
           ) : null}

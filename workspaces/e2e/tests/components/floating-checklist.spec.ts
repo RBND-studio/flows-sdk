@@ -42,11 +42,13 @@ const getBlock = ({
   position,
   items,
   defaultOpen,
+  hideOnClick,
 }: {
   propertyMeta?: PropertyMeta[];
   position?: ChecklistPosition;
   items?: { title: string; description: string }[];
   defaultOpen?: boolean;
+  hideOnClick?: boolean;
 }): Block => ({
   id: randomUUID(),
   workflowId: randomUUID(),
@@ -59,6 +61,7 @@ const getBlock = ({
     popupDescription: "This is a description",
     position,
     defaultOpen: defaultOpen ?? false,
+    hideOnClick: hideOnClick ?? false,
     items: items ?? [
       {
         title: "Item 1",
@@ -115,6 +118,29 @@ const run = (packageName: string) => {
     await page.getByText("Skip checklist", { exact: true }).click();
     await expect(checklistPopover).toBeHidden();
     await expect(checklistWidget).toBeHidden();
+  });
+  test(`${packageName} - should hide checklist on item button click if hideOnClick is true`, async ({
+    page,
+  }) => {
+    // Primary button
+    await mockBlocksEndpoint(page, [getBlock({ hideOnClick: true })]);
+    await page.goto(`/${packageName}.html`);
+    const checklistWidget = page.getByRole("button", { name: "Widget title" });
+    await expect(checklistWidget).toBeVisible();
+    const checklistPopover = page.locator(".flows_basicsV2_floating_checklist_popover");
+    await expect(checklistPopover).toBeHidden();
+    await checklistWidget.click();
+    await expect(checklistPopover).toBeVisible();
+    await page.getByRole("button", { name: "Item 1" }).click();
+    await page.getByRole("button", { name: "Start tour" }).click();
+    await expect(checklistPopover).toBeHidden();
+
+    // Secondary button
+    await page.goto(`/${packageName}.html`);
+    await page.getByRole("button", { name: "Widget title" }).click();
+    await page.getByRole("button", { name: "Item 1" }).click();
+    await page.getByRole("link", { name: "Learn more" }).click();
+    await expect(page.locator(".flows_basicsV2_floating_checklist_popover")).toBeHidden();
   });
 
   test(`${packageName} - shouldn't render skip button without action`, async ({ page }) => {
