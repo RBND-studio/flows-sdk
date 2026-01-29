@@ -134,6 +134,7 @@ const run = (packageName: string) => {
     await page.getByRole("button", { name: "Item 1" }).click();
     await page.getByRole("button", { name: "Start tour" }).click();
     await expect(checklistPopover).toBeHidden();
+    await expect(checklistWidget).toBeFocused();
 
     // Secondary button
     await page.goto(`/${packageName}.html`);

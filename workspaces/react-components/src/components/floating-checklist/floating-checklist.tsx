@@ -80,6 +80,8 @@ const FloatingChecklist: FC<FloatingChecklistProps> = (props) => {
 
   const closeTimeoutRef = useRef<number>(null);
   const handleClose = useCallback(() => {
+    window.clearTimeout(closeTimeoutRef.current ?? undefined);
+    closeTimeoutRef.current = null;
     setChecklistClosing(true);
     closeTimeoutRef.current = window.setTimeout(() => {
       setChecklistOpen(false);
@@ -91,17 +93,19 @@ const FloatingChecklist: FC<FloatingChecklistProps> = (props) => {
     if (checklistOpen && !checklistClosing) {
       handleClose();
     } else {
-      const closeTimeout = closeTimeoutRef.current;
-      if (closeTimeout !== null) {
-        window.clearTimeout(closeTimeout);
-        closeTimeoutRef.current = null;
-      }
+      window.clearTimeout(closeTimeoutRef.current ?? undefined);
+      closeTimeoutRef.current = null;
       setChecklistClosing(false);
       setChecklistOpen(true);
     }
   }, [checklistClosing, checklistOpen, handleClose]);
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const handleItemClick = useCallback(() => {
-    if (props.hideOnClick) handleClose();
+    if (props.hideOnClick) {
+      handleClose();
+      // Restore focus to the button after closing
+      buttonRef.current?.focus();
+    }
   }, [handleClose, props.hideOnClick]);
 
   return (
@@ -110,6 +114,7 @@ const FloatingChecklist: FC<FloatingChecklistProps> = (props) => {
         type="button"
         className="flows_basicsV2_floating_checklist_widget_button"
         onClick={handleClick}
+        ref={buttonRef}
       >
         <Rocket16 aria-hidden="true" />
         {props.widgetTitle}

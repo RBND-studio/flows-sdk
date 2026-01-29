@@ -9,7 +9,7 @@ import {
 // eslint-disable-next-line import/no-named-as-default -- correct import
 import DOMPurify from "dompurify";
 import { html, LitElement } from "lit";
-import { property, queryAll, state } from "lit/decorators.js";
+import { property, query, queryAll, state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import { Rocket16 } from "../../icons/rocket-16";
@@ -81,6 +81,8 @@ class FloatingChecklist extends LitElement implements FloatingChecklistProps {
 
   private _closeTimeout: number | null = null;
   handleClose(): void {
+    window.clearTimeout(this._closeTimeout ?? undefined);
+    this._closeTimeout = null;
     this._checklistClosing = true;
     this._closeTimeout = window.setTimeout(() => {
       this._checklistOpen = false;
@@ -100,8 +102,15 @@ class FloatingChecklist extends LitElement implements FloatingChecklistProps {
     }
   }
 
+  @query(".flows_basicsV2_floating_checklist_widget_button")
+  buttonElement?: HTMLButtonElement;
+
   handleItemClick(): void {
-    if (this.hideOnClick) this.handleClose();
+    if (this.hideOnClick) {
+      this.handleClose();
+      // Restore focus to the button after closing
+      this.buttonElement?.focus();
+    }
   }
 
   handleToggleExpanded(index: number): void {
