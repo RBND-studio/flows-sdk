@@ -1,7 +1,6 @@
 import {
   type ComponentProps,
   type FloatingChecklistProps as LibraryFloatingChecklistProps,
-  type ChecklistItem as ChecklistItemType,
 } from "@flows/shared";
 import { type FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 // eslint-disable-next-line import/no-named-as-default -- correct import
@@ -10,6 +9,7 @@ import { Text } from "../../internal-components/text";
 import { ActionButton } from "../../internal-components/action-button";
 import { Chevron16 } from "../../icons/chevron16";
 import { Rocket16 } from "../../icons/rocket16";
+import { usePrevious } from "../../hooks/use-previous";
 import { ChecklistItem } from "./checklist-item";
 import { ChecklistProgress } from "./checklist-progress";
 
@@ -49,28 +49,24 @@ const FloatingChecklist: FC<FloatingChecklistProps> = (props) => {
     window.sessionStorage.setItem(sessionStorageOpenKey, String(checklistOpen));
   }, [checklistOpen, firstRender, sessionStorageOpenKey]);
 
-  const prevItemsRef = useRef<ChecklistItemType[]>(null);
+  const prevItems = usePrevious(props.items);
   useEffect(() => {
-    const prevItems = prevItemsRef.current;
-    if (prevItems) {
-      props.items.forEach((item, index) => {
-        const prevItem = prevItems.at(index);
+    if (prevItems === undefined) return;
 
-        // Close the expanded item if it was completed
-        if (
-          prevItem &&
-          !prevItem.completed.value &&
-          item.completed.value &&
-          expandedItemIndex === index
-        ) {
-          setExpandedItemIndex(null);
-        }
-      });
-    }
+    props.items.forEach((item, index) => {
+      const prevItem = prevItems.at(index);
 
-    // Store previous items to compare on next update
-    prevItemsRef.current = props.items;
-  }, [expandedItemIndex, props.items]);
+      // Close the expanded item if it was completed
+      if (
+        prevItem &&
+        !prevItem.completed.value &&
+        item.completed.value &&
+        expandedItemIndex === index
+      ) {
+        setExpandedItemIndex(null);
+      }
+    });
+  }, [expandedItemIndex, prevItems, props.items]);
 
   const completedItems = useMemo(
     () => props.items.filter((item) => item.completed.value),
@@ -89,16 +85,20 @@ const FloatingChecklist: FC<FloatingChecklistProps> = (props) => {
       closeTimeoutRef.current = null;
     }, CLOSE_TIMEOUT);
   }, []);
+  const handleOpen = useCallback(() => {
+    window.clearTimeout(closeTimeoutRef.current ?? undefined);
+    closeTimeoutRef.current = null;
+    setChecklistClosing(false);
+    setChecklistOpen(true);
+  }, []);
   const handleClick = useCallback(() => {
     if (checklistOpen && !checklistClosing) {
       handleClose();
     } else {
-      window.clearTimeout(closeTimeoutRef.current ?? undefined);
-      closeTimeoutRef.current = null;
-      setChecklistClosing(false);
-      setChecklistOpen(true);
+      handleOpen();
     }
-  }, [checklistClosing, checklistOpen, handleClose]);
+  }, [checklistClosing, checklistOpen, handleClose, handleOpen]);
+
   const buttonRef = useRef<HTMLButtonElement>(null);
   const handleItemClick = useCallback(() => {
     if (props.hideOnClick) {
@@ -107,6 +107,21 @@ const FloatingChecklist: FC<FloatingChecklistProps> = (props) => {
       buttonRef.current?.focus();
     }
   }, [handleClose, props.hideOnClick]);
+
+  useEffect(() => {
+    if (!props.openOnItemCompleted || prevItems === undefined) return;
+
+    props.items.forEach((item, index) => {
+      const prevItem = prevItems.at(index);
+
+      // Open the checklist if an item was just completed
+      if (prevItem && !prevItem.completed.value && item.completed.value) {
+        const isManualTrigger =
+          item.completed.triggers.length === 1 && item.completed.triggers.at(0)?.type === "manual";
+        if (!isManualTrigger) handleOpen();
+      }
+    });
+  }, [handleOpen, prevItems, props.items, props.openOnItemCompleted]);
 
   return (
     <div className="flows_basicsV2_floating_checklist" data-position={position}>

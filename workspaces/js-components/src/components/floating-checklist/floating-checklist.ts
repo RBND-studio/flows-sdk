@@ -36,6 +36,9 @@ class FloatingChecklist extends LitElement implements FloatingChecklistProps {
   @property({ type: Boolean })
   hideOnClick = false;
 
+  @property({ type: Boolean })
+  openOnItemCompleted = false;
+
   @property()
   popupTitle: string;
 
@@ -90,15 +93,17 @@ class FloatingChecklist extends LitElement implements FloatingChecklistProps {
       this._closeTimeout = null;
     }, CLOSE_TIMEOUT);
   }
-
+  handleOpen(): void {
+    this._checklistOpen = true;
+    this._checklistClosing = false;
+    window.clearTimeout(this._closeTimeout ?? undefined);
+    this._closeTimeout = null;
+  }
   handleClick(): void {
     if (this._checklistOpen && !this._checklistClosing) {
       this.handleClose();
     } else {
-      this._checklistOpen = true;
-      this._checklistClosing = false;
-      window.clearTimeout(this._closeTimeout ?? undefined);
-      this._closeTimeout = null;
+      this.handleOpen();
     }
   }
 
@@ -145,15 +150,23 @@ class FloatingChecklist extends LitElement implements FloatingChecklistProps {
       if (this.prevItems !== null) {
         this.items.forEach((item, index) => {
           const prevItem = this.prevItems?.at(index);
+          if (!prevItem) return;
 
           // Close the expanded item if it was completed
           if (
-            prevItem &&
             !prevItem.completed.value &&
             item.completed.value &&
             this._expandedItemIndex === index
           ) {
             this._expandedItemIndex = null;
+          }
+
+          // Open the checklist if an item was just completed
+          if (this.openOnItemCompleted && !prevItem.completed.value && item.completed.value) {
+            const isManualTrigger =
+              item.completed.triggers.length === 1 &&
+              item.completed.triggers.at(0)?.type === "manual";
+            if (!isManualTrigger) this.handleOpen();
           }
         });
       }

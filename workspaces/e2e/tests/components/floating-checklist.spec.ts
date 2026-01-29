@@ -1,12 +1,15 @@
-import { Block, ChecklistPosition, PropertyMeta } from "@flows/shared";
-import test, { expect } from "@playwright/test";
+import { Block, BlockUpdatesPayload, ChecklistPosition, PropertyMeta } from "@flows/shared";
+import test, { expect, WebSocketRoute } from "@playwright/test";
 import { randomUUID } from "crypto";
 import { mockBlocksEndpoint } from "../utils";
 
+let ws: WebSocketRoute | null = null;
 test.beforeEach(async ({ page }) => {
   await page.routeWebSocket(
     (url) => url.pathname === "/ws/sdk/block-updates",
-    () => {},
+    (_ws) => {
+      ws = _ws;
+    },
   );
 });
 
@@ -43,12 +46,14 @@ const getBlock = ({
   items,
   defaultOpen,
   hideOnClick,
+  openOnItemCompleted,
 }: {
   propertyMeta?: PropertyMeta[];
   position?: ChecklistPosition;
   items?: { title: string; description: string }[];
   defaultOpen?: boolean;
   hideOnClick?: boolean;
+  openOnItemCompleted?: boolean;
 }): Block => ({
   id: randomUUID(),
   workflowId: randomUUID(),
@@ -62,6 +67,7 @@ const getBlock = ({
     position,
     defaultOpen: defaultOpen ?? false,
     hideOnClick: hideOnClick ?? false,
+    openOnItemCompleted: openOnItemCompleted ?? false,
     items: items ?? [
       {
         title: "Item 1",
@@ -79,6 +85,17 @@ const getBlock = ({
     secondaryButton,
     completedStateMemory,
   ],
+});
+
+const getModalBlock = (): Block => ({
+  id: randomUUID(),
+  workflowId: randomUUID(),
+  type: "component",
+  componentType: "BasicsV2Modal",
+  data: { title: "Hello world", body: "" },
+  exitNodes: [],
+  slottable: false,
+  propertyMeta: [],
 });
 
 const run = (packageName: string) => {
@@ -119,11 +136,11 @@ const run = (packageName: string) => {
     await expect(checklistPopover).toBeHidden();
     await expect(checklistWidget).toBeHidden();
   });
-  test(`${packageName} - should hide checklist on item button click if hideOnClick is true`, async ({
+  test(`${packageName} - should hide checklist on item primary button click if hideOnClick is true`, async ({
     page,
   }) => {
-    // Primary button
-    await mockBlocksEndpoint(page, [getBlock({ hideOnClick: true })]);
+    const block = getBlock({ hideOnClick: true, openOnItemCompleted: true });
+    await mockBlocksEndpoint(page, [block]);
     await page.goto(`/${packageName}.html`);
     const checklistWidget = page.getByRole("button", { name: "Widget title" });
     await expect(checklistWidget).toBeVisible();
@@ -136,12 +153,80 @@ const run = (packageName: string) => {
     await expect(checklistPopover).toBeHidden();
     await expect(checklistWidget).toBeFocused();
 
-    // Secondary button
+    const payload: BlockUpdatesPayload = {
+      exitedBlockIds: [],
+      updatedBlocks: [
+        {
+          ...block,
+          propertyMeta: [
+            skipButton,
+            completedButton,
+            primaryButton,
+            secondaryButton,
+            {
+              type: "state-memory",
+              key: "items.0.completed",
+              value: true,
+              triggers: [{ type: "manual" }],
+            },
+          ],
+        },
+      ],
+    };
+    ws?.send(JSON.stringify(payload));
+    // Checklist should stay closed with openOnItemCompleted and manual trigger
+    await expect(checklistPopover).toBeHidden();
+  });
+  test(`${packageName} - should hide checklist on item secondary button click if hideOnClick is true`, async ({
+    page,
+  }) => {
+    const modalBlock = getModalBlock();
+    const block = getBlock({
+      hideOnClick: true,
+      openOnItemCompleted: true,
+      propertyMeta: [
+        skipButton,
+        completedButton,
+        primaryButton,
+        secondaryButton,
+        {
+          type: "state-memory",
+          key: "items.0.completed",
+          value: false,
+          triggers: [{ type: "transition", blockId: modalBlock.id }],
+        },
+      ],
+    });
+    await mockBlocksEndpoint(page, [modalBlock, block]);
     await page.goto(`/${packageName}.html`);
     await page.getByRole("button", { name: "Widget title" }).click();
     await page.getByRole("button", { name: "Item 1" }).click();
     await page.getByRole("link", { name: "Learn more" }).click();
-    await expect(page.locator(".flows_basicsV2_floating_checklist_popover")).toBeHidden();
+    const checklistPopover = page.locator(".flows_basicsV2_floating_checklist_popover");
+    await expect(checklistPopover).toBeHidden();
+    const payload: BlockUpdatesPayload = {
+      exitedBlockIds: [],
+      updatedBlocks: [
+        {
+          ...block,
+          propertyMeta: [
+            skipButton,
+            completedButton,
+            primaryButton,
+            secondaryButton,
+            {
+              type: "state-memory",
+              key: "items.0.completed",
+              value: true,
+              triggers: [{ type: "transition", blockId: modalBlock.id }],
+            },
+          ],
+        },
+      ],
+    };
+    ws?.send(JSON.stringify(payload));
+    // Checklist should open on item completed with openOnItemCompleted
+    await expect(checklistPopover).toBeVisible();
   });
 
   test(`${packageName} - shouldn't render skip button without action`, async ({ page }) => {
