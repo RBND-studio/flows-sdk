@@ -27,7 +27,7 @@
     "minimist": "^1.2.8",
     "prettier": "^3.7.4"
   },
-  "packageManager": "pnpm@10.24.0",
+  "packageManager": "pnpm@10.28.2",
   "engines": {
     "node": "^24"
   }

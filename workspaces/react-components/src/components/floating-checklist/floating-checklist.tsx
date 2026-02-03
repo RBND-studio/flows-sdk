@@ -100,7 +100,7 @@ const FloatingChecklist: FC<FloatingChecklistProps> = (props) => {
   }, [checklistClosing, checklistOpen, handleClose, handleOpen]);
 
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const handleItemClick = useCallback(() => {
+  const handleNonManualButtonClick = useCallback(() => {
     if (props.hideOnClick) {
       handleClose();
       // Restore focus to the button after closing
@@ -116,9 +116,7 @@ const FloatingChecklist: FC<FloatingChecklistProps> = (props) => {
 
       // Open the checklist if an item was just completed
       if (prevItem && !prevItem.completed.value && item.completed.value) {
-        const isManualTrigger =
-          item.completed.triggers.length === 1 && item.completed.triggers.at(0)?.type === "manual";
-        if (!isManualTrigger) handleOpen();
+        handleOpen();
       }
     });
   }, [handleOpen, prevItems, props.items, props.openOnItemCompleted]);
@@ -185,7 +183,7 @@ const FloatingChecklist: FC<FloatingChecklistProps> = (props) => {
                   index={index}
                   expanded={expandedItemIndex === index}
                   toggleExpanded={toggleExpanded}
-                  onClick={handleItemClick}
+                  onNonManualButtonClick={handleNonManualButtonClick}
                   {...item}
                 />
               ))}

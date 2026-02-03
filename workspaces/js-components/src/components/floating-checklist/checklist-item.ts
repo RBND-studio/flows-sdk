@@ -1,4 +1,4 @@
-import { type ChecklistItem as ChecklistItemType } from "@flows/shared";
+import { type StateMemory, type ChecklistItem as ChecklistItemType } from "@flows/shared";
 // eslint-disable-next-line import/no-named-as-default -- correct import
 import DOMPurify from "dompurify";
 import { html, type TemplateResult } from "lit";
@@ -12,7 +12,13 @@ type Props = ChecklistItemType & {
   index: number;
   expanded: boolean;
   toggleExpanded: (index: number) => void;
-  onClick: () => void;
+  onNonManualButtonClick: () => void;
+};
+
+const getIsManualTrigger = (completed: StateMemory): boolean => {
+  const isManualTrigger =
+    completed.triggers.length === 1 && completed.triggers.at(0)?.type === "manual";
+  return isManualTrigger;
 };
 
 export const ChecklistItem = (props: Props): TemplateResult => {
@@ -20,13 +26,18 @@ export const ChecklistItem = (props: Props): TemplateResult => {
     props.toggleExpanded(props.index);
   };
 
+  const handleButtonClick = (): void => {
+    if (!getIsManualTrigger(props.completed)) {
+      props.onNonManualButtonClick();
+    }
+  };
+
   const handlePrimaryButtonClick = (): void => {
-    const firstStateMemoryTrigger = props.completed.triggers.at(0);
     // Complete the item if it's manual trigger only
-    if (props.completed.triggers.length === 1 && firstStateMemoryTrigger?.type === "manual") {
+    if (getIsManualTrigger(props.completed)) {
       props.completed.setValue(true);
     }
-    props.onClick();
+    handleButtonClick();
   };
 
   return html`
@@ -86,7 +97,7 @@ export const ChecklistItem = (props: Props): TemplateResult => {
                       action: props.secondaryButton,
                       variant: "secondary",
                       size: "small",
-                      onClick: props.onClick,
+                      onClick: handleButtonClick,
                     })
                   : null}
               </div>`

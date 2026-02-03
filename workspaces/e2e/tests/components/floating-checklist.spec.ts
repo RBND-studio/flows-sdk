@@ -136,10 +136,10 @@ const run = (packageName: string) => {
     await expect(checklistPopover).toBeHidden();
     await expect(checklistWidget).toBeHidden();
   });
-  test(`${packageName} - should hide checklist on item primary button click if hideOnClick is true`, async ({
+  test(`${packageName} - should not hide checklist on item primary button click with manual memory`, async ({
     page,
   }) => {
-    const block = getBlock({ hideOnClick: true, openOnItemCompleted: true });
+    const block = getBlock({ hideOnClick: true });
     await mockBlocksEndpoint(page, [block]);
     await page.goto(`/${packageName}.html`);
     const checklistWidget = page.getByRole("button", { name: "Widget title" });
@@ -150,32 +150,8 @@ const run = (packageName: string) => {
     await expect(checklistPopover).toBeVisible();
     await page.getByRole("button", { name: "Item 1" }).click();
     await page.getByRole("button", { name: "Start tour" }).click();
-    await expect(checklistPopover).toBeHidden();
-    await expect(checklistWidget).toBeFocused();
-
-    const payload: BlockUpdatesPayload = {
-      exitedBlockIds: [],
-      updatedBlocks: [
-        {
-          ...block,
-          propertyMeta: [
-            skipButton,
-            completedButton,
-            primaryButton,
-            secondaryButton,
-            {
-              type: "state-memory",
-              key: "items.0.completed",
-              value: true,
-              triggers: [{ type: "manual" }],
-            },
-          ],
-        },
-      ],
-    };
-    ws?.send(JSON.stringify(payload));
-    // Checklist should stay closed with openOnItemCompleted and manual trigger
-    await expect(checklistPopover).toBeHidden();
+    await page.waitForTimeout(500); // Wait for the checklist to potentially close
+    await expect(checklistPopover).toBeVisible();
   });
   test(`${packageName} - should hide checklist on item secondary button click if hideOnClick is true`, async ({
     page,
@@ -199,11 +175,14 @@ const run = (packageName: string) => {
     });
     await mockBlocksEndpoint(page, [modalBlock, block]);
     await page.goto(`/${packageName}.html`);
-    await page.getByRole("button", { name: "Widget title" }).click();
+    const checklistWidget = page.getByRole("button", { name: "Widget title" });
+    await checklistWidget.click();
     await page.getByRole("button", { name: "Item 1" }).click();
     await page.getByRole("link", { name: "Learn more" }).click();
     const checklistPopover = page.locator(".flows_basicsV2_floating_checklist_popover");
     await expect(checklistPopover).toBeHidden();
+    await expect(checklistWidget).toBeFocused();
+
     const payload: BlockUpdatesPayload = {
       exitedBlockIds: [],
       updatedBlocks: [

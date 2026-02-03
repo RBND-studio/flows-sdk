@@ -110,7 +110,7 @@ class FloatingChecklist extends LitElement implements FloatingChecklistProps {
   @query(".flows_basicsV2_floating_checklist_widget_button")
   buttonElement?: HTMLButtonElement;
 
-  handleItemClick(): void {
+  handleNonManualButtonClick(): void {
     if (this.hideOnClick) {
       this.handleClose();
       // Restore focus to the button after closing
@@ -163,10 +163,7 @@ class FloatingChecklist extends LitElement implements FloatingChecklistProps {
 
           // Open the checklist if an item was just completed
           if (this.openOnItemCompleted && !prevItem.completed.value && item.completed.value) {
-            const isManualTrigger =
-              item.completed.triggers.length === 1 &&
-              item.completed.triggers.at(0)?.type === "manual";
-            if (!isManualTrigger) this.handleOpen();
+            this.handleOpen();
           }
         });
       }
@@ -249,7 +246,7 @@ class FloatingChecklist extends LitElement implements FloatingChecklistProps {
                             index,
                             expanded: this._expandedItemIndex === index,
                             toggleExpanded: this.handleToggleExpanded.bind(this),
-                            onClick: this.handleItemClick.bind(this),
+                            onNonManualButtonClick: this.handleNonManualButtonClick.bind(this),
                           }),
                       )}
                       ${this.skipButton
