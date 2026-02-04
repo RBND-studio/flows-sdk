@@ -24,11 +24,13 @@ on:
           - js
           - js-components
 
+permissions:
+  id-token: write # Required for OIDC
+  contents: write # Required to create GH releases
+
 jobs:
   npm-publish:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - uses: actions/create-github-app-token@v2
         id: app-token
@@ -44,10 +46,10 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 24
+          registry-url: "https://registry.npmjs.org"
           cache: "pnpm"
       - run: git remote set-url origin https://flows-bot[bot]:${{ steps.app-token.outputs.token }}@github.com/${{ github.repository }}
       - run: git config user.name "flows-bot[bot]"
       - run: git config user.email "170794745+flows-bot[bot]@users.noreply.github.com"
-      - run: npm config set //registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}
       - run: pnpm install
       - run: node scripts/release.js --release=${{ github.event.inputs.type }} --package=${{ github.event.inputs.package }}
