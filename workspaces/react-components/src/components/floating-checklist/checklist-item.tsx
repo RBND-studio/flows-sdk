@@ -1,4 +1,4 @@
-import { type ChecklistItem as ChecklistItemType } from "@flows/shared";
+import { type StateMemory, type ChecklistItem as ChecklistItemType } from "@flows/shared";
 import { type FC, type ReactNode, useCallback, useEffect, useRef } from "react";
 // eslint-disable-next-line import/no-named-as-default -- correct import
 import DOMPurify from "dompurify";
@@ -11,12 +11,21 @@ type Props = ChecklistItemType & {
   index: number;
   expanded: boolean;
   toggleExpanded: (index: number) => void;
+  onNonManualButtonClick: () => void;
+};
+
+const getIsManualTrigger = (completed: StateMemory): boolean => {
+  const isManualTrigger =
+    completed.triggers.length === 1 && completed.triggers.at(0)?.type === "manual";
+  return isManualTrigger;
 };
 
 export const ChecklistItem: FC<Props> = (props) => {
-  const toggleExpanded = useCallback(() => {
-    props.toggleExpanded(props.index);
-  }, [props]);
+  const { onNonManualButtonClick, toggleExpanded } = props;
+
+  const handleToggleExpanded = useCallback(() => {
+    toggleExpanded(props.index);
+  }, [props.index, toggleExpanded]);
 
   const expandRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -28,13 +37,19 @@ export const ChecklistItem: FC<Props> = (props) => {
     }
   }, []);
 
+  const handleButtonClick = useCallback(() => {
+    if (!getIsManualTrigger(props.completed)) {
+      onNonManualButtonClick();
+    }
+  }, [onNonManualButtonClick, props.completed]);
+
   const handlePrimaryButtonClick = useCallback(() => {
-    const firstStateMemoryTrigger = props.completed.triggers.at(0);
     // Complete the item if it's manual trigger only
-    if (props.completed.triggers.length === 1 && firstStateMemoryTrigger?.type === "manual") {
+    if (getIsManualTrigger(props.completed)) {
       props.completed.setValue(true);
     }
-  }, [props.completed]);
+    handleButtonClick();
+  }, [handleButtonClick, props.completed]);
 
   return (
     <div
@@ -44,7 +59,7 @@ export const ChecklistItem: FC<Props> = (props) => {
       <button
         type="button"
         className="flows_basicsV2_floating_checklist_item_expand_button"
-        onClick={toggleExpanded}
+        onClick={handleToggleExpanded}
         data-expanded={props.expanded ? "true" : "false"}
       >
         <Indicator completed={props.completed.value} />
@@ -91,7 +106,12 @@ export const ChecklistItem: FC<Props> = (props) => {
                 />
               ) : null}
               {props.secondaryButton ? (
-                <ActionButton action={props.secondaryButton} variant="secondary" size="small" />
+                <ActionButton
+                  action={props.secondaryButton}
+                  onClick={onNonManualButtonClick}
+                  variant="secondary"
+                  size="small"
+                />
               ) : null}
             </div>
           ) : null}

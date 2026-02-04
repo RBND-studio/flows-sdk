@@ -172,6 +172,8 @@ export interface FloatingChecklistProps {
 
   position?: ChecklistPosition;
   defaultOpen: boolean;
+  hideOnClick: boolean;
+  openOnItemCompleted: boolean;
   skipButton?: Action;
 
   complete: () => void;

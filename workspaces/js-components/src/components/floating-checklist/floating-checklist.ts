@@ -9,7 +9,7 @@ import {
 // eslint-disable-next-line import/no-named-as-default -- correct import
 import DOMPurify from "dompurify";
 import { html, LitElement } from "lit";
-import { property, queryAll, state } from "lit/decorators.js";
+import { property, query, queryAll, state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import { Rocket16 } from "../../icons/rocket-16";
@@ -32,6 +32,12 @@ class FloatingChecklist extends LitElement implements FloatingChecklistProps {
 
   @property({ type: Boolean })
   defaultOpen = false;
+
+  @property({ type: Boolean })
+  hideOnClick = false;
+
+  @property({ type: Boolean })
+  openOnItemCompleted = false;
 
   @property()
   popupTitle: string;
@@ -77,19 +83,38 @@ class FloatingChecklist extends LitElement implements FloatingChecklistProps {
   private accessor _expandedItemIndex: number | null = null;
 
   private _closeTimeout: number | null = null;
+  handleClose(): void {
+    window.clearTimeout(this._closeTimeout ?? undefined);
+    this._closeTimeout = null;
+    this._checklistClosing = true;
+    this._closeTimeout = window.setTimeout(() => {
+      this._checklistOpen = false;
+      this._checklistClosing = false;
+      this._closeTimeout = null;
+    }, CLOSE_TIMEOUT);
+  }
+  handleOpen(): void {
+    this._checklistOpen = true;
+    this._checklistClosing = false;
+    window.clearTimeout(this._closeTimeout ?? undefined);
+    this._closeTimeout = null;
+  }
   handleClick(): void {
     if (this._checklistOpen && !this._checklistClosing) {
-      this._checklistClosing = true;
-      this._closeTimeout = window.setTimeout(() => {
-        this._checklistOpen = false;
-        this._checklistClosing = false;
-        this._closeTimeout = null;
-      }, CLOSE_TIMEOUT);
+      this.handleClose();
     } else {
-      this._checklistOpen = true;
-      this._checklistClosing = false;
-      window.clearTimeout(this._closeTimeout ?? undefined);
-      this._closeTimeout = null;
+      this.handleOpen();
+    }
+  }
+
+  @query(".flows_basicsV2_floating_checklist_widget_button")
+  buttonElement?: HTMLButtonElement;
+
+  handleNonManualButtonClick(): void {
+    if (this.hideOnClick) {
+      this.handleClose();
+      // Restore focus to the button after closing
+      this.buttonElement?.focus();
     }
   }
 
@@ -125,15 +150,20 @@ class FloatingChecklist extends LitElement implements FloatingChecklistProps {
       if (this.prevItems !== null) {
         this.items.forEach((item, index) => {
           const prevItem = this.prevItems?.at(index);
+          if (!prevItem) return;
 
           // Close the expanded item if it was completed
           if (
-            prevItem &&
             !prevItem.completed.value &&
             item.completed.value &&
             this._expandedItemIndex === index
           ) {
             this._expandedItemIndex = null;
+          }
+
+          // Open the checklist if an item was just completed
+          if (this.openOnItemCompleted && !prevItem.completed.value && item.completed.value) {
+            this.handleOpen();
           }
         });
       }
@@ -216,6 +246,7 @@ class FloatingChecklist extends LitElement implements FloatingChecklistProps {
                             index,
                             expanded: this._expandedItemIndex === index,
                             toggleExpanded: this.handleToggleExpanded.bind(this),
+                            onNonManualButtonClick: this.handleNonManualButtonClick.bind(this),
                           }),
                       )}
                       ${this.skipButton
