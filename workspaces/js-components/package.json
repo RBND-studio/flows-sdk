@@ -38,7 +38,7 @@
     "prepare": "pnpm build"
   },
   "dependencies": {
-    "@floating-ui/dom": "^1.7.4",
+    "@floating-ui/dom": "^1.7.5",
     "clsx": "^2.1.1",
     "dompurify": "^3.3.1",
     "lit": "^3.3.2"
