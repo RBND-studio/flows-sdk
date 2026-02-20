@@ -1,9 +1,10 @@
 import { log } from "./log";
-import { type BlockUpdatesPayload, type Block, type TourStep, type ActiveBlock } from "./types";
+import { type Block, type TourStep, type ActiveBlock } from "./types";
+import { type BlockUpdatesMessage } from "./websocket-message";
 
 export const applyUpdateMessageToBlocksState = (
   blocks: Block[],
-  message: BlockUpdatesPayload,
+  message: BlockUpdatesMessage,
 ): Block[] => {
   const exitedOrUpdatedBlockIdsSet = new Set([
     ...message.exitedBlockIds,

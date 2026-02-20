@@ -1,4 +1,4 @@
-import { type BlockUpdatesPayload, type Block, logSlottableBlocksError } from "@flows/shared";
+import { type Block, logSlottableBlocksError, type BlockUpdatesMessage } from "@flows/shared";
 import { computed, effect, signal } from "@preact/signals-core";
 import { type FlowsOptions } from "./types/configuration";
 
@@ -11,7 +11,7 @@ export const pathname = signal<string>();
 // The blocks value is null until the SDK is initialized
 export const blocksState = signal<Block[] | null>(null);
 export const blocks = computed(() => blocksState.value ?? []);
-export const pendingMessages = signal<BlockUpdatesPayload[]>([]);
+export const pendingMessages = signal<BlockUpdatesMessage[]>([]);
 
 // Log error about slottable blocks without slotId
 effect(() => {
