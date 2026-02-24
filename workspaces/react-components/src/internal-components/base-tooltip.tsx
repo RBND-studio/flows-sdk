@@ -90,17 +90,17 @@ export const BaseTooltip: FC<Props> = (props) => {
   }, [placement]);
 
   useEffect(() => {
-    if (!props.targetElement) {
-      log.error("Cannot render Tooltip without target element");
-    }
-  }, [props.targetElement]);
-
-  useEffect(() => {
     reference?.setAttribute(TARGET_ELEMENT_DATA_ATTRIBUTE, "true");
     return () => {
       reference?.removeAttribute(TARGET_ELEMENT_DATA_ATTRIBUTE);
     };
   }, [reference]);
+
+  useEffect(() => {
+    if (!props.targetElement) {
+      log.error("Cannot render Tooltip without target element");
+    }
+  }, [props.targetElement]);
 
   if (!reference) return null;
   // Avoid rendering on client render to prevent hydration issues

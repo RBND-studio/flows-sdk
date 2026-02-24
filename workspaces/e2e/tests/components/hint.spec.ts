@@ -112,6 +112,26 @@ const run = (packageName: string) => {
       await page.locator(".flows_basicsV2_hint_hotspot").click();
       await expect(page.locator(".flows_basicsV2_tooltip_footer")).toBeHidden();
     });
+    test(`${packageName} - should add data attribute to target element`, async ({ page }) => {
+      await mockBlocksEndpoint(page, [
+        getBlock({
+          propertyMeta: [
+            {
+              key: "primaryButton",
+              type: "action",
+              value: { label: "Continue", exitNode: "continue" },
+            },
+          ],
+        }),
+      ]);
+      await page.goto(`/${packageName}.html`);
+      await expect(page.locator(".flows_basicsV2_hint_hotspot")).toBeVisible();
+      await expect(page.locator("h1")).toHaveAttribute("data-flows-hint-target");
+      await page.locator(".flows_basicsV2_hint_hotspot").click();
+      await page.getByText("Continue", { exact: true }).click();
+      await expect(page.locator(".flows_basicsV2_hint_hotspot")).toBeHidden();
+      await expect(page.locator("h1")).not.toHaveAttribute("data-flows-hint-target");
+    });
   });
 
   test.describe("tour", () => {

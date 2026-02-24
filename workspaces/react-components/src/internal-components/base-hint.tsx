@@ -34,6 +34,7 @@ interface Props {
 const CLOSE_TIMEOUT = 300;
 const BOUNDARY_PADDING = 8;
 const DISTANCE = 4;
+const TARGET_ELEMENT_DATA_ATTRIBUTE = "data-flows-hint-target";
 
 const autoUpdate: typeof floatingAutoUpdate = (ref, floating, update) =>
   floatingAutoUpdate(ref, floating, update, { animationFrame: true });
@@ -97,6 +98,13 @@ export const BaseHint: FC<Props> = (props) => {
       window.removeEventListener("click", handleWindowClick);
     };
   }, [handleClose, dotRef, tooltipRef]);
+
+  useEffect(() => {
+    reference?.setAttribute(TARGET_ELEMENT_DATA_ATTRIBUTE, "true");
+    return () => {
+      reference?.removeAttribute(TARGET_ELEMENT_DATA_ATTRIBUTE);
+    };
+  }, [reference]);
 
   useEffect(() => {
     if (!props.targetElement) {
