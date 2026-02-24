@@ -20,6 +20,8 @@ import { ActionButton } from "./action-button";
 import { IconButton } from "./icon-button";
 import { Text } from "./text";
 
+const TARGET_ELEMENT_DATA_ATTRIBUTE = "data-flows-tooltip-target";
+
 class BaseTooltip extends LitElement {
   @property()
   title: string;
@@ -60,11 +62,20 @@ class BaseTooltip extends LitElement {
     super.connectedCallback();
 
     this.observerCleanup = observeQuerySelector(this.targetElement, (el) => {
+      const isEqual = this._reference === el;
+      if (isEqual) return;
+
+      const oldReference = this._reference;
+      oldReference?.removeAttribute(TARGET_ELEMENT_DATA_ATTRIBUTE);
+
       this._reference = el;
+      this._reference?.setAttribute(TARGET_ELEMENT_DATA_ATTRIBUTE, "true");
     });
   }
   disconnectedCallback(): void {
     super.disconnectedCallback();
+
+    this._reference?.removeAttribute(TARGET_ELEMENT_DATA_ATTRIBUTE);
 
     this.autoUpdateCleanup?.();
     this.observerCleanup?.();
@@ -114,7 +125,13 @@ class BaseTooltip extends LitElement {
 
     return html`
       <div class="flows_basicsV2_tooltip_root">
-        ${this.overlay ? html`<div class="flows_basicsV2_tooltip_overlay"></div>` : null}
+        ${
+          this.overlay
+            ? html`
+                <div class="flows_basicsV2_tooltip_overlay"></div>
+              `
+            : null
+        }
         <div class="flows_basicsV2_tooltip_tooltip">
           ${Text({
             variant: "title",
@@ -131,24 +148,30 @@ class BaseTooltip extends LitElement {
               }),
             ),
           })}
-          ${this.dots || Boolean(buttons.length)
-            ? html`<div class="flows_basicsV2_tooltip_footer">
+          ${
+            this.dots || Boolean(buttons.length)
+              ? html`<div class="flows_basicsV2_tooltip_footer">
                 ${this.dots}
-                ${buttons.length
-                  ? html`<div className="flows_basicsV2_tooltip_buttons_wrapper">
+                ${
+                  buttons.length
+                    ? html`<div className="flows_basicsV2_tooltip_buttons_wrapper">
                       <div className="flows_basicsV2_tooltip_buttons">${buttons}</div>
                     </div>`
-                  : null}
+                    : null
+                }
               </div>`
-            : null}
-          ${this.onClose
-            ? IconButton({
-                "aria-label": "Close",
-                className: "flows_basicsV2_tooltip_close",
-                children: Close16(),
-                onClick: this.onClose,
-              })
-            : null}
+              : null
+          }
+          ${
+            this.onClose
+              ? IconButton({
+                  "aria-label": "Close",
+                  className: "flows_basicsV2_tooltip_close",
+                  children: Close16(),
+                  onClick: this.onClose,
+                })
+              : null
+          }
 
           <div
             class=${clsx("flows_basicsV2_tooltip_arrow", "flows_basicsV2_tooltip_arrow-bottom")}

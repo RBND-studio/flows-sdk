@@ -27,6 +27,7 @@ const ARROW_SIZE = 6;
 const OFFSET_DISTANCE = DISTANCE + ARROW_SIZE;
 const BOUNDARY_PADDING = 8;
 const ARROW_EDGE_PADDING = 8;
+const TARGET_ELEMENT_DATA_ATTRIBUTE = "data-flows-tooltip-target";
 
 interface Props {
   title: string;
@@ -87,6 +88,13 @@ export const BaseTooltip: FC<Props> = (props) => {
     if (placement.includes("left")) return "right";
     return "left";
   }, [placement]);
+
+  useEffect(() => {
+    reference?.setAttribute(TARGET_ELEMENT_DATA_ATTRIBUTE, "true");
+    return () => {
+      reference?.removeAttribute(TARGET_ELEMENT_DATA_ATTRIBUTE);
+    };
+  }, [reference]);
 
   useEffect(() => {
     if (!props.targetElement) {
