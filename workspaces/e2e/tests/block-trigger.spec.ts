@@ -1,6 +1,7 @@
 import { Block } from "@flows/shared";
 import test, { expect } from "@playwright/test";
 import { randomUUID } from "crypto";
+import { mockBlocksEndpoint } from "./utils";
 
 test.beforeEach(async ({ page }) => {
   await page.routeWebSocket(
@@ -32,9 +33,7 @@ const getBlock = (): Block => ({
 
 const run = (packageName: string) => {
   test(`${packageName} - shouldn't pass trigger with empty array`, async ({ page }) => {
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [getBlock()] } });
-    });
+    await mockBlocksEndpoint(page, [getBlock()]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Block Trigger title", { exact: true })).toBeVisible();
     let reqWasSent = false;
@@ -47,9 +46,7 @@ const run = (packageName: string) => {
     expect(reqWasSent).toBe(false);
   });
   test(`${packageName} - should pass trigger with exit nodes`, async ({ page }) => {
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [getBlock()] } });
-    });
+    await mockBlocksEndpoint(page, [getBlock()]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Block Trigger title", { exact: true })).toBeVisible();
 
@@ -69,9 +66,7 @@ const run = (packageName: string) => {
     await expect(page.getByText("Block Trigger title", { exact: true })).toBeVisible();
   });
   test(`${packageName} - should pass trigger to array item`, async ({ page }) => {
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [getBlock()] } });
-    });
+    await mockBlocksEndpoint(page, [getBlock()]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Block Trigger title", { exact: true })).toBeVisible();
 

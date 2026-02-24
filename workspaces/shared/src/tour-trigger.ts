@@ -72,7 +72,7 @@ export const tourTriggerMatch = (block: Block, context: Context): boolean => {
     }
 
     log.error(
-      `Aborting tour start due to an unrecognized tour trigger type: ${type}. Try updating the SDK or changing the tour trigger configuration.`,
+      `Aborting tour start due to an unrecognized tour trigger type: ${type as string}. Try updating the SDK or changing the tour trigger configuration.`,
     );
     // When the expression isn't recognized, we treat it as non-matching and abort the tour start
     return false;

@@ -1,6 +1,7 @@
 import { Block } from "@flows/shared";
 import test, { expect } from "@playwright/test";
 import { randomUUID } from "crypto";
+import { mockBlocksEndpoint } from "./utils";
 
 const getBlock = ({ componentType }: { componentType: string }): Block => ({
   id: randomUUID(),
@@ -42,9 +43,7 @@ const run = (packageName: string) => {
   test(`${packageName} - shouldn't call activate without matching component`, async ({ page }) => {
     const wrongCmpBlock = getBlock({ componentType: "WrongCmp" });
     const modalBlock = getBlock({ componentType: "BasicsV2Modal" });
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [wrongCmpBlock, modalBlock] } });
-    });
+    await mockBlocksEndpoint(page, [wrongCmpBlock, modalBlock]);
     await page.goto(`/${packageName}.html?noCurrentBlocks=true`);
     let wrongCmpReqWasSent = false;
     page.on("request", (req) => {
@@ -67,13 +66,11 @@ const run = (packageName: string) => {
 
     await expect(page.locator(".flows_basicsV2_modal_modal")).toBeVisible();
     await modalReqPromise;
-    await expect(wrongCmpReqWasSent).toBe(false);
+    expect(wrongCmpReqWasSent).toBe(false);
   });
   test(`${packageName} - should call activate for workflow block`, async ({ page }) => {
     const block = getBlock({ componentType: "BasicsV2Modal" });
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [block] } });
-    });
+    await mockBlocksEndpoint(page, [block]);
     const reqPromise = page.waitForRequest((req) => {
       const body = req.postDataJSON();
       const headers = req.headers();
@@ -92,9 +89,7 @@ const run = (packageName: string) => {
   });
   test(`${packageName} - should call activate for tour block`, async ({ page }) => {
     const block = getTour({ componentType: "BasicsV2Modal" });
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [block] } });
-    });
+    await mockBlocksEndpoint(page, [block]);
     const reqPromise = page.waitForRequest((req) => {
       const body = req.postDataJSON();
       const headers = req.headers();

@@ -2,5 +2,5 @@ src
 tsconfig*
 tsup.config.ts
 jest.config.js
-.eslintrc.js
-.eslintignore
+.oxlintrc.json
+tsconfig.tsbuildinfo

@@ -5,7 +5,6 @@
   "sideEffects": false,
   "main": "src/index.ts",
   "scripts": {
-    "lint": "eslint src",
     "tsc": "tsc -p tsconfig.json",
     "test": "jest",
     "test:watch": "jest --watch"

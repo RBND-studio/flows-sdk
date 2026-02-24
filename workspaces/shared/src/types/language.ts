@@ -1,3 +1,5 @@
+// cspell:words Tfng Vaii
+
 export type LanguageOption = "disabled" | "automatic" | Locale;
 
 /**

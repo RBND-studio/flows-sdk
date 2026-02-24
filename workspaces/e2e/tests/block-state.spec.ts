@@ -1,6 +1,7 @@
 import { Block } from "@flows/shared";
 import { expect, test } from "@playwright/test";
 import { randomUUID } from "crypto";
+import { mockBlocksEndpoint } from "./utils";
 
 test.beforeEach(async ({ page }) => {
   await page.routeWebSocket(
@@ -49,9 +50,7 @@ const getBlocks = (): Block[] => {
 const run = (packageName: string) => {
   test(`${packageName} - should pass block state to the component props`, async ({ page }) => {
     const blocks = getBlocks();
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks } });
-    });
+    await mockBlocksEndpoint(page, blocks);
     await page.goto(`/${packageName}.html`);
     await expect(page.locator(".current-blocks")).toHaveText(
       JSON.stringify([

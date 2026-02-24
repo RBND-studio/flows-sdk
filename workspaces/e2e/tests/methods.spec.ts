@@ -1,4 +1,5 @@
 import test from "@playwright/test";
+import { mockBlocksEndpoint } from "./utils";
 
 test.beforeEach(async ({ page }) => {
   await page.routeWebSocket(
@@ -6,9 +7,7 @@ test.beforeEach(async ({ page }) => {
     () => {},
   );
 
-  await page.route("**/v2/sdk/blocks", (route) => {
-    route.fulfill({ json: { blocks: [] } });
-  });
+  await mockBlocksEndpoint(page, []);
 });
 
 const run = (packageName: string) => {

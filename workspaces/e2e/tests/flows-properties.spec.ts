@@ -1,6 +1,7 @@
 import { Block } from "@flows/shared";
 import test, { expect } from "@playwright/test";
 import { randomUUID } from "crypto";
+import { mockBlocksEndpoint } from "./utils";
 
 test.beforeEach(async ({ page }) => {
   await page.routeWebSocket(
@@ -24,9 +25,7 @@ const getBlock = (props: { key: string }): Block => ({
 
 const run = (packageName: string) => {
   test(`${packageName} - should pass block key to component props`, async ({ page }) => {
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [getBlock({ key: "my-block-key" })] } });
-    });
+    await mockBlocksEndpoint(page, [getBlock({ key: "my-block-key" })]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("key: my-block-key", { exact: true })).toBeVisible();
   });

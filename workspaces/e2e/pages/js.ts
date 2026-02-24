@@ -143,17 +143,17 @@ addFloatingBlocksChangeListener((blocks) => {
 (document.querySelector("#resetAllWorkflowsProgress") as HTMLButtonElement).addEventListener(
   "click",
   () => {
-    resetAllWorkflowsProgress();
+    void resetAllWorkflowsProgress();
   },
 );
 (document.querySelector("#resetWorkflowProgress") as HTMLButtonElement).addEventListener(
   "click",
   () => {
-    resetWorkflowProgress("my-workflow-id");
+    void resetWorkflowProgress("my-workflow-id");
   },
 );
 (document.querySelector("#startWorkflow") as HTMLButtonElement).addEventListener("click", () => {
-  startWorkflow("my-start-block");
+  void startWorkflow("my-start-block");
 });
 (document.querySelector("#changeLocation") as HTMLButtonElement).addEventListener("click", () => {
   window.history.pushState({}, "", window.location.pathname + "?v=1");
