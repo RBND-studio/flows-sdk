@@ -1,10 +1,10 @@
 import {
   applyUpdateMessageToBlocksState,
-  type BlockUpdatesPayload,
   getApi,
   getUserLanguage,
   type LanguageOption,
   log,
+  parseWebsocketMessage,
   type UserProperties,
 } from "@flows/shared";
 import { blocks, blocksError, blocksState, pendingMessages } from "../store";
@@ -55,9 +55,14 @@ export const connectToWebsocketAndFetchBlocks = (props: Props): void => {
       });
   };
   const onMessage = (event: MessageEvent<unknown>): void => {
-    const data = JSON.parse(event.data as string) as BlockUpdatesPayload;
-    if (!blocksState.value) pendingMessages.value = [...pendingMessages.value, data];
-    else blocksState.value = applyUpdateMessageToBlocksState(blocks.value, data);
+    const data = parseWebsocketMessage(event);
+    if (!data) return;
+
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- there will be more message types in the future
+    if (data.type === "block-updates") {
+      if (!blocksState.value) pendingMessages.value = [...pendingMessages.value, data];
+      else blocksState.value = applyUpdateMessageToBlocksState(blocks.value, data);
+    }
   };
 
   // Disconnect previous connection if it exists

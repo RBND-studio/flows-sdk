@@ -8,3 +8,4 @@ export * from "./matchers";
 export * from "./pathname";
 export * from "./tour-trigger";
 export * from "./types";
+export * from "./websocket-message";

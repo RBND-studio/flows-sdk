@@ -4,11 +4,12 @@ import {
   log,
   type UserProperties,
   type Block,
-  type BlockUpdatesPayload,
   type LanguageOption,
   getUserLanguage,
   applyUpdateMessageToBlocksState,
   logSlottableBlocksError,
+  parseWebsocketMessage,
+  type BlockUpdatesMessage,
 } from "@flows/shared";
 import { packageAndVersion } from "../lib/constants";
 import { type RemoveBlock, type UpdateBlock } from "../flows-context";
@@ -44,7 +45,7 @@ export const useBlocks = ({
   const blocks = useMemo(() => blocksState ?? [], [blocksState]);
 
   const [usageLimited, setUsageLimited] = useState(false);
-  const pendingMessages = useRef<BlockUpdatesPayload[]>([]);
+  const pendingMessages = useRef<BlockUpdatesMessage[]>([]);
 
   const params = useMemo(
     () => ({ environment, organizationId, userId }),
@@ -91,16 +92,19 @@ export const useBlocks = ({
   }, [apiUrl, params, usageLimited]);
 
   const onMessage = useCallback((event: MessageEvent<unknown>) => {
-    // TODO: add debug logging
-    // console.log("Message from server", event.data);
-    const data = JSON.parse(event.data as string) as BlockUpdatesPayload;
-    setBlocksState((prev) => {
-      if (!prev) {
-        pendingMessages.current.push(data);
-        return prev;
-      }
-      return applyUpdateMessageToBlocksState(prev, data);
-    });
+    const data = parseWebsocketMessage(event);
+    if (!data) return;
+
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- there will be more message types in the future
+    if (data.type === "block-updates") {
+      setBlocksState((prev) => {
+        if (!prev) {
+          pendingMessages.current.push(data);
+          return prev;
+        }
+        return applyUpdateMessageToBlocksState(prev, data);
+      });
+    }
   }, []);
   const { error: wsError } = useWebsocket({ url: websocketUrl, onMessage, onOpen: fetchBlocks });
 
