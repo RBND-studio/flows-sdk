@@ -3,10 +3,9 @@ import { Page } from "@playwright/test";
 import { randomUUID } from "crypto";
 
 export const mockBlocksEndpoint = async (page: Page, blocks: Block[]): Promise<void> => {
-  await page.route("**/v2/sdk/blocks", (route) => {
-    return route.fulfill({ json: { blocks } });
+  await page.route("**/v2/sdk/blocks", async (route) => {
+    await route.fulfill({ json: { blocks } });
   });
-  await mockBlocksEndpoint(page, blocks);
 };
 
 export const getTour = ({ tourBlocks }: { tourBlocks: TourStep[] }): Block => ({
