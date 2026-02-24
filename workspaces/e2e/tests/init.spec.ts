@@ -1,6 +1,7 @@
 import { Block, BlockUpdatesPayload } from "@flows/shared";
 import { expect, Route, test, WebSocketRoute } from "@playwright/test";
 import { randomUUID } from "crypto";
+import { mockBlocksEndpoint } from "./utils";
 
 let ws: WebSocketRoute | null = null;
 test.beforeEach(async ({ page }) => {
@@ -25,9 +26,7 @@ const getBlock = (): Block => ({
 
 const run = (packageName: string) => {
   test(`${packageName} - should call blocks with correct parameters`, async ({ page }) => {
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [] } });
-    });
+    await mockBlocksEndpoint(page, []);
     const blocksReq = page.waitForRequest((req) => {
       const body = req.postDataJSON();
       const headers = req.headers();
@@ -46,9 +45,7 @@ const run = (packageName: string) => {
     await blocksReq;
   });
   test(`${packageName} - should call custom apiUrl`, async ({ page }) => {
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [] } });
-    });
+    await mockBlocksEndpoint(page, []);
     const blocksReq = page.waitForRequest((req) => {
       const body = req.postDataJSON();
       const headers = req.headers();
@@ -84,7 +81,7 @@ const run = (packageName: string) => {
     };
     ws?.send(JSON.stringify(payload));
     await expect(page.getByText("Hello world", { exact: true })).toBeHidden();
-    (blocksRoute as Route | null)?.fulfill({ json: { blocks: [] } });
+    await (blocksRoute as Route | null)?.fulfill({ json: { blocks: [] } });
     await expect(page.getByText("Hello world", { exact: true })).toBeVisible();
   });
 };

@@ -22,7 +22,7 @@ export const parseWebsocketMessage = (event: MessageEvent<unknown>): FlowsWsMess
         updatedBlocks: data.updatedBlocks,
       };
     }
-  } catch (err) {}
+  } catch {}
 
   return null;
 };

@@ -1,4 +1,5 @@
 import { test } from "@playwright/test";
+import { mockBlocksEndpoint } from "./utils";
 
 test.beforeEach(async ({ page }) => {
   await page.routeWebSocket(
@@ -9,9 +10,7 @@ test.beforeEach(async ({ page }) => {
 
 const run = (packageName: string, language: string) => {
   test(`${packageName} (${language}) - should call custom apiUrl`, async ({ page }) => {
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [] } });
-    });
+    await mockBlocksEndpoint(page, []);
     const blocksReq = page.waitForRequest((req) => {
       const body = req.postDataJSON();
       return req.url() === "https://api.flows-cloud.com/v2/sdk/blocks" && body.language === "en-GB";
@@ -22,9 +21,7 @@ const run = (packageName: string, language: string) => {
     await blocksReq;
   });
   test(`${packageName} (${language}) - should call with detected language`, async ({ page }) => {
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [] } });
-    });
+    await mockBlocksEndpoint(page, []);
     const blocksReq = page.waitForRequest((req) => {
       const body = req.postDataJSON();
       return (

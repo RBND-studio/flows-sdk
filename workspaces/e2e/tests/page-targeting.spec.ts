@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { Block, TourStep } from "@flows/shared";
 import { randomUUID } from "crypto";
+import { mockBlocksEndpoint } from "./utils";
 
 test.beforeEach(async ({ page }) => {
   await page.routeWebSocket(
@@ -69,9 +70,7 @@ const run = (packageName: string) => {
       page_targeting_operator: "contains",
       page_targeting_values: [`/${packageName}.html?param=value`],
     };
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [block] } });
-    });
+    await mockBlocksEndpoint(page, [block]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Workflow block", { exact: true })).toBeHidden();
     await page.goto(`/${packageName}.html?param=value`);
@@ -80,9 +79,7 @@ const run = (packageName: string) => {
 
   // Floating workflow
   test(`${packageName} - should show workflow block without page targeting`, async ({ page }) => {
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [floatingWorkflowBlock] } });
-    });
+    await mockBlocksEndpoint(page, [floatingWorkflowBlock]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Workflow block", { exact: true })).toBeVisible();
   });
@@ -95,9 +92,7 @@ const run = (packageName: string) => {
       page_targeting_operator: "contains",
       page_targeting_values: ["/wrong"],
     };
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [block] } });
-    });
+    await mockBlocksEndpoint(page, [block]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Workflow block", { exact: true })).toBeHidden();
   });
@@ -110,9 +105,7 @@ const run = (packageName: string) => {
       page_targeting_operator: "contains",
       page_targeting_values: [`/${packageName}.html`],
     };
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [block] } });
-    });
+    await mockBlocksEndpoint(page, [block]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Workflow block", { exact: true })).toBeVisible();
   });
@@ -126,9 +119,7 @@ const run = (packageName: string) => {
       page_targeting_operator: "contains",
       page_targeting_values: ["/wrong"],
     };
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [block] } });
-    });
+    await mockBlocksEndpoint(page, [block]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("slottable block", { exact: true })).toBeHidden();
   });
@@ -140,18 +131,14 @@ const run = (packageName: string) => {
       page_targeting_operator: "contains",
       page_targeting_values: [`/${packageName}.html`],
     };
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [block] } });
-    });
+    await mockBlocksEndpoint(page, [block]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("slottable block", { exact: true })).toBeVisible();
   });
 
   // Floating tour
   test(`${packageName} - should show tour block without page targeting`, async ({ page }) => {
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [getTour([floatingTourBlock])] } });
-    });
+    await mockBlocksEndpoint(page, [getTour([floatingTourBlock])]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Tour block", { exact: true })).toBeVisible();
   });
@@ -163,9 +150,7 @@ const run = (packageName: string) => {
       page_targeting_operator: "contains",
       page_targeting_values: ["/wrong"],
     };
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [getTour([block])] } });
-    });
+    await mockBlocksEndpoint(page, [getTour([block])]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Tour block", { exact: true })).toBeHidden();
   });
@@ -175,9 +160,7 @@ const run = (packageName: string) => {
       page_targeting_operator: "contains",
       page_targeting_values: [`/${packageName}.html`],
     };
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [getTour([block])] } });
-    });
+    await mockBlocksEndpoint(page, [getTour([block])]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Tour block", { exact: true })).toBeVisible();
   });
@@ -191,9 +174,7 @@ const run = (packageName: string) => {
       page_targeting_operator: "contains",
       page_targeting_values: ["/wrong"],
     };
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [getTour([block])] } });
-    });
+    await mockBlocksEndpoint(page, [getTour([block])]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("slottable tour block", { exact: true })).toBeHidden();
   });
@@ -205,9 +186,7 @@ const run = (packageName: string) => {
       page_targeting_operator: "contains",
       page_targeting_values: [`/${packageName}.html`],
     };
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [getTour([block])] } });
-    });
+    await mockBlocksEndpoint(page, [getTour([block])]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("slottable tour block", { exact: true })).toBeVisible();
   });
@@ -222,9 +201,7 @@ const run = (packageName: string) => {
       page_targeting_operator: "notContains",
       page_targeting_values: [`/wrong`],
     };
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [block] } });
-    });
+    await mockBlocksEndpoint(page, [block]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Workflow block", { exact: true })).toBeVisible();
   });
@@ -236,9 +213,7 @@ const run = (packageName: string) => {
       page_targeting_operator: "notContains",
       page_targeting_values: [`/${packageName}.html`],
     };
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [block] } });
-    });
+    await mockBlocksEndpoint(page, [block]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Workflow block", { exact: true })).toBeHidden();
   });
@@ -252,9 +227,7 @@ const run = (packageName: string) => {
       page_targeting_operator: "eq",
       page_targeting_values: [`/${packageName}.html`],
     };
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [block] } });
-    });
+    await mockBlocksEndpoint(page, [block]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Workflow block", { exact: true })).toBeVisible();
   });
@@ -266,9 +239,7 @@ const run = (packageName: string) => {
       page_targeting_operator: "eq",
       page_targeting_values: [`/wrong`],
     };
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [block] } });
-    });
+    await mockBlocksEndpoint(page, [block]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Workflow block", { exact: true })).toBeHidden();
   });
@@ -282,9 +253,7 @@ const run = (packageName: string) => {
       page_targeting_operator: "ne",
       page_targeting_values: [`/wrong`],
     };
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [block] } });
-    });
+    await mockBlocksEndpoint(page, [block]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Workflow block", { exact: true })).toBeVisible();
   });
@@ -296,9 +265,7 @@ const run = (packageName: string) => {
       page_targeting_operator: "ne",
       page_targeting_values: [`/${packageName}.html`],
     };
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [block] } });
-    });
+    await mockBlocksEndpoint(page, [block]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Workflow block", { exact: true })).toBeHidden();
   });
@@ -312,9 +279,7 @@ const run = (packageName: string) => {
       page_targeting_operator: "startsWith",
       page_targeting_values: [`/${packageName}`],
     };
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [block] } });
-    });
+    await mockBlocksEndpoint(page, [block]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Workflow block", { exact: true })).toBeVisible();
   });
@@ -326,9 +291,7 @@ const run = (packageName: string) => {
       page_targeting_operator: "startsWith",
       page_targeting_values: [`/wrong`],
     };
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [block] } });
-    });
+    await mockBlocksEndpoint(page, [block]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Workflow block", { exact: true })).toBeHidden();
   });
@@ -342,9 +305,7 @@ const run = (packageName: string) => {
       page_targeting_operator: "endsWith",
       page_targeting_values: [`.html`],
     };
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [block] } });
-    });
+    await mockBlocksEndpoint(page, [block]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Workflow block", { exact: true })).toBeVisible();
   });
@@ -356,9 +317,7 @@ const run = (packageName: string) => {
       page_targeting_operator: "endsWith",
       page_targeting_values: [`/wrong`],
     };
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [block] } });
-    });
+    await mockBlocksEndpoint(page, [block]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Workflow block", { exact: true })).toBeHidden();
   });
@@ -372,9 +331,7 @@ const run = (packageName: string) => {
       page_targeting_operator: "notStartsWith",
       page_targeting_values: [`/wrong`],
     };
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [block] } });
-    });
+    await mockBlocksEndpoint(page, [block]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Workflow block", { exact: true })).toBeVisible();
   });
@@ -386,9 +343,7 @@ const run = (packageName: string) => {
       page_targeting_operator: "notStartsWith",
       page_targeting_values: [`/${packageName}`],
     };
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [block] } });
-    });
+    await mockBlocksEndpoint(page, [block]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Workflow block", { exact: true })).toBeHidden();
   });
@@ -402,9 +357,7 @@ const run = (packageName: string) => {
       page_targeting_operator: "notEndsWith",
       page_targeting_values: [`/wrong`],
     };
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [block] } });
-    });
+    await mockBlocksEndpoint(page, [block]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Workflow block", { exact: true })).toBeVisible();
   });
@@ -416,9 +369,7 @@ const run = (packageName: string) => {
       page_targeting_operator: "notEndsWith",
       page_targeting_values: [`.html`],
     };
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [block] } });
-    });
+    await mockBlocksEndpoint(page, [block]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Workflow block", { exact: true })).toBeHidden();
   });
@@ -430,11 +381,9 @@ const run = (packageName: string) => {
     const block: Block = {
       ...floatingWorkflowBlock,
       page_targeting_operator: "regex",
-      page_targeting_values: [`/*.\.html`],
+      page_targeting_values: [`/*..html`],
     };
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [block] } });
-    });
+    await mockBlocksEndpoint(page, [block]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Workflow block", { exact: true })).toBeVisible();
   });
@@ -446,9 +395,7 @@ const run = (packageName: string) => {
       page_targeting_operator: "regex",
       page_targeting_values: [`/wrong`],
     };
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [block] } });
-    });
+    await mockBlocksEndpoint(page, [block]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Workflow block", { exact: true })).toBeHidden();
   });

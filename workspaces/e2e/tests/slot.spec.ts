@@ -1,6 +1,7 @@
 import { Block } from "@flows/shared";
 import test, { expect } from "@playwright/test";
 import { randomUUID } from "crypto";
+import { mockBlocksEndpoint } from "./utils";
 
 test.beforeEach(async ({ page }) => {
   await page.routeWebSocket(
@@ -24,29 +25,22 @@ const getCard = (props: { slotIndex?: number; text: string }): Block => ({
 
 const run = (packageName: string) => {
   test(`${packageName} - should render empty slot`, async ({ page }) => {
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [] } });
-    });
+    await mockBlocksEndpoint(page, []);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Slot placeholder", { exact: true })).toBeVisible();
   });
   test(`${packageName} - should render block in slot and hide placeholder`, async ({ page }) => {
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [getCard({ text: "Hello world" })] } });
-    });
+    await mockBlocksEndpoint(page, [getCard({ text: "Hello world" })]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Slot placeholder", { exact: true })).toBeHidden();
     await expect(page.getByText("Hello world", { exact: true })).toBeVisible();
     await expect(page.locator(".flows-card")).toBeVisible();
   });
   test(`${packageName} - should sort blocks by slotIndex`, async ({ page }) => {
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({
-        json: {
-          blocks: [getCard({ text: "block number one" }), getCard({ text: "block number two" })],
-        },
-      });
-    });
+    await mockBlocksEndpoint(page, [
+      getCard({ text: "block number one" }),
+      getCard({ text: "block number two" }),
+    ]);
     await page.goto(`/${packageName}.html`);
     await expect(page.locator(".flows-card").nth(0).locator(".card-text")).toHaveText(
       "block number one",
@@ -55,16 +49,10 @@ const run = (packageName: string) => {
       "block number two",
     );
 
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({
-        json: {
-          blocks: [
-            getCard({ text: "block number one", slotIndex: 1 }),
-            getCard({ text: "block number two" }),
-          ],
-        },
-      });
-    });
+    await mockBlocksEndpoint(page, [
+      getCard({ text: "block number one", slotIndex: 1 }),
+      getCard({ text: "block number two" }),
+    ]);
     await page.goto(`/${packageName}.html`);
     await expect(page.locator(".flows-card").nth(0).locator(".card-text")).toHaveText(
       "block number two",
@@ -73,16 +61,10 @@ const run = (packageName: string) => {
       "block number one",
     );
 
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({
-        json: {
-          blocks: [
-            getCard({ text: "block number one", slotIndex: 1 }),
-            getCard({ text: "block number two", slotIndex: 2 }),
-          ],
-        },
-      });
-    });
+    await mockBlocksEndpoint(page, [
+      getCard({ text: "block number one", slotIndex: 1 }),
+      getCard({ text: "block number two", slotIndex: 2 }),
+    ]);
     await page.goto(`/${packageName}.html`);
     await expect(page.locator(".flows-card").nth(0).locator(".card-text")).toHaveText(
       "block number one",

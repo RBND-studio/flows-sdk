@@ -1,6 +1,7 @@
 import { Block } from "@flows/shared";
 import { expect, test } from "@playwright/test";
 import { randomUUID } from "crypto";
+import { mockBlocksEndpoint } from "./utils";
 
 const getBlocks = (): Block[] =>
   [
@@ -46,18 +47,14 @@ test.beforeEach(async ({ page }) => {
 
 const run = (packageName: string) => {
   test(`${packageName} - return empty blocks`, async ({ page }) => {
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [] } });
-    });
+    await mockBlocksEndpoint(page, []);
     await page.goto(`/${packageName}.html`);
     await expect(page.locator(".current-blocks")).toHaveText(JSON.stringify([]));
   });
 
   test(`${packageName} - return floating blocks`, async ({ page }) => {
     const blocks = getBlocks();
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks } });
-    });
+    await mockBlocksEndpoint(page, blocks);
     await page.goto(`/${packageName}.html`);
     await expect(page.locator(".current-blocks")).toHaveText(
       JSON.stringify([

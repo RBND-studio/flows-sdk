@@ -42,7 +42,6 @@
     "build": "tsup --env.NODE_ENV production",
     "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",
-    "lint": "eslint src",
     "tsc": "tsc -p tsconfig.json",
     "version": "pnpm version",
     "prepare": "pnpm build"

@@ -105,8 +105,8 @@ const run = (packageName: string) => {
       await expect(page.getByText("Tooltip title", { exact: true })).toBeVisible();
       const overlayEl = page.locator(".flows_basicsV2_tooltip_overlay");
       await expect(overlayEl).toBeVisible();
-      expect(overlayEl).not.toHaveCSS("width", "0px");
-      expect(overlayEl).not.toHaveCSS("height", "0px");
+      await expect(overlayEl).not.toHaveCSS("width", "0px");
+      await expect(overlayEl).not.toHaveCSS("height", "0px");
 
       await expect(page.locator(".flows_basicsV2_tooltip_root")).toMatchAriaSnapshot(`
       - paragraph: Tooltip title
@@ -158,17 +158,11 @@ const run = (packageName: string) => {
 
   test.describe("tour", () => {
     test(`${packageName} - should render tooltip`, async ({ page }) => {
-      await page.route("**/v2/sdk/blocks", (route) => {
-        route.fulfill({
-          json: {
-            blocks: [
-              getTour({
-                tourBlocks: [getTourStep({ title: "Step 1" }), getTourStep({ title: "Step 2" })],
-              }),
-            ],
-          },
-        });
-      });
+      await mockBlocksEndpoint(page, [
+        getTour({
+          tourBlocks: [getTourStep({ title: "Step 1" }), getTourStep({ title: "Step 2" })],
+        }),
+      ]);
       await page.goto(`/${packageName}.html`);
 
       await expect(page.locator(".flows_basicsV2_tooltip_tooltip")).toBeVisible();
@@ -179,8 +173,8 @@ const run = (packageName: string) => {
       await expect(page.locator(".flows_basicsV2_dots_dot_active")).toHaveCount(1);
       const overlayEl = page.locator(".flows_basicsV2_tooltip_overlay");
       await expect(overlayEl).toBeVisible();
-      expect(overlayEl).not.toHaveCSS("width", "0px");
-      expect(overlayEl).not.toHaveCSS("height", "0px");
+      await expect(overlayEl).not.toHaveCSS("width", "0px");
+      await expect(overlayEl).not.toHaveCSS("height", "0px");
 
       await expect(page.locator(".flows_basicsV2_tooltip_root")).toMatchAriaSnapshot(`
         - paragraph: Step 1

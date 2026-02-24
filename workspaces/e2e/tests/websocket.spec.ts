@@ -1,6 +1,7 @@
 import { Block, BlockUpdatesPayload } from "@flows/shared";
 import { expect, test, WebSocketRoute } from "@playwright/test";
 import { randomUUID } from "crypto";
+import { mockBlocksEndpoint } from "./utils";
 
 const getBlock = (): Block => ({
   id: randomUUID(),
@@ -29,9 +30,7 @@ const run = (packageName: string) => {
       page,
     }) => {
       const block = getBlock();
-      await page.route("**/v2/sdk/blocks", (route) => {
-        route.fulfill({ json: { blocks: [] } });
-      });
+      await mockBlocksEndpoint(page, []);
       await page.goto(`/${packageName}.html`);
       await expect(page.locator("h1")).toBeVisible();
       await expect(page.getByText("Hello world", { exact: true })).toBeHidden();
@@ -39,30 +38,26 @@ const run = (packageName: string) => {
         exitedBlockIds: [],
         updatedBlocks: [block],
       };
-      await (ws as unknown as WebSocketRoute).send(JSON.stringify(payload));
+      (ws as unknown as WebSocketRoute).send(JSON.stringify(payload));
       await expect(page.getByText("Hello world", { exact: true })).toBeVisible();
     });
     test(`${packageName} - should exit block that is received through websocket`, async ({
       page,
     }) => {
       const block = getBlock();
-      await page.route("**/v2/sdk/blocks", (route) => {
-        route.fulfill({ json: { blocks: [block] } });
-      });
+      await mockBlocksEndpoint(page, [block]);
       await page.goto(`/${packageName}.html`);
       await expect(page.getByText("Hello world", { exact: true })).toBeVisible();
       const payload: BlockUpdatesPayload = {
         exitedBlockIds: [block.id],
         updatedBlocks: [],
       };
-      await (ws as unknown as WebSocketRoute).send(JSON.stringify(payload));
+      (ws as unknown as WebSocketRoute).send(JSON.stringify(payload));
       await expect(page.getByText("Hello world", { exact: true })).toBeHidden();
     });
     test(`${packageName} - should update block`, async ({ page }) => {
       const block = getBlock();
-      await page.route("**/v2/sdk/blocks", (route) => {
-        route.fulfill({ json: { blocks: [block] } });
-      });
+      await mockBlocksEndpoint(page, [block]);
       await page.goto(`/${packageName}.html`);
       await expect(page.getByText("Hello world", { exact: true })).toBeVisible();
       await expect(page.getByText("Updated body", { exact: true })).toBeHidden();
@@ -70,7 +65,7 @@ const run = (packageName: string) => {
         exitedBlockIds: [],
         updatedBlocks: [{ ...block, data: { ...block.data, body: "Updated body" } }],
       };
-      await (ws as unknown as WebSocketRoute).send(JSON.stringify(payload));
+      (ws as unknown as WebSocketRoute).send(JSON.stringify(payload));
       await expect(page.getByText("Hello world", { exact: true })).toHaveCount(1);
       await expect(page.getByText("Updated body", { exact: true })).toBeVisible();
     });
@@ -78,9 +73,7 @@ const run = (packageName: string) => {
 
   test.describe(`real websocket`, () => {
     test(`${packageName} - should establish websocket connection`, async ({ page }) => {
-      await page.route("**/v2/sdk/blocks", (route) => {
-        route.fulfill({ json: { blocks: [] } });
-      });
+      await mockBlocksEndpoint(page, []);
       const wsPromise = page.waitForEvent("websocket");
       await page.goto(`/${packageName}.html`);
       await wsPromise;

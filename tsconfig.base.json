@@ -1,6 +1,13 @@
 {
-  "extends": "@vercel/style-guide/typescript",
+  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "incremental": true,
     "noEmit": true,
     "target": "ES2017",
     "moduleResolution": "Bundler",

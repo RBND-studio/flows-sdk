@@ -44,7 +44,7 @@ const getTourStep = (actionValue: (PropertyMeta & { type: "action" })["value"]):
 const run = (packageName: string) => {
   test.describe("workflow block", () => {
     test(`${packageName} - url`, async ({ page }) => {
-      mockBlocksEndpoint(page, [
+      await mockBlocksEndpoint(page, [
         getBlock({
           label: "Example",
           url: "https://example.com",
@@ -63,7 +63,7 @@ const run = (packageName: string) => {
         label: "TransitionBtn",
         exitNode: "continue",
       });
-      mockBlocksEndpoint(page, [block]);
+      await mockBlocksEndpoint(page, [block]);
       await page.goto(`/${packageName}.html`);
       await expect(page.getByText("Action Title", { exact: true })).toBeVisible();
       const buttonEl = page.getByRole("button", { name: "TransitionBtn", exact: true });
@@ -82,7 +82,7 @@ const run = (packageName: string) => {
   });
   test.describe("tour block", () => {
     test(`${packageName} - url`, async ({ page }) => {
-      mockBlocksEndpoint(page, [
+      await mockBlocksEndpoint(page, [
         getTour({
           tourBlocks: [
             getTourStep({
@@ -101,7 +101,7 @@ const run = (packageName: string) => {
       await expect(linkEl).toHaveAttribute("target", "_blank");
     });
     test(`${packageName} - should navigate to URL from current step`, async ({ page }) => {
-      mockBlocksEndpoint(page, [
+      await mockBlocksEndpoint(page, [
         getTour({
           tourBlocks: [
             getTourStep({
@@ -133,7 +133,8 @@ const run = (packageName: string) => {
           }),
         ],
       });
-      mockBlocksEndpoint(page, [block]);
+      await mockBlocksEndpoint(page, [block]);
+
       await page.goto(`/${packageName}.html`);
       await expect(page.getByText("Action Tour Title", { exact: true })).toBeVisible();
       const buttonEl = page.getByRole("button", { name: "TransitionBtn", exact: true });

@@ -18,7 +18,7 @@ import { HashRouter, Link, Route, Routes } from "react-router";
 import * as components from "@flows/react-components";
 import * as tourComponents from "@flows/react-components/tour";
 import "@flows/react-components/index.css";
-import { LanguageOption, LinkComponentProps } from "@flows/shared";
+import { LanguageOption } from "@flows/shared";
 
 const apiUrl = new URLSearchParams(window.location.search).get("apiUrl") ?? undefined;
 const noUserId = new URLSearchParams(window.location.search).get("noUserId") === "true";
