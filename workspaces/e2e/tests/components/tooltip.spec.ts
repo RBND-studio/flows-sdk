@@ -154,6 +154,23 @@ const run = (packageName: string) => {
       await page.getByText("Continue", { exact: true }).click();
       await expect(page.locator(".flows_basicsV2_tooltip_tooltip")).toBeHidden();
     });
+    test(`${packageName} - should add data attribute to target element`, async ({ page }) => { 
+      await mockBlocksEndpoint(page, [getBlock({
+        targetElement: "h1", propertyMeta: [
+          {
+            key: "primaryButton",
+            type: "action",
+            value: { label: "Continue", exitNode: "continue" },
+          },
+        ],
+})]);
+      await page.goto(`/${packageName}.html`);
+      await expect(page.getByText("Tooltip title", { exact: true })).toBeVisible();
+      await expect(page.locator("h1")).toHaveAttribute("data-flows-tooltip-target");
+      await page.getByText("Continue", { exact: true }).click();
+      await expect(page.getByText("Tooltip title", { exact: true })).toBeHidden();
+      await expect(page.locator("h1")).not.toHaveAttribute("data-flows-tooltip-target");
+    })
   });
 
   test.describe("tour", () => {

@@ -20,6 +20,8 @@ import { ActionButton } from "./action-button";
 import { IconButton } from "./icon-button";
 import { Text } from "./text";
 
+const TARGET_ELEMENT_DATA_ATTRIBUTE = "data-flows-tooltip-target"
+
 class BaseTooltip extends LitElement {
   @property()
   title: string;
@@ -59,12 +61,23 @@ class BaseTooltip extends LitElement {
   connectedCallback(): void {
     super.connectedCallback();
 
+
+
     this.observerCleanup = observeQuerySelector(this.targetElement, (el) => {
+      const isEqual = this._reference === el;
+      if (isEqual) return;
+
+      const oldReference = this._reference;
+      oldReference?.removeAttribute(TARGET_ELEMENT_DATA_ATTRIBUTE);
+
       this._reference = el;
+      this._reference?.setAttribute(TARGET_ELEMENT_DATA_ATTRIBUTE, "true");
     });
   }
   disconnectedCallback(): void {
     super.disconnectedCallback();
+
+    this._reference?.removeAttribute(TARGET_ELEMENT_DATA_ATTRIBUTE);
 
     this.autoUpdateCleanup?.();
     this.observerCleanup?.();
@@ -117,38 +130,38 @@ class BaseTooltip extends LitElement {
         ${this.overlay ? html`<div class="flows_basicsV2_tooltip_overlay"></div>` : null}
         <div class="flows_basicsV2_tooltip_tooltip">
           ${Text({
-            variant: "title",
-            className: "flows_basicsV2_tooltip_title",
-            children: this.title,
-          })}
+      variant: "title",
+      className: "flows_basicsV2_tooltip_title",
+      children: this.title,
+    })}
           ${Text({
-            variant: "body",
-            className: "flows_basicsV2_tooltip_body",
-            children: unsafeHTML(
-              DOMPurify.sanitize(this.body, {
-                FORCE_BODY: true,
-                ADD_ATTR: ["target"],
-              }),
-            ),
-          })}
+      variant: "body",
+      className: "flows_basicsV2_tooltip_body",
+      children: unsafeHTML(
+        DOMPurify.sanitize(this.body, {
+          FORCE_BODY: true,
+          ADD_ATTR: ["target"],
+        }),
+      ),
+    })}
           ${this.dots || Boolean(buttons.length)
-            ? html`<div class="flows_basicsV2_tooltip_footer">
+        ? html`<div class="flows_basicsV2_tooltip_footer">
                 ${this.dots}
                 ${buttons.length
-                  ? html`<div className="flows_basicsV2_tooltip_buttons_wrapper">
+            ? html`<div className="flows_basicsV2_tooltip_buttons_wrapper">
                       <div className="flows_basicsV2_tooltip_buttons">${buttons}</div>
                     </div>`
-                  : null}
+            : null}
               </div>`
-            : null}
+        : null}
           ${this.onClose
-            ? IconButton({
-                "aria-label": "Close",
-                className: "flows_basicsV2_tooltip_close",
-                children: Close16(),
-                onClick: this.onClose,
-              })
-            : null}
+        ? IconButton({
+          "aria-label": "Close",
+          className: "flows_basicsV2_tooltip_close",
+          children: Close16(),
+          onClick: this.onClose,
+        })
+        : null}
 
           <div
             class=${clsx("flows_basicsV2_tooltip_arrow", "flows_basicsV2_tooltip_arrow-bottom")}
