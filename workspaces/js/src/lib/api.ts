@@ -1,4 +1,4 @@
-import { type EventRequest, getApi } from "@flows/shared";
+import { type EventRequest, getApi, log, WorkflowsResponse } from "@flows/shared";
 import { config } from "../store";
 import { packageAndVersion } from "./constants";
 
@@ -25,4 +25,15 @@ export const sendActivate = async (blockId: string): Promise<void> => {
 
   activatedBlockIds.add(blockId);
   await sendEvent({ name: "block-activated", blockId });
+};
+
+export const fetchWorkflows = async (): Promise<WorkflowsResponse> => {
+  const configuration = config.value;
+  if (!configuration) {
+    log.error("fetchWorkflows() called before rendering <FlowsProvider>");
+    return { workflows: [] };
+  }
+
+  const { environment, organizationId, userId, apiUrl } = configuration;
+  return getApi(apiUrl, packageAndVersion).getWorkflows({ environment, organizationId, userId });
 };

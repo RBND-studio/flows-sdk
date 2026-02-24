@@ -24,3 +24,4 @@ export const startWorkflow = (blockKey: string): Promise<void> =>
   sendEvent({ name: "workflow-start", blockKey });
 
 export { useCurrentFloatingBlocks, useCurrentSlotBlocks } from "./hooks/use-current-blocks";
+export { fetchWorkflows } from "./lib/api";

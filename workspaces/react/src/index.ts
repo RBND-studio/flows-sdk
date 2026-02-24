@@ -10,6 +10,10 @@ export type {
   Locale,
   StateMemory,
   TourComponentProps,
+  Workflow,
+  WorkflowStatus,
+  WorkflowFrequency,
+  WorkflowUserState,
 } from "@flows/shared";
 export * from "./components/flows-slot";
 export { FlowsProvider } from "./flows-provider";

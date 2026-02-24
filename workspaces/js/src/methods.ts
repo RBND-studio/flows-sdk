@@ -131,3 +131,5 @@ export const resetWorkflowProgress = (workflowId: string): Promise<void> =>
  */
 export const startWorkflow = (blockKey: string): Promise<void> =>
   sendEvent({ name: "workflow-start", blockKey });
+
+export { fetchWorkflows } from "./lib/api";

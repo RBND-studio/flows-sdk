@@ -8,6 +8,10 @@ export type {
   Locale,
   StateMemory,
   TourComponentProps,
+  Workflow,
+  WorkflowFrequency,
+  WorkflowStatus,
+  WorkflowUserState,
 } from "@flows/shared";
 export * from "./init";
 export * from "./methods";
