@@ -18,7 +18,9 @@
     "rbnd",
     "solidjs",
     "valuenow",
-    "xlink"
+    "xlink",
+    "Vojtech",
+    "Vidra"
   ],
   "ignorePaths": [
     "node_modules",

@@ -70,6 +70,22 @@ const run = (packageName: string) => {
     await page.getByRole("button", { name: "startWorkflow" }).click();
     await req;
   });
+  test(`${packageName} - fetchWorkflows should call api`, async ({ page }) => {
+    await page.goto(`/${packageName}.html`);
+    const req = page.waitForRequest((req) => {
+      const body = req.postDataJSON();
+      const headers = req.headers();
+      return (
+        req.url() === "https://api.flows-cloud.com/v2/sdk/workflows" &&
+        /@flows\/[^@]*@\d+\.\d+.\d+/.test(headers["x-flows-version"] ?? "") &&
+        body.userId === "testUserId" &&
+        body.environment === "prod" &&
+        body.organizationId === "orgId"
+      );
+    });
+    await page.getByText("fetchWorkflows", { exact: true }).click();
+    await req;
+  });
 };
 
 run("js");

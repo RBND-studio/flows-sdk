@@ -1,4 +1,5 @@
-import { type EventRequest, getApi } from "@flows/shared";
+import type { WorkflowsResponse } from "@flows/shared";
+import { type EventRequest, getApi, log } from "@flows/shared";
 import { config } from "../store";
 import { packageAndVersion } from "./constants";
 
@@ -25,4 +26,19 @@ export const sendActivate = async (blockId: string): Promise<void> => {
 
   activatedBlockIds.add(blockId);
   await sendEvent({ name: "block-activated", blockId });
+};
+
+/**
+ * Returns all available workflows for the current user. Before calling this method, the `init()` method must be called first.
+ * @returns A promise resolving to a {@link WorkflowsResponse} object containing an array of enabled workflows.
+ */
+export const fetchWorkflows = async (): Promise<WorkflowsResponse> => {
+  const configuration = config.value;
+  if (!configuration) {
+    log.error("fetchWorkflows() called before init() method was called");
+    return { workflows: [] };
+  }
+
+  const { environment, organizationId, userId, apiUrl } = configuration;
+  return getApi(apiUrl, packageAndVersion).getWorkflows({ environment, organizationId, userId });
 };

@@ -1,19 +1,21 @@
+import type { Action as IAction } from "@flows/js";
 import {
   init,
   resetAllWorkflowsProgress,
   resetWorkflowProgress,
-  Action as IAction,
   addFloatingBlocksChangeListener,
+  fetchWorkflows,
 } from "@flows/js";
 import { setupJsComponents } from "@flows/js-components";
 import * as _components from "@flows/js-components/components";
 import * as _tourComponents from "@flows/js-components/tour-components";
 import "@flows/js-components/index.css";
-import { startWorkflow, StateMemory as IStateMemory } from "@flows/js";
-import { LanguageOption } from "@flows/shared";
+import type { StateMemory as IStateMemory } from "@flows/js";
+import { startWorkflow } from "@flows/js";
+import type { LanguageOption } from "@flows/shared";
 import { css, LitElement } from "lit";
 import { property } from "lit/decorators.js";
-import { FlowsProperties } from "@flows/js";
+import type { FlowsProperties } from "@flows/js";
 import { html, unsafeStatic } from "lit/static-html.js";
 
 const apiUrl = new URLSearchParams(window.location.search).get("apiUrl") ?? undefined;
@@ -157,4 +159,7 @@ addFloatingBlocksChangeListener((blocks) => {
 });
 (document.querySelector("#changeLocation") as HTMLButtonElement).addEventListener("click", () => {
   window.history.pushState({}, "", window.location.pathname + "?v=1");
+});
+document.querySelector("#fetchWorkflows")?.addEventListener("click", () => {
+  void fetchWorkflows();
 });

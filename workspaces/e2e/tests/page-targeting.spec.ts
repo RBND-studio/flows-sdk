@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { Block, TourStep } from "@flows/shared";
+import type { Block, TourStep } from "@flows/shared";
 import { randomUUID } from "crypto";
 import { mockBlocksEndpoint } from "./utils";
 

@@ -1,4 +1,4 @@
-import { Block, PropertyMeta, TourStep } from "@flows/shared";
+import type { Block, PropertyMeta, TourStep } from "@flows/shared";
 import test, { expect } from "@playwright/test";
 import { randomUUID } from "crypto";
 import { getTour, mockBlocksEndpoint } from "../utils";

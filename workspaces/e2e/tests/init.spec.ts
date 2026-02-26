@@ -1,5 +1,6 @@
-import { Block, BlockUpdatesPayload } from "@flows/shared";
-import { expect, Route, test, WebSocketRoute } from "@playwright/test";
+import type { Block, BlockUpdatesPayload } from "@flows/shared";
+import type { Route, WebSocketRoute } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import { randomUUID } from "crypto";
 import { mockBlocksEndpoint } from "./utils";
 
