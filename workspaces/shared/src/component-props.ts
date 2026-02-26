@@ -9,8 +9,10 @@ import {
   type TourStep,
   type UserProperties,
   type PropertyMeta,
+  SurveyComponentProps,
 } from "./types";
 import { template } from "./template";
+import { QuestionBase, Survey, SurveyQuestion, SurveyQuestionType } from "./types/survey";
 
 export type SetStateMemory = (props: {
   key: string;
@@ -242,4 +244,59 @@ export const createTourComponentProps = ({
     previous: !isFirstStep ? handlePrevious : undefined,
     cancel: handleCancel,
   };
+};
+
+export const createSurveyComponentProps = (
+  props: Parameters<typeof createComponentProps>[0],
+): SurveyComponentProps<object> => {
+  const { block } = props;
+
+  const baseProps = createComponentProps(props) as ComponentProps<{
+    cancel: () => void;
+    submit: () => void;
+  }>;
+
+  const questions = (block.survey?.questions ?? []).map((question): SurveyQuestion | null => {
+    const questionBase: QuestionBase<SurveyQuestionType> = {
+      id: question.id,
+      title: template(question.title, props.userProperties),
+      description: template(question.description, props.userProperties),
+      type: question.type as SurveyQuestionType,
+      optional: question.optional,
+    };
+
+    if (questionBase.type === "freeform") {
+      return {
+        ...questionBase,
+        type: "freeform",
+        // TODO:
+        setValue: () => {},
+        initialValue: undefined,
+      };
+    }
+    if (questionBase.type === "single-choice") {
+      return {
+        ...questionBase,
+        type: "single-choice",
+        options: (question.options ?? []).map((option) => ({
+          id: option.id,
+          label: template(option.label, props.userProperties),
+          // TODO:
+          setSelected: () => {},
+          initialSelected: false,
+        })),
+        // TODO:
+        setValue: () => {},
+        initialValue: undefined,
+      };
+    }
+
+    return null;
+  });
+
+  const survey: Survey = {
+    questions: questions.filter((q): q is SurveyQuestion => q !== null),
+  };
+
+  return { ...baseProps, survey };
 };

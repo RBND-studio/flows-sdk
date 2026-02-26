@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 import { type Block, type TourStep, type UserProperties } from "@flows/shared";
-import { type Components, type TourComponents } from "./types";
+import { SurveyComponents, type Components, type TourComponents } from "./types";
 
 export interface RunningTour {
   block: Block;
@@ -19,6 +19,7 @@ export interface IFlowsContext {
   userProperties: UserProperties;
   components: Components;
   tourComponents: TourComponents;
+  surveyComponents: SurveyComponents;
   runningTours: RunningTour[];
   removeBlock: RemoveBlock;
   updateBlock: UpdateBlock;
@@ -31,6 +32,7 @@ export const FlowsContext = createContext<IFlowsContext>({
   blocks: [],
   components: {},
   tourComponents: {},
+  surveyComponents: {},
   runningTours: [],
   userProperties: {},
   removeBlock: noop,

@@ -67,6 +67,11 @@
       "import": "./dist/tour.mjs",
       "require": "./dist/tour.js"
     },
+    "./survey": {
+      "types": "./dist/survey.d.ts",
+      "import": "./dist/survey.mjs",
+      "require": "./dist/survey.js"
+    },
     "./index.css": {
       "import": "./dist/index.css",
       "require": "./dist/index.css"

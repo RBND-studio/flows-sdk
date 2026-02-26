@@ -1,4 +1,5 @@
 import { type StateMemoryTrigger } from "./components";
+import { ApiSurvey } from "./api-survey";
 
 export type TourWaitInteraction =
   | "navigation"
@@ -67,6 +68,8 @@ export interface Block {
   tour_trigger?: TourTrigger;
   tourBlocks?: TourStep[];
   currentTourIndex?: number;
+
+  survey?: ApiSurvey;
 }
 
 export interface TourStep {

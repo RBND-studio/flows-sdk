@@ -1,0 +1,38 @@
+.flows_basicsV2_survey_popover {
+  position: fixed;
+  z-index: var(--flows-basicsV2-zIndex);
+  background-color: var(--flows-basicsV2-bg-default);
+  border: var(--flows-basicsV2-border);
+  color: var(--flows-basicsV2-fg-default);
+  border-radius: var(--flows-basicsV2-borderRadius-l);
+  box-shadow: var(--flows-basicsV2-shadow-large);
+}
+
+.flows_basicsV2_survey_popover[data-position="bottom-right"] {
+  right: var(--flows-basicsV2-size-l);
+  bottom: var(--flows-basicsV2-size-l);
+}
+.flows_basicsV2_survey_popover[data-position="bottom-left"] {
+  left: var(--flows-basicsV2-size-l);
+  bottom: var(--flows-basicsV2-size-l);
+}
+.flows_basicsV2_survey_popover[data-position="top-right"] {
+  right: var(--flows-basicsV2-size-l);
+  top: var(--flows-basicsV2-size-l);
+}
+.flows_basicsV2_survey_popover[data-position="top-left"] {
+  left: var(--flows-basicsV2-size-l);
+  top: var(--flows-basicsV2-size-l);
+}
+
+.flows_basicsV2_survey_popover_options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--flows-basicsV2-size-m);
+}
+
+.flows_basicsV2_survey_popover_footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--flows-basicsV2-size-s);
+}
