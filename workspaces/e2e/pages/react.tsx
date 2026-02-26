@@ -11,6 +11,7 @@ import {
   resetWorkflowProgress,
   startWorkflow,
   useCurrentFloatingBlocks,
+  fetchWorkflows,
 } from "@flows/react";
 import type { FC } from "react";
 import { StrictMode } from "react";
@@ -115,6 +116,7 @@ const Home: FC = () => {
       <button onClick={() => resetWorkflowProgress("my-workflow-id")}>resetWorkflowProgress</button>
       <button onClick={() => startWorkflow("my-start-block")}>startWorkflow</button>
       <button onClick={handleChangeLocation}>changeLocation</button>
+      <button onClick={() => fetchWorkflows()}>fetchWorkflows</button>
     </>
   );
 };

@@ -1,10 +1,10 @@
-import type {
-  Action as IAction} from "@flows/js";
+import type { Action as IAction } from "@flows/js";
 import {
   init,
   resetAllWorkflowsProgress,
   resetWorkflowProgress,
   addFloatingBlocksChangeListener,
+  fetchWorkflows,
 } from "@flows/js";
 import { setupJsComponents } from "@flows/js-components";
 import * as _components from "@flows/js-components/components";
@@ -159,4 +159,7 @@ addFloatingBlocksChangeListener((blocks) => {
 });
 (document.querySelector("#changeLocation") as HTMLButtonElement).addEventListener("click", () => {
   window.history.pushState({}, "", window.location.pathname + "?v=1");
+});
+document.querySelector("#fetchWorkflows")?.addEventListener("click", () => {
+  void fetchWorkflows();
 });
