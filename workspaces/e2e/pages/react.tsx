@@ -1,16 +1,19 @@
-import {
+import type {
   ComponentProps,
+  StateMemory as IStateMemory,
+  Action as IAction,
+  LinkComponentType,
+} from "@flows/react";
+import {
   FlowsProvider,
   FlowsSlot,
   resetAllWorkflowsProgress,
   resetWorkflowProgress,
   startWorkflow,
-  StateMemory as IStateMemory,
   useCurrentFloatingBlocks,
-  Action as IAction,
-  LinkComponentType,
 } from "@flows/react";
-import { FC, StrictMode } from "react";
+import type { FC } from "react";
+import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
 import { HashRouter, Link, Route, Routes } from "react-router";
@@ -18,7 +21,7 @@ import { HashRouter, Link, Route, Routes } from "react-router";
 import * as components from "@flows/react-components";
 import * as tourComponents from "@flows/react-components/tour";
 import "@flows/react-components/index.css";
-import { LanguageOption } from "@flows/shared";
+import type { LanguageOption } from "@flows/shared";
 
 const apiUrl = new URLSearchParams(window.location.search).get("apiUrl") ?? undefined;
 const noUserId = new URLSearchParams(window.location.search).get("noUserId") === "true";

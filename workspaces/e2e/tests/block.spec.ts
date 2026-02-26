@@ -1,4 +1,4 @@
-import { Block } from "@flows/shared";
+import type { Block } from "@flows/shared";
 import { expect, test } from "@playwright/test";
 import { randomUUID } from "crypto";
 import { mockBlocksEndpoint } from "./utils";

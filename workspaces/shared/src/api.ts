@@ -51,7 +51,7 @@ export interface WorkflowsRequest {
 export type WorkflowStatus = "enabled" | "launchpad-enabled";
 export type WorkflowFrequency = "once" | "every-time";
 
-export type WorkflowUserState = "inactive" | "active" | "completed" | "stopped";
+export type WorkflowUserState = "not-started" | "in-progress" | "completed" | "stopped";
 
 export interface Workflow {
   /**
@@ -72,8 +72,8 @@ export interface Workflow {
   frequency: WorkflowFrequency;
   /**
    * The user's current state in the workflow. Can be either:
-   * - `inactive`: The user has not entered the workflow.
-   * - `active`: The user is currently in the workflow.
+   * - `not-started`: The user has not entered the workflow.
+   * - `in-progress`: The user is currently in the workflow.
    * - `completed`: The user has completed the workflow.
    * - `stopped`: The user has been stopped the workflow (e.g., by a workflow migration).
    */

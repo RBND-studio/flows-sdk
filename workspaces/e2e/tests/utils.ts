@@ -1,5 +1,5 @@
-import { Block, TourStep } from "@flows/shared";
-import { Page } from "@playwright/test";
+import type { Block, TourStep } from "@flows/shared";
+import type { Page } from "@playwright/test";
 import { randomUUID } from "crypto";
 
 export const mockBlocksEndpoint = async (page: Page, blocks: Block[]): Promise<void> => {
