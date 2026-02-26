@@ -1,4 +1,5 @@
-import { type EventRequest, getApi, log, WorkflowsResponse } from "@flows/shared";
+import type { WorkflowsResponse } from "@flows/shared";
+import { type EventRequest, getApi, log } from "@flows/shared";
 import { config } from "../store";
 import { packageAndVersion } from "./constants";
 
