@@ -60,22 +60,22 @@ export interface Workflow {
   id: string;
   /**
    * How the workflow is currently enabled in Flows. Can be either:
-   * - `enabled`: workflow is enabled and can be triggered based on its start block setup
-   * - `launchpad-enabled`: workflow is enabled and is in an active launchpad group, so it can be triggered based on its start block setup but only for users that meet the launchpad group criteria
+   * - `enabled`: The workflow is published and active.
+   * - `launchpad-enabled`: The workflow is published, active, and inside an active launchpad group.
    */
   workflow_status: WorkflowStatus;
   /**
    * How often the workflow can be shown to the user. Can be either:
-   * - `once`: workflow can be shown only once to each user. Once the user completes or is stopped in the workflow, they cannot enter it again.
-   * - `every-time`: workflow can be shown unlimited times to each user. The user can complete or be stopped in the workflow, and then enter it again multiple times.
+   * - `once`: The workflow can only be entered once.
+   * - `every-time`: The workflow can be entered every time.
    */
   frequency: WorkflowFrequency;
   /**
    * The user's current state in the workflow. Can be either:
-   * - `inactive`: user has not entered the workflow yet, or their progress has been reset
-   * - `active`: user is currently active in the workflow
-   * - `completed`: user has completed the workflow
-   * - `stopped`: user has been stopped in the workflow, meaning they will not be able to continue or complete it unless their progress is reset.
+   * - `inactive`: The user has not entered the workflow.
+   * - `active`: The user is currently in the workflow.
+   * - `completed`: The user has completed the workflow.
+   * - `stopped`: The user has been stopped the workflow (e.g., by a workflow migration).
    */
   user_state: WorkflowUserState;
   /**
