@@ -27,7 +27,7 @@ export const sendActivate = async (blockId: string): Promise<void> => {
 };
 
 /**
- * Method for fetching the available workflows for the current user from the API. Before calling this method, the `<FlowsProvider>` component must be rendered.
+ * Returns all available workflows for the current user. Before calling this method, the `<FlowsProvider>` component must be rendered.
  * @returns A promise with an array of workflows. Only the enabled workflows are returned.
  */
 export const fetchWorkflows = async (): Promise<WorkflowsResponse> => {
