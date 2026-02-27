@@ -44,6 +44,7 @@ export const logMissingComponentError = ({
   if (type === "tour-component")
     log.error(`Tour Component not found for tour block "${component}"`);
   if (type === "component") log.error(`Component not found for workflow block "${component}"`);
+  if (type === "survey-component") log.error(`Component not found for survey block "${component}"`);
 };
 
 export const getBlockRenderKey = (block: ActiveBlock): string => {

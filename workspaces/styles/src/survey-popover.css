@@ -36,3 +36,7 @@
   justify-content: flex-end;
   gap: var(--flows-basicsV2-size-s);
 }
+
+.flows_basicsV2_survey_freeform_textarea {
+  border: var(--flows-basicsV2-border);
+}

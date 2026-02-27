@@ -5,7 +5,9 @@ type Props = SurveyComponentProps<{
   position: "top-left" | "top-right" | "bottom-left" | "bottom-right";
 }>;
 
-export const SurveyPopover: FC<Props> = ({ survey, position, submit, cancel }) => {
+const SurveyPopover: FC<Props> = ({ survey, position, submit, cancel }) => {
+  console.log(survey);
+
   const [questionIndex, setQuestionIndex] = useState(0);
   const questionsLength = survey.questions.length;
   const isFirstQuestion = questionIndex === 0;
@@ -28,6 +30,7 @@ export const SurveyPopover: FC<Props> = ({ survey, position, submit, cancel }) =
 
       {currentQuestion.type === "freeform" && (
         <textarea
+          className="flows_basicsV2_survey_freeform_textarea"
           defaultValue={currentQuestion.initialValue}
           onChange={(e) => currentQuestion.setValue(e.target.value)}
         />
@@ -54,3 +57,5 @@ export const SurveyPopover: FC<Props> = ({ survey, position, submit, cancel }) =
     </div>
   );
 };
+
+export const BasicsV2SurveyPopover = SurveyPopover;

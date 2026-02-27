@@ -55,7 +55,7 @@ export const blockToActiveBlock = ({
 
   const activeBlock: ActiveBlock = {
     id: block.id,
-    type: "component",
+    type: block.type as ActiveBlock["type"],
     component: block.componentType,
     props,
   };

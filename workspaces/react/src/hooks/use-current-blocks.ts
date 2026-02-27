@@ -2,7 +2,11 @@ import { type ActiveBlock, type Block, pathnameMatch } from "@flows/shared";
 import { useMemo } from "react";
 import { type RunningTour, useFlowsContext } from "../flows-context";
 import { usePathname } from "../contexts/pathname-context";
-import { blockToActiveBlock, tourBlockToActiveBlock } from "../lib/active-block";
+import {
+  blockToActiveBlock,
+  surveyBlockToActiveBlock,
+  tourBlockToActiveBlock,
+} from "../lib/active-block";
 import { getSlot } from "../lib/selectors";
 
 export const useVisibleBlocks = (): Block[] => {
@@ -54,9 +58,11 @@ export const useCurrentFloatingBlocks = (): ActiveBlock[] => {
     () =>
       visibleBlocks
         .filter((b) => !b.slottable)
-        .flatMap((block) =>
-          blockToActiveBlock({ block, removeBlock, updateBlock, userProperties }),
-        ),
+        .flatMap((block) => {
+          if (block.type === "survey-component")
+            return surveyBlockToActiveBlock({ block, removeBlock, updateBlock, userProperties });
+          return blockToActiveBlock({ block, removeBlock, updateBlock, userProperties });
+        }),
     [removeBlock, userProperties, updateBlock, visibleBlocks],
   );
   const floatingTourBlocks = useMemo(
