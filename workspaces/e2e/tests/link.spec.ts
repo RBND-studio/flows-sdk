@@ -1,6 +1,6 @@
 import test, { expect } from "@playwright/test";
 import { mockBlocksEndpoint } from "./utils";
-import { Block } from "@flows/shared";
+import type { Block } from "@flows/shared";
 import { randomUUID } from "crypto";
 
 test.beforeEach(async ({ page }) => {

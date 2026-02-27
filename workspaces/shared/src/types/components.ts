@@ -15,7 +15,7 @@ export interface FlowsProperties {
    */
   key?: string;
   /**
-   * Id of the workflow this block belongs to.
+   * Id of the workflow this block belongs to. You can find it in the Flows app in the workflow detail by opening the three dot menu in the top right corner.
    */
   workflowId: string;
   /**

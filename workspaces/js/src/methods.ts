@@ -116,7 +116,7 @@ export const resetAllWorkflowsProgress = (): Promise<void> => sendEvent({ name: 
 
 /**
  * Reset progress of one workflow for the current user in the current environment.
- * @param workflowId - UUID of the workflow to reset progress for
+ * @param workflowId - UUID of the workflow to reset. You can find it in the Flows app in the workflow detail by opening the three dot menu in the top right corner.
  */
 export const resetWorkflowProgress = (workflowId: string): Promise<void> =>
   sendEvent({ name: "reset-progress", workflowId });
@@ -131,3 +131,5 @@ export const resetWorkflowProgress = (workflowId: string): Promise<void> =>
  */
 export const startWorkflow = (blockKey: string): Promise<void> =>
   sendEvent({ name: "workflow-start", blockKey });
+
+export { fetchWorkflows } from "./lib/api";
