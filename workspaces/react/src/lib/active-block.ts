@@ -9,7 +9,7 @@ import {
   createSurveyComponentProps,
 } from "@flows/shared";
 import { type RemoveBlock, type UpdateBlock, type RunningTour } from "../flows-context";
-import { sendActivate, sendEvent } from "./api";
+import { postSurvey, sendActivate, sendEvent } from "./api";
 
 const getSetStateMemory = (updateBlock: UpdateBlock): SetStateMemory => {
   return async ({ blockId, key, value }) => {
@@ -109,18 +109,22 @@ export const surveyBlockToActiveBlock = ({
 
   const setStateMemory = getSetStateMemory(updateBlock);
 
+  const props = createSurveyComponentProps({
+    block,
+    userProperties,
+    removeBlock,
+    exitNodeCb: ({ key, blockId }) => sendEvent({ name: "transition", blockId, propertyKey: key }),
+    setStateMemory,
+    submitSurvey: postSurvey,
+  });
+
+  if (!props) return [];
+
   const activeBlock: ActiveBlock = {
     id: block.id,
     type: "survey-component",
     component: block.componentType,
-    props: createSurveyComponentProps({
-      block,
-      userProperties,
-      removeBlock,
-      exitNodeCb: ({ key, blockId }) =>
-        sendEvent({ name: "transition", blockId, propertyKey: key }),
-      setStateMemory,
-    }),
+    props,
   };
 
   return createActiveBlockProxy(activeBlock, sendActivate);

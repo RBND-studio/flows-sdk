@@ -21,6 +21,7 @@ import { HashRouter, Link, Route, Routes } from "react-router";
 
 import * as components from "@flows/react-components";
 import * as tourComponents from "@flows/react-components/tour";
+import * as surveyComponents from "@flows/react-components/survey";
 import "@flows/react-components/index.css";
 import type { LanguageOption } from "@flows/shared";
 
@@ -150,6 +151,7 @@ createRoot(document.getElementById("root")!).render(
         apiUrl={apiUrl}
         components={{ ...components, Card, BlockTrigger, StateMemory, Action }}
         tourComponents={{ ...tourComponents, Card, Action }}
+        surveyComponents={{ ...surveyComponents }}
         LinkComponent={enableLinkComponent ? LinkComponent : undefined}
       >
         <Routes>

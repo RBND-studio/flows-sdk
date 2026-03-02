@@ -1,16 +1,27 @@
 import { getApi, log, type WorkflowsResponse, type EventRequest } from "@flows/shared";
 import { globalConfig } from "./store";
 import { packageAndVersion } from "./constants";
+import type { ApiSurveyAnswer } from "@flows/shared/src/types/api-survey";
 
-type SendEventProps = Pick<
-  EventRequest,
-  "name" | "blockId" | "blockKey" | "propertyKey" | "properties" | "workflowId"
->;
+type SendEventProps = Omit<EventRequest, "userId" | "environment" | "organizationId">;
 
 export const sendEvent = async (props: SendEventProps): Promise<void> => {
   const { apiUrl, environment, organizationId, userId } = globalConfig;
   if (!apiUrl || !environment || !organizationId || !userId) return;
   await getApi(apiUrl, packageAndVersion).sendEvent({
+    ...props,
+    environment,
+    organizationId,
+    userId,
+  });
+};
+
+export const postSurvey = async (
+  props: Omit<ApiSurveyAnswer, "userId" | "environment" | "organizationId">,
+) => {
+  const { apiUrl, environment, organizationId, userId } = globalConfig;
+  if (!apiUrl || !environment || !organizationId || !userId) return;
+  await getApi(apiUrl, packageAndVersion).postSurvey({
     ...props,
     environment,
     organizationId,

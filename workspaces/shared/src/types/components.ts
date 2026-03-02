@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any -- needed for loose types */
 
-import { Survey } from "./survey";
+import type { Survey } from "./survey";
 
 /**
  * Properties provided by Flows based on block and block template setup.

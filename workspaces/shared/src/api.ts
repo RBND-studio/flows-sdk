@@ -1,4 +1,5 @@
 import { type Block } from "./types";
+import type { ApiSurveyAnswer } from "./types/api-survey";
 
 const f = <T>(
   url: string,
@@ -120,4 +121,6 @@ export const getApi = (apiUrl: string, version: string) => ({
     f<WorkflowsResponse>(`${apiUrl}/v2/sdk/workflows`, { method: "POST", body, version }),
   sendEvent: (body: EventRequest) =>
     f(`${apiUrl}/v2/sdk/events`, { method: "POST", body, version }),
+  postSurvey: (body: ApiSurveyAnswer) =>
+    f(`${apiUrl}/v2/sdk/survey`, { method: "POST", body, version }),
 });

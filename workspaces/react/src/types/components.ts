@@ -1,4 +1,8 @@
-import { SurveyComponentProps, type ComponentProps, type TourComponentProps } from "@flows/shared";
+import {
+  type SurveyComponentProps,
+  type ComponentProps,
+  type TourComponentProps,
+} from "@flows/shared";
 import { type FC } from "react";
 
 export type Component = FC<ComponentProps>;

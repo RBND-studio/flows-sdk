@@ -1,5 +1,5 @@
 import { type StateMemoryTrigger } from "./components";
-import { ApiSurvey } from "./api-survey";
+import type { ApiSurvey } from "./api-survey";
 
 export type TourWaitInteraction =
   | "navigation"

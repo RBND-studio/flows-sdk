@@ -1,14 +1,14 @@
+import { type LanguageOption, type LinkComponentType, type UserProperties } from "@flows/shared";
 import { useEffect, type FC, type ReactNode } from "react";
-import { type LanguageOption, type UserProperties, type LinkComponentType } from "@flows/shared";
-import { type TourComponents, type Components, SurveyComponents } from "./types";
-import { FlowsContext } from "./flows-context";
-import { useRunningTours } from "./hooks/use-running-tours";
-import { useBlocks } from "./hooks/use-blocks";
-import { PathnameProvider } from "./contexts/pathname-context";
-import { TourController } from "./tour-controller";
-import { globalConfig } from "./lib/store";
-import { FloatingBlocks } from "./components/floating-blocks";
 import { Debug } from "./components/debug";
+import { FloatingBlocks } from "./components/floating-blocks";
+import { PathnameProvider } from "./contexts/pathname-context";
+import { FlowsContext } from "./flows-context";
+import { useBlocks } from "./hooks/use-blocks";
+import { useRunningTours } from "./hooks/use-running-tours";
+import { globalConfig } from "./lib/store";
+import { TourController } from "./tour-controller";
+import { type SurveyComponents, type Components, type TourComponents } from "./types";
 
 export interface FlowsProviderProps {
   /**
