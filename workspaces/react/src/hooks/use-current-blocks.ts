@@ -2,7 +2,11 @@ import { type ActiveBlock, type Block, pathnameMatch } from "@flows/shared";
 import { useMemo } from "react";
 import { type RunningTour, useFlowsContext } from "../flows-context";
 import { usePathname } from "../contexts/pathname-context";
-import { blockToActiveBlock, tourBlockToActiveBlock } from "../lib/active-block";
+import {
+  blockToActiveBlock,
+  surveyBlockToActiveBlock,
+  tourBlockToActiveBlock,
+} from "../lib/active-block";
 import { getSlot } from "../lib/selectors";
 
 export const useVisibleBlocks = (): Block[] => {
@@ -54,9 +58,11 @@ export const useCurrentFloatingBlocks = (): ActiveBlock[] => {
     () =>
       visibleBlocks
         .filter((b) => !b.slottable)
-        .flatMap((block) =>
-          blockToActiveBlock({ block, removeBlock, updateBlock, userProperties }),
-        ),
+        .flatMap((block) => {
+          if (block.type === "survey")
+            return surveyBlockToActiveBlock({ block, removeBlock, updateBlock, userProperties });
+          return blockToActiveBlock({ block, removeBlock, updateBlock, userProperties });
+        }),
     [removeBlock, userProperties, updateBlock, visibleBlocks],
   );
   const floatingTourBlocks = useMemo(
@@ -98,14 +104,22 @@ export const useCurrentSlotBlocks = (slotId: string): ActiveBlock[] => {
     return [...slotBlocks, ...slotTourBlocks]
       .sort((a, b) => getSlotIndex(a) - getSlotIndex(b))
       .flatMap((item) => {
-        if (isBlock(item))
+        if (isBlock(item) && item.type === "component")
           return blockToActiveBlock({
             block: item,
             removeBlock,
             updateBlock,
             userProperties,
           });
-        return tourBlockToActiveBlock({ tour: item, userProperties });
+        if (isBlock(item) && item.type === "survey")
+          return surveyBlockToActiveBlock({
+            block: item,
+            removeBlock,
+            updateBlock,
+            userProperties,
+          });
+        if (!isBlock(item)) return tourBlockToActiveBlock({ tour: item, userProperties });
+        return [];
       });
   }, [removeBlock, slotId, userProperties, updateBlock, visibleBlocks, visibleTours]);
 

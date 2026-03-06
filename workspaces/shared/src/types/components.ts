@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any -- needed for loose types */
 
+import type { Survey } from "./survey";
+
 /**
  * Properties provided by Flows based on block and block template setup.
  */
@@ -41,6 +43,18 @@ export type TourComponentProps<T extends Record<string, any> = any> = {
 
   continue: () => void;
   previous?: () => void;
+  cancel: () => void;
+} & T;
+
+export type SurveyComponentProps<T extends Record<string, any> = any> = {
+  /**
+   * Properties provided by Flows based on block and block template setup.
+   */
+  __flows: FlowsProperties;
+
+  survey: Survey;
+
+  submit: () => void;
   cancel: () => void;
 } & T;
 

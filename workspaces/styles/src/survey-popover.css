@@ -1,0 +1,70 @@
+.flows_basicsV2_survey_popover {
+  position: fixed;
+  z-index: var(--flows-basicsV2-zIndex);
+  background-color: var(--flows-basicsV2-bg-default);
+  border: var(--flows-basicsV2-border);
+  color: var(--flows-basicsV2-fg-default);
+  border-radius: var(--flows-basicsV2-borderRadius-l);
+  box-shadow: var(--flows-basicsV2-shadow-large);
+  padding: var(--flows-basicsV2-size-m);
+}
+
+.flows_basicsV2_survey_popover[data-position="bottom-right"] {
+  right: var(--flows-basicsV2-size-l);
+  bottom: var(--flows-basicsV2-size-l);
+}
+.flows_basicsV2_survey_popover[data-position="bottom-left"] {
+  left: var(--flows-basicsV2-size-l);
+  bottom: var(--flows-basicsV2-size-l);
+}
+.flows_basicsV2_survey_popover[data-position="top-right"] {
+  right: var(--flows-basicsV2-size-l);
+  top: var(--flows-basicsV2-size-l);
+}
+.flows_basicsV2_survey_popover[data-position="top-left"] {
+  left: var(--flows-basicsV2-size-l);
+  top: var(--flows-basicsV2-size-l);
+}
+
+.flows_basicsV2_survey_popover_footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--flows-basicsV2-size-s);
+  margin-top: var(--flows-basicsV2-size-m);
+}
+
+/* Freeform */
+
+.flows_basicsV2_survey_freeform_textarea {
+  border: var(--flows-basicsV2-border);
+}
+
+/* Rating */
+
+.flows_basicsV2_survey_rating_list {
+  display: flex;
+  gap: var(--flows-basicsV2-size-s);
+}
+
+.flows_basicsV2_survey_rating_option {
+  width: var(--flows-basicsV2-size-xxl);
+  height: var(--flows-basicsV2-size-xxl);
+  display: grid;
+  place-items: center;
+  border: var(--flows-basicsV2-border);
+  cursor: pointer;
+}
+
+/* Single / Multi choice */
+
+.flows_basicsV2_survey_option_list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--flows-basicsV2-size-s);
+}
+
+.flows_basicsV2_survey_option {
+  display: flex;
+  align-items: center;
+  gap: var(--flows-basicsV2-size-s);
+}
