@@ -1,13 +1,11 @@
-import type { SurveyComponentProps } from "@flows/shared";
+import type { SurveyComponentProps, SurveyPopoverProps } from "@flows/shared";
 import type { FC } from "react";
 import { useCallback, useState } from "react";
 import { Button } from "../../internal-components/button";
 
-type Props = SurveyComponentProps<{
-  position: "top-left" | "top-right" | "bottom-left" | "bottom-right";
-}>;
+type Props = SurveyComponentProps<SurveyPopoverProps>;
 
-const SurveyPopover: FC<Props> = ({ survey, position, submit, cancel }) => {
+const SurveyPopover: FC<Props> = ({ survey, position = "bottom-left", submit, cancel }) => {
   const [questionIndex, setQuestionIndex] = useState(0);
   const questionsLength = survey.questions.length;
   const isFirstQuestion = questionIndex === 0;

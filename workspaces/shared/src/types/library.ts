@@ -148,7 +148,7 @@ export interface TourCardProps {
   hideProgress: boolean;
 }
 
-// Checklist
+// Floating checklist
 
 export interface ChecklistItem {
   title: string;
@@ -178,4 +178,12 @@ export interface FloatingChecklistProps {
 
   complete: () => void;
   close: () => void;
+}
+
+// Survey popover
+
+export type SurveyPopoverPosition = "top-left" | "top-right" | "bottom-left" | "bottom-right";
+
+export interface SurveyPopoverProps {
+  position?: SurveyPopoverPosition;
 }

@@ -12,7 +12,7 @@ export const Block: FC<Props> = ({ block }) => {
   const Component = (() => {
     if (block.type === "component") return components[block.component];
     if (block.type === "tour-component") return tourComponents[block.component];
-    if (block.type === "survey-component") return surveyComponents[block.component];
+    if (block.type === "survey") return surveyComponents[block.component];
     return undefined;
   })();
 

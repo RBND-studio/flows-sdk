@@ -48,11 +48,14 @@ export interface TourTrigger {
   $and?: TourTriggerExpression[];
 }
 
+export type BlockType = "component" | "tour" | "survey";
+export type TourStepType = "tour-component" | "wait";
+
 export interface Block {
   id: string;
   workflowId: string;
   key?: string;
-  type: string;
+  type: BlockType;
   componentType?: string;
   data: Record<string, unknown>;
   propertyMeta?: PropertyMeta[];
@@ -76,7 +79,7 @@ export interface TourStep {
   id: string;
   workflowId: string;
   key?: string;
-  type: string;
+  type: TourStepType;
   componentType?: string;
   data: Record<string, unknown>;
   propertyMeta?: PropertyMeta[];

@@ -41,6 +41,7 @@ export const blockToActiveBlock = ({
   updateBlock: UpdateBlock;
   userProperties: UserProperties;
 }): ActiveBlock | [] => {
+  if (block.type !== "component") return [];
   if (!block.componentType) return [];
 
   const setStateMemory = getSetStateMemory(updateBlock);
@@ -105,6 +106,7 @@ export const surveyBlockToActiveBlock = ({
   updateBlock: UpdateBlock;
   removeBlock: RemoveBlock;
 }): ActiveBlock | [] => {
+  if (block.type !== "survey") return [];
   if (!block.componentType) return [];
 
   const setStateMemory = getSetStateMemory(updateBlock);
@@ -122,7 +124,7 @@ export const surveyBlockToActiveBlock = ({
 
   const activeBlock: ActiveBlock = {
     id: block.id,
-    type: "survey-component",
+    type: "survey",
     component: block.componentType,
     props,
   };

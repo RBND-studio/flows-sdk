@@ -1,4 +1,5 @@
 import { log } from "./log";
+import type { BlockType, TourStepType } from "./types";
 import { type Block, type TourStep, type ActiveBlock } from "./types";
 import { type BlockUpdatesMessage } from "./websocket-message";
 
@@ -13,7 +14,7 @@ export const applyUpdateMessageToBlocksState = (
   return [...blocks.filter((b) => !exitedOrUpdatedBlockIdsSet.has(b.id)), ...message.updatedBlocks];
 };
 
-const logSlottableError = (b: Block | TourStep, type: "component" | "tour-component"): void => {
+const logSlottableError = (b: Block | TourStep, type: BlockType | TourStepType): void => {
   if (b.slottable && !b.slotId) {
     if (type === "component")
       log.error(
@@ -21,15 +22,19 @@ const logSlottableError = (b: Block | TourStep, type: "component" | "tour-compon
       );
     if (type === "tour-component")
       log.error(`Encountered tour block "${b.componentType}" that is slottable but has no slotId`);
+    if (type === "survey")
+      log.error(
+        `Encountered survey block "${b.componentType}" that is slottable but has no slotId`,
+      );
   }
 };
 
 export const logSlottableBlocksError = (blocks: Block[]): void => {
   blocks.forEach((b) => {
-    logSlottableError(b, "component");
+    logSlottableError(b, b.type);
 
     b.tourBlocks?.forEach((tb) => {
-      logSlottableError(tb, "tour-component");
+      logSlottableError(tb, tb.type);
     });
   });
 };
@@ -44,7 +49,7 @@ export const logMissingComponentError = ({
   if (type === "tour-component")
     log.error(`Tour Component not found for tour block "${component}"`);
   if (type === "component") log.error(`Component not found for workflow block "${component}"`);
-  if (type === "survey-component") log.error(`Component not found for survey block "${component}"`);
+  if (type === "survey") log.error(`Component not found for survey block "${component}"`);
 };
 
 export const getBlockRenderKey = (block: ActiveBlock): string => {

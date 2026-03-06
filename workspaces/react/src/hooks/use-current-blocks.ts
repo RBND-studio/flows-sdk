@@ -59,7 +59,7 @@ export const useCurrentFloatingBlocks = (): ActiveBlock[] => {
       visibleBlocks
         .filter((b) => !b.slottable)
         .flatMap((block) => {
-          if (block.type === "survey-component")
+          if (block.type === "survey")
             return surveyBlockToActiveBlock({ block, removeBlock, updateBlock, userProperties });
           return blockToActiveBlock({ block, removeBlock, updateBlock, userProperties });
         }),
@@ -104,14 +104,22 @@ export const useCurrentSlotBlocks = (slotId: string): ActiveBlock[] => {
     return [...slotBlocks, ...slotTourBlocks]
       .sort((a, b) => getSlotIndex(a) - getSlotIndex(b))
       .flatMap((item) => {
-        if (isBlock(item))
+        if (isBlock(item) && item.type === "component")
           return blockToActiveBlock({
             block: item,
             removeBlock,
             updateBlock,
             userProperties,
           });
-        return tourBlockToActiveBlock({ tour: item, userProperties });
+        if (isBlock(item) && item.type === "survey")
+          return surveyBlockToActiveBlock({
+            block: item,
+            removeBlock,
+            updateBlock,
+            userProperties,
+          });
+        if (!isBlock(item)) return tourBlockToActiveBlock({ tour: item, userProperties });
+        return [];
       });
   }, [removeBlock, slotId, userProperties, updateBlock, visibleBlocks, visibleTours]);
 
