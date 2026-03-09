@@ -7,6 +7,7 @@ export type QuestionBase<T extends string> = {
 };
 
 type FreeformQuestion = QuestionBase<"freeform"> & {
+  placeholder?: string;
   getInitialValue: () => string | undefined;
   setValue: (value: string) => void;
 };

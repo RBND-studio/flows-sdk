@@ -186,4 +186,10 @@ export type SurveyPopoverPosition = "top-left" | "top-right" | "bottom-left" | "
 
 export interface SurveyPopoverProps {
   position?: SurveyPopoverPosition;
+  dismissible: boolean;
+  autoCloseAfterSubmit: boolean;
+
+  autoProceedAfterAnswer: boolean;
+
+  nextButtonLabel?: string;
 }

@@ -2,126 +2,85 @@ import type { SurveyComponentProps, SurveyPopoverProps } from "@flows/shared";
 import type { FC } from "react";
 import { useCallback, useState } from "react";
 import { Button } from "../../internal-components/button";
+import { Text } from "../../internal-components/text";
+import { MultipleChoiceInput } from "./multiple-choice-input";
+import { RatingQuestion } from "./rating-question";
+import { SingleChoiceInput } from "./single-choice-input";
 
 type Props = SurveyComponentProps<SurveyPopoverProps>;
 
-const SurveyPopover: FC<Props> = ({ survey, position = "bottom-left", submit, cancel }) => {
+const SurveyPopover: FC<Props> = ({
+  survey,
+  position = "bottom-right",
+  dismissible,
+  nextButtonLabel = "Next",
+  autoProceedAfterAnswer = true,
+  submit,
+  cancel,
+}) => {
   const [questionIndex, setQuestionIndex] = useState(0);
+
   const questionsLength = survey.questions.length;
-  const isFirstQuestion = questionIndex === 0;
   const isLastQuestion = questionIndex === questionsLength - 1;
+
   const handleNextQuestion = useCallback(() => {
     setQuestionIndex((prev) => Math.min(prev + 1, questionsLength - 1));
   }, [questionsLength]);
-  const handlePreviousQuestion = useCallback(() => {
-    setQuestionIndex((prev) => Math.max(prev - 1, 0));
-  }, []);
+
+  const handleAutoProceed = () => {
+    if (autoProceedAfterAnswer) {
+      if (!isLastQuestion) {
+        // add few ms delay
+        setTimeout(() => {
+          handleNextQuestion();
+        }, 320);
+      }
+    }
+  };
 
   const currentQuestion = survey.questions.at(questionIndex);
+
+  const handleLinkClick = () => {
+    if (isLastQuestion) {
+      submit();
+    } else {
+      handleNextQuestion();
+    }
+  };
+
+  const hideNextButton =
+    (currentQuestion?.type === "rating" || currentQuestion?.type === "single-choice") &&
+    autoProceedAfterAnswer;
 
   if (!currentQuestion) return null;
 
   return (
     <div className="flows_basicsV2_survey_popover" data-position={position}>
-      <p>{currentQuestion.title}</p>
-      <p>{currentQuestion.description}</p>
+      <Text className="flows_basicsV2_survey_popover_title" variant="title">
+        {currentQuestion.title}
+      </Text>
+      <Text className="flows_basicsV2_survey_popover_description" variant="body">
+        {currentQuestion.description}
+      </Text>
 
       {currentQuestion.type === "freeform" && (
         <textarea
           className="flows_basicsV2_survey_freeform_textarea"
           defaultValue={currentQuestion.getInitialValue()}
           onChange={(e) => currentQuestion.setValue(e.target.value)}
+          // FIXME: add this prop to cloud and remove the "Start typing..." default here
+          placeholder={currentQuestion.placeholder ?? "Start typing..."}
+          rows={4}
         />
       )}
       {currentQuestion.type === "rating" && (
-        <div className="flows_basicsV2_survey_rating_list">
-          {Array(currentQuestion.scale)
-            .fill(null)
-            .map((_, i) => (
-              <button
-                className="flows_basicsV2_survey_rating_option"
-                onClick={() => currentQuestion.setValue(i.toString())}
-                key={i}
-              >
-                {i + 1}
-              </button>
-            ))}
-        </div>
+        <RatingQuestion currentQuestion={currentQuestion} onAnswer={handleAutoProceed} />
       )}
       {currentQuestion.type === "single-choice" && (
-        <>
-          <div className="flows_basicsV2_survey_option_list">
-            {currentQuestion.options.map((option) => (
-              <div className="flows_basicsV2_survey_option" key={option.id}>
-                <input
-                  defaultChecked={option.getInitialSelected()}
-                  onChange={(e) => option.setSelected(e.target.checked)}
-                  type="radio"
-                  name={currentQuestion.id}
-                  value={option.id}
-                  id={option.id}
-                />
-                <label htmlFor={option.id}>{option.label}</label>
-              </div>
-            ))}
-          </div>
-
-          {currentQuestion.openOption && (
-            <>
-              <div className="flows_basicsV2_survey_option">
-                <input
-                  type="radio"
-                  name={currentQuestion.id}
-                  value=""
-                  id={`${currentQuestion.id}-open`}
-                />
-                <label htmlFor={`${currentQuestion.id}-open`}>{currentQuestion.openLabel}</label>
-              </div>
-              <textarea
-                className="flows_basicsV2_survey_freeform_textarea"
-                defaultValue={currentQuestion.getInitialValue()}
-                onChange={(e) => currentQuestion.setValue(e.target.value)}
-              />
-            </>
-          )}
-        </>
+        <SingleChoiceInput currentQuestion={currentQuestion} onAnswer={handleAutoProceed} />
       )}
       {currentQuestion.type === "multiple-choice" && (
-        <>
-          <div className="flows_basicsV2_survey_option_list">
-            {currentQuestion.options.map((option) => (
-              <div className="flows_basicsV2_survey_option" key={option.id}>
-                <input
-                  defaultChecked={option.getInitialSelected()}
-                  onChange={(e) => option.setSelected(e.target.checked)}
-                  type="checkbox"
-                  name={currentQuestion.id}
-                  value={option.id}
-                  id={option.id}
-                />
-                <label htmlFor={option.id}>{option.label}</label>
-              </div>
-            ))}
-          </div>
-          {currentQuestion.openOption && (
-            <>
-              <div className="flows_basicsV2_survey_option">
-                <input
-                  type="checkbox"
-                  name={currentQuestion.id}
-                  value=""
-                  id={`${currentQuestion.id}-open`}
-                />
-                <label htmlFor={`${currentQuestion.id}-open`}>{currentQuestion.openLabel}</label>
-              </div>
-              <textarea
-                className="flows_basicsV2_survey_freeform_textarea"
-                defaultValue={currentQuestion.getInitialValue()}
-                onChange={(e) => currentQuestion.setValue(e.target.value)}
-              />
-            </>
-          )}
-        </>
+        <MultipleChoiceInput currentQuestion={currentQuestion} />
       )}
       {currentQuestion.type === "link" && (
         <>
@@ -129,34 +88,35 @@ const SurveyPopover: FC<Props> = ({ survey, position = "bottom-left", submit, ca
             href={currentQuestion.url}
             variant="primary"
             target={currentQuestion.openInNew ? "_blank" : undefined}
+            className="flows_basicsV2_survey_popover_link_button"
+            onClick={() => {
+              currentQuestion.setClicked();
+              handleLinkClick();
+            }}
           >
             {currentQuestion.linkLabel}
           </Button>
         </>
       )}
 
-      <div className="flows_basicsV2_survey_popover_footer">
-        {!isFirstQuestion && (
-          <Button variant="secondary" onClick={handlePreviousQuestion}>
-            Previous
-          </Button>
-        )}
-        {!isLastQuestion && (
-          <Button variant="secondary" onClick={handleNextQuestion}>
-            Next
-          </Button>
-        )}
-        {isLastQuestion && (
-          <Button variant="secondary" onClick={submit}>
-            Submit
-          </Button>
-        )}
-        {!isLastQuestion && (
-          <Button variant="secondary" onClick={cancel}>
-            Cancel
-          </Button>
-        )}
-      </div>
+      {currentQuestion.type !== "link" && (isLastQuestion || !hideNextButton) && (
+        <div className="flows_basicsV2_survey_popover_footer">
+          {!isLastQuestion && !hideNextButton && (
+            <Button
+              className="flows_basicsV2_survey_popover_submit"
+              variant="primary"
+              onClick={handleNextQuestion}
+            >
+              {nextButtonLabel}
+            </Button>
+          )}
+          {isLastQuestion && (
+            <Button variant="secondary" onClick={submit}>
+              Submit
+            </Button>
+          )}
+        </div>
+      )}
     </div>
   );
 };

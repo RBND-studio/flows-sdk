@@ -12,6 +12,7 @@
   white-space: nowrap;
   text-decoration: none;
   text-align: center;
+  appearance: button;
 }
 
 .flows_basicsV2_button_primary {
