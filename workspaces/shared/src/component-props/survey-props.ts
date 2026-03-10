@@ -80,6 +80,7 @@ export const createSurveyComponentProps = (props: {
       return {
         ...questionBase,
         type: "freeform",
+        placeholder: template(question.textPlaceholder ?? "", props.userProperties),
         setValue: (value) =>
           setQuestionValue({ questionId: question.id, surveyId: survey.id, value }),
         getInitialValue: () => getQuestionValue(survey.id, question.id),
@@ -178,6 +179,15 @@ export const createSurveyComponentProps = (props: {
         openInNew: question.openInNew ?? false,
         linkLabel: template(question.linkLabel ?? "", props.userProperties),
         setClicked: () => setClickedLink({ questionId: question.id, surveyId: survey.id }),
+      };
+    }
+    if (questionBase.type === "end-screen") {
+      return {
+        ...questionBase,
+        type: "end-screen",
+        url: template(question.url ?? "", props.userProperties),
+        openInNew: question.openInNew ?? false,
+        linkLabel: template(question.linkLabel ?? "", props.userProperties),
       };
     }
 

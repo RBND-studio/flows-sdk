@@ -63,12 +63,21 @@ export type LinkQuestion = QuestionBase<"link"> & {
   setClicked: () => void;
 };
 
+export type EndScreenQuestion = QuestionBase<"end-screen"> & {
+  url: string;
+  openInNew: boolean;
+  linkLabel: string;
+
+  // TODO: should we add method like in LinkQuestion?
+};
+
 export type SurveyQuestion =
   | FreeformQuestion
   | SingleChoiceQuestion
   | MultipleChoiceQuestion
   | RatingQuestion
-  | LinkQuestion;
+  | LinkQuestion
+  | EndScreenQuestion;
 export type SurveyQuestionType = SurveyQuestion["type"];
 
 export type Survey = {

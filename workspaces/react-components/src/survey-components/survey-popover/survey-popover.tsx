@@ -157,7 +157,7 @@ const SurveyPopover: FC<Props> = ({
               descriptionId={descriptionId}
             />
           )}
-          {currentQuestion.type === "link" && (
+          {(currentQuestion.type === "link" || currentQuestion.type === "end-screen") && (
             <>
               <Button
                 href={currentQuestion.url}
@@ -165,7 +165,7 @@ const SurveyPopover: FC<Props> = ({
                 target={currentQuestion.openInNew ? "_blank" : undefined}
                 className="flows_basicsV2_survey_popover_link_button"
                 onClick={() => {
-                  currentQuestion.setClicked();
+                  if (currentQuestion.type === "link") currentQuestion.setClicked();
                   handleLinkClick();
                 }}
               >

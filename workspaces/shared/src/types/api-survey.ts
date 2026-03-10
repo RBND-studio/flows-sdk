@@ -14,6 +14,7 @@ export type ApiSurveyQuestion = {
   openLabel?: string;
   linkLabel?: string;
   url?: string;
+  textPlaceholder?: string;
 
   optional: boolean;
   shuffleOptions?: boolean;
