@@ -6,7 +6,8 @@ export const OpenOption: FC<{
   openSelected: boolean;
   onSelect: () => void;
   onDeselect: () => void;
-}> = ({ currentQuestion, openSelected, onSelect, onDeselect }) => {
+  type: "radio" | "checkbox";
+}> = ({ currentQuestion, openSelected, onSelect, onDeselect, type }) => {
   const { openLabel } = currentQuestion;
 
   const handleClick = () => {
@@ -14,20 +15,36 @@ export const OpenOption: FC<{
       currentQuestion.setOpenSelected(true);
       currentQuestion.setValue("");
       onSelect();
+    } else {
+      // Move focus to input if user clicks outside of the input
+      setTimeout(() => {
+        const input = document.getElementById(currentQuestion.id + "-open-input");
+        input?.focus();
+      });
     }
   };
 
   return (
     <button
       onClick={handleClick}
-      className="flows_basicsV2_survey_popover_open_option"
+      className="flows_basicsV2_survey_popover_choice_option flows_basicsV2_survey_popover_open_option"
       data-selected={openSelected ? "true" : "false"}
+      role={type === "radio" ? "radio" : "checkbox"}
+      aria-checked={openSelected}
     >
+      <span
+        className={
+          type === "radio"
+            ? "flows_basicsV2_survey_popover_radio_indicator"
+            : "flows_basicsV2_survey_popover_checkbox_indicator"
+        }
+      />
       {openSelected ? (
         <input
           ref={(el) => el?.focus()}
           type="text"
-          className="flows_basicsV2_survey_open_option_input"
+          id={currentQuestion.id + "-open-input"}
+          className="flows_basicsV2_survey_popover_open_option_input"
           onChange={(e) => currentQuestion.setValue(e.target.value)}
           defaultValue={currentQuestion.getInitialValue()}
           onBlur={(e) => {

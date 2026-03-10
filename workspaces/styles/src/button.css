@@ -52,3 +52,8 @@
   font-size: var(--flows-basicsV2-button-small-font-size);
   line-height: var(--flows-basicsV2-button-small-line-height);
 }
+
+.flows_basicsV2_button:disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}

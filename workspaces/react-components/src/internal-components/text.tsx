@@ -3,11 +3,12 @@ import { type FC } from "react";
 
 interface Props extends React.HTMLAttributes<HTMLParagraphElement> {
   variant: "title" | "body";
+  as?: React.ElementType;
 }
 
-export const Text: FC<Props> = ({ className, variant, ...props }) => {
+export const Text: FC<Props> = ({ className, variant, as: Component = "p", ...props }) => {
   return (
-    <p
+    <Component
       className={clsx("flows_basicsV2_text", `flows_basicsV2_text_${variant}`, className)}
       {...props}
     />
