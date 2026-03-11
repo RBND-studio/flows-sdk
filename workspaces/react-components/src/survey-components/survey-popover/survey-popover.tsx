@@ -8,24 +8,37 @@ import { RatingQuestion } from "./rating-question";
 import { SingleChoiceInput } from "./single-choice-input";
 import { IconButton } from "../../internal-components/icon-button";
 import { Close16 } from "../../icons/close16";
+import { EndScreen } from "./end-screen";
 
 type Props = SurveyComponentProps<SurveyPopoverProps>;
 
 // The duration should be in sync with the animation durations in survey-popover.css
 const TRANSITION_DURATION = 240;
+const CLOSE_ANIMATION_DURATION = 160;
+const DEFAULT_POSITION: SurveyPopoverProps["position"] = "bottom-right";
+const DEFAULT_NEXT_BUTTON_LABEL = "Next";
 
 const SurveyPopover: FC<Props> = ({
   survey,
-  position = "bottom-right",
+  position,
   dismissible,
-  nextButtonLabel = "Next",
-  autoProceedAfterAnswer = false,
+  nextButtonLabel,
+  autoProceedAfterAnswer,
+  autoCloseAfterSubmit = true,
   submit,
   cancel,
 }) => {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [isExiting, setIsExiting] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
+
+  const closeTimeoutRef = useRef<number>(null);
+  const handleClose = useCallback((fn: () => void) => {
+    clearTimeout(closeTimeoutRef.current ?? undefined);
+    setIsClosing(true);
+    closeTimeoutRef.current = window.setTimeout(fn, CLOSE_ANIMATION_DURATION);
+  }, []);
 
   const questionsLength = survey.questions.length;
   const isLastQuestion = questionIndex === questionsLength - 1;
@@ -60,9 +73,11 @@ const SurveyPopover: FC<Props> = ({
     navigateTo(Math.min(questionIndex + 1, questionsLength - 1));
   }, [questionIndex, questionsLength, navigateTo]);
 
+  const autoProceedTimeoutRef = useRef<number>(null);
   const handleAutoProceed = () => {
     if (autoProceedAfterAnswer && !isLastQuestion) {
-      setTimeout(handleNextQuestion, 320);
+      clearTimeout(autoProceedTimeoutRef.current ?? undefined);
+      autoProceedTimeoutRef.current = window.setTimeout(handleNextQuestion, 320);
     }
   };
 
@@ -96,7 +111,8 @@ const SurveyPopover: FC<Props> = ({
     <div
       ref={popoverRef}
       className="flows_basicsV2_survey_popover"
-      data-position={position}
+      data-position={position ? position : DEFAULT_POSITION}
+      data-closing={isClosing ? "true" : undefined}
       onTransitionEnd={handleHeightTransitionEnd}
     >
       <div
@@ -108,13 +124,23 @@ const SurveyPopover: FC<Props> = ({
           <Text
             as="legend"
             id={legendId}
-            className="flows_basicsV2_survey_popover_title"
+            className={
+              `flows_basicsV2_survey_popover_title` +
+              (currentQuestion.type === "end-screen"
+                ? " flows_basicsV2_survey_popover_end_screen_title"
+                : "")
+            }
             variant="title"
           >
             {currentQuestion.title}
           </Text>
           <Text
-            className="flows_basicsV2_survey_popover_description"
+            className={
+              `flows_basicsV2_survey_popover_description` +
+              (currentQuestion.type === "end-screen"
+                ? " flows_basicsV2_survey_popover_end_screen_description"
+                : "")
+            }
             variant="body"
             id={descriptionId}
           >
@@ -129,8 +155,9 @@ const SurveyPopover: FC<Props> = ({
               id={currentQuestion.id + "-textarea"}
               defaultValue={currentQuestion.getInitialValue()}
               onChange={(e) => currentQuestion.setValue(e.target.value)}
-              // FIXME: add this prop to cloud and remove the "Start typing..." default here
-              placeholder={currentQuestion.placeholder ?? "Start typing..."}
+              placeholder={
+                currentQuestion.placeholder ? currentQuestion.placeholder : "Start typing..."
+              }
               rows={4}
             />
           )}
@@ -157,10 +184,10 @@ const SurveyPopover: FC<Props> = ({
               descriptionId={descriptionId}
             />
           )}
-          {(currentQuestion.type === "link" || currentQuestion.type === "end-screen") && (
+          {currentQuestion.type === "link" && (
             <>
               <Button
-                href={currentQuestion.url}
+                href={currentQuestion.url ? currentQuestion.url : undefined}
                 variant="primary"
                 target={currentQuestion.openInNew ? "_blank" : undefined}
                 className="flows_basicsV2_survey_popover_link_button"
@@ -173,33 +200,43 @@ const SurveyPopover: FC<Props> = ({
               </Button>
             </>
           )}
-
-          {currentQuestion.type !== "link" && (isLastQuestion || !hideNextButton) && (
-            <div className="flows_basicsV2_survey_popover_footer">
-              {!isLastQuestion && !hideNextButton && (
-                <Button
-                  className="flows_basicsV2_survey_popover_submit"
-                  variant="primary"
-                  // FIXME: @VojtechVidra add disabled state when required question is unanswered
-                  // disabled
-                  onClick={handleNextQuestion}
-                >
-                  {nextButtonLabel}
-                </Button>
-              )}
-              {isLastQuestion && (
-                <Button variant="secondary" onClick={submit}>
-                  Submit
-                </Button>
-              )}
-            </div>
+          {currentQuestion.type === "end-screen" && (
+            <EndScreen
+              currentQuestion={currentQuestion}
+              handleLinkClick={handleLinkClick}
+              submit={() => handleClose(submit)}
+              autoCloseAfterSubmit={autoCloseAfterSubmit}
+            />
           )}
 
-          {dismissible ? (
+          {currentQuestion.type !== "link" &&
+            currentQuestion.type !== "end-screen" &&
+            (isLastQuestion || !hideNextButton) && (
+              <div className="flows_basicsV2_survey_popover_footer">
+                {!isLastQuestion && !hideNextButton && (
+                  <Button
+                    className="flows_basicsV2_survey_popover_submit"
+                    variant="primary"
+                    // FIXME: @VojtechVidra add disabled state when required question is unanswered
+                    // disabled
+                    onClick={handleNextQuestion}
+                  >
+                    {nextButtonLabel ? nextButtonLabel : DEFAULT_NEXT_BUTTON_LABEL}
+                  </Button>
+                )}
+                {isLastQuestion && (
+                  <Button variant="secondary" onClick={() => handleClose(submit)}>
+                    Submit
+                  </Button>
+                )}
+              </div>
+            )}
+
+          {dismissible && !isLastQuestion ? (
             <IconButton
               aria-label="Close"
               className="flows_basicsV2_survey_popover_close"
-              onClick={cancel}
+              onClick={() => handleClose(cancel)}
             >
               <Close16 />
             </IconButton>
