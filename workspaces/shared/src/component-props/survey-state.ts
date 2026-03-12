@@ -4,7 +4,7 @@ type SurveyState = {
   [questionId: string]: {
     textResponse?: string;
     optionIds?: string[];
-    openSelected?: boolean;
+    otherSelected?: boolean;
     clickedLink?: boolean;
   };
 };
@@ -51,7 +51,7 @@ export const setOptionValue = ({
   const surveyState = getSurveyState(surveyId) ?? {};
   const questionState = surveyState[questionId] ?? {};
   const optionIds = clearPrevious ? new Set<string>() : new Set(questionState.optionIds ?? []);
-  if (clearPrevious) questionState.openSelected = false;
+  if (clearPrevious) questionState.otherSelected = false;
   if (selected) {
     optionIds.add(optionId);
   } else {
@@ -62,7 +62,7 @@ export const setOptionValue = ({
   debouncedPersistSurveyState(surveyId);
 };
 
-export const setOpenSelected = ({
+export const setOtherSelected = ({
   questionId,
   selected,
   surveyId,
@@ -75,7 +75,7 @@ export const setOpenSelected = ({
 }): void => {
   const surveyState = getSurveyState(surveyId) ?? {};
   const questionState = surveyState[questionId] ?? {};
-  questionState.openSelected = selected;
+  questionState.otherSelected = selected;
   if (clearOptions) questionState.optionIds = [];
   surveyState[questionId] = questionState;
   surveyStates.set(surveyId, surveyState);
@@ -119,7 +119,7 @@ export const getOptionValue = (surveyId: string, questionId: string, optionId: s
   return optionIds.includes(optionId);
 };
 
-export const getOpenSelected = (surveyId: string, questionId: string): boolean => {
+export const getOtherSelected = (surveyId: string, questionId: string): boolean => {
   const surveyState = getSurveyState(surveyId);
-  return surveyState?.[questionId]?.openSelected ?? false;
+  return surveyState?.[questionId]?.otherSelected ?? false;
 };

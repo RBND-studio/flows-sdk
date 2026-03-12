@@ -11,14 +11,14 @@ export type ApiSurveyQuestion = {
   description: string;
   lowerBoundLabel?: string;
   upperBoundLabel?: string;
-  openLabel?: string;
+  otherLabel?: string;
   linkLabel?: string;
   url?: string;
   textPlaceholder?: string;
 
   optional: boolean;
   shuffleOptions?: boolean;
-  openOption?: boolean;
+  otherOption?: boolean;
   displayType?: string;
   scale?: number;
   openInNew?: boolean;
@@ -36,7 +36,7 @@ export type ApiSurveyQuestionAnswer = {
   questionId: string;
   textResponse?: string;
   clickedLink?: boolean;
-  openSelected?: boolean;
+  otherSelected?: boolean;
   optionIds?: string[];
 };
 

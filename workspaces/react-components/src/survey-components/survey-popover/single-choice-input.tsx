@@ -1,5 +1,5 @@
 import type { SingleChoiceQuestion } from "@flows/shared/src/types/survey";
-import { OpenOption } from "./open-option";
+import { OtherOption } from "./open-option";
 import { useState } from "react";
 
 type Props = {
@@ -16,7 +16,7 @@ export const SingleChoiceInput = ({
   descriptionId,
 }: Props) => {
   const [selected, setSelected] = useState(currentQuestion.getInitialValue());
-  const [openSelected, setOpenSelected] = useState(currentQuestion.getInitialOpenSelected());
+  const [otherSelected, setOtherSelected] = useState(currentQuestion.getInitialOtherSelected());
 
   return (
     <div
@@ -26,7 +26,7 @@ export const SingleChoiceInput = ({
       aria-describedby={descriptionId}
     >
       {currentQuestion.options.map((option) => {
-        const isSelected = !openSelected && selected === option.label;
+        const isSelected = !otherSelected && selected === option.label;
         return (
           <button
             key={option.id}
@@ -40,9 +40,9 @@ export const SingleChoiceInput = ({
               currentQuestion.setValue(option.label);
               setSelected(option.label);
               onAnswer();
-              if (openSelected) {
-                currentQuestion.setOpenSelected(false);
-                setOpenSelected(false);
+              if (otherSelected) {
+                currentQuestion.setOtherSelected(false);
+                setOtherSelected(false);
               }
             }}
           >
@@ -51,16 +51,16 @@ export const SingleChoiceInput = ({
           </button>
         );
       })}
-      {currentQuestion.openOption && (
-        <OpenOption
+      {currentQuestion.otherOption && (
+        <OtherOption
           type="radio"
           currentQuestion={currentQuestion}
-          openSelected={openSelected}
+          otherSelected={otherSelected}
           onSelect={() => {
-            setOpenSelected(true);
+            setOtherSelected(true);
             setSelected(undefined);
           }}
-          onDeselect={() => setOpenSelected(false)}
+          onDeselect={() => setOtherSelected(false)}
         />
       )}
     </div>

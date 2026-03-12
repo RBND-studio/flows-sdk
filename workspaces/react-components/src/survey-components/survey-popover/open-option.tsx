@@ -1,18 +1,16 @@
 import type { MultipleChoiceQuestion, SingleChoiceQuestion } from "@flows/shared/src/types/survey";
 import type { FC } from "react";
 
-export const OpenOption: FC<{
+export const OtherOption: FC<{
   currentQuestion: SingleChoiceQuestion | MultipleChoiceQuestion;
-  openSelected: boolean;
+  otherSelected: boolean;
   onSelect: () => void;
   onDeselect: () => void;
   type: "radio" | "checkbox";
-}> = ({ currentQuestion, openSelected, onSelect, onDeselect, type }) => {
-  const { openLabel } = currentQuestion;
-
+}> = ({ currentQuestion, otherSelected, onSelect, onDeselect, type }) => {
   const handleClick = () => {
-    if (!openSelected) {
-      currentQuestion.setOpenSelected(true);
+    if (!otherSelected) {
+      currentQuestion.setOtherSelected(true);
       currentQuestion.setValue("");
       onSelect();
     } else {
@@ -27,10 +25,10 @@ export const OpenOption: FC<{
   return (
     <button
       onClick={handleClick}
-      className="flows_basicsV2_survey_popover_choice_option flows_basicsV2_survey_popover_open_option"
-      data-selected={openSelected ? "true" : "false"}
+      className="flows_basicsV2_survey_popover_choice_option flows_basicsV2_survey_popover_other_option"
+      data-selected={otherSelected ? "true" : "false"}
       role={type === "radio" ? "radio" : "checkbox"}
-      aria-checked={openSelected}
+      aria-checked={otherSelected}
     >
       <span
         className={
@@ -39,23 +37,23 @@ export const OpenOption: FC<{
             : "flows_basicsV2_survey_popover_checkbox_indicator"
         }
       />
-      {openSelected ? (
+      {otherSelected ? (
         <input
           ref={(el) => el?.focus()}
           type="text"
           id={currentQuestion.id + "-open-input"}
-          className="flows_basicsV2_survey_popover_open_option_input"
+          className="flows_basicsV2_survey_popover_other_option_input"
           onChange={(e) => currentQuestion.setValue(e.target.value)}
           defaultValue={currentQuestion.getInitialValue()}
           onBlur={(e) => {
             if (!e.target.value) {
-              currentQuestion.setOpenSelected(false);
+              currentQuestion.setOtherSelected(false);
               onDeselect();
             }
           }}
         />
       ) : (
-        openLabel
+        currentQuestion.otherLabel
       )}
     </button>
   );

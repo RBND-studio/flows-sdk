@@ -21,27 +21,27 @@ type QuestionOption = {
 };
 
 export type SingleChoiceQuestion = QuestionBase<"single-choice"> & {
-  openOption: boolean;
-  openLabel: string;
+  otherOption: boolean;
+  otherLabel: string;
 
   options: QuestionOption[];
 
   getInitialValue: () => string | undefined;
   setValue: (value: string) => void;
-  getInitialOpenSelected: () => boolean;
-  setOpenSelected: (selected: boolean) => void;
+  getInitialOtherSelected: () => boolean;
+  setOtherSelected: (selected: boolean) => void;
 };
 
 export type MultipleChoiceQuestion = QuestionBase<"multiple-choice"> & {
-  openOption: boolean;
-  openLabel: string;
+  otherOption: boolean;
+  otherLabel: string;
 
   options: QuestionOption[];
 
   getInitialValue: () => string | undefined;
   setValue: (value: string) => void;
-  getInitialOpenSelected: () => boolean;
-  setOpenSelected: (selected: boolean) => void;
+  getInitialOtherSelected: () => boolean;
+  setOtherSelected: (selected: boolean) => void;
 };
 
 export type RatingDisplayType = "numbers" | "stars";

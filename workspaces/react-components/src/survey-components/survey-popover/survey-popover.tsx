@@ -99,7 +99,7 @@ const SurveyPopover: FC<Props> = ({
 
   const hideNextButton =
     (currentQuestion?.type === "rating" ||
-      (currentQuestion?.type === "single-choice" && !currentQuestion.openOption)) &&
+      (currentQuestion?.type === "single-choice" && !currentQuestion.otherOption)) &&
     autoProceedAfterAnswer;
 
   if (!currentQuestion) return null;

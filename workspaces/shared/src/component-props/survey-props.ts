@@ -3,11 +3,11 @@ import { template } from "../template";
 import type { Block, ComponentProps, SurveyComponentProps, UserProperties } from "../types";
 import {
   getOptionValue,
-  getOpenSelected,
+  getOtherSelected,
   getQuestionValue,
   getSurveyState,
   setClickedLink,
-  setOpenSelected,
+  setOtherSelected,
   setOptionValue,
   setQuestionValue,
 } from "./survey-state";
@@ -58,7 +58,7 @@ export const createSurveyComponentProps = (props: {
           return {
             questionId,
             clickedLink: questionState.clickedLink,
-            openSelected: questionState.openSelected,
+            otherSelected: questionState.otherSelected,
             textResponse: questionState.textResponse,
             optionIds: questionState.optionIds,
           };
@@ -103,8 +103,8 @@ export const createSurveyComponentProps = (props: {
       return {
         ...questionBase,
         type: "single-choice",
-        openOption: question.openOption ?? false,
-        openLabel: template(question.openLabel ?? "", props.userProperties),
+        otherOption: question.otherOption ?? false,
+        otherLabel: template(question.otherLabel ?? "", props.userProperties),
 
         options: shuffleArray(question.options ?? [], question.shuffleOptions ?? false).map(
           (option) => ({
@@ -125,22 +125,22 @@ export const createSurveyComponentProps = (props: {
         setValue: (value) =>
           setQuestionValue({ questionId: question.id, surveyId: survey.id, value }),
         getInitialValue: () => getQuestionValue(survey.id, question.id),
-        setOpenSelected: (selected) =>
-          setOpenSelected({
+        setOtherSelected: (selected) =>
+          setOtherSelected({
             questionId: question.id,
             selected,
             surveyId: survey.id,
             clearOptions: true,
           }),
-        getInitialOpenSelected: () => getOpenSelected(survey.id, question.id),
+        getInitialOtherSelected: () => getOtherSelected(survey.id, question.id),
       };
     }
     if (questionBase.type === "multiple-choice") {
       return {
         ...questionBase,
         type: "multiple-choice",
-        openOption: question.openOption ?? false,
-        openLabel: template(question.openLabel ?? "", props.userProperties),
+        otherOption: question.otherOption ?? false,
+        otherLabel: template(question.otherLabel ?? "", props.userProperties),
 
         options: shuffleArray(question.options ?? [], question.shuffleOptions ?? false).map(
           (option) => ({
@@ -161,14 +161,14 @@ export const createSurveyComponentProps = (props: {
         getInitialValue: () => getQuestionValue(survey.id, question.id),
         setValue: (value) =>
           setQuestionValue({ questionId: question.id, surveyId: survey.id, value }),
-        setOpenSelected: (selected) =>
-          setOpenSelected({
+        setOtherSelected: (selected) =>
+          setOtherSelected({
             questionId: question.id,
             selected,
             surveyId: survey.id,
             clearOptions: false,
           }),
-        getInitialOpenSelected: () => getOpenSelected(survey.id, question.id),
+        getInitialOtherSelected: () => getOtherSelected(survey.id, question.id),
       };
     }
     if (questionBase.type === "link") {

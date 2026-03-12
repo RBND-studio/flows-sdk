@@ -251,7 +251,7 @@
 
 .flows_basicsV2_survey_popover_choice_option[data-selected="true"]
   .flows_basicsV2_survey_popover_radio_indicator,
-.flows_basicsV2_survey_popover_open_option[data-selected="true"]
+.flows_basicsV2_survey_popover_other_option[data-selected="true"]
   .flows_basicsV2_survey_popover_radio_indicator {
   opacity: 1;
   border-color: var(--flows-basicsV2-bg-primary);
@@ -272,7 +272,7 @@
 
 .flows_basicsV2_survey_popover_choice_option[data-selected="true"]
   .flows_basicsV2_survey_popover_radio_indicator::after,
-.flows_basicsV2_survey_popover_open_option[data-selected="true"]
+.flows_basicsV2_survey_popover_other_option[data-selected="true"]
   .flows_basicsV2_survey_popover_radio_indicator::after {
   transform: scale(1);
 }
@@ -294,7 +294,7 @@
 
 .flows_basicsV2_survey_popover_choice_option[data-selected="true"]
   .flows_basicsV2_survey_popover_checkbox_indicator,
-.flows_basicsV2_survey_popover_open_option[data-selected="true"]
+.flows_basicsV2_survey_popover_other_option[data-selected="true"]
   .flows_basicsV2_survey_popover_checkbox_indicator {
   opacity: 1;
   border-color: var(--flows-basicsV2-bg-primary);
@@ -317,14 +317,14 @@
 
 .flows_basicsV2_survey_popover_choice_option[data-selected="true"]
   .flows_basicsV2_survey_popover_checkbox_indicator::after,
-.flows_basicsV2_survey_popover_open_option[data-selected="true"]
+.flows_basicsV2_survey_popover_other_option[data-selected="true"]
   .flows_basicsV2_survey_popover_checkbox_indicator::after {
   transform: rotate(45deg) scale(1);
 }
 
 /* Other choice */
 
-.flows_basicsV2_survey_popover_open_option_input {
+.flows_basicsV2_survey_popover_other_option_input {
   flex: 1;
   min-width: 0;
   border: none;
@@ -336,7 +336,7 @@
   line-height: var(--flows-basicsV2-button-line-height);
 }
 
-.flows_basicsV2_survey_popover_open_option_input:focus-visible {
+.flows_basicsV2_survey_popover_other_option_input:focus-visible {
   outline: 0;
 }
 

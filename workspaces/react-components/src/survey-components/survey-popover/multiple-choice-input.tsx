@@ -1,6 +1,6 @@
 import type { MultipleChoiceQuestion } from "@flows/shared/src/types/survey";
 import { useState } from "react";
-import { OpenOption } from "./open-option";
+import { OtherOption } from "./open-option";
 
 type Props = {
   currentQuestion: MultipleChoiceQuestion;
@@ -12,7 +12,7 @@ export const MultipleChoiceInput = ({ currentQuestion, legendId, descriptionId }
   const [selectedOptions, setSelectedOptions] = useState<Record<string, boolean>>(() =>
     Object.fromEntries(currentQuestion.options.map((o) => [o.id, o.getInitialSelected()])),
   );
-  const [openSelected, setOpenSelected] = useState(currentQuestion.getInitialOpenSelected());
+  const [otherSelected, setOtherSelected] = useState(currentQuestion.getInitialOtherSelected());
 
   return (
     <div
@@ -40,13 +40,13 @@ export const MultipleChoiceInput = ({ currentQuestion, legendId, descriptionId }
           </button>
         );
       })}
-      {currentQuestion.openOption && (
-        <OpenOption
+      {currentQuestion.otherOption && (
+        <OtherOption
           type="checkbox"
           currentQuestion={currentQuestion}
-          openSelected={openSelected}
-          onSelect={() => setOpenSelected(true)}
-          onDeselect={() => setOpenSelected(false)}
+          otherSelected={otherSelected}
+          onSelect={() => setOtherSelected(true)}
+          onDeselect={() => setOtherSelected(false)}
         />
       )}
     </div>
