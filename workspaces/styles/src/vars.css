@@ -28,6 +28,7 @@
 
   /* Sizes */
   --flows-basicsV2-borderRadius-xs: 3px;
+  --flows-basicsV2-borderRadius-s: 6px;
   --flows-basicsV2-borderRadius-m: 8px;
   --flows-basicsV2-borderRadius-l: 12px;
   --flows-basicsV2-borderRadius-xl: 16px;

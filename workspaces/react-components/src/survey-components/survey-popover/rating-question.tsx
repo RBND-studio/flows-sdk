@@ -1,6 +1,8 @@
 import type { SurveyQuestion } from "@flows/shared/src/types/survey";
 import { Text } from "../../internal-components/text";
 import { useState } from "react";
+import { StarFilled16 } from "../../icons/star-filled16";
+import { StarEmpty16 } from "../../icons/star-empty16";
 
 type Props = {
   currentQuestion: SurveyQuestion;
@@ -13,6 +15,7 @@ export const RatingQuestion = ({ currentQuestion, onAnswer, legendId, descriptio
   if (currentQuestion.type !== "rating") return null;
 
   const [selected, setSelected] = useState(currentQuestion.getInitialValue());
+  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
 
   const handleSetValue = (value: string) => {
     setSelected(value);
@@ -44,8 +47,15 @@ export const RatingQuestion = ({ currentQuestion, onAnswer, legendId, descriptio
                 }}
                 key={i}
                 data-selected={isSelected ? "true" : "false"}
+                onMouseEnter={() => setHoverIndex(i)}
+                onMouseLeave={() => setHoverIndex(null)}
               >
-                {i + 1}
+                <DisplayRender
+                  displayType={currentQuestion.displayType}
+                  value={i + 1}
+                  selectedValue={selected ? parseInt(selected) + 1 : undefined}
+                  hoverValue={hoverIndex !== null ? hoverIndex + 1 : undefined}
+                />
               </button>
             );
           })}
@@ -58,4 +68,36 @@ export const RatingQuestion = ({ currentQuestion, onAnswer, legendId, descriptio
       )}
     </>
   );
+};
+
+type DisplayRenderProps = {
+  displayType: "numbers" | "stars" | "smileys";
+  value: number;
+  selectedValue?: number;
+  hoverValue?: number;
+};
+
+const DisplayRender = ({ displayType, value, selectedValue, hoverValue }: DisplayRenderProps) => {
+  if (displayType === "numbers") {
+    return <span>{value}</span>;
+  }
+
+  if (displayType === "stars") {
+    const isHovered = hoverValue !== undefined && value <= hoverValue;
+    const isSelected = selectedValue !== undefined && value <= selectedValue;
+    const highlight = isHovered || (!isHovered && hoverValue === undefined && isSelected);
+
+    return (
+      <span
+        className={`flows_basicsV2_survey_popover_rating_star ${highlight ? "flows_basicsV2_survey_popover_rating_star_highlighted" : "flows_basicsV2_survey_popover_rating_star_default"}`}
+      >
+        {highlight ? <StarFilled16 /> : <StarEmpty16 />}
+      </span>
+    );
+  }
+
+  if (displayType === "smileys") {
+    const emojis = ["😞", "😐", "😊", "😀", "😍"];
+    return <span>{emojis[value - 1]}</span>;
+  }
 };

@@ -118,13 +118,13 @@
 
 .flows_basicsV2_survey_popover_rating_list {
   display: flex;
-  /* gap: var(--flows-basicsV2-size-s); */
   margin-top: var(--flows-basicsV2-size-l);
   box-shadow: var(--flows-basicsV2-secondary-button-shadow);
   background-color: var(--flows-basicsV2-survey-popover-rating-list-background);
-  border-radius: var(--flows-basicsV2-borderRadius-m);
+  border-radius: calc(var(--flows-basicsV2-borderRadius-m) + 1px);
   padding: 1px;
   gap: 1px;
+  width: 100%;
 }
 
 .flows_basicsV2_survey_popover_rating_option {
@@ -132,7 +132,8 @@
   transition:
     background-color 120ms ease-in-out,
     border-color 120ms ease-in-out;
-  padding: 5px 15px;
+  padding: 5px 5px;
+  width: 100%;
   font-family: var(--flows-basicsV2-font-family);
   font-size: var(--flows-basicsV2-button-font-size);
   line-height: var(--flows-basicsV2-button-line-height);
@@ -164,13 +165,31 @@
 .flows_basicsV2_survey_popover_rating_option[data-selected="true"] {
   box-shadow: var(--flows-basicsV2-survey-popover-selected-option-shadow);
   z-index: 1;
-  border-radius: var(--flows-basicsV2-borderRadius-m);
+  border-radius: var(--flows-basicsV2-borderRadius-s);
   border: var(--flows-basicsV2-border-primary);
   background-color: var(--flows-basicsV2-bg-default);
 }
 
 .flows_basicsV2_survey_popover_rating_option[data-selected="true"]:hover {
   background-color: var(--flows-basicsV2-bg-default);
+}
+
+.flows_basicsV2_survey_popover_rating_star {
+  height: 24px;
+  min-width: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  transition: color 120ms ease-in-out;
+}
+
+.flows_basicsV2_survey_popover_rating_star_default {
+  color: var(--flows-basicsV2-fg-muted);
+}
+
+.flows_basicsV2_survey_popover_rating_star_highlighted {
+  color: #f4be35;
 }
 
 .flows_basicsV2_survey_popover_bound_labels {
@@ -368,6 +387,8 @@
 
 .flows_basicsV2_survey_popover_end_screen_title {
   text-align: center;
+  /* Remove the extra space reserved for the close button in the title */
+  margin-right: 0;
 }
 
 .flows_basicsV2_survey_popover_end_screen_description {
