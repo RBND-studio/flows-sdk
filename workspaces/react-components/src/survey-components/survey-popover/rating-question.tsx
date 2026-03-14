@@ -1,4 +1,4 @@
-import type { SurveyQuestion } from "@flows/shared/src/types/survey";
+import type { RatingDisplayType, SurveyQuestion } from "@flows/shared/src/types/survey";
 import { Text } from "../../internal-components/text";
 import { useState } from "react";
 import { StarFilled16 } from "../../icons/star-filled16";
@@ -71,7 +71,7 @@ export const RatingQuestion = ({ currentQuestion, onAnswer, legendId, descriptio
 };
 
 type DisplayRenderProps = {
-  displayType: "numbers" | "stars" | "smileys";
+  displayType: RatingDisplayType;
   value: number;
   selectedValue?: number;
   hoverValue?: number;
@@ -79,7 +79,7 @@ type DisplayRenderProps = {
 
 const DisplayRender = ({ displayType, value, selectedValue, hoverValue }: DisplayRenderProps) => {
   if (displayType === "numbers") {
-    return <span>{value}</span>;
+    return <span data-selected={selectedValue === value}>{value}</span>;
   }
 
   if (displayType === "stars") {
@@ -89,15 +89,19 @@ const DisplayRender = ({ displayType, value, selectedValue, hoverValue }: Displa
 
     return (
       <span
-        className={`flows_basicsV2_survey_popover_rating_star ${highlight ? "flows_basicsV2_survey_popover_rating_star_highlighted" : "flows_basicsV2_survey_popover_rating_star_default"}`}
+        className="flows_basicsV2_survey_popover_rating_star"
+        data-highlight={highlight ? "true" : "false"}
+        data-selected={isSelected ? "true" : "false"}
       >
         {highlight ? <StarFilled16 /> : <StarEmpty16 />}
       </span>
     );
   }
 
-  if (displayType === "smileys") {
+  if (displayType === "emojis") {
     const emojis = ["😞", "😐", "😊", "😀", "😍"];
-    return <span>{emojis[value - 1]}</span>;
+    return (
+      <span data-selected={selectedValue === value ? "true" : "false"}>{emojis[value - 1]}</span>
+    );
   }
 };

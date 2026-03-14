@@ -1,3 +1,4 @@
+import type { SurveyQuestion } from "@flows/shared/src/types/survey";
 import { useCallback, useRef, useState } from "react";
 
 // These durations must stay in sync with the animation durations in survey-popover.css
@@ -9,7 +10,10 @@ interface UseSurveyPopoverOptions {
   autoProceedAfterAnswer?: boolean;
 }
 
-export const useSurveyPopover = ({ questionsLength, autoProceedAfterAnswer }: UseSurveyPopoverOptions) => {
+export const useSurveyPopover = ({
+  questionsLength,
+  autoProceedAfterAnswer,
+}: UseSurveyPopoverOptions) => {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [isExiting, setIsExiting] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
@@ -55,12 +59,18 @@ export const useSurveyPopover = ({ questionsLength, autoProceedAfterAnswer }: Us
     navigateTo(Math.min(questionIndex + 1, questionsLength - 1));
   }, [questionIndex, questionsLength, navigateTo]);
 
-  const handleAutoProceed = useCallback(() => {
-    if (autoProceedAfterAnswer && !isLastQuestion) {
-      clearTimeout(autoProceedTimeoutRef.current ?? undefined);
-      autoProceedTimeoutRef.current = window.setTimeout(handleNextQuestion, 320);
-    }
-  }, [autoProceedAfterAnswer, isLastQuestion, handleNextQuestion]);
+  const handleAutoProceed = useCallback(
+    ({ currentQuestion }: { currentQuestion: SurveyQuestion }) => {
+      const hasOtherOption =
+        currentQuestion.type === "single-choice" && !!currentQuestion.otherOption;
+
+      if (autoProceedAfterAnswer && !isLastQuestion && !hasOtherOption) {
+        clearTimeout(autoProceedTimeoutRef.current ?? undefined);
+        autoProceedTimeoutRef.current = window.setTimeout(handleNextQuestion, 320);
+      }
+    },
+    [autoProceedAfterAnswer, isLastQuestion, handleNextQuestion],
+  );
 
   const handleHeightTransitionEnd = useCallback((e: React.TransitionEvent<HTMLDivElement>) => {
     if (e.propertyName === "height" && e.target === popoverRef.current) {

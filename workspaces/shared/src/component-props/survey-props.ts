@@ -10,6 +10,7 @@ import {
   setOtherSelected,
   setOptionValue,
   setQuestionValue,
+  clearSurveyState,
 } from "./survey-state";
 import type { ExitNodeCb, SetStateMemory, SubmitSurvey } from "./component-props-types";
 import type { ApiSurveyQuestionAnswer } from "../types/api-survey";
@@ -65,6 +66,8 @@ export const createSurveyComponentProps = (props: {
         },
       ),
     });
+
+    clearSurveyState(survey.id);
   };
 
   const questions = survey.questions.map((question): SurveyQuestion | null => {

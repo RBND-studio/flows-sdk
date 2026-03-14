@@ -44,7 +44,7 @@ export type MultipleChoiceQuestion = QuestionBase<"multiple-choice"> & {
   setOtherSelected: (selected: boolean) => void;
 };
 
-export type RatingDisplayType = "numbers" | "stars";
+export type RatingDisplayType = "numbers" | "stars" | "emojis";
 export type RatingQuestion = QuestionBase<"rating"> & {
   displayType: RatingDisplayType;
   scale: number;

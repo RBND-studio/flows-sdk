@@ -112,7 +112,7 @@ const SurveyPopover: FC<Props> = ({
           {currentQuestion.type === "rating" && (
             <RatingQuestion
               currentQuestion={currentQuestion}
-              onAnswer={handleAutoProceed}
+              onAnswer={() => handleAutoProceed({ currentQuestion })}
               legendId={legendId}
               descriptionId={descriptionId}
             />
@@ -120,7 +120,7 @@ const SurveyPopover: FC<Props> = ({
           {currentQuestion.type === "single-choice" && (
             <SingleChoiceInput
               currentQuestion={currentQuestion}
-              onAnswer={handleAutoProceed}
+              onAnswer={() => handleAutoProceed({ currentQuestion })}
               legendId={legendId}
               descriptionId={descriptionId}
             />

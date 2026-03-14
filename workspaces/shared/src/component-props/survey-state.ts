@@ -11,13 +11,32 @@ type SurveyState = {
 
 const surveyStates = new Map<string, SurveyState>();
 
-const getLocalStorageKey = (surveyId: string): string => `surveyState-${surveyId}`;
+const getSessionStorageKey = (surveyId: string): string => `flows-survey-state-${surveyId}`;
 const persistSurveyState = (surveyId: string): void => {
   const surveyState = surveyStates.get(surveyId);
   if (!surveyState) return;
-  localStorage.setItem(getLocalStorageKey(surveyId), JSON.stringify(surveyState));
+  sessionStorage.setItem(getSessionStorageKey(surveyId), JSON.stringify(surveyState));
 };
 const debouncedPersistSurveyState = debounce(persistSurveyState, 1000);
+
+export const getSurveyState = (surveyId: string): SurveyState | undefined => {
+  const surveyState = surveyStates.get(surveyId);
+  if (surveyState) return surveyState;
+  const persistedState = sessionStorage.getItem(getSessionStorageKey(surveyId));
+  if (persistedState) {
+    const parsedState = JSON.parse(persistedState) as SurveyState;
+    surveyStates.set(surveyId, parsedState);
+    return parsedState;
+  }
+};
+
+export const clearSurveyState = (surveyId: string): void => {
+  const surveyState = surveyStates.get(surveyId);
+  if (surveyState) {
+    surveyStates.delete(surveyId);
+    sessionStorage.removeItem(getSessionStorageKey(surveyId));
+  }
+};
 
 export const setQuestionValue = ({
   questionId,
@@ -95,17 +114,6 @@ export const setClickedLink = ({
   surveyState[questionId] = questionState;
   surveyStates.set(surveyId, surveyState);
   debouncedPersistSurveyState(surveyId);
-};
-
-export const getSurveyState = (surveyId: string): SurveyState | undefined => {
-  const surveyState = surveyStates.get(surveyId);
-  if (surveyState) return surveyState;
-  const persistedState = localStorage.getItem(getLocalStorageKey(surveyId));
-  if (persistedState) {
-    const parsedState = JSON.parse(persistedState) as SurveyState;
-    surveyStates.set(surveyId, parsedState);
-    return parsedState;
-  }
 };
 
 export const getQuestionValue = (surveyId: string, questionId: string): string | undefined => {

@@ -85,7 +85,8 @@
 
 .flows_basicsV2_survey_popover_close {
   position: absolute;
-  top: 0;
+  /* Vertically center the close button with the title */
+  top: calc((var(--flows-basicsV2-title-line-height) - 20px) / 2);
   right: 0;
 }
 
@@ -182,13 +183,10 @@
   justify-content: center;
   width: 100%;
   transition: color 120ms ease-in-out;
-}
-
-.flows_basicsV2_survey_popover_rating_star_default {
   color: var(--flows-basicsV2-fg-muted);
 }
 
-.flows_basicsV2_survey_popover_rating_star_highlighted {
+.flows_basicsV2_survey_popover_rating_star[data-highlight="true"] {
   color: #f4be35;
 }
 

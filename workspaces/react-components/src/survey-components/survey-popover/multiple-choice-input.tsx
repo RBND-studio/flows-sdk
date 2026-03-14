@@ -25,6 +25,7 @@ export const MultipleChoiceInput = ({ currentQuestion, legendId, descriptionId }
         return (
           <button
             key={option.id}
+            // oxlint-disable-next-line jsx_a11y/prefer-tag-over-role -- intentionally using button
             role="checkbox"
             aria-checked={isSelected}
             className="flows_basicsV2_survey_popover_choice_option"
