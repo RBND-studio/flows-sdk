@@ -7,12 +7,12 @@ interface Props {
 }
 
 export const Block: FC<Props> = ({ block }) => {
-  const { components, tourComponents } = useFlowsContext();
+  const { components, tourComponents, surveyComponents } = useFlowsContext();
 
   const Component = (() => {
     if (block.type === "component") return components[block.component];
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- block types can be added in the future
     if (block.type === "tour-component") return tourComponents[block.component];
+    if (block.type === "survey") return surveyComponents[block.component];
     return undefined;
   })();
 

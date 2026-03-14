@@ -28,6 +28,7 @@
 
   /* Sizes */
   --flows-basicsV2-borderRadius-xs: 3px;
+  --flows-basicsV2-borderRadius-s: 6px;
   --flows-basicsV2-borderRadius-m: 8px;
   --flows-basicsV2-borderRadius-l: 12px;
   --flows-basicsV2-borderRadius-xl: 16px;
@@ -80,7 +81,7 @@
   --flows-basicsV2-button-small-line-height: 20px;
   --flows-basicsV2-primary-button-gradient: linear-gradient(#ffffff14, #fff0);
   --flows-basicsV2-primary-button-shadow: inset 0 1px #ffffff1f, 0 1px 2px #0a0d120d;
-  --flows-basicsV2-secondary-button-shadow: inset 0 -2px 0 0 #fafafa, 0 1px 2px 0 #0d0d0d0d;
+  --flows-basicsV2-secondary-button-shadow: inset 0 -2px 0 0 #fafafa37, 0 1px 2px 0 #0d0d0d0d;
 
   --flows-basicsV2-progress-dots-size: 10px;
   --flows-basicsV2-progress-dots-gap: 6px;
@@ -89,6 +90,16 @@
 
   --flows-basicsV2-floating-checklist-popover-maxWidth: 340px;
   --flows-basicsV2-floating-checklist-scrollbar-color: #d6d6d6 transparent;
+
+  --flows-basicsV2-survey-popover-width: 320px;
+  --flows-basicsV2-survey-popover-padding: var(--flows-basicsV2-size-xl);
+  --flows-basicsV2-textarea-shadow: inset 0 -2px 0 0 #fafafa37, 0 1px 2px 0 #0d0d0d0d;
+  --flows-basicsV2-textarea-focus-shadow:
+    inset 0 -2px 0 0 #fafafa,
+    0 0 0 2px color-mix(in srgb, var(--flows-basicsV2-bg-primary) 30%, transparent);
+  --flows-basicsV2-survey-popover-selected-option-shadow: 0 0 0 2px
+    color-mix(in srgb, var(--flows-basicsV2-bg-primary) 30%, transparent);
+  --flows-basicsV2-survey-popover-rating-list-background: #ccc;
 }
 
 /* Dark mode */
@@ -105,10 +116,11 @@
   --flows-basicsV2-fg-onPrimary: #1e1e1e;
   --flows-basicsV2-fg-muted: #9d9595;
 
-  --flows-basicsV2-border: 1px solid #3d3d3d;
-  --flows-basicsV2-border-strong: 1px solid #4a4a4a;
-  --flows-basicsV2-border-strong-hover: 1px solid #616161;
-  --flows-basicsV2-border-primary: 1px solid #f1f1f1;
+  --flows-basicsV2-borderWidth: 1px;
+  --flows-basicsV2-border: var(--flows-basicsV2-borderWidth) solid #3d3d3d;
+  --flows-basicsV2-border-strong: var(--flows-basicsV2-borderWidth) solid #4a4a4a;
+  --flows-basicsV2-border-strong-hover: var(--flows-basicsV2-borderWidth) solid #616161;
+  --flows-basicsV2-border-primary: var(--flows-basicsV2-borderWidth) solid #f1f1f1;
 
   --flows-basicsV2-shadow:
     0px 4px 12px rgba(0, 0, 0, 0.2), 0px 2px 6px rgba(0, 0, 0, 0.25), 0px 1px 1px rgba(0, 0, 0, 0.2);
@@ -122,6 +134,13 @@
   --flows-basicsV2-secondary-button-shadow: unset;
 
   --flows-basicsV2-floating-checklist-scrollbar-color: #3d3d3d transparent;
+
+  --flows-basicsV2-textarea-shadow: unset;
+  --flows-basicsV2-textarea-focus-shadow: 0 0 0 2px
+    color-mix(in srgb, var(--flows-basicsV2-bg-primary) 30%, transparent);
+  --flows-basicsV2-survey-popover-selected-option-shadow: 0 0 0 2px
+    color-mix(in srgb, var(--flows-basicsV2-bg-primary) 30%, transparent);
+  --flows-basicsV2-survey-popover-rating-list-background: #4a4a4a;
 }
 
 /* Animation */
