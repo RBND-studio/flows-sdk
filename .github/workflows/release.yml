@@ -42,7 +42,7 @@ jobs:
           token: ${{ steps.app-token.outputs.token }}
           # Make sure the value of GITHUB_TOKEN will not be persisted in repo's config
           persist-credentials: false
-      - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320
       - uses: actions/setup-node@v6
         with:
           node-version: 24
