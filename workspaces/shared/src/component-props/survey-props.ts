@@ -43,7 +43,7 @@ export const createSurveyComponentProps = (props: {
     await props.submitSurvey({
       surveyId: survey.id,
       submitType: "submit",
-      questions: Object.entries(surveyState).map(
+      questions: Object.entries(surveyState.questions).map(
         ([questionId, questionState]): ApiSurveyQuestionAnswer => {
           return {
             questionId,
@@ -56,7 +56,7 @@ export const createSurveyComponentProps = (props: {
       ),
     });
 
-    SurveyState.deleteInstance(survey.id);
+    surveyState.deleteInstance();
   };
 
   const surveyState = SurveyState.getInstance(survey.id);
@@ -173,10 +173,21 @@ export const createSurveyComponentProps = (props: {
     return null;
   });
 
+  const filteredQuestions = questions.filter((q): q is SurveyQuestion => q !== null);
+
   const surveyProp: Survey = {
-    questions: questions.filter((q): q is SurveyQuestion => q !== null),
+    questions: filteredQuestions,
     getCurrentQuestionIndex: () => surveyState.questionIndex,
-    nextQuestion: surveyState.nextQuestion.bind(surveyState),
+    nextQuestion: () => {
+      const newIndex = surveyState.nextQuestion();
+      const newQuestion = filteredQuestions.at(newIndex);
+
+      if (newQuestion?.type === "end-screen") {
+        void handleSubmit();
+      }
+
+      return newIndex;
+    },
     previousQuestion: surveyState.previousQuestion.bind(surveyState),
     submit: handleSubmit,
   };

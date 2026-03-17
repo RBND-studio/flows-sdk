@@ -5,22 +5,27 @@ import { useEffect } from "react";
 type Props = {
   question: EndScreenQuestion;
   handleLinkClick: () => void;
-  submit: () => void;
+  handleClose: () => void;
   autoCloseAfterSubmit?: boolean;
 };
 
 // The timeout should sync with the animation duration in survey-popover.css
 const AUTO_CLOSE_TIMEOUT = 3000;
 
-export const EndScreen = ({ question, handleLinkClick, submit, autoCloseAfterSubmit }: Props) => {
+export const EndScreen = ({
+  question,
+  handleLinkClick,
+  handleClose,
+  autoCloseAfterSubmit,
+}: Props) => {
   useEffect(() => {
     if (autoCloseAfterSubmit) {
       const timeout = setTimeout(() => {
-        submit();
+        handleClose();
       }, AUTO_CLOSE_TIMEOUT);
       return () => clearTimeout(timeout);
     }
-  }, [submit, autoCloseAfterSubmit]);
+  }, [handleClose, autoCloseAfterSubmit]);
 
   if (autoCloseAfterSubmit) {
     return (

@@ -155,7 +155,7 @@ const SurveyPopover: FC<Props> = (props) => {
               <EndScreen
                 question={currentQuestion}
                 handleLinkClick={handleLinkClick}
-                submit={() => handleClose(complete)}
+                handleClose={() => handleClose(complete)}
                 autoCloseAfterSubmit={autoCloseAfterSubmit}
               />
             )}

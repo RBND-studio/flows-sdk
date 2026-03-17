@@ -88,8 +88,9 @@ export class SurveyState {
       return new SurveyState(surveyId);
     }
   }
-  static deleteInstance(surveyId: string): void {
-    SurveyState.instancesBySurveyId.delete(surveyId);
-    sessionStorage.removeItem(SurveyState.getSessionStorageKey(surveyId));
+  deleteInstance(): void {
+    this.debouncedSaveToSessionStorage.cancel();
+    SurveyState.instancesBySurveyId.delete(this.surveyId);
+    sessionStorage.removeItem(SurveyState.getSessionStorageKey(this.surveyId));
   }
 }
