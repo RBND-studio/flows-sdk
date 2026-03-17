@@ -1,25 +1,24 @@
-import type { RatingDisplayType, SurveyQuestion } from "@flows/shared/src/types/survey";
+import type { RatingDisplayType, RatingQuestion } from "@flows/shared";
 import { Text } from "../../internal-components/text";
 import { useState } from "react";
 import { StarFilled16 } from "../../icons/star-filled16";
 import { StarEmpty16 } from "../../icons/star-empty16";
+import { useQuestionContext } from "./question-context";
 
 type Props = {
-  currentQuestion: SurveyQuestion;
+  question: RatingQuestion;
   onAnswer: () => void;
   legendId: string;
   descriptionId: string;
 };
 
-export const RatingQuestion = ({ currentQuestion, onAnswer, legendId, descriptionId }: Props) => {
-  if (currentQuestion.type !== "rating") return null;
-
-  const [selected, setSelected] = useState(currentQuestion.getInitialValue());
+export const RatingInput = ({ question, onAnswer, legendId, descriptionId }: Props) => {
+  const { value, refresh } = useQuestionContext();
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
 
   const handleSetValue = (value: string) => {
-    setSelected(value);
-    currentQuestion.setValue(value);
+    question.setValue(value);
+    refresh();
     onAnswer();
   };
 
@@ -31,17 +30,17 @@ export const RatingQuestion = ({ currentQuestion, onAnswer, legendId, descriptio
         aria-labelledby={legendId}
         aria-describedby={descriptionId}
       >
-        {Array(currentQuestion.scale)
+        {Array(question.scale)
           .fill(null)
           .map((_, i) => {
-            const isSelected = selected === i.toString();
+            const isSelected = value === i.toString();
             return (
               <button
                 className="flows_basicsV2_survey_popover_rating_option"
                 role="radio"
                 type="button"
                 aria-checked={isSelected}
-                aria-label={`${i + 1} out of ${currentQuestion.scale}`}
+                aria-label={`${i + 1} out of ${question.scale}`}
                 onClick={() => {
                   handleSetValue(i.toString());
                 }}
@@ -51,19 +50,18 @@ export const RatingQuestion = ({ currentQuestion, onAnswer, legendId, descriptio
                 onMouseLeave={() => setHoverIndex(null)}
               >
                 <DisplayRender
-                  displayType={currentQuestion.displayType}
-                  value={i + 1}
-                  selectedValue={selected ? parseInt(selected) + 1 : undefined}
-                  hoverValue={hoverIndex !== null ? hoverIndex + 1 : undefined}
+                  displayType={question.displayType}
+                  index={i}
+                  activeIndex={hoverIndex ?? (value ? parseInt(value) : undefined)}
                 />
               </button>
             );
           })}
       </div>
-      {currentQuestion.upperBoundLabel && currentQuestion.lowerBoundLabel && (
+      {question.upperBoundLabel && question.lowerBoundLabel && (
         <div className="flows_basicsV2_survey_popover_bound_labels">
-          <Text variant="body">{currentQuestion.lowerBoundLabel}</Text>
-          <Text variant="body">{currentQuestion.upperBoundLabel}</Text>
+          <Text variant="body">{question.lowerBoundLabel}</Text>
+          <Text variant="body">{question.upperBoundLabel}</Text>
         </div>
       )}
     </>
@@ -72,26 +70,24 @@ export const RatingQuestion = ({ currentQuestion, onAnswer, legendId, descriptio
 
 type DisplayRenderProps = {
   displayType: RatingDisplayType;
-  value: number;
-  selectedValue?: number;
-  hoverValue?: number;
+  index: number;
+  activeIndex?: number;
 };
 
-const DisplayRender = ({ displayType, value, selectedValue, hoverValue }: DisplayRenderProps) => {
+const emojis = ["😞", "😐", "😊", "😀", "😍"];
+
+const DisplayRender = ({ displayType, index, activeIndex }: DisplayRenderProps) => {
   if (displayType === "numbers") {
-    return <span data-selected={selectedValue === value}>{value}</span>;
+    return <span>{index + 1}</span>;
   }
 
   if (displayType === "stars") {
-    const isHovered = hoverValue !== undefined && value <= hoverValue;
-    const isSelected = selectedValue !== undefined && value <= selectedValue;
-    const highlight = isHovered || (!isHovered && hoverValue === undefined && isSelected);
+    const highlight = activeIndex !== undefined && index <= activeIndex;
 
     return (
       <span
         className="flows_basicsV2_survey_popover_rating_star"
         data-highlight={highlight ? "true" : "false"}
-        data-selected={isSelected ? "true" : "false"}
       >
         {highlight ? <StarFilled16 /> : <StarEmpty16 />}
       </span>
@@ -99,9 +95,6 @@ const DisplayRender = ({ displayType, value, selectedValue, hoverValue }: Displa
   }
 
   if (displayType === "emojis") {
-    const emojis = ["😞", "😐", "😊", "😀", "😍"];
-    return (
-      <span data-selected={selectedValue === value ? "true" : "false"}>{emojis[value - 1]}</span>
-    );
+    return <span>{emojis[index]}</span>;
   }
 };

@@ -192,4 +192,5 @@ export interface SurveyPopoverProps {
   autoProceedAfterAnswer: boolean;
 
   nextButtonLabel?: string;
+  submitButtonLabel?: string;
 }

@@ -7,25 +7,29 @@ import { IconButton } from "../../internal-components/icon-button";
 import { Text } from "../../internal-components/text";
 import { EndScreen } from "./end-screen";
 import { MultipleChoiceInput } from "./multiple-choice-input";
-import { RatingQuestion } from "./rating-question";
+import { RatingInput } from "./rating-input";
 import { SingleChoiceInput } from "./single-choice-input";
 import { useSurveyPopover } from "./use-survey-popover";
+import { FreeformInput } from "./freeform-input";
+import { QuestionProvider } from "./question-context";
+import { SurveyNextButton } from "./survey-next-button";
 
 type Props = SurveyComponentProps<SurveyPopoverProps>;
 
 const DEFAULT_POSITION: SurveyPopoverProps["position"] = "bottom-right";
 const DEFAULT_NEXT_BUTTON_LABEL = "Next";
+const DEFAULT_SUBMIT_BUTTON_LABEL = "Submit";
 
-const SurveyPopover: FC<Props> = ({
-  survey,
-  position,
-  dismissible,
-  nextButtonLabel,
-  autoProceedAfterAnswer,
-  autoCloseAfterSubmit = true,
-  submit,
-  cancel,
-}) => {
+const SurveyPopover: FC<Props> = (props) => {
+  const {
+    survey,
+    dismissible,
+    autoProceedAfterAnswer,
+    autoCloseAfterSubmit = true,
+    complete,
+    cancel,
+  } = props;
+
   const {
     popoverRef,
     questionIndex,
@@ -36,36 +40,42 @@ const SurveyPopover: FC<Props> = ({
     handleNextQuestion,
     handleAutoProceed,
     handleHeightTransitionEnd,
-  } = useSurveyPopover({ questionsLength: survey.questions.length, autoProceedAfterAnswer });
+  } = useSurveyPopover({ autoProceedAfterAnswer, survey });
 
   const currentQuestion = survey.questions.at(questionIndex);
-
   if (!currentQuestion) return null;
+
+  const position = props.position || DEFAULT_POSITION;
+  const nextButtonLabel = props.nextButtonLabel || DEFAULT_NEXT_BUTTON_LABEL;
+  const submitButtonLabel = props.submitButtonLabel || DEFAULT_SUBMIT_BUTTON_LABEL;
 
   const legendId = `${currentQuestion.id}-legend`;
   const descriptionId = `${currentQuestion.id}-description`;
 
-  const questionAutoProceeds =
+  const questionCanAutoProceed =
     currentQuestion.type === "rating" ||
     (currentQuestion.type === "single-choice" && !currentQuestion.otherOption);
-
-  const hideNextButton = autoProceedAfterAnswer && questionAutoProceeds;
+  const autoProceed = autoProceedAfterAnswer && questionCanAutoProceed;
 
   const hasOwnFooter = currentQuestion.type === "link" || currentQuestion.type === "end-screen";
-  const showFooter = !hasOwnFooter && (isLastQuestion || !hideNextButton);
-
-  const isEndScreen = currentQuestion.type === "end-screen";
+  const showNextButton = !hasOwnFooter && !autoProceed;
 
   const handleLinkClick = () => {
-    if (isLastQuestion) submit();
+    if (isLastQuestion) complete();
     else handleNextQuestion();
+  };
+  const handleNextButton = () => {
+    if (isLastQuestion) {
+      void survey.submit();
+      handleClose(complete);
+    } else handleNextQuestion();
   };
 
   return (
     <div
       ref={popoverRef}
       className="flows_basicsV2_survey_popover"
-      data-position={position ? position : DEFAULT_POSITION}
+      data-position={position}
       data-closing={isClosing || undefined}
       onTransitionEnd={handleHeightTransitionEnd}
     >
@@ -79,7 +89,7 @@ const SurveyPopover: FC<Props> = ({
             as="legend"
             id={legendId}
             className={clsx("flows_basicsV2_survey_popover_title", {
-              flows_basicsV2_survey_popover_end_screen_title: isEndScreen,
+              flows_basicsV2_survey_popover_end_screen_title: currentQuestion.type === "end-screen",
             })}
             variant="title"
           >
@@ -88,97 +98,76 @@ const SurveyPopover: FC<Props> = ({
           <Text
             id={descriptionId}
             className={clsx("flows_basicsV2_survey_popover_description", {
-              flows_basicsV2_survey_popover_end_screen_description: isEndScreen,
+              flows_basicsV2_survey_popover_end_screen_description:
+                currentQuestion.type === "end-screen",
             })}
             variant="body"
           >
             {currentQuestion.description}
           </Text>
 
-          {currentQuestion.type === "freeform" && (
-            <textarea
-              className="flows_basicsV2_survey_popover_freeform_textarea"
-              aria-labelledby={legendId}
-              aria-describedby={descriptionId}
-              id={`${currentQuestion.id}-textarea`}
-              defaultValue={currentQuestion.getInitialValue()}
-              onChange={(e) => currentQuestion.setValue(e.target.value)}
-              placeholder={
-                currentQuestion.placeholder ? currentQuestion.placeholder : "Start typing..."
-              }
-              rows={4}
-            />
-          )}
-          {currentQuestion.type === "rating" && (
-            <RatingQuestion
-              currentQuestion={currentQuestion}
-              onAnswer={() => handleAutoProceed({ currentQuestion })}
-              legendId={legendId}
-              descriptionId={descriptionId}
-            />
-          )}
-          {currentQuestion.type === "single-choice" && (
-            <SingleChoiceInput
-              currentQuestion={currentQuestion}
-              onAnswer={() => handleAutoProceed({ currentQuestion })}
-              legendId={legendId}
-              descriptionId={descriptionId}
-            />
-          )}
-          {currentQuestion.type === "multiple-choice" && (
-            <MultipleChoiceInput
-              currentQuestion={currentQuestion}
-              legendId={legendId}
-              descriptionId={descriptionId}
-            />
-          )}
-          {currentQuestion.type === "link" && (
-            <Button
-              href={currentQuestion.url ? currentQuestion.url : undefined}
-              variant="primary"
-              target={currentQuestion.openInNew ? "_blank" : undefined}
-              className="flows_basicsV2_survey_popover_link_button"
-              onClick={() => {
-                if (currentQuestion.type === "link") currentQuestion.setClicked();
-                handleLinkClick();
-              }}
-            >
-              {currentQuestion.linkLabel}
-            </Button>
-          )}
-          {currentQuestion.type === "end-screen" && (
-            <EndScreen
-              currentQuestion={currentQuestion}
-              handleLinkClick={handleLinkClick}
-              submit={() => handleClose(submit)}
-              autoCloseAfterSubmit={autoCloseAfterSubmit}
-            />
-          )}
+          <QuestionProvider question={currentQuestion}>
+            {currentQuestion.type === "freeform" && (
+              <FreeformInput
+                question={currentQuestion}
+                descriptionId={descriptionId}
+                legendId={legendId}
+              />
+            )}
+            {currentQuestion.type === "rating" && (
+              <RatingInput
+                question={currentQuestion}
+                onAnswer={() => handleAutoProceed({ currentQuestion })}
+                legendId={legendId}
+                descriptionId={descriptionId}
+              />
+            )}
+            {currentQuestion.type === "single-choice" && (
+              <SingleChoiceInput
+                question={currentQuestion}
+                onAnswer={() => handleAutoProceed({ currentQuestion })}
+                legendId={legendId}
+                descriptionId={descriptionId}
+              />
+            )}
+            {currentQuestion.type === "multiple-choice" && (
+              <MultipleChoiceInput
+                question={currentQuestion}
+                legendId={legendId}
+                descriptionId={descriptionId}
+              />
+            )}
+            {currentQuestion.type === "link" && (
+              <Button
+                href={currentQuestion.url ? currentQuestion.url : undefined}
+                variant="primary"
+                target={currentQuestion.openInNew ? "_blank" : undefined}
+                className="flows_basicsV2_survey_popover_link_button"
+                onClick={() => {
+                  currentQuestion.setClicked();
+                  handleLinkClick();
+                }}
+              >
+                {currentQuestion.linkLabel}
+              </Button>
+            )}
+            {currentQuestion.type === "end-screen" && (
+              <EndScreen
+                question={currentQuestion}
+                handleLinkClick={handleLinkClick}
+                submit={() => handleClose(complete)}
+                autoCloseAfterSubmit={autoCloseAfterSubmit}
+              />
+            )}
 
-          {showFooter && (
-            <div className="flows_basicsV2_survey_popover_footer">
-              {!isLastQuestion && !hideNextButton && (
-                <Button
-                  className="flows_basicsV2_survey_popover_submit"
-                  variant="primary"
-                  // FIXME: @VojtechVidra add disabled state when required question is unanswered
-                  // disabled
-                  onClick={handleNextQuestion}
-                >
-                  {nextButtonLabel ? nextButtonLabel : DEFAULT_NEXT_BUTTON_LABEL}
-                </Button>
-              )}
-              {isLastQuestion && (
-                <Button
-                  className="flows_basicsV2_survey_popover_submit"
-                  variant="primary"
-                  onClick={() => handleClose(submit)}
-                >
-                  Submit
-                </Button>
-              )}
-            </div>
-          )}
+            {showNextButton && (
+              <SurveyNextButton
+                question={currentQuestion}
+                label={isLastQuestion ? submitButtonLabel : nextButtonLabel}
+                onClick={handleNextButton}
+              />
+            )}
+          </QuestionProvider>
 
           {dismissible && !isLastQuestion && (
             <IconButton

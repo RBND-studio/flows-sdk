@@ -1,27 +1,25 @@
-import type { SurveyQuestion } from "@flows/shared/src/types/survey";
+import type { Survey, SurveyQuestion } from "@flows/shared";
 import { useCallback, useRef, useState } from "react";
 
 // These durations must stay in sync with the animation durations in survey-popover.css
 const TRANSITION_DURATION = 240;
 const CLOSE_ANIMATION_DURATION = 160;
+const AUTO_PROCEED_DURATION = 320;
 
 interface UseSurveyPopoverOptions {
-  questionsLength: number;
+  survey: Survey;
   autoProceedAfterAnswer?: boolean;
 }
 
-export const useSurveyPopover = ({
-  questionsLength,
-  autoProceedAfterAnswer,
-}: UseSurveyPopoverOptions) => {
-  const [questionIndex, setQuestionIndex] = useState(0);
+export const useSurveyPopover = ({ survey, autoProceedAfterAnswer }: UseSurveyPopoverOptions) => {
+  const [questionIndex, setQuestionIndex] = useState(survey.getCurrentQuestionIndex());
   const [isExiting, setIsExiting] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
   const closeTimeoutRef = useRef<number>(null);
   const autoProceedTimeoutRef = useRef<number>(null);
 
-  const isLastQuestion = questionIndex === questionsLength - 1;
+  const isLastQuestion = questionIndex === survey.questions.length - 1;
 
   const handleClose = useCallback((fn: () => void) => {
     clearTimeout(closeTimeoutRef.current ?? undefined);
@@ -56,8 +54,8 @@ export const useSurveyPopover = ({
   }, []);
 
   const handleNextQuestion = useCallback(() => {
-    navigateTo(Math.min(questionIndex + 1, questionsLength - 1));
-  }, [questionIndex, questionsLength, navigateTo]);
+    navigateTo(survey.nextQuestion());
+  }, [navigateTo, survey]);
 
   const handleAutoProceed = useCallback(
     ({ currentQuestion }: { currentQuestion: SurveyQuestion }) => {
@@ -66,7 +64,10 @@ export const useSurveyPopover = ({
 
       if (autoProceedAfterAnswer && !isLastQuestion && !hasOtherOption) {
         clearTimeout(autoProceedTimeoutRef.current ?? undefined);
-        autoProceedTimeoutRef.current = window.setTimeout(handleNextQuestion, 320);
+        autoProceedTimeoutRef.current = window.setTimeout(
+          handleNextQuestion,
+          AUTO_PROCEED_DURATION,
+        );
       }
     },
     [autoProceedAfterAnswer, isLastQuestion, handleNextQuestion],

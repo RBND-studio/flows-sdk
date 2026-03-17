@@ -6,18 +6,15 @@ export type QuestionBase<T extends string> = {
   optional: boolean;
 };
 
-type FreeformQuestion = QuestionBase<"freeform"> & {
+export type FreeformQuestion = QuestionBase<"freeform"> & {
   placeholder?: string;
-  getInitialValue: () => string | undefined;
+  getValue: () => string | undefined;
   setValue: (value: string) => void;
 };
 
 type QuestionOption = {
   id: string;
   label: string;
-
-  getInitialSelected: () => boolean;
-  setSelected: (selected: boolean) => void;
 };
 
 export type SingleChoiceQuestion = QuestionBase<"single-choice"> & {
@@ -26,9 +23,11 @@ export type SingleChoiceQuestion = QuestionBase<"single-choice"> & {
 
   options: QuestionOption[];
 
-  getInitialValue: () => string | undefined;
+  getSelectedOptionIds: () => string[];
+  setSelectedOptionIds: (optionIds: string[]) => void;
+  getValue: () => string | undefined;
   setValue: (value: string) => void;
-  getInitialOtherSelected: () => boolean;
+  getOtherSelected: () => boolean;
   setOtherSelected: (selected: boolean) => void;
 };
 
@@ -38,9 +37,11 @@ export type MultipleChoiceQuestion = QuestionBase<"multiple-choice"> & {
 
   options: QuestionOption[];
 
-  getInitialValue: () => string | undefined;
+  getSelectedOptionIds: () => string[];
+  setSelectedOptionIds: (optionIds: string[]) => void;
+  getValue: () => string | undefined;
   setValue: (value: string) => void;
-  getInitialOtherSelected: () => boolean;
+  getOtherSelected: () => boolean;
   setOtherSelected: (selected: boolean) => void;
 };
 
@@ -51,7 +52,7 @@ export type RatingQuestion = QuestionBase<"rating"> & {
   lowerBoundLabel: string;
   upperBoundLabel: string;
 
-  getInitialValue: () => string | undefined;
+  getValue: () => string | undefined;
   setValue: (value: string) => void;
 };
 
@@ -82,4 +83,24 @@ export type SurveyQuestionType = SurveyQuestion["type"];
 
 export type Survey = {
   questions: SurveyQuestion[];
+
+  /**
+   * Get the current question index in the survey. The index is zero-based, so the first question has index 0.
+   * @returns index of the current question in the survey
+   */
+  getCurrentQuestionIndex: () => number;
+  /**
+   * Proceed to the next question in the survey. If the user is on the last question already, this method does nothing.
+   * @returns new question index
+   */
+  nextQuestion: () => number;
+  /**
+   * Proceed to the previous question in the survey. If the user is on the first question already, this method does nothing.
+   * @returns new question index
+   */
+  previousQuestion: () => number;
+  /**
+   * Submits the survey response and keeps the component visible.
+   */
+  submit: () => Promise<void>;
 };

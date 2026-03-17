@@ -1,17 +1,8 @@
 import { createComponentProps } from "./component-props";
 import { template } from "../template";
 import type { Block, ComponentProps, SurveyComponentProps, UserProperties } from "../types";
-import {
-  getOptionValue,
-  getOtherSelected,
-  getQuestionValue,
-  getSurveyState,
-  setClickedLink,
-  setOtherSelected,
-  setOptionValue,
-  setQuestionValue,
-  clearSurveyState,
-} from "./survey-state";
+import type { QuestionState } from "./survey-state";
+import { SurveyState } from "./survey-state";
 import type { ExitNodeCb, SetStateMemory, SubmitSurvey } from "./component-props-types";
 import type { ApiSurveyQuestionAnswer } from "../types/api-survey";
 import type {
@@ -43,18 +34,16 @@ export const createSurveyComponentProps = (props: {
 
   const baseProps = createComponentProps(props) as ComponentProps<{
     cancel: () => void;
-    submit: () => void;
+    complete: () => void;
   }>;
 
-  const handleSubmit = (): void => {
-    baseProps.submit();
+  const handleSubmit = async (): Promise<void> => {
+    const surveyState = SurveyState.getInstance(survey.id);
 
-    const surveyState = getSurveyState(survey.id);
-
-    void props.submitSurvey({
+    await props.submitSurvey({
       surveyId: survey.id,
       submitType: "submit",
-      questions: Object.entries(surveyState ?? {}).map(
+      questions: Object.entries(surveyState).map(
         ([questionId, questionState]): ApiSurveyQuestionAnswer => {
           return {
             questionId,
@@ -67,8 +56,11 @@ export const createSurveyComponentProps = (props: {
       ),
     });
 
-    clearSurveyState(survey.id);
+    SurveyState.deleteInstance(survey.id);
   };
+
+  const surveyState = SurveyState.getInstance(survey.id);
+  surveyState.questionsLength = survey.questions.length;
 
   const questions = survey.questions.map((question): SurveyQuestion | null => {
     const questionBase: QuestionBase<SurveyQuestionType> = {
@@ -84,9 +76,8 @@ export const createSurveyComponentProps = (props: {
         ...questionBase,
         type: "freeform",
         placeholder: template(question.textPlaceholder ?? "", props.userProperties),
-        setValue: (value) =>
-          setQuestionValue({ questionId: question.id, surveyId: survey.id, value }),
-        getInitialValue: () => getQuestionValue(survey.id, question.id),
+        setValue: (value) => surveyState.updateQuestion(question.id, { textResponse: value }),
+        getValue: () => surveyState.getQuestionValue(question.id),
       };
     }
     if (questionBase.type === "rating") {
@@ -97,9 +88,8 @@ export const createSurveyComponentProps = (props: {
         scale: question.scale ?? 5,
         lowerBoundLabel: template(question.lowerBoundLabel ?? "", props.userProperties),
         upperBoundLabel: template(question.upperBoundLabel ?? "", props.userProperties),
-        setValue: (value) =>
-          setQuestionValue({ questionId: question.id, surveyId: survey.id, value }),
-        getInitialValue: () => getQuestionValue(survey.id, question.id),
+        setValue: (value) => surveyState.updateQuestion(question.id, { textResponse: value }),
+        getValue: () => surveyState.getQuestionValue(question.id),
       };
     }
     if (questionBase.type === "single-choice") {
@@ -113,29 +103,23 @@ export const createSurveyComponentProps = (props: {
           (option) => ({
             id: option.id,
             label: template(option.label, props.userProperties),
-
-            setSelected: (selected) =>
-              setOptionValue({
-                surveyId: survey.id,
-                questionId: question.id,
-                optionId: option.id,
-                selected,
-                clearPrevious: true,
-              }),
-            getInitialSelected: () => getOptionValue(survey.id, question.id, option.id),
           }),
         ),
-        setValue: (value) =>
-          setQuestionValue({ questionId: question.id, surveyId: survey.id, value }),
-        getInitialValue: () => getQuestionValue(survey.id, question.id),
-        setOtherSelected: (selected) =>
-          setOtherSelected({
-            questionId: question.id,
-            selected,
-            surveyId: survey.id,
-            clearOptions: true,
+        getSelectedOptionIds: () => surveyState.getQuestionOptionIds(question.id),
+        setSelectedOptionIds: (optionIds) =>
+          surveyState.updateQuestion(question.id, {
+            optionIds: optionIds,
+            otherSelected: false,
+            textResponse: undefined,
           }),
-        getInitialOtherSelected: () => getOtherSelected(survey.id, question.id),
+        setValue: (value) => surveyState.updateQuestion(question.id, { textResponse: value }),
+        getValue: () => surveyState.getQuestionValue(question.id),
+        setOtherSelected: (selected) => {
+          const update: Partial<QuestionState> = { otherSelected: selected, optionIds: [] };
+          if (!selected) update.textResponse = undefined;
+          surveyState.updateQuestion(question.id, update);
+        },
+        getOtherSelected: () => surveyState.getOtherSelected(question.id),
       };
     }
     if (questionBase.type === "multiple-choice") {
@@ -149,29 +133,21 @@ export const createSurveyComponentProps = (props: {
           (option) => ({
             id: option.id,
             label: template(option.label, props.userProperties),
-
-            setSelected: (selected) =>
-              setOptionValue({
-                surveyId: survey.id,
-                questionId: question.id,
-                optionId: option.id,
-                selected,
-                clearPrevious: false,
-              }),
-            getInitialSelected: () => getOptionValue(survey.id, question.id, option.id),
           }),
         ),
-        getInitialValue: () => getQuestionValue(survey.id, question.id),
-        setValue: (value) =>
-          setQuestionValue({ questionId: question.id, surveyId: survey.id, value }),
-        setOtherSelected: (selected) =>
-          setOtherSelected({
-            questionId: question.id,
-            selected,
-            surveyId: survey.id,
-            clearOptions: false,
+        getSelectedOptionIds: () => surveyState.getQuestionOptionIds(question.id),
+        setSelectedOptionIds: (optionIds) =>
+          surveyState.updateQuestion(question.id, {
+            optionIds: optionIds,
           }),
-        getInitialOtherSelected: () => getOtherSelected(survey.id, question.id),
+        getValue: () => surveyState.getQuestionValue(question.id),
+        setValue: (value) => surveyState.updateQuestion(question.id, { textResponse: value }),
+        setOtherSelected: (selected) => {
+          const update: Partial<QuestionState> = { otherSelected: selected };
+          if (!selected) update.textResponse = undefined;
+          surveyState.updateQuestion(question.id, update);
+        },
+        getOtherSelected: () => surveyState.getOtherSelected(question.id),
       };
     }
     if (questionBase.type === "link") {
@@ -181,7 +157,7 @@ export const createSurveyComponentProps = (props: {
         url: template(question.url ?? "", props.userProperties),
         openInNew: question.openInNew ?? false,
         linkLabel: template(question.linkLabel ?? "", props.userProperties),
-        setClicked: () => setClickedLink({ questionId: question.id, surveyId: survey.id }),
+        setClicked: () => surveyState.updateQuestion(question.id, { clickedLink: true }),
       };
     }
     if (questionBase.type === "end-screen") {
@@ -199,11 +175,14 @@ export const createSurveyComponentProps = (props: {
 
   const surveyProp: Survey = {
     questions: questions.filter((q): q is SurveyQuestion => q !== null),
+    getCurrentQuestionIndex: () => surveyState.questionIndex,
+    nextQuestion: surveyState.nextQuestion.bind(surveyState),
+    previousQuestion: surveyState.previousQuestion.bind(surveyState),
+    submit: handleSubmit,
   };
 
   return {
     ...baseProps,
-    submit: handleSubmit,
     survey: surveyProp,
   };
 };

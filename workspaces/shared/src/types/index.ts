@@ -4,4 +4,5 @@ export * from "./components";
 export * from "./language";
 export * from "./library";
 export * from "./link";
+export * from "./survey";
 export * from "./user-properties";

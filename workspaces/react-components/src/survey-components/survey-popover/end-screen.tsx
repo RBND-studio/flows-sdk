@@ -1,9 +1,9 @@
-import type { EndScreenQuestion } from "@flows/shared/src/types/survey";
+import type { EndScreenQuestion } from "@flows/shared";
 import { Button } from "../../internal-components/button";
 import { useEffect } from "react";
 
 type Props = {
-  currentQuestion: EndScreenQuestion;
+  question: EndScreenQuestion;
   handleLinkClick: () => void;
   submit: () => void;
   autoCloseAfterSubmit?: boolean;
@@ -12,12 +12,7 @@ type Props = {
 // The timeout should sync with the animation duration in survey-popover.css
 const AUTO_CLOSE_TIMEOUT = 3000;
 
-export const EndScreen = ({
-  currentQuestion,
-  handleLinkClick,
-  submit,
-  autoCloseAfterSubmit,
-}: Props) => {
+export const EndScreen = ({ question, handleLinkClick, submit, autoCloseAfterSubmit }: Props) => {
   useEffect(() => {
     if (autoCloseAfterSubmit) {
       const timeout = setTimeout(() => {
@@ -39,15 +34,13 @@ export const EndScreen = ({
 
   return (
     <Button
-      href={currentQuestion.url ? currentQuestion.url : undefined}
+      href={question.url ? question.url : undefined}
       variant="primary"
-      target={currentQuestion.openInNew ? "_blank" : undefined}
+      target={question.openInNew ? "_blank" : undefined}
       className="flows_basicsV2_survey_popover_link_button"
-      onClick={() => {
-        handleLinkClick();
-      }}
+      onClick={handleLinkClick}
     >
-      {currentQuestion.linkLabel}
+      {question.linkLabel}
     </Button>
   );
 };

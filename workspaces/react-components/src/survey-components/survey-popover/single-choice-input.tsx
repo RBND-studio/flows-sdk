@@ -1,22 +1,16 @@
-import type { SingleChoiceQuestion } from "@flows/shared/src/types/survey";
-import { OtherOption } from "./open-option";
-import { useState } from "react";
+import type { SingleChoiceQuestion } from "@flows/shared";
+import { OtherOption } from "./other-option";
+import { useQuestionContext } from "./question-context";
 
 type Props = {
-  currentQuestion: SingleChoiceQuestion;
+  question: SingleChoiceQuestion;
   onAnswer: () => void;
   legendId: string;
   descriptionId: string;
 };
 
-export const SingleChoiceInput = ({
-  currentQuestion,
-  onAnswer,
-  legendId,
-  descriptionId,
-}: Props) => {
-  const [selected, setSelected] = useState(currentQuestion.getInitialValue());
-  const [otherSelected, setOtherSelected] = useState(currentQuestion.getInitialOtherSelected());
+export const SingleChoiceInput = ({ question, onAnswer, legendId, descriptionId }: Props) => {
+  const { optionIds, refresh } = useQuestionContext();
 
   return (
     <div
@@ -25,8 +19,8 @@ export const SingleChoiceInput = ({
       aria-labelledby={legendId}
       aria-describedby={descriptionId}
     >
-      {currentQuestion.options.map((option) => {
-        const isSelected = !otherSelected && selected === option.label;
+      {question.options.map((option) => {
+        const isSelected = optionIds.includes(option.id);
         return (
           <button
             key={option.id}
@@ -36,14 +30,9 @@ export const SingleChoiceInput = ({
             className="flows_basicsV2_survey_popover_choice_option"
             data-selected={isSelected ? "true" : "false"}
             onClick={() => {
-              option.setSelected(true);
-              currentQuestion.setValue(option.label);
-              setSelected(option.label);
+              question.setSelectedOptionIds([option.id]);
+              refresh();
               onAnswer();
-              if (otherSelected) {
-                currentQuestion.setOtherSelected(false);
-                setOtherSelected(false);
-              }
             }}
           >
             <span className="flows_basicsV2_survey_popover_radio_indicator" />
@@ -51,18 +40,7 @@ export const SingleChoiceInput = ({
           </button>
         );
       })}
-      {currentQuestion.otherOption && (
-        <OtherOption
-          type="radio"
-          currentQuestion={currentQuestion}
-          otherSelected={otherSelected}
-          onSelect={() => {
-            setOtherSelected(true);
-            setSelected(undefined);
-          }}
-          onDeselect={() => setOtherSelected(false)}
-        />
-      )}
+      {question.otherOption && <OtherOption type="radio" question={question} />}
     </div>
   );
 };

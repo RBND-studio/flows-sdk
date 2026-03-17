@@ -1,18 +1,15 @@
-import type { MultipleChoiceQuestion } from "@flows/shared/src/types/survey";
-import { useState } from "react";
-import { OtherOption } from "./open-option";
+import type { MultipleChoiceQuestion } from "@flows/shared";
+import { OtherOption } from "./other-option";
+import { useQuestionContext } from "./question-context";
 
 type Props = {
-  currentQuestion: MultipleChoiceQuestion;
+  question: MultipleChoiceQuestion;
   legendId: string;
   descriptionId: string;
 };
 
-export const MultipleChoiceInput = ({ currentQuestion, legendId, descriptionId }: Props) => {
-  const [selectedOptions, setSelectedOptions] = useState<Record<string, boolean>>(() =>
-    Object.fromEntries(currentQuestion.options.map((o) => [o.id, o.getInitialSelected()])),
-  );
-  const [otherSelected, setOtherSelected] = useState(currentQuestion.getInitialOtherSelected());
+export const MultipleChoiceInput = ({ question, legendId, descriptionId }: Props) => {
+  const { optionIds, refresh } = useQuestionContext();
 
   return (
     <div
@@ -20,8 +17,8 @@ export const MultipleChoiceInput = ({ currentQuestion, legendId, descriptionId }
       aria-labelledby={legendId}
       aria-describedby={descriptionId}
     >
-      {currentQuestion.options.map((option) => {
-        const isSelected = !!selectedOptions[option.id];
+      {question.options.map((option) => {
+        const isSelected = optionIds.includes(option.id);
         return (
           <button
             key={option.id}
@@ -31,9 +28,11 @@ export const MultipleChoiceInput = ({ currentQuestion, legendId, descriptionId }
             className="flows_basicsV2_survey_popover_choice_option"
             data-selected={isSelected ? "true" : "false"}
             onClick={() => {
-              const next = !isSelected;
-              option.setSelected(next);
-              setSelectedOptions((prev) => ({ ...prev, [option.id]: next }));
+              const updatedOptionIds = isSelected
+                ? optionIds.filter((id) => id !== option.id)
+                : [...optionIds, option.id];
+              question.setSelectedOptionIds(updatedOptionIds);
+              refresh();
             }}
           >
             <span className="flows_basicsV2_survey_popover_checkbox_indicator" />
@@ -41,15 +40,7 @@ export const MultipleChoiceInput = ({ currentQuestion, legendId, descriptionId }
           </button>
         );
       })}
-      {currentQuestion.otherOption && (
-        <OtherOption
-          type="checkbox"
-          currentQuestion={currentQuestion}
-          otherSelected={otherSelected}
-          onSelect={() => setOtherSelected(true)}
-          onDeselect={() => setOtherSelected(false)}
-        />
-      )}
+      {question.otherOption && <OtherOption type="checkbox" question={question} />}
     </div>
   );
 };

@@ -54,7 +54,13 @@ export type SurveyComponentProps<T extends Record<string, any> = any> = {
 
   survey: Survey;
 
-  submit: () => void;
+  /**
+   * Exits the survey block with `complete` exit node.
+   */
+  complete: () => void;
+  /**
+   * Exits the survey block with `cancel` exit node.
+   */
   cancel: () => void;
 } & T;
 
