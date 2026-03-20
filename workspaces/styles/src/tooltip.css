@@ -12,7 +12,7 @@
   pointer-events: none;
   animation: flows-basicsV2-fadeIn 100ms ease-out;
 }
-.flows_basicsV2_tooltip_overlay:after {
+.flows_basicsV2_tooltip_overlay::after {
   content: "";
   position: absolute;
   inset: 0;
