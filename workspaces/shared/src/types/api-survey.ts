@@ -3,9 +3,17 @@ export type ApiSurveyQuestionOption = {
   label: string;
 };
 
+export type QuestionType =
+  | "freeform"
+  | "single-choice"
+  | "multiple-choice"
+  | "rating"
+  | "link"
+  | "end-screen";
+
 export type ApiSurveyQuestion = {
   id: string;
-  type: string;
+  type: QuestionType;
 
   title: string;
   description: string;

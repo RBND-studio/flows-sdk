@@ -43,8 +43,25 @@ export const createSurveyComponentProps = (props: {
     await props.submitSurvey({
       surveyId: survey.id,
       submitType: "submit",
-      questions: Object.entries(surveyState.questions).map(
-        ([questionId, questionState]): ApiSurveyQuestionAnswer => {
+      questions: Object.entries(surveyState.questions)
+        .map(([questionId, questionState]): ApiSurveyQuestionAnswer | null => {
+          const question = survey.questions.find((q) => q.id === questionId);
+          if (!question) return null;
+
+          if (question.type === "single-choice" || question.type === "multiple-choice") {
+            const answer: ApiSurveyQuestionAnswer = {
+              questionId,
+              optionIds: questionState.optionIds ?? [],
+            };
+            if (question.otherOption) {
+              answer.otherSelected = questionState.otherSelected ?? false;
+              answer.textResponse = questionState.textResponse ?? "";
+            }
+            return answer;
+          }
+
+          // TODO: handle other question types
+
           return {
             questionId,
             clickedLink: questionState.clickedLink,
@@ -52,8 +69,8 @@ export const createSurveyComponentProps = (props: {
             textResponse: questionState.textResponse,
             optionIds: questionState.optionIds,
           };
-        },
-      ),
+        })
+        .filter((answer): answer is ApiSurveyQuestionAnswer => answer !== null),
     });
 
     surveyState.deleteInstance();
