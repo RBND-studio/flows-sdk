@@ -20,7 +20,8 @@ export type ApiSurveyQuestion = {
   shuffleOptions?: boolean;
   otherOption?: boolean;
   displayType?: string;
-  scale?: number;
+  minValue?: number;
+  maxValue?: number;
   openInNew?: boolean;
   options?: ApiSurveyQuestionOption[];
 };

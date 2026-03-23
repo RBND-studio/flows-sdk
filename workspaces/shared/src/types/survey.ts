@@ -48,7 +48,8 @@ export type MultipleChoiceQuestion = QuestionBase<"multiple-choice"> & {
 export type RatingDisplayType = "numbers" | "stars" | "emojis";
 export type RatingQuestion = QuestionBase<"rating"> & {
   displayType: RatingDisplayType;
-  scale: number;
+  minValue: number;
+  maxValue: number;
   lowerBoundLabel: string;
   upperBoundLabel: string;
 

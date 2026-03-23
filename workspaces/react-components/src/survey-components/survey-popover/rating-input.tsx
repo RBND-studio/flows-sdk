@@ -1,9 +1,10 @@
 import type { RatingDisplayType, RatingQuestion } from "@flows/shared";
 import { Text } from "../../internal-components/text";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { StarFilled16 } from "../../icons/star-filled16";
 import { StarEmpty16 } from "../../icons/star-empty16";
 import { useQuestionContext } from "./question-context";
+import { range } from "es-toolkit";
 
 type Props = {
   question: RatingQuestion;
@@ -22,6 +23,12 @@ export const RatingInput = ({ question, onAnswer, legendId, descriptionId }: Pro
     onAnswer();
   };
 
+  const options = useMemo(
+    () => range(question.minValue, question.maxValue + 1),
+    [question.minValue, question.maxValue],
+  );
+  const valueIndex = options.findIndex((optValue) => optValue.toString() === value);
+
   return (
     <>
       <div
@@ -30,33 +37,32 @@ export const RatingInput = ({ question, onAnswer, legendId, descriptionId }: Pro
         aria-labelledby={legendId}
         aria-describedby={descriptionId}
       >
-        {Array(question.scale)
-          .fill(null)
-          .map((_, i) => {
-            const isSelected = value === i.toString();
-            return (
-              <button
-                className="flows_basicsV2_survey_popover_rating_option"
-                role="radio"
-                type="button"
-                aria-checked={isSelected}
-                aria-label={`${i + 1} out of ${question.scale}`}
-                onClick={() => {
-                  handleSetValue(i.toString());
-                }}
-                key={i}
-                data-selected={isSelected ? "true" : "false"}
-                onMouseEnter={() => setHoverIndex(i)}
-                onMouseLeave={() => setHoverIndex(null)}
-              >
-                <DisplayRender
-                  displayType={question.displayType}
-                  index={i}
-                  activeIndex={hoverIndex ?? (value ? parseInt(value) : undefined)}
-                />
-              </button>
-            );
-          })}
+        {options.map((optValue, index) => {
+          const isSelected = value === optValue.toString();
+          return (
+            <button
+              className="flows_basicsV2_survey_popover_rating_option"
+              role="radio"
+              type="button"
+              aria-checked={isSelected}
+              aria-label={`${optValue} out of ${question.maxValue}`}
+              onClick={() => {
+                handleSetValue(optValue.toString());
+              }}
+              key={optValue}
+              data-selected={isSelected ? "true" : "false"}
+              onMouseEnter={() => setHoverIndex(index)}
+              onMouseLeave={() => setHoverIndex(null)}
+            >
+              <DisplayRender
+                displayType={question.displayType}
+                value={optValue}
+                index={index}
+                activeIndex={hoverIndex ?? valueIndex}
+              />
+            </button>
+          );
+        })}
       </div>
       {question.upperBoundLabel && question.lowerBoundLabel && (
         <div className="flows_basicsV2_survey_popover_bound_labels">
@@ -70,15 +76,16 @@ export const RatingInput = ({ question, onAnswer, legendId, descriptionId }: Pro
 
 type DisplayRenderProps = {
   displayType: RatingDisplayType;
+  value: number;
   index: number;
   activeIndex?: number;
 };
 
 const emojis = ["😞", "😐", "😊", "😀", "😍"];
 
-const DisplayRender = ({ displayType, index, activeIndex }: DisplayRenderProps) => {
+const DisplayRender = ({ displayType, value, index, activeIndex }: DisplayRenderProps) => {
   if (displayType === "numbers") {
-    return <span>{index + 1}</span>;
+    return <span>{value}</span>;
   }
 
   if (displayType === "stars") {
