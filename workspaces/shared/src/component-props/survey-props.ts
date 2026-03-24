@@ -48,7 +48,26 @@ export const createSurveyComponentProps = (props: {
           const question = survey.questions.find((q) => q.id === questionId);
           if (!question) return null;
 
+          if (question.type === "freeform") {
+            const textResponse = questionState.textResponse?.trim();
+            if (!questionState.textResponse) return null;
+            return { questionId, textResponse };
+          }
+
+          if (question.type === "link") {
+            if (!questionState.clickedLink) return null;
+            return { questionId, clickedLink: questionState.clickedLink };
+          }
+
+          if (question.type === "rating") {
+            const textResponse = questionState.textResponse?.trim();
+            if (!textResponse) return null;
+            return { questionId, textResponse };
+          }
+
           if (question.type === "single-choice" || question.type === "multiple-choice") {
+            if (!questionState.optionIds?.length && !questionState.otherSelected) return null;
+
             const answer: ApiSurveyQuestionAnswer = {
               questionId,
               optionIds: questionState.optionIds ?? [],
@@ -60,15 +79,7 @@ export const createSurveyComponentProps = (props: {
             return answer;
           }
 
-          // TODO: handle other question types
-
-          return {
-            questionId,
-            clickedLink: questionState.clickedLink,
-            otherSelected: questionState.otherSelected,
-            textResponse: questionState.textResponse,
-            optionIds: questionState.optionIds,
-          };
+          return null;
         })
         .filter((answer): answer is ApiSurveyQuestionAnswer => answer !== null),
     });
