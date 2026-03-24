@@ -17,7 +17,7 @@ export const sendEvent = async (props: SendEventProps): Promise<void> => {
 };
 
 export const postSurvey = async (
-  props: Omit<ApiSurveyAnswer, "userId" | "environment" | "organizationId">,
+  props: Omit<ApiSurveyAnswer, "userId" | "environment" | "organizationId" | "url">,
 ) => {
   const { apiUrl, environment, organizationId, userId } = globalConfig;
   if (!apiUrl || !environment || !organizationId || !userId) return;
@@ -26,6 +26,7 @@ export const postSurvey = async (
     environment,
     organizationId,
     userId,
+    url: window.location.href,
   });
 };
 

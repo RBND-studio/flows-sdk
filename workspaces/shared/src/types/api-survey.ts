@@ -57,4 +57,5 @@ export type ApiSurveyAnswer = {
   surveyId: string;
   submitType: SurveySubmitType;
   questions: ApiSurveyQuestionAnswer[];
+  url: string;
 };
