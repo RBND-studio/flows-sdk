@@ -60,10 +60,6 @@ const SurveyPopover: FC<Props> = (props) => {
   const hasOwnFooter = currentQuestion.type === "link" || currentQuestion.type === "end-screen";
   const showNextButton = !hasOwnFooter && !autoProceed;
 
-  const handleLinkClick = () => {
-    if (isLastQuestion) complete();
-    else handleNextQuestion();
-  };
   const handleNextButton = () => {
     if (isLastQuestion) {
       void survey.submit();
@@ -145,7 +141,7 @@ const SurveyPopover: FC<Props> = (props) => {
                 className="flows_basicsV2_survey_popover_link_button"
                 onClick={() => {
                   currentQuestion.setClicked();
-                  handleLinkClick();
+                  handleNextButton();
                 }}
               >
                 {currentQuestion.linkLabel}
@@ -154,7 +150,6 @@ const SurveyPopover: FC<Props> = (props) => {
             {currentQuestion.type === "end-screen" && (
               <EndScreen
                 question={currentQuestion}
-                handleLinkClick={handleLinkClick}
                 handleClose={() => handleClose(complete)}
                 autoCloseAfterSubmit={autoCloseAfterSubmit}
               />
@@ -169,7 +164,7 @@ const SurveyPopover: FC<Props> = (props) => {
             )}
           </QuestionProvider>
 
-          {dismissible && !isLastQuestion && (
+          {dismissible && currentQuestion.type !== "end-screen" && (
             <IconButton
               aria-label="Close"
               className="flows_basicsV2_survey_popover_close"

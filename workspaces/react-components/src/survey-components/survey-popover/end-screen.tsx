@@ -4,7 +4,6 @@ import { useEffect } from "react";
 
 type Props = {
   question: EndScreenQuestion;
-  handleLinkClick: () => void;
   handleClose: () => void;
   autoCloseAfterSubmit?: boolean;
 };
@@ -12,12 +11,7 @@ type Props = {
 // The timeout should sync with the animation duration in survey-popover.css
 const AUTO_CLOSE_TIMEOUT = 3000;
 
-export const EndScreen = ({
-  question,
-  handleLinkClick,
-  handleClose,
-  autoCloseAfterSubmit,
-}: Props) => {
+export const EndScreen = ({ question, handleClose, autoCloseAfterSubmit }: Props) => {
   useEffect(() => {
     if (autoCloseAfterSubmit) {
       const timeout = setTimeout(() => {
@@ -43,7 +37,7 @@ export const EndScreen = ({
       variant="primary"
       target={question.openInNew ? "_blank" : undefined}
       className="flows_basicsV2_survey_popover_link_button"
-      onClick={handleLinkClick}
+      onClick={handleClose}
     >
       {question.linkLabel}
     </Button>
