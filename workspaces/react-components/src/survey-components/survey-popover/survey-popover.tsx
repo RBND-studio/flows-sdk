@@ -1,18 +1,19 @@
 import type { SurveyComponentProps, SurveyPopoverProps } from "@flows/shared";
 import clsx from "clsx";
+import DOMPurify from "dompurify";
 import type { FC } from "react";
 import { Close16 } from "../../icons/close16";
 import { Button } from "../../internal-components/button";
 import { IconButton } from "../../internal-components/icon-button";
 import { Text } from "../../internal-components/text";
 import { EndScreen } from "./end-screen";
+import { FreeformInput } from "./freeform-input";
 import { MultipleChoiceInput } from "./multiple-choice-input";
+import { QuestionProvider } from "./question-context";
 import { RatingInput } from "./rating-input";
 import { SingleChoiceInput } from "./single-choice-input";
-import { useSurveyPopover } from "./use-survey-popover";
-import { FreeformInput } from "./freeform-input";
-import { QuestionProvider } from "./question-context";
 import { SurveyNextButton } from "./survey-next-button";
+import { useSurveyPopover } from "./use-survey-popover";
 
 type Props = SurveyComponentProps<SurveyPopoverProps>;
 
@@ -88,9 +89,13 @@ const SurveyPopover: FC<Props> = (props) => {
               flows_basicsV2_survey_popover_end_screen_title: currentQuestion.type === "end-screen",
             })}
             variant="title"
-          >
-            {currentQuestion.title}
-          </Text>
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(currentQuestion.title, {
+                FORCE_BODY: true,
+                ADD_ATTR: ["target"],
+              }),
+            }}
+          />
           <Text
             id={descriptionId}
             className={clsx("flows_basicsV2_survey_popover_description", {
@@ -98,9 +103,13 @@ const SurveyPopover: FC<Props> = (props) => {
                 currentQuestion.type === "end-screen",
             })}
             variant="body"
-          >
-            {currentQuestion.description}
-          </Text>
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(currentQuestion.description, {
+                FORCE_BODY: true,
+                ADD_ATTR: ["target"],
+              }),
+            }}
+          />
 
           <QuestionProvider question={currentQuestion}>
             {currentQuestion.type === "freeform" && (

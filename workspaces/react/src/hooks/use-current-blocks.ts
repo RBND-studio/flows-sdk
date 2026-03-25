@@ -10,19 +10,23 @@ import {
 import { getSlot } from "../lib/selectors";
 
 export const useVisibleBlocks = (): Block[] => {
-  const { blocks } = useFlowsContext();
+  const { blocks, runningSurveyIds } = useFlowsContext();
   const pathname = usePathname();
-  return useMemo(
-    () =>
-      blocks.filter((b) =>
-        pathnameMatch({
-          pathname,
-          operator: b.page_targeting_operator,
-          value: b.page_targeting_values,
-        }),
-      ),
-    [blocks, pathname],
-  );
+  return useMemo(() => {
+    const runningSurveyIdsSet = new Set(runningSurveyIds);
+
+    return blocks.filter((b) => {
+      if (b.type === "survey" && !runningSurveyIdsSet.has(b.id)) return false;
+
+      const pageTargetingMatch = pathnameMatch({
+        pathname,
+        operator: b.page_targeting_operator,
+        value: b.page_targeting_values,
+      });
+
+      return pageTargetingMatch;
+    });
+  }, [blocks, pathname, runningSurveyIds]);
 };
 
 const useVisibleTours = (): RunningTour[] => {

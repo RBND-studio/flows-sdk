@@ -9,6 +9,7 @@ import { useRunningTours } from "./hooks/use-running-tours";
 import { globalConfig } from "./lib/store";
 import { TourController } from "./tour-controller";
 import { type SurveyComponents, type Components, type TourComponents } from "./types";
+import { useRunningSurveys } from "./hooks/use-running-surveys";
 
 export interface FlowsProviderProps {
   /**
@@ -163,6 +164,7 @@ const FlowsProviderInner: FC<Props> = ({
   });
 
   const runningTours = useRunningTours({ blocks, removeBlock });
+  const runningSurveyIds = useRunningSurveys({ blocks });
 
   useEffect(() => {
     window.__flows_LinkComponent = LinkComponent;
@@ -175,6 +177,7 @@ const FlowsProviderInner: FC<Props> = ({
         blocks,
         components,
         runningTours,
+        runningSurveyIds,
         tourComponents,
         surveyComponents,
         removeBlock,

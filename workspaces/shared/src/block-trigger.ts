@@ -1,5 +1,6 @@
 import { log } from "./log";
 import { elementContains, pathnameMatch } from "./matchers";
+import type { TourTrigger } from "./types";
 import { type Block, type TourTriggerType } from "./types";
 
 interface Context {
@@ -7,14 +8,10 @@ interface Context {
   pathname: string;
 }
 
-export const tourTriggerMatch = (block: Block, context: Context): boolean => {
-  const tourTrigger = block.tour_trigger;
-
-  const currentTourIndex = block.currentTourIndex ?? 0;
-
-  // If the tour has already started, we don't match the trigger again
-  if (currentTourIndex > 0) return true;
-
+export const blockTriggerMatch = (
+  tourTrigger: TourTrigger | undefined,
+  context: Context,
+): boolean => {
   // Undefined tour trigger means the tour should start
   if (!tourTrigger) return true;
 
@@ -77,4 +74,13 @@ export const tourTriggerMatch = (block: Block, context: Context): boolean => {
     // When the expression isn't recognized, we treat it as non-matching and abort the tour start
     return false;
   });
+};
+
+export const tourTriggerMatch = (block: Block, context: Context): boolean => {
+  const currentTourIndex = block.currentTourIndex ?? 0;
+
+  // If the tour has already started, we don't match the trigger again
+  if (currentTourIndex > 0) return true;
+
+  return blockTriggerMatch(block.tour_trigger, context);
 };
