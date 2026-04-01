@@ -39,6 +39,12 @@ export const useRunningSurveys = ({ blocks }: Props): string[] => {
 
   const pathname = usePathname();
 
+  // Remove surveys that are no longer running
+  useEffect(() => {
+    const surveyBlockIds = new Set(blocks.filter((b) => b.type === "survey").map((b) => b.id));
+    setRunningSurveyIds((prev) => prev.filter((id) => surveyBlockIds.has(id)));
+  }, [blocks]);
+
   const startSurveysIfNeeded = useCallback(
     (ctx: { pathname: string; event?: MouseEvent }) => {
       const surveyBlocks = blocks.filter((b) => b.type === "survey");

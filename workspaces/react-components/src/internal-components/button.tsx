@@ -34,6 +34,7 @@ export const Button: FC<Props> = ({
     "flows_basicsV2_button",
     `flows_basicsV2_button_${variant}`,
     `flows_basicsV2_button_size_${size}`,
+    disabled && "flows_basicsV2_button_disabled",
     classNameProp,
   );
 
@@ -57,8 +58,8 @@ export const Button: FC<Props> = ({
   return (
     <Cmp
       type={Cmp === "button" ? "button" : undefined}
+      disabled={Cmp === "button" ? disabled : undefined}
       className={className}
-      disabled={disabled}
       {...props}
     />
   );

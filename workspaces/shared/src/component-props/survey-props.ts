@@ -20,6 +20,11 @@ const shuffleArray = <T>(options: T[], doShuffle?: boolean): T[] => {
   return shuffle(options);
 };
 
+const getDisplayType = (displayType?: string): RatingDisplayType => {
+  if (!displayType?.trim()) return "numbers";
+  return displayType as RatingDisplayType;
+};
+
 export const createSurveyComponentProps = (props: {
   block: Block;
   removeBlock: (blockId: string) => void;
@@ -58,7 +63,7 @@ export const createSurveyComponentProps = (props: {
 
           if (question.type === "freeform") {
             const textResponse = questionState.textResponse?.trim();
-            if (!questionState.textResponse) return null;
+            if (!textResponse) return null;
             return { questionId, textResponse };
           }
 
@@ -120,7 +125,7 @@ export const createSurveyComponentProps = (props: {
       return {
         ...questionBase,
         type: "rating",
-        displayType: question.displayType as RatingDisplayType,
+        displayType: getDisplayType(question.displayType),
         minValue: question.minValue ?? 1,
         maxValue: question.maxValue ?? 5,
         lowerBoundLabel: template(question.lowerBoundLabel ?? "", props.userProperties),

@@ -1,7 +1,7 @@
 import { getApi, log, type WorkflowsResponse, type EventRequest } from "@flows/shared";
 import { globalConfig } from "./store";
 import { packageAndVersion } from "./constants";
-import type { ApiSurveyAnswer } from "@flows/shared/src/types/api-survey";
+import type { ApiSurveyAnswer } from "@flows/shared";
 
 type SendEventProps = Omit<EventRequest, "userId" | "environment" | "organizationId">;
 

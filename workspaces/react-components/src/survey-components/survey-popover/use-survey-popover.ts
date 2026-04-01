@@ -1,5 +1,5 @@
 import type { Survey, SurveyQuestion } from "@flows/shared";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 // These durations must stay in sync with the animation durations in survey-popover.css
 const TRANSITION_DURATION = 240;
@@ -18,6 +18,13 @@ export const useSurveyPopover = ({ survey, autoProceedAfterAnswer }: UseSurveyPo
   const popoverRef = useRef<HTMLDivElement>(null);
   const closeTimeoutRef = useRef<number>(null);
   const autoProceedTimeoutRef = useRef<number>(null);
+
+  useEffect(() => {
+    return () => {
+      clearTimeout(closeTimeoutRef.current ?? undefined);
+      clearTimeout(autoProceedTimeoutRef.current ?? undefined);
+    };
+  }, []);
 
   const isLastQuestion = questionIndex === survey.questions.length - 1;
 

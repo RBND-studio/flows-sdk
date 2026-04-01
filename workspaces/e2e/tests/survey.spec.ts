@@ -3,10 +3,7 @@ import test, { expect, type Page } from "@playwright/test";
 import { isDeepStrictEqual } from "node:util";
 import { randomUUID } from "crypto";
 import { mockBlocksEndpoint } from "./utils";
-import type {
-  ApiSurveyQuestion,
-  ApiSurveyQuestionAnswer,
-} from "@flows/shared/src/types/api-survey";
+import type { ApiSurveyQuestion, ApiSurveyQuestionAnswer } from "@flows/shared";
 
 test.beforeEach(async ({ page }) => {
   await page.routeWebSocket(

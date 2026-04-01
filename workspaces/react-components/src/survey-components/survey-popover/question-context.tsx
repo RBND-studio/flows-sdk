@@ -1,5 +1,5 @@
 import type { FC, ReactNode } from "react";
-import { createContext, use, useCallback, useState } from "react";
+import { createContext, useCallback, useContext, useState } from "react";
 import type { SurveyQuestion } from "@flows/shared";
 
 type IQuestionContext = {
@@ -41,4 +41,4 @@ export const QuestionProvider: FC<Props> = ({ children, question }) => {
   );
 };
 
-export const useQuestionContext = () => use(QuestionContext);
+export const useQuestionContext = () => useContext(QuestionContext);
