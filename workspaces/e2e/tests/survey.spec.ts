@@ -526,3 +526,6 @@ const run = (packageName: string) => {
 };
 
 run("react");
+// TODO: uncomment once survey is implemented for JS
+// and also in tour-trigger.spec.ts
+// run("js");

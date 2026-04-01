@@ -17,13 +17,11 @@ const questionToContextValue = (question: SurveyQuestion): ContextData => ({
   otherSelected: "getOtherSelected" in question ? question.getOtherSelected() : false,
 });
 
-const noop = () => {};
-
 const QuestionContext = createContext<IQuestionContext>({
   value: "",
   optionIds: [],
   otherSelected: false,
-  refresh: noop,
+  refresh: () => {},
 });
 
 type Props = {

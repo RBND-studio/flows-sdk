@@ -197,22 +197,14 @@
   color: var(--flows-basicsV2-fg-muted);
 }
 
+/* Single / Multi choice */
+
 .flows_basicsV2_survey_popover_option_list {
   display: flex;
   flex-direction: column;
   gap: var(--flows-basicsV2-size-s);
   margin-top: var(--flows-basicsV2-size-l);
 }
-
-.flows_basicsV2_survey_popover_option {
-  display: flex;
-  align-items: center;
-  gap: var(--flows-basicsV2-size-s);
-  border: var(--flows-basicsV2-border);
-  padding: var(--flows-basicsV2-size-s);
-}
-
-/* Single / Multi choice */
 
 .flows_basicsV2_survey_popover_choice_option {
   border-radius: var(--flows-basicsV2-borderRadius-m);

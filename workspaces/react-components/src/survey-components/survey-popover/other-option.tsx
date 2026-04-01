@@ -38,7 +38,7 @@ export const OtherOption: FC<Props> = ({ question, type }) => {
       data-selected={otherSelected ? "true" : "false"}
     >
       <button
-        role={type === "radio" ? "radio" : "checkbox"}
+        role={type}
         aria-checked={otherSelected}
         onClick={handleClick}
         onMouseDown={handleMouseDown}

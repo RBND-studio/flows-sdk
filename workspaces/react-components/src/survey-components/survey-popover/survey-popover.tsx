@@ -1,4 +1,7 @@
-import type { SurveyComponentProps, SurveyPopoverProps } from "@flows/shared";
+import type {
+  SurveyComponentProps,
+  SurveyPopoverProps as LibrarySurveyPopoverProps,
+} from "@flows/shared";
 import clsx from "clsx";
 import DOMPurify from "dompurify";
 import type { FC } from "react";
@@ -15,13 +18,13 @@ import { SingleChoiceInput } from "./single-choice-input";
 import { SurveyNextButton } from "./survey-next-button";
 import { useSurveyPopover } from "./use-survey-popover";
 
-type Props = SurveyComponentProps<SurveyPopoverProps>;
+export type SurveyPopoverProps = SurveyComponentProps<LibrarySurveyPopoverProps>;
 
 const DEFAULT_POSITION: SurveyPopoverProps["position"] = "bottom-right";
 const DEFAULT_NEXT_BUTTON_LABEL = "Next";
 const DEFAULT_SUBMIT_BUTTON_LABEL = "Submit";
 
-const SurveyPopover: FC<Props> = (props) => {
+const SurveyPopover: FC<SurveyPopoverProps> = (props) => {
   const {
     survey,
     dismissible,
