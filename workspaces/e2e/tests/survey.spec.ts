@@ -1,4 +1,4 @@
-import type { Block, TourTriggerExpression } from "@flows/shared";
+import type { Block } from "@flows/shared";
 import test, { expect, type Page } from "@playwright/test";
 import { isDeepStrictEqual } from "node:util";
 import { randomUUID } from "crypto";
@@ -17,14 +17,12 @@ test.beforeEach(async ({ page }) => {
 
 const getBlock = ({
   questions,
-  tour_trigger,
   autoCloseAfterSubmit,
   autoProceedAfterAnswer,
   dismissible,
   nextButtonLabel,
   submitButtonLabel,
 }: {
-  tour_trigger?: TourTriggerExpression[];
   questions: ApiSurveyQuestion[];
   dismissible?: boolean;
   autoCloseAfterSubmit?: boolean;
@@ -45,7 +43,6 @@ const getBlock = ({
   },
   exitNodes: ["complete", "cancel"],
   slottable: false,
-  tour_trigger: tour_trigger ? { $and: tour_trigger } : undefined,
   survey: { id: randomUUID(), blockStateId: randomUUID(), questions },
 });
 
@@ -68,7 +65,7 @@ const waitForSurveySubmit = ({
       body.environment === "prod" &&
       body.organizationId === "orgId" &&
       body.surveyId === block.survey?.id &&
-      body.submitType === "submit" &&
+      body.blockStateId === block.survey?.blockStateId &&
       urlMatcher(body.url) &&
       isDeepStrictEqual(body.questions, questions)
     );
@@ -496,8 +493,36 @@ const run = (packageName: string) => {
     });
   });
 
-  test.skip(`${packageName} - survey persists page`, async ({ page }) => {});
-  test.skip(`${packageName} - survey trigger`, async ({ page }) => {});
+  test(`${packageName} - survey persists page`, async ({ page }) => {
+    const block = getBlock({
+      questions: [
+        {
+          id: "question-1",
+          type: "freeform",
+          title: "Question 1",
+          description: "Description 1",
+          optional: true,
+        },
+        {
+          id: "question-2",
+          type: "freeform",
+          title: "Question 2",
+          description: "Description 2",
+          optional: true,
+        },
+      ],
+    });
+    await mockBlocksEndpoint(page, [block]);
+    await page.goto(`/${packageName}.html`);
+    await expect(page.getByText("Question 1", { exact: true })).toBeVisible();
+    await page.getByText("Next", { exact: true }).click();
+    await expect(page.getByText("Question 2", { exact: true })).toBeVisible();
+    await page.waitForTimeout(500);
+    await page.reload();
+    await expect(page.getByText("Question 2", { exact: true })).toBeVisible();
+    await expect(page.getByText("Description 2", { exact: true })).toBeVisible();
+    await expect(page.getByText("Question 1", { exact: true })).toHaveCount(0);
+  });
 };
 
 run("react");
