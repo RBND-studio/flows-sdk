@@ -5,7 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { debounce } from "es-toolkit";
 
 type Props = {
-  blocks: Block[];
+  blocksState: Block[] | null;
 };
 
 const SESSION_STORAGE_KEY = "flows-running-surveys";
@@ -28,7 +28,7 @@ const getSessionStorageValue = (): string[] => {
   }
 };
 
-export const useRunningSurveys = ({ blocks }: Props): string[] => {
+export const useRunningSurveys = ({ blocksState: blocks }: Props): string[] => {
   const [runningSurveyIds, setRunningSurveyIds] = useState<string[]>(getSessionStorageValue());
   useEffect(() => {
     sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(runningSurveyIds));
@@ -41,12 +41,16 @@ export const useRunningSurveys = ({ blocks }: Props): string[] => {
 
   // Remove surveys that are no longer running
   useEffect(() => {
+    if (!blocks) return;
+
     const surveyBlockIds = new Set(blocks.filter((b) => b.type === "survey").map((b) => b.id));
     setRunningSurveyIds((prev) => prev.filter((id) => surveyBlockIds.has(id)));
   }, [blocks]);
 
   const startSurveysIfNeeded = useCallback(
     (ctx: { pathname: string; event?: MouseEvent }) => {
+      if (!blocks) return;
+
       const surveyBlocks = blocks.filter((b) => b.type === "survey");
       const runningSurveyIdsSet = new Set(runningSurveyIdsRef.current);
 

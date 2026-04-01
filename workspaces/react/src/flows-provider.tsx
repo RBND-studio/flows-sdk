@@ -154,7 +154,7 @@ const FlowsProviderInner: FC<Props> = ({
   globalConfig.organizationId = organizationId;
   globalConfig.userId = userId;
 
-  const { blocks, error, wsError, removeBlock, updateBlock } = useBlocks({
+  const { blocksState, blocks, error, wsError, removeBlock, updateBlock } = useBlocks({
     apiUrl,
     environment,
     organizationId,
@@ -164,7 +164,7 @@ const FlowsProviderInner: FC<Props> = ({
   });
 
   const runningTours = useRunningTours({ blocks, removeBlock });
-  const runningSurveyIds = useRunningSurveys({ blocks });
+  const runningSurveyIds = useRunningSurveys({ blocksState });
 
   useEffect(() => {
     window.__flows_LinkComponent = LinkComponent;
