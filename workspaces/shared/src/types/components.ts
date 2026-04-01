@@ -52,6 +52,9 @@ export type SurveyComponentProps<T extends Record<string, any> = any> = {
    */
   __flows: FlowsProperties;
 
+  /**
+   * The survey object provided by Flows, containing information about the survey and functions to interact with it.
+   */
   survey: Survey;
 
   /**

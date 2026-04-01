@@ -18,12 +18,12 @@ export const SurveyNextButton: FC<Props> = ({ onClick, label, question }) => {
     if (question.type === "freeform") {
       return !value?.trim();
     }
+    if (question.type === "rating") {
+      return !value?.trim();
+    }
     if (question.type === "single-choice" || question.type === "multiple-choice") {
       const otherOptionFilled = otherSelected && value?.trim();
       return !optionIds.length && !otherOptionFilled;
-    }
-    if (question.type === "rating") {
-      return value === undefined;
     }
   }, [question.type, value, optionIds, otherSelected, question.optional]);
 

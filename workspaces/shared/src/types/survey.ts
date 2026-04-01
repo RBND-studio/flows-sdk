@@ -55,7 +55,7 @@ type QuestionOption = {
 
 export type SingleChoiceQuestion = QuestionBase<"single-choice"> & {
   /**
-   * Available options for the single-choice question.
+   * Ordered list of available options for the single-choice question.
    */
   options: QuestionOption[];
   /**
@@ -104,7 +104,7 @@ export type SingleChoiceQuestion = QuestionBase<"single-choice"> & {
 
 export type MultipleChoiceQuestion = QuestionBase<"multiple-choice"> & {
   /**
-   * Available options for the multiple-choice question.
+   * Ordered list of available options for the multiple-choice question.
    */
   options: QuestionOption[];
   /**
