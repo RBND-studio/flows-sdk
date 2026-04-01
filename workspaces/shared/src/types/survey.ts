@@ -5,126 +5,147 @@ export type QuestionBase<T extends string> = {
   id: string;
 
   /**
-   * Type of the question. E.g. freeform, single-choice, rating, etc.
+   * Type of the question, e.g. `freeform`, `single-choice`, `rating`.
    */
   type: T;
   /**
-   * Title of the question, can contain HTML.
+   * Title of the question. May contain HTML.
    */
   title: string;
   /**
-   * Description of the question, can contain HTML.
+   * Description of the question. May contain HTML.
    */
   description: string;
   /**
-   * When true, the question does not have to be answered in order to proceed with the survey. Only relevant for questions with inputs (e.g. freeform, single-choice, multiple-choice, rating).
+   * When true, the user may skip this question without providing an answer.
+   * Only applies to questions with user input: `freeform`, `single-choice`, `multiple-choice`, and `rating`.
    */
   optional: boolean;
 };
 
 export type FreeformQuestion = QuestionBase<"freeform"> & {
   /**
-   * Placeholder text for the freeform question input field. This is the text that will be displayed in the input field when it is empty.
+   * Placeholder text for the freeform question input field, shown when the field is empty.
    */
   placeholder: string;
 
   /**
-   * Method for getting the current text value for the freeform question.
+   * Returns the current text value entered by the user for the freeform question,
+   * or `undefined` if the field has not been filled in yet.
    */
   getValue: () => string | undefined;
   /**
-   * Method for setting the current text value for the freeform question.
+   * Sets the current text value for the freeform question.
+   * @param value - The text to set as the current input value.
    */
   setValue: (value: string) => void;
 };
 
 type QuestionOption = {
   /**
-   * Unique identifier for the option. The id is used for state management using the `getSelectedOptionIds` and `setSelectedOptionIds` methods provided in choice question types.
+   * Unique identifier for the option. Used to track selection state via the
+   * `getSelectedOptionIds` and `setSelectedOptionIds` methods on choice question types.
    */
   id: string;
   /**
-   * Label for the option. This is the text that will be displayed to the user.
+   * Display label shown to the user for this option.
    */
   label: string;
 };
 
 export type SingleChoiceQuestion = QuestionBase<"single-choice"> & {
   /**
-   * List of options to choose from in the single choice question. Each option has an id and a label.
+   * Available options for the single-choice question.
    */
   options: QuestionOption[];
   /**
-   * When true, an additional "other" option should be displayed to the user. Label for the "other" option is provided in the `otherLabel` property.
+   * When true, an additional "other" option should be rendered. Its label is provided in `otherLabel`.
+   * When the user selects "other", also show a text input — use `getValue`/`setValue` for its value
+   * and `getOtherSelected`/`setOtherSelected` to track whether it is selected.
    */
   otherOption: boolean;
   /**
-   * Label for the "other" option that can be displayed to the user when `otherOption` property is true.
+   * Label for the "other" option. Only relevant when `otherOption` is true.
    */
   otherLabel: string;
 
   /**
-   * Method for getting the current state of the selected option ids for the question. For single choice questions, the array will contain zero or one option id.
+   * Returns the currently selected option id as a single-element array,
+   * or an empty array if no option is selected.
+   * For single-choice questions, the array will never contain more than one id.
    */
   getSelectedOptionIds: () => string[];
   /**
-   * Method for setting the current state of the selected option ids for the question. For single choice questions, the array should contain zero or one option id.
+   * Sets the currently selected option for the single-choice question.
+   * Pass a single-element array with the option id to select it, or an empty array to deselect.
+   * @param optionIds - Array containing zero or one option id.
    */
   setSelectedOptionIds: (optionIds: string[]) => void;
   /**
-   * Method for getting the current text value of "other" option input. This is relevant only when `otherOption` is enabled.
+   * Returns the current text entered in the "other" option input field,
+   * or `undefined` if it has not been filled in. Only relevant when `otherOption` is true.
    */
   getValue: () => string | undefined;
   /**
-   * Method for setting the current text value of "other" option input. This is relevant only when `otherOption` is enabled.
+   * Sets the text value of the "other" option input field. Only relevant when `otherOption` is true.
+   * @param value - The text to set as the current "other" input value.
    */
   setValue: (value: string) => void;
   /**
-   * Method for getting the current state of the "other" option selection. This is relevant only when `otherOption` is enabled.
+   * Returns whether the "other" option is currently selected. Only relevant when `otherOption` is true.
    */
   getOtherSelected: () => boolean;
   /**
-   * Method for setting the current state of the "other" option selection. This is relevant only when `otherOption` is enabled.
+   * Sets whether the "other" option is selected. Only relevant when `otherOption` is true.
+   * @param selected - Pass `true` to select the "other" option, `false` to deselect it.
    */
   setOtherSelected: (selected: boolean) => void;
 };
 
 export type MultipleChoiceQuestion = QuestionBase<"multiple-choice"> & {
   /**
-   * List of options to choose from in the multiple choice question. Each option has an id and a label.
+   * Available options for the multiple-choice question.
    */
   options: QuestionOption[];
   /**
-   * When true, an additional "other" option should be displayed to the user. Label for the "other" option is provided in the `otherLabel` property.
+   * When true, an additional "other" option should be rendered. Its label is provided in `otherLabel`.
+   * When the user selects "other", also show a text input — use `getValue`/`setValue` for its value
+   * and `getOtherSelected`/`setOtherSelected` to track whether it is selected.
    */
   otherOption: boolean;
   /**
-   * Label for the "other" option that can be displayed to the user when `otherOption` property is true.
+   * Label for the "other" option. Only relevant when `otherOption` is true.
    */
   otherLabel: string;
 
   /**
-   * Method for getting the current state of the selected option ids for the question. For multiple choice questions, the array can contain zero or more option ids.
+   * Returns the ids of all currently selected options.
+   * For multiple-choice questions, the array can contain zero or more option ids.
    */
   getSelectedOptionIds: () => string[];
   /**
-   * Method for setting the current state of the selected option ids for the question. For multiple choice questions, the array can contain zero or more option ids.
+   * Sets the currently selected options for the multiple-choice question.
+   * Pass an array of option ids to select them, or an empty array to deselect all.
+   * @param optionIds - Array of selected option ids.
    */
   setSelectedOptionIds: (optionIds: string[]) => void;
   /**
-   * Method for getting the current text value of "other" option input. This is relevant only when `otherOption` is enabled.
+   * Returns the current text entered in the "other" option input field,
+   * or `undefined` if it has not been filled in. Only relevant when `otherOption` is true.
    */
   getValue: () => string | undefined;
   /**
-   * Method for setting the current text value of "other" option input. This is relevant only when `otherOption` is enabled.
+   * Sets the text value of the "other" option input field. Only relevant when `otherOption` is true.
+   * @param value - The text to set as the current "other" input value.
    */
   setValue: (value: string) => void;
   /**
-   * Method for getting the current state of the "other" option selection. This is relevant only when `otherOption` is enabled.
+   * Returns whether the "other" option is currently selected. Only relevant when `otherOption` is true.
    */
   getOtherSelected: () => boolean;
   /**
-   * Method for setting the current state of the "other" option selection. This is relevant only when `otherOption` is enabled.
+   * Sets whether the "other" option is selected. Only relevant when `otherOption` is true.
+   * @param selected - Pass `true` to select the "other" option, `false` to deselect it.
    */
   setOtherSelected: (selected: boolean) => void;
 };
@@ -132,68 +153,74 @@ export type MultipleChoiceQuestion = QuestionBase<"multiple-choice"> & {
 export type RatingDisplayType = "numbers" | "stars" | "emojis";
 export type RatingQuestion = QuestionBase<"rating"> & {
   /**
-   * Display type of the rating option buttons, e.g. numbers, stars or emojis.
+   * Visual style of the rating buttons in the rating question.
    */
   displayType: RatingDisplayType;
   /**
-   * Lower bound of the rating scale. This is the minimum rating value that can be selected by the user.
+   * Minimum selectable value on the rating scale.
    */
   minValue: number;
   /**
-   * Upper bound of the rating scale. This is the maximum rating value that can be selected by the user.
+   * Maximum selectable value on the rating scale.
    */
   maxValue: number;
   /**
-   * Label for the lower bound of the rating scale e.g. "Not satisfied".
+   * Label shown at the low end of the rating scale, e.g. `"Not satisfied"`.
    */
   lowerBoundLabel: string;
   /**
-   * Label for the upper bound of the rating scale e.g. "Very satisfied".
+   * Label shown at the high end of the rating scale, e.g. `"Very satisfied"`.
    */
   upperBoundLabel: string;
 
   /**
-   * Method for getting the current rating value selected by the user. The value is a string number between the defined lower and upper bounds of the rating scale.
+   * Returns the rating value currently selected by the user as a numeric string,
+   * or `undefined` if no rating has been selected yet.
+   * The value will be within the range defined by `minValue` and `maxValue`.
    * @returns e.g. `"2"` or `undefined`
    */
   getValue: () => string | undefined;
   /**
-   * Method for setting the current rating value selected by the user. The value should be a string number between the defined lower and upper bounds of the rating scale.
+   * Sets the currently selected rating value for the rating question.
+   * The value must be a numeric string within the range defined by `minValue` and `maxValue`.
+   * @param value - The rating value to select, e.g. `"3"`.
    */
   setValue: (value: string) => void;
 };
 
 export type LinkQuestion = QuestionBase<"link"> & {
   /**
-   * Label for the link in the question.
+   * Display label for the clickable link shown in the link question.
    */
   linkLabel: string;
   /**
-   * URL that the user will be navigated to when they click the link in the question.
+   * URL the user is navigated to when they click the link.
+   * Can be empty when the link question is used as an announcement only without navigation.
    */
   url: string;
   /**
-   * When true, the link will be opened in a new tab when clicked.
+   * When true, the link opens in a new browser tab.
    */
   openInNew: boolean;
 
   /**
-   * Method for marking the link question as clicked.
+   * Marks the link question as clicked. Call this when the user activates the link
+   * so the interaction is recorded in the survey response.
    */
   setClicked: () => void;
 };
 
 export type EndScreenQuestion = QuestionBase<"end-screen"> & {
   /**
-   * Label for the link in the end screen question.
+   * Display label for the optional link shown on the end screen.
    */
   linkLabel: string;
   /**
-   * URL that the user will be navigated to when they click the link in the end screen question.
+   * URL the user is navigated to when they click the link on the end screen.
    */
   url: string;
   /**
-   * When true, the link will be opened in a new tab when clicked.
+   * When true, the link opens in a new browser tab.
    */
   openInNew: boolean;
 };
@@ -209,29 +236,35 @@ export type SurveyQuestionType = SurveyQuestion["type"];
 
 export type Survey = {
   /**
-   * Ordered list of questions in the survey. The current question is determined based on the current question index that you can get and update using the provided methods.
+   * Ordered list of all questions in the survey. Use `getCurrentQuestionIndex` to determine
+   * which question is currently active, and `nextQuestion`/`previousQuestion` to navigate between them.
    */
   questions: SurveyQuestion[];
 
   /**
-   * Get the current question index in the survey. The index is zero-based, so the first question has index 0.
-   * @returns index of the current question in the survey
+   * Returns the zero-based index of the currently displayed question.
+   * Use this to look up the active question in the `questions` array.
+   * @returns Index of the current question, starting at `0`.
    */
   getCurrentQuestionIndex: () => number;
   /**
-   * Proceed to the next question in the survey. If the user is on the last question already, this method does nothing.
-   * @returns new question index
+   * Advances to the next question in the survey and returns the new index.
+   * If the user is already on the last question, this method does nothing and returns the current index.
+   * @returns New question index after advancing.
    */
   nextQuestion: () => number;
   /**
-   * Proceed to the previous question in the survey. If the user is on the first question already, this method does nothing.
-   * @returns new question index
+   * Moves back to the previous question in the survey and returns the new index.
+   * If the user is already on the first question, this method does nothing and returns the current index.
+   * @returns New question index after moving back.
    */
   previousQuestion: () => number;
   /**
-   * Submits the survey response and keeps the component visible. You need to call `complete` exit node method to exit the survey block after submission.
+   * Submits the survey response. The survey component remains visible after submission —
+   * call the `complete` exit node method to close the survey block.
    *
-   * When using end screen question type and built-in question navigation (with `nextQuestion` method), the survey is submitted automatically.
+   * Note: when using the `end-screen` question type with built-in navigation via `nextQuestion`,
+   * the survey is submitted automatically when the user reaches the end screen.
    */
   submit: () => Promise<void>;
 };
