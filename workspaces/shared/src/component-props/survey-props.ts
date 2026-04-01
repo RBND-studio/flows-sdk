@@ -13,6 +13,7 @@ import type {
   SurveyQuestionType,
 } from "../types/survey";
 import { shuffle } from "es-toolkit";
+import { log } from "../log";
 
 const shuffleArray = <T>(options: T[], doShuffle?: boolean): T[] => {
   if (!doShuffle) return options;
@@ -38,11 +39,18 @@ export const createSurveyComponentProps = (props: {
   }>;
 
   const handleSubmit = async (): Promise<void> => {
+    if (!survey.blockStateId) {
+      log.error(
+        "Cannot submit survey without block state, make sure the user is active in the survey block before submitting.",
+      );
+      return;
+    }
+
     const surveyState = SurveyState.getInstance(survey.id);
 
     await props.submitSurvey({
       surveyId: survey.id,
-      submitType: "submit",
+      blockStateId: survey.blockStateId,
       questions: Object.entries(surveyState.questions)
         .map(([questionId, questionState]): ApiSurveyQuestionAnswer | null => {
           const question = survey.questions.find((q) => q.id === questionId);

@@ -66,7 +66,7 @@ export class SurveyState {
     };
     sessionStorage.setItem(SurveyState.getSessionStorageKey(this.surveyId), JSON.stringify(data));
   }
-  debouncedSaveToSessionStorage = debounce(this.saveToSessionStorage.bind(this), 1000);
+  debouncedSaveToSessionStorage = debounce(this.saveToSessionStorage.bind(this), 500);
   save() {
     this.debouncedSaveToSessionStorage();
   }

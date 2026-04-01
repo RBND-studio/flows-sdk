@@ -7,5 +7,5 @@ export type SetStateMemory = (props: {
 }) => Promise<void>;
 export type ExitNodeCb = (props: { key: string; blockId: string }) => Promise<void>;
 export type SubmitSurvey = (
-  props: Pick<ApiSurveyAnswer, "surveyId" | "submitType" | "questions">,
+  props: Pick<ApiSurveyAnswer, "surveyId" | "blockStateId" | "questions">,
 ) => Promise<void>;

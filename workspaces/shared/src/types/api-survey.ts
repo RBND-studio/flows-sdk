@@ -36,6 +36,10 @@ export type ApiSurveyQuestion = {
 
 export type ApiSurvey = {
   id: string;
+  /**
+   * blockStateId is null if the block state doesn't exist, for example when the survey block is part of block-state property
+   */
+  blockStateId: string | null;
   questions: ApiSurveyQuestion[];
 };
 
@@ -49,13 +53,12 @@ export type ApiSurveyQuestionAnswer = {
   optionIds?: string[];
 };
 
-export type SurveySubmitType = "submit" | "partial";
 export type ApiSurveyAnswer = {
   userId: string;
   environment: string;
   organizationId: string;
   surveyId: string;
-  submitType: SurveySubmitType;
+  blockStateId: string;
   questions: ApiSurveyQuestionAnswer[];
   url: string;
 };
