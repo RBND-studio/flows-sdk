@@ -1,6 +1,6 @@
 {
   "name": "@flows/react",
-  "version": "1.21.0",
+  "version": "1.21.1-canary.0",
   "description": "Flows React SDK – Build native product growth experiences, your way",
   "keywords": [
     "react",
@@ -59,6 +59,6 @@
   },
   "dependencies": {
     "clsx": "^2.1.1",
-    "es-toolkit": "^1.43.0"
+    "es-toolkit": "^1.45.1"
   }
 }

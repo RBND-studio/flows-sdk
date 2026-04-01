@@ -1,0 +1,19 @@
+import { type ReactElement } from "react";
+
+export function StarFilled16(props: React.SVGProps<SVGSVGElement>): ReactElement {
+  return (
+    <svg
+      height={16}
+      viewBox="0 0 16 16"
+      width={16}
+      xmlns="http://www.w3.org/2000/svg"
+      fill="currentColor"
+      {...props}
+    >
+      <path
+        xmlns="http://www.w3.org/2000/svg"
+        d="M9.12798 2.12266C8.67498 1.17266 7.32498 1.17266 6.87198 2.12266L5.48198 5.03466L2.28298 5.45566C1.24098 5.59366 0.822976 6.87766 1.58598 7.60166L3.92598 9.82366L3.33898 12.9957C3.14698 14.0297 4.23998 14.8237 5.16398 14.3227L7.99998 12.7827L10.836 14.3227C11.76 14.8237 12.853 14.0297 12.661 12.9957L12.074 9.82366L14.414 7.60166C15.176 6.87766 14.759 5.59366 13.717 5.45566L10.517 5.03466L9.12798 2.12266Z"
+      />
+    </svg>
+  );
+}

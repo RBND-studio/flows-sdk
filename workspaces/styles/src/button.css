@@ -12,6 +12,7 @@
   white-space: nowrap;
   text-decoration: none;
   text-align: center;
+  appearance: button;
 }
 
 .flows_basicsV2_button_primary {
@@ -50,4 +51,9 @@
   padding: 4px 9px;
   font-size: var(--flows-basicsV2-button-small-font-size);
   line-height: var(--flows-basicsV2-button-small-line-height);
+}
+
+.flows_basicsV2_button_disabled {
+  opacity: 0.6;
+  pointer-events: none;
 }

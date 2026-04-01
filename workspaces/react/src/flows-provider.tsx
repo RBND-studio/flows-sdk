@@ -1,14 +1,15 @@
+import { type LanguageOption, type LinkComponentType, type UserProperties } from "@flows/shared";
 import { useEffect, type FC, type ReactNode } from "react";
-import { type LanguageOption, type UserProperties, type LinkComponentType } from "@flows/shared";
-import { type TourComponents, type Components } from "./types";
-import { FlowsContext } from "./flows-context";
-import { useRunningTours } from "./hooks/use-running-tours";
-import { useBlocks } from "./hooks/use-blocks";
-import { PathnameProvider } from "./contexts/pathname-context";
-import { TourController } from "./tour-controller";
-import { globalConfig } from "./lib/store";
-import { FloatingBlocks } from "./components/floating-blocks";
 import { Debug } from "./components/debug";
+import { FloatingBlocks } from "./components/floating-blocks";
+import { PathnameProvider } from "./contexts/pathname-context";
+import { FlowsContext } from "./flows-context";
+import { useBlocks } from "./hooks/use-blocks";
+import { useRunningTours } from "./hooks/use-running-tours";
+import { globalConfig } from "./lib/store";
+import { TourController } from "./tour-controller";
+import { type SurveyComponents, type Components, type TourComponents } from "./types";
+import { useRunningSurveys } from "./hooks/use-running-surveys";
 
 export interface FlowsProviderProps {
   /**
@@ -41,6 +42,10 @@ export interface FlowsProviderProps {
    * Components used for tour blocks.
    */
   tourComponents: TourComponents;
+  /**
+   * Components used for survey blocks.
+   */
+  surveyComponents: SurveyComponents;
   /**
    * Language used to enable [localization](https://flows.sh/docs/localization). Based on the set language, the correct translation for the block data will be selected.
    * - `disabled` (default) - The user will be served content in the default language group of your organization.
@@ -137,6 +142,7 @@ const FlowsProviderInner: FC<Props> = ({
   userId,
   components,
   tourComponents,
+  surveyComponents,
   userProperties = {},
   language,
   debug,
@@ -148,7 +154,7 @@ const FlowsProviderInner: FC<Props> = ({
   globalConfig.organizationId = organizationId;
   globalConfig.userId = userId;
 
-  const { blocks, error, wsError, removeBlock, updateBlock } = useBlocks({
+  const { blocksState, blocks, error, wsError, removeBlock, updateBlock } = useBlocks({
     apiUrl,
     environment,
     organizationId,
@@ -158,6 +164,7 @@ const FlowsProviderInner: FC<Props> = ({
   });
 
   const runningTours = useRunningTours({ blocks, removeBlock });
+  const runningSurveyIds = useRunningSurveys({ blocksState });
 
   useEffect(() => {
     window.__flows_LinkComponent = LinkComponent;
@@ -170,7 +177,9 @@ const FlowsProviderInner: FC<Props> = ({
         blocks,
         components,
         runningTours,
+        runningSurveyIds,
         tourComponents,
+        surveyComponents,
         removeBlock,
         updateBlock,
       }}

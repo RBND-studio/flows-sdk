@@ -4,7 +4,7 @@ export default defineConfig((options) => {
   const isDevelopment = options.env?.NODE_ENV === "development";
 
   return {
-    entry: ["src/index.ts", "src/tour.ts"],
+    entry: ["src/index.ts", "src/tour.ts", "src/survey.ts"],
     format: ["cjs", "esm"],
     minify: true,
     dts: {

@@ -10,6 +10,7 @@ interface Props {
   size?: ButtonSize;
   href?: string;
   target?: "_blank";
+  disabled?: boolean;
 }
 
 const isInternalLink = (href: string, target?: Props["target"]): boolean => {
@@ -26,12 +27,14 @@ export const Button: FC<Props> = ({
   className: classNameProp,
   variant,
   size = "default",
+  disabled,
   ...props
 }) => {
   const className = clsx(
     "flows_basicsV2_button",
     `flows_basicsV2_button_${variant}`,
     `flows_basicsV2_button_size_${size}`,
+    disabled && "flows_basicsV2_button_disabled",
     classNameProp,
   );
 
@@ -52,5 +55,12 @@ export const Button: FC<Props> = ({
 
   const Cmp = props.href ? "a" : "button";
 
-  return <Cmp type={Cmp === "button" ? "button" : undefined} className={className} {...props} />;
+  return (
+    <Cmp
+      type={Cmp === "button" ? "button" : undefined}
+      disabled={Cmp === "button" ? disabled : undefined}
+      className={className}
+      {...props}
+    />
+  );
 };

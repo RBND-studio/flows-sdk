@@ -63,6 +63,37 @@ const slotTourBlock: TourStep = {
   slotId: "my-slot",
 };
 
+const getSurvey = ({
+  page_targeting_operator,
+  page_targeting_values,
+}: {
+  page_targeting_operator?: string;
+  page_targeting_values?: string[];
+}): Block => ({
+  id: randomUUID(),
+  workflowId: randomUUID(),
+  type: "survey",
+  componentType: "BasicsV2SurveyPopover",
+  data: {},
+  exitNodes: ["complete", "cancel"],
+  slottable: false,
+  survey: {
+    id: randomUUID(),
+    blockStateId: randomUUID(),
+    questions: [
+      {
+        id: "question-1",
+        type: "freeform",
+        title: "Hello",
+        description: "Question",
+        optional: true,
+      },
+    ],
+  },
+  page_targeting_operator,
+  page_targeting_values,
+});
+
 const run = (packageName: string) => {
   test(`${packageName} - should work with query params`, async ({ page }) => {
     const block: Block = {
@@ -398,6 +429,51 @@ const run = (packageName: string) => {
     await mockBlocksEndpoint(page, [block]);
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Workflow block", { exact: true })).toBeHidden();
+  });
+
+  test.describe("survey", () => {
+    test.skip(packageName !== "react", "Survey page-targeting coverage is only available in React");
+
+    test(`${packageName} - should show survey without page targeting`, async ({ page }) => {
+      await mockBlocksEndpoint(page, [getSurvey({})]);
+      await page.goto(`/${packageName}.html`);
+      await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+    });
+
+    test(`${packageName} - should not show survey with incorrect page targeting`, async ({
+      page,
+    }) => {
+      await mockBlocksEndpoint(
+        page,
+        [getSurvey({ page_targeting_operator: "contains", page_targeting_values: ["/wrong"] })],
+      );
+      await page.goto(`/${packageName}.html`);
+      await expect(page.getByText("Hello", { exact: true })).toBeHidden();
+    });
+
+    test(`${packageName} - should show survey with correct page targeting`, async ({ page }) => {
+      await mockBlocksEndpoint(page, [
+        getSurvey({
+          page_targeting_operator: "contains",
+          page_targeting_values: [`/${packageName}.html`],
+        }),
+      ]);
+      await page.goto(`/${packageName}.html`);
+      await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+    });
+
+    test(`${packageName} - should show survey with query params`, async ({ page }) => {
+      await mockBlocksEndpoint(page, [
+        getSurvey({
+          page_targeting_operator: "contains",
+          page_targeting_values: [`/${packageName}.html?param=value`],
+        }),
+      ]);
+      await page.goto(`/${packageName}.html`);
+      await expect(page.getByText("Hello", { exact: true })).toBeHidden();
+      await page.goto(`/${packageName}.html?param=value`);
+      await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+    });
   });
 };
 
