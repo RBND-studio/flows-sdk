@@ -102,7 +102,7 @@
   transition:
     box-shadow 200ms ease-in-out,
     border-color 160ms ease-in-out;
-  box-shadow: var(--flows-basicsV2-secondary-button-shadow);
+  box-shadow: var(--flows-basicsV2-textarea-shadow);
 }
 
 .flows_basicsV2_survey_popover_freeform_textarea:hover {
