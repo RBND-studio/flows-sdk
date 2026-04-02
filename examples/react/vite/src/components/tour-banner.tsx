@@ -1,5 +1,5 @@
-import { FC } from "react";
-import { TourComponentProps } from "@flows/react";
+import type { FC } from "react";
+import type { TourComponentProps } from "@flows/react";
 
 type Props = TourComponentProps<{
   title: string;
