@@ -1,5 +1,6 @@
 .flows_basicsV2_survey_popover {
   position: fixed;
+  box-sizing: border-box;
   z-index: var(--flows-basicsV2-zIndex);
   background-color: var(--flows-basicsV2-bg-default);
   border: var(--flows-basicsV2-border);
@@ -51,6 +52,12 @@
     opacity: 0;
     transform: translateY(-8px);
   }
+}
+
+.flows_basicsV2_survey_popover_fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
 }
 
 .flows_basicsV2_survey_popover_title {
@@ -250,6 +257,7 @@
 .flows_basicsV2_survey_popover_radio_indicator {
   width: 16px;
   height: 16px;
+  box-sizing: border-box;
   border-radius: 50%;
   border: 2px solid var(--flows-basicsV2-fg-default);
   flex-shrink: 0;
@@ -291,6 +299,7 @@
 .flows_basicsV2_survey_popover_checkbox_indicator {
   width: 16px;
   height: 16px;
+  box-sizing: border-box;
   border-radius: 3px;
   border: 2px solid var(--flows-basicsV2-fg-default);
   flex-shrink: 0;
@@ -313,6 +322,7 @@
 .flows_basicsV2_survey_popover_checkbox_indicator::after {
   content: "";
   position: absolute;
+  box-sizing: border-box;
   width: 5px;
   height: 9px;
   border-right: 2px solid var(--flows-basicsV2-fg-onPrimary);
@@ -341,6 +351,8 @@
   appearance: none;
   display: flex;
   cursor: pointer;
+  border: none;
+  background-color: unset;
   margin: -8px;
   padding: 8px;
 }
@@ -356,14 +368,6 @@
 
 .flows_basicsV2_survey_popover_other_option_input {
   flex: 1;
-  min-width: 0;
-  border: none;
-  border-radius: var(--flows-basicsV2-borderRadius-m);
-  padding: 0;
-  background-color: unset;
-  font-family: var(--flows-basicsV2-font-family);
-  font-size: var(--flows-basicsV2-button-font-size);
-  line-height: var(--flows-basicsV2-button-line-height);
 }
 
 .flows_basicsV2_survey_popover_other_option_input:focus-visible {
@@ -397,6 +401,7 @@
 }
 
 .flows_basicsV2_survey_popover_end_screen_title {
+  width: 100%;
   text-align: center;
   /* Remove the extra space reserved for the close button in the title */
   margin-right: 0;
