@@ -4,7 +4,8 @@
     "jsx": "react-jsx",
     "experimentalDecorators": true,
     "useDefineForClassFields": false,
-    "strictPropertyInitialization": false
+    "strictPropertyInitialization": false,
+    "noUncheckedSideEffectImports": false
   },
   "include": ["tests/**/*", "pages/**/*"]
 }
