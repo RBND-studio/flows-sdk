@@ -1,8 +1,11 @@
 .flows_basicsV2_button {
   border-radius: var(--flows-basicsV2-borderRadius-m);
   cursor: pointer;
+  box-sizing: border-box;
+  display: inline-block;
   transition:
     background-color 120ms ease-in-out,
+    opacity 120ms ease-in-out,
     border-color 120ms ease-in-out;
   padding: 5px 15px;
   font-family: var(--flows-basicsV2-font-family);
@@ -13,6 +16,8 @@
   text-decoration: none;
   text-align: center;
   appearance: button;
+  background-color: unset;
+  border: none;
 }
 
 .flows_basicsV2_button_primary {

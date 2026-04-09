@@ -143,6 +143,8 @@
   gap: var(--flows-basicsV2-size-s);
   padding: var(--flows-basicsV2-size-m);
   align-items: center;
+  border: none;
+  background-color: unset;
 
   font-size: var(--flows-basicsV2-base-font-size);
   line-height: var(--flows-basicsV2-base-line-height);

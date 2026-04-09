@@ -83,7 +83,7 @@ export const SettingsPanel = ({ position, onPositionChange }: Props): ReactNode 
             Make sure to keep your SDK up to date for the best experience.
           </p>
         </div>
-        <p>{packageAndVersion}</p>
+        <p className="flows-debug-version">{packageAndVersion}</p>
       </div>
     </>
   );
