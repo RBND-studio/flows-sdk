@@ -1,0 +1,9 @@
+.flows_basicsV2_input {
+  border: none;
+  padding: 0;
+  background-color: unset;
+  box-sizing: border-box;
+  font-family: var(--flows-basicsV2-font-family);
+  font-size: var(--flows-basicsV2-button-font-size);
+  line-height: var(--flows-basicsV2-button-line-height);
+}

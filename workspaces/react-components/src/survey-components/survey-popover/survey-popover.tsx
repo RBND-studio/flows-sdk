@@ -84,7 +84,7 @@ const SurveyPopover: FC<SurveyPopoverProps> = (props) => {
         className="flows_basicsV2_survey_popover_content"
         data-exiting={isExiting || undefined}
       >
-        <fieldset>
+        <fieldset className="flows_basicsV2_survey_popover_fieldset">
           <Text
             as="legend"
             id={legendId}

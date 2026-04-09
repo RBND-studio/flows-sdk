@@ -1,6 +1,7 @@
 import type { MultipleChoiceQuestion, SingleChoiceQuestion } from "@flows/shared";
 import type { FC } from "react";
 import { useQuestionContext } from "./question-context";
+import { Input } from "../../internal-components/input";
 
 type Props = {
   question: SingleChoiceQuestion | MultipleChoiceQuestion;
@@ -54,7 +55,7 @@ export const OtherOption: FC<Props> = ({ question, type }) => {
         />
       </button>
       {otherSelected ? (
-        <input
+        <Input
           // oxlint-disable-next-line jsx_a11y/no-autofocus -- We want to autofocus the input when the user selects the "Other" option
           autoFocus
           type="text"

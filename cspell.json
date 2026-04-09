@@ -20,13 +20,15 @@
     "valuenow",
     "xlink",
     "Vojtech",
-    "Vidra"
+    "Vidra",
+    "vite"
   ],
   "ignorePaths": [
     "node_modules",
     "tsconfig.*",
     "coverage",
     "dist",
+    "*.svg",
     "jest.config.js",
     "package.json",
     "pnpm-*.yaml"
