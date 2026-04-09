@@ -64,6 +64,7 @@
   color: var(--flows-debug-fg-default);
 }
 :where(.flows-debug) hr {
+  border: none;
   border-top: var(--flows-debug-border);
 }
 :where(.flows-debug) a {
@@ -126,6 +127,7 @@
 
 .flows-debug-menu-error {
   background: var(--flows-debug-fg-error) !important;
+  border: none;
 }
 
 .flows-debug-menu-inset-error {
@@ -241,6 +243,11 @@
   display: flex;
   flex-direction: column;
   padding: 6px;
+}
+
+.flows-debug-version {
+  font-family: var(--flows-debug-mono-font);
+  white-space: nowrap;
 }
 
 .flows-debug-info-line {

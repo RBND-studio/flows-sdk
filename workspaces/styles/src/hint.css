@@ -4,9 +4,11 @@
   border-radius: 50%;
   transition: background-color 120ms ease-in-out;
   z-index: var(--flows-basicsV2-zIndex);
+  box-sizing: border-box;
   width: var(--flows-basicsV2-size-l);
   height: var(--flows-basicsV2-size-l);
   cursor: pointer;
+  padding: 0;
   border: var(--flows-basicsV2-border-primary);
   background-image: var(--flows-basicsV2-primary-button-gradient);
   box-shadow: var(--flows-basicsV2-primary-button-shadow);

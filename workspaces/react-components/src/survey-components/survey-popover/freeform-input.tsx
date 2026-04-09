@@ -1,6 +1,7 @@
 import type { FreeformQuestion } from "@flows/shared";
 import type { FC } from "react";
 import { useQuestionContext } from "./question-context";
+import { Input } from "../../internal-components/input";
 
 const DEFAULT_PLACEHOLDER = "Start typing...";
 
@@ -19,7 +20,8 @@ export const FreeformInput: FC<Props> = ({ question, descriptionId, legendId }) 
   };
 
   return (
-    <textarea
+    <Input
+      as="textarea"
       className="flows_basicsV2_survey_popover_freeform_textarea"
       aria-labelledby={legendId}
       aria-describedby={descriptionId}
