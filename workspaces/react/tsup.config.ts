@@ -9,6 +9,9 @@ export default defineConfig((options) => {
     minify: true,
     dts: {
       compilerOptions: {
+        // Temporary workaround to make tsup work with Typescript 6+
+        // More info: https://github.com/egoist/tsup/issues/1388
+        ignoreDeprecations: "6.0",
         paths: {
           "@flows/shared": ["../shared/src/index.ts"],
         },
