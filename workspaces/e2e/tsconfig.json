@@ -5,7 +5,8 @@
     "experimentalDecorators": true,
     "useDefineForClassFields": false,
     "strictPropertyInitialization": false,
-    "noUncheckedSideEffectImports": false
+    "noUncheckedSideEffectImports": false,
+    "types": ["node"]
   },
   "include": ["tests/**/*", "pages/**/*"]
 }
