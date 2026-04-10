@@ -8,8 +8,9 @@ import { LitElement } from "lit";
 import { state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
 import { getBlockRenderKey, type ActiveBlock } from "@flows/shared";
+import type { SurveyComponents } from "./types";
 import { type Components, type TourComponents } from "./types";
-import { components, jsMethods, tourComponents } from "./components-store";
+import { components, jsMethods, surveyComponents, tourComponents } from "./components-store";
 import { FlowsSlot } from "./slot";
 import { Block } from "./block";
 
@@ -52,6 +53,7 @@ class FlowsFloatingBlocks extends LitElement {
 export interface SetupJsComponentsOptions {
   components: Components;
   tourComponents: TourComponents;
+  surveyComponents: SurveyComponents;
 
   /**
    * Optional method from `@flows/js` useful when its reference cannot be imported directly. e.g. in CDN usage.
@@ -122,6 +124,18 @@ export const setupJsComponents = (options: SetupJsComponentsOptions): void => {
     if (customElements.getName(Cmp)) return;
 
     const tagName = `flows-tour-${name.toLowerCase()}`;
+    if (!customElements.get(tagName)) {
+      customElements.define(tagName, Cmp);
+    }
+  });
+
+  Object.entries(options.surveyComponents).forEach(([name, Cmp]) => {
+    surveyComponents[name] = Cmp;
+
+    // Component may be already defined
+    if (customElements.getName(Cmp)) return;
+
+    const tagName = `flows-survey-${name.toLowerCase()}`;
     if (!customElements.get(tagName)) {
       customElements.define(tagName, Cmp);
     }

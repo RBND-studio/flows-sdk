@@ -1,6 +1,7 @@
 import type {
   SurveyComponentProps,
   SurveyPopoverProps as LibrarySurveyPopoverProps,
+  SurveyPopoverPosition,
 } from "@flows/shared";
 import clsx from "clsx";
 import DOMPurify from "dompurify";
@@ -20,7 +21,7 @@ import { useSurveyPopover } from "./use-survey-popover";
 
 export type SurveyPopoverProps = SurveyComponentProps<LibrarySurveyPopoverProps>;
 
-const DEFAULT_POSITION: SurveyPopoverProps["position"] = "bottom-right";
+const DEFAULT_POSITION: SurveyPopoverPosition = "bottom-right";
 const DEFAULT_NEXT_BUTTON_LABEL = "Next";
 const DEFAULT_SUBMIT_BUTTON_LABEL = "Submit";
 

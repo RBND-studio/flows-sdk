@@ -1,7 +1,11 @@
 import { computed, effect, type ReadonlySignal } from "@preact/signals-core";
 import { type ActiveBlock, type Block } from "@flows/shared";
 import { config, type RunningTour } from "./store";
-import { blockToActiveBlock, tourToActiveBlock } from "./lib/active-block";
+import {
+  blockToActiveBlock,
+  surveyBlockToActiveBlock,
+  tourToActiveBlock,
+} from "./lib/active-block";
 import { sendEvent } from "./lib/api";
 import { floatingItems, slotBlocks, visibleTours } from "./computed";
 
@@ -24,16 +28,23 @@ const addActiveSlotBlocksComputed = (slotId: string): ReadonlySignal<ActiveBlock
     });
     const sorted = [...workflowBlocks, ...tours].sort((a, b) => getSlotIndex(a) - getSlotIndex(b));
     return sorted.flatMap((item) => {
-      if (isBlock(item))
+      if (isBlock(item) && item.type === "component")
         return blockToActiveBlock({
           block: item,
           userProperties: configValue?.userProperties ?? {},
         });
-      return tourToActiveBlock({
-        block: item.block,
-        currentIndex: item.currentBlockIndex,
-        userProperties: configValue?.userProperties ?? {},
-      });
+      if (isBlock(item) && item.type === "survey")
+        return surveyBlockToActiveBlock({
+          block: item,
+          userProperties: configValue?.userProperties ?? {},
+        });
+      if (!isBlock(item))
+        return tourToActiveBlock({
+          block: item.block,
+          currentIndex: item.currentBlockIndex,
+          userProperties: configValue?.userProperties ?? {},
+        });
+      return [];
     });
   });
   computedActiveBlocksBySlotId.set(slotId, newComputed);

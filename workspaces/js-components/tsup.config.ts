@@ -4,7 +4,12 @@ export default defineConfig((options) => {
   const isDevelopment = options.env?.NODE_ENV === "development";
 
   return {
-    entry: ["src/index.ts", "src/components.ts", "src/tour-components.ts"],
+    entry: [
+      "src/index.ts",
+      "src/components.ts",
+      "src/tour-components.ts",
+      "src/survey-components.ts",
+    ],
     format: ["cjs", "esm", "iife"],
     globalName: "flows_js_components",
     minify: true,

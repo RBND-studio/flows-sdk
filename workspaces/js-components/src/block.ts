@@ -1,6 +1,6 @@
 import { logMissingComponentError, type ActiveBlock } from "@flows/shared";
 import { html, unsafeStatic } from "lit/static-html.js";
-import { components, tourComponents } from "./components-store";
+import { components, surveyComponents, tourComponents } from "./components-store";
 import { spreadProps } from "./spread-props";
 
 interface Props {
@@ -10,8 +10,8 @@ interface Props {
 export const Block = ({ block }: Props): unknown => {
   const Component = (() => {
     if (block.type === "component") return components[block.component];
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- block types can be added in the future
     if (block.type === "tour-component") return tourComponents[block.component];
+    if (block.type === "survey") return surveyComponents[block.component];
     return undefined;
   })();
 
@@ -22,6 +22,8 @@ export const Block = ({ block }: Props): unknown => {
 
   const tagName = customElements.getName(Component);
   if (!tagName) return null;
+
+  console.log("Block", block);
 
   return html`<${unsafeStatic(tagName)} ${spreadProps(block.props)} />`;
 };
