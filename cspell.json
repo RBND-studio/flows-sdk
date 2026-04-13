@@ -18,10 +18,10 @@
     "rbnd",
     "solidjs",
     "valuenow",
-    "xlink",
-    "Vojtech",
     "Vidra",
-    "vite"
+    "vite",
+    "Vojtech",
+    "xlink"
   ],
   "ignorePaths": [
     "node_modules",
@@ -31,6 +31,7 @@
     "*.svg",
     "jest.config.js",
     "package.json",
-    "pnpm-*.yaml"
+    "pnpm-*.yaml",
+    "test-results"
   ]
 }
