@@ -12,6 +12,12 @@ type Props = {
 export const SingleChoiceInput = ({ question, onAnswer, legendId, descriptionId }: Props) => {
   const { optionIds, refresh } = useQuestionContext();
 
+  const handleClick = (optionId: string) => {
+    question.setSelectedOptionIds([optionId]);
+    refresh();
+    onAnswer();
+  };
+
   return (
     <div
       className="flows_basicsV2_survey_popover_option_list"
@@ -29,18 +35,14 @@ export const SingleChoiceInput = ({ question, onAnswer, legendId, descriptionId 
             aria-checked={isSelected}
             className="flows_basicsV2_survey_popover_choice_option"
             data-selected={isSelected ? "true" : "false"}
-            onClick={() => {
-              question.setSelectedOptionIds([option.id]);
-              refresh();
-              onAnswer();
-            }}
+            onClick={() => handleClick(option.id)}
           >
             <span className="flows_basicsV2_survey_popover_radio_indicator" />
             {option.label}
           </button>
         );
       })}
-      {question.otherOption && <OtherOption type="radio" question={question} />}
+      {question.otherOption && <OtherOption question={question} />}
     </div>
   );
 };

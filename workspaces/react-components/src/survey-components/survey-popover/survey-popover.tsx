@@ -148,7 +148,7 @@ const SurveyPopover: FC<SurveyPopoverProps> = (props) => {
             )}
             {currentQuestion.type === "link" && (
               <Button
-                href={currentQuestion.url ? currentQuestion.url : undefined}
+                href={currentQuestion.url || undefined}
                 variant="primary"
                 target={currentQuestion.openInNew ? "_blank" : undefined}
                 className="flows_basicsV2_survey_popover_link_button"

@@ -432,8 +432,6 @@ const run = (packageName: string) => {
   });
 
   test.describe("survey", () => {
-    test.skip(packageName !== "react", "Survey page-targeting coverage is only available in React");
-
     test(`${packageName} - should show survey without page targeting`, async ({ page }) => {
       await mockBlocksEndpoint(page, [getSurvey({})]);
       await page.goto(`/${packageName}.html`);
@@ -443,10 +441,9 @@ const run = (packageName: string) => {
     test(`${packageName} - should not show survey with incorrect page targeting`, async ({
       page,
     }) => {
-      await mockBlocksEndpoint(
-        page,
-        [getSurvey({ page_targeting_operator: "contains", page_targeting_values: ["/wrong"] })],
-      );
+      await mockBlocksEndpoint(page, [
+        getSurvey({ page_targeting_operator: "contains", page_targeting_values: ["/wrong"] }),
+      ]);
       await page.goto(`/${packageName}.html`);
       await expect(page.getByText("Hello", { exact: true })).toBeHidden();
     });

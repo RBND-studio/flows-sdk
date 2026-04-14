@@ -1,24 +1,31 @@
 import type { MultipleChoiceQuestion, SingleChoiceQuestion } from "@flows/shared";
-import type { FC } from "react";
+import { useRef, type FC } from "react";
 import { useQuestionContext } from "./question-context";
 import { Input } from "../../internal-components/input";
 
 type Props = {
   question: SingleChoiceQuestion | MultipleChoiceQuestion;
-  type: "radio" | "checkbox";
 };
 
 const DEFAULT_OTHER_LABEL = "Other";
 
-export const OtherOption: FC<Props> = ({ question, type }) => {
+export const OtherOption: FC<Props> = ({ question }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
   const { value, otherSelected, refresh } = useQuestionContext();
+  const type = question.type === "single-choice" ? "radio" : "checkbox";
 
   const handleClick = () => {
     const selected = question.type === "multiple-choice" ? !otherSelected : true;
     question.setOtherSelected(selected);
     refresh();
+
+    // Focus the input element with a delay because it's not rendered when the button is clicked
+    setTimeout(() => {
+      const inputEl = inputRef.current;
+      inputEl?.focus();
+    }, 10);
   };
-  const handleMouseDown = (e: React.MouseEvent) => {
+  const handlePointerDown = (e: React.PointerEvent) => {
     // Prevent calling onBlur when clicking the button
     e.preventDefault();
   };
@@ -33,6 +40,8 @@ export const OtherOption: FC<Props> = ({ question, type }) => {
     }
   };
 
+  const otherLabel = question.otherLabel || DEFAULT_OTHER_LABEL;
+
   return (
     <div
       className="flows_basicsV2_survey_popover_choice_option flows_basicsV2_survey_popover_other_option"
@@ -42,7 +51,7 @@ export const OtherOption: FC<Props> = ({ question, type }) => {
         role={type}
         aria-checked={otherSelected}
         onClick={handleClick}
-        onMouseDown={handleMouseDown}
+        onPointerDown={handlePointerDown}
         type="button"
         className="flows_basicsV2_survey_popover_other_option_button"
       >
@@ -56,16 +65,16 @@ export const OtherOption: FC<Props> = ({ question, type }) => {
       </button>
       {otherSelected ? (
         <Input
-          // oxlint-disable-next-line jsx_a11y/no-autofocus -- We want to autofocus the input when the user selects the "Other" option
-          autoFocus
+          ref={inputRef}
           type="text"
           className="flows_basicsV2_survey_popover_other_option_input"
           onChange={handleInputChange}
           defaultValue={value}
           onBlur={handleBlur}
+          placeholder={otherLabel}
         />
       ) : (
-        question.otherLabel || DEFAULT_OTHER_LABEL
+        otherLabel
       )}
     </div>
   );

@@ -19,6 +19,13 @@ export const MultipleChoiceInput = ({ question, legendId, descriptionId }: Props
     >
       {question.options.map((option) => {
         const isSelected = optionIds.includes(option.id);
+        const handleClick = () => {
+          const updatedOptionIds = isSelected
+            ? optionIds.filter((id) => id !== option.id)
+            : [...optionIds, option.id];
+          question.setSelectedOptionIds(updatedOptionIds);
+          refresh();
+        };
         return (
           <button
             key={option.id}
@@ -27,20 +34,14 @@ export const MultipleChoiceInput = ({ question, legendId, descriptionId }: Props
             aria-checked={isSelected}
             className="flows_basicsV2_survey_popover_choice_option"
             data-selected={isSelected ? "true" : "false"}
-            onClick={() => {
-              const updatedOptionIds = isSelected
-                ? optionIds.filter((id) => id !== option.id)
-                : [...optionIds, option.id];
-              question.setSelectedOptionIds(updatedOptionIds);
-              refresh();
-            }}
+            onClick={handleClick}
           >
             <span className="flows_basicsV2_survey_popover_checkbox_indicator" />
             {option.label}
           </button>
         );
       })}
-      {question.otherOption && <OtherOption type="checkbox" question={question} />}
+      {question.otherOption && <OtherOption question={question} />}
     </div>
   );
 };

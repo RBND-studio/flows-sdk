@@ -33,7 +33,7 @@ export const EndScreen = ({ question, handleClose, autoCloseAfterSubmit }: Props
 
   return (
     <Button
-      href={question.url ? question.url : undefined}
+      href={question.url || undefined}
       variant="primary"
       target={question.openInNew ? "_blank" : undefined}
       className="flows_basicsV2_survey_popover_link_button"

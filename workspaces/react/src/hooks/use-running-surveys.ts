@@ -1,5 +1,10 @@
 import type { Block } from "@flows/shared";
-import { getPathname, blockTriggerMatch } from "@flows/shared";
+import {
+  getPathname,
+  blockTriggerMatch,
+  getSessionStorageRunningSurveys,
+  saveSessionStorageRunningSurveys,
+} from "@flows/shared";
 import { usePathname } from "../contexts/pathname-context";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { debounce } from "es-toolkit";
@@ -8,30 +13,12 @@ type Props = {
   blocksState: Block[] | null;
 };
 
-const SESSION_STORAGE_KEY = "flows-running-surveys";
-
-const getSessionStorageValue = (): string[] => {
-  if (typeof window === "undefined") return [];
-
-  const item = sessionStorage.getItem(SESSION_STORAGE_KEY);
-  if (!item) return [];
-
-  try {
-    const parsedValue = JSON.parse(item);
-    if (!Array.isArray(parsedValue) || !parsedValue.every((v) => typeof v === "string")) {
-      throw new Error();
-    }
-
-    return parsedValue;
-  } catch {
-    return [];
-  }
-};
-
 export const useRunningSurveys = ({ blocksState: blocks }: Props): string[] => {
-  const [runningSurveyIds, setRunningSurveyIds] = useState<string[]>(getSessionStorageValue());
+  const [runningSurveyIds, setRunningSurveyIds] = useState<string[]>(
+    getSessionStorageRunningSurveys(),
+  );
   useEffect(() => {
-    sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(runningSurveyIds));
+    saveSessionStorageRunningSurveys(runningSurveyIds);
   }, [runningSurveyIds]);
 
   const runningSurveyIdsRef = useRef(runningSurveyIds);

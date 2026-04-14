@@ -236,8 +236,6 @@ const run = (packageName: string) => {
   });
 
   test.describe("survey", () => {
-    test.skip(packageName !== "react", "Surveys are currently only supported in React SDK");
-
     test(`${packageName} - should start survey`, async ({ page }) => {
       await mockBlocksEndpoint(page, [
         getSurvey([{ type: "navigation", operator: "eq", values: ["/wrong"] }]),

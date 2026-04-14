@@ -3,5 +3,8 @@
   "ignorePatterns": ["examples", "dist", "node_modules", "coverage"],
   "rules": {
     "typescript/consistent-type-imports": "error"
+  },
+  "options": {
+    "typeAware": true
   }
 }

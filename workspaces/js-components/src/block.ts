@@ -23,7 +23,5 @@ export const Block = ({ block }: Props): unknown => {
   const tagName = customElements.getName(Component);
   if (!tagName) return null;
 
-  console.log("Block", block);
-
   return html`<${unsafeStatic(tagName)} ${spreadProps(block.props)} />`;
 };

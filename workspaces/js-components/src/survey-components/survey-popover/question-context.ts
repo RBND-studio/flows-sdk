@@ -1,5 +1,5 @@
 import type { SurveyQuestion } from "@flows/shared";
-import { signal } from "@lit-labs/preact-signals";
+import { signal } from "@preact/signals-core";
 
 type QuestionState = {
   value?: string;

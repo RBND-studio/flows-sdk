@@ -146,12 +146,18 @@ importers:
       '@lit-labs/preact-signals':
         specifier: ^1.0.3
         version: 1.0.3
+      '@preact/signals-core':
+        specifier: ^1.13.0
+        version: 1.13.0
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
       dompurify:
         specifier: ^3.3.2
         version: 3.3.2
+      es-toolkit:
+        specifier: ^1.45.1
+        version: 1.45.1
       lit:
         specifier: ^3.3.2
         version: 3.3.2

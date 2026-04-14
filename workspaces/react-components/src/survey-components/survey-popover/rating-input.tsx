@@ -1,5 +1,6 @@
 import type { RatingDisplayType, RatingQuestion } from "@flows/shared";
 import { Text } from "../../internal-components/text";
+import type { FC } from "react";
 import { useMemo, useState } from "react";
 import { StarFilled16 } from "../../icons/star-filled16";
 import { StarEmpty16 } from "../../icons/star-empty16";
@@ -46,13 +47,11 @@ export const RatingInput = ({ question, onAnswer, legendId, descriptionId }: Pro
               type="button"
               aria-checked={isSelected}
               aria-label={`${optValue} out of ${question.maxValue}`}
-              onClick={() => {
-                handleSetValue(optValue.toString());
-              }}
+              onClick={() => handleSetValue(optValue.toString())}
               key={optValue}
               data-selected={isSelected ? "true" : "false"}
-              onMouseEnter={() => setHoverIndex(index)}
-              onMouseLeave={() => setHoverIndex(null)}
+              onPointerEnter={() => setHoverIndex(index)}
+              onPointerLeave={() => setHoverIndex(null)}
             >
               <DisplayRender
                 displayType={question.displayType}
@@ -83,7 +82,12 @@ type DisplayRenderProps = {
 
 const emojis = ["😞", "😐", "😊", "😀", "😍"];
 
-const DisplayRender = ({ displayType, value, index, activeIndex }: DisplayRenderProps) => {
+const DisplayRender: FC<DisplayRenderProps> = ({
+  displayType,
+  value,
+  index,
+  activeIndex,
+}: DisplayRenderProps) => {
   if (displayType === "numbers") {
     return <span>{value}</span>;
   }
@@ -104,4 +108,6 @@ const DisplayRender = ({ displayType, value, index, activeIndex }: DisplayRender
   if (displayType === "emojis") {
     return <span>{emojis[index]}</span>;
   }
+
+  return null;
 };
