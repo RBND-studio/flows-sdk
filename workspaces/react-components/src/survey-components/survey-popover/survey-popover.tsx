@@ -1,7 +1,9 @@
-import type {
-  SurveyComponentProps,
-  SurveyPopoverProps as LibrarySurveyPopoverProps,
-  SurveyPopoverPosition,
+import {
+  type SurveyComponentProps,
+  type SurveyPopoverProps as LibrarySurveyPopoverProps,
+  SURVEY_POPOVER_DEFAULT_POSITION,
+  SURVEY_POPOVER_DEFAULT_NEXT_BUTTON_LABEL,
+  SURVEY_POPOVER_DEFAULT_SUBMIT_BUTTON_LABEL,
 } from "@flows/shared";
 import clsx from "clsx";
 import DOMPurify from "dompurify";
@@ -20,10 +22,6 @@ import { SurveyNextButton } from "./survey-next-button";
 import { useSurveyPopover } from "./use-survey-popover";
 
 export type SurveyPopoverProps = SurveyComponentProps<LibrarySurveyPopoverProps>;
-
-const DEFAULT_POSITION: SurveyPopoverPosition = "bottom-right";
-const DEFAULT_NEXT_BUTTON_LABEL = "Next";
-const DEFAULT_SUBMIT_BUTTON_LABEL = "Submit";
 
 const SurveyPopover: FC<SurveyPopoverProps> = (props) => {
   const {
@@ -50,9 +48,9 @@ const SurveyPopover: FC<SurveyPopoverProps> = (props) => {
   const currentQuestion = survey.questions.at(questionIndex);
   if (!currentQuestion) return null;
 
-  const position = props.position || DEFAULT_POSITION;
-  const nextButtonLabel = props.nextButtonLabel || DEFAULT_NEXT_BUTTON_LABEL;
-  const submitButtonLabel = props.submitButtonLabel || DEFAULT_SUBMIT_BUTTON_LABEL;
+  const position = props.position || SURVEY_POPOVER_DEFAULT_POSITION;
+  const nextButtonLabel = props.nextButtonLabel || SURVEY_POPOVER_DEFAULT_NEXT_BUTTON_LABEL;
+  const submitButtonLabel = props.submitButtonLabel || SURVEY_POPOVER_DEFAULT_SUBMIT_BUTTON_LABEL;
 
   const legendId = `${currentQuestion.id}-legend`;
   const descriptionId = `${currentQuestion.id}-description`;

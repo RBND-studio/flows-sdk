@@ -1,4 +1,8 @@
-import type { MultipleChoiceQuestion, SingleChoiceQuestion } from "@flows/shared";
+import {
+  SURVEY_POPOVER_DEFAULT_OTHER_LABEL,
+  type MultipleChoiceQuestion,
+  type SingleChoiceQuestion,
+} from "@flows/shared";
 import { useQuestionContext } from "./question-context";
 import { html } from "lit";
 import { Input } from "../../internal-components/input";
@@ -8,7 +12,6 @@ type Props = {
   question: SingleChoiceQuestion | MultipleChoiceQuestion;
 };
 
-const DEFAULT_OTHER_LABEL = "Other";
 const inputRef = createRef();
 
 export const OtherOption = ({ question }: Props) => {
@@ -42,7 +45,7 @@ export const OtherOption = ({ question }: Props) => {
     }
   };
 
-  const otherLabel = question.otherLabel || DEFAULT_OTHER_LABEL;
+  const otherLabel = question.otherLabel || SURVEY_POPOVER_DEFAULT_OTHER_LABEL;
 
   return html`<div
     class="flows_basicsV2_survey_popover_choice_option flows_basicsV2_survey_popover_other_option"

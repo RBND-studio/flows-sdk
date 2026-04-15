@@ -1,4 +1,4 @@
-import type { RatingDisplayType, RatingQuestion } from "@flows/shared";
+import { SURVEY_EMOJIS, type RatingDisplayType, type RatingQuestion } from "@flows/shared";
 import { Text } from "../../internal-components/text";
 import type { FC } from "react";
 import { useMemo, useState } from "react";
@@ -80,8 +80,6 @@ type DisplayRenderProps = {
   activeIndex?: number;
 };
 
-const emojis = ["😞", "😐", "😊", "😀", "😍"];
-
 const DisplayRender: FC<DisplayRenderProps> = ({
   displayType,
   value,
@@ -106,7 +104,7 @@ const DisplayRender: FC<DisplayRenderProps> = ({
   }
 
   if (displayType === "emojis") {
-    return <span>{emojis[index]}</span>;
+    return <span>{SURVEY_EMOJIS[index]}</span>;
   }
 
   return null;

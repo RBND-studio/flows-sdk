@@ -1,4 +1,4 @@
-import type { EndScreenQuestion } from "@flows/shared";
+import { SURVEY_POPOVER_AUTO_CLOSE_TIMEOUT, type EndScreenQuestion } from "@flows/shared";
 import { Button } from "../../internal-components/button";
 import { useEffect } from "react";
 
@@ -8,15 +8,12 @@ type Props = {
   autoCloseAfterSubmit?: boolean;
 };
 
-// The timeout should sync with the animation duration in survey-popover.css
-const AUTO_CLOSE_TIMEOUT = 3000;
-
 export const EndScreen = ({ question, handleClose, autoCloseAfterSubmit }: Props) => {
   useEffect(() => {
     if (autoCloseAfterSubmit) {
       const timeout = setTimeout(() => {
         handleClose();
-      }, AUTO_CLOSE_TIMEOUT);
+      }, SURVEY_POPOVER_AUTO_CLOSE_TIMEOUT);
       return () => clearTimeout(timeout);
     }
   }, [handleClose, autoCloseAfterSubmit]);

@@ -8,9 +8,6 @@ type Props = {
   autoCloseAfterSubmit?: boolean;
 };
 
-// The timeout should sync with the animation duration in survey-popover.css
-export const AUTO_CLOSE_TIMEOUT = 3000;
-
 export const EndScreen = ({ handleClose, question, autoCloseAfterSubmit }: Props) => {
   if (autoCloseAfterSubmit) {
     return html`<div class="flows_basicsV2_survey_popover_end_screen">

@@ -1,10 +1,11 @@
-import type { Survey, SurveyQuestion } from "@flows/shared";
+import {
+  SURVEY_POPOVER_AUTO_PROCEED_DURATION,
+  SURVEY_POPOVER_CLOSE_ANIMATION_DURATION,
+  SURVEY_POPOVER_TRANSITION_DURATION,
+  type Survey,
+  type SurveyQuestion,
+} from "@flows/shared";
 import { useCallback, useEffect, useRef, useState } from "react";
-
-// These durations must stay in sync with the animation durations in survey-popover.css
-const TRANSITION_DURATION = 240;
-const CLOSE_ANIMATION_DURATION = 160;
-const AUTO_PROCEED_DURATION = 320;
 
 interface UseSurveyPopoverOptions {
   survey: Survey;
@@ -31,7 +32,7 @@ export const useSurveyPopover = ({ survey, autoProceedAfterAnswer }: UseSurveyPo
   const handleClose = useCallback((fn: () => void) => {
     clearTimeout(closeTimeoutRef.current ?? undefined);
     setIsClosing(true);
-    closeTimeoutRef.current = window.setTimeout(fn, CLOSE_ANIMATION_DURATION);
+    closeTimeoutRef.current = window.setTimeout(fn, SURVEY_POPOVER_CLOSE_ANIMATION_DURATION);
   }, []);
 
   const navigateTo = useCallback((nextIndex: number) => {
@@ -57,7 +58,7 @@ export const useSurveyPopover = ({ survey, autoProceedAfterAnswer }: UseSurveyPo
           }
         });
       });
-    }, TRANSITION_DURATION);
+    }, SURVEY_POPOVER_TRANSITION_DURATION);
   }, []);
 
   const handleNextQuestion = useCallback(() => {
@@ -73,7 +74,7 @@ export const useSurveyPopover = ({ survey, autoProceedAfterAnswer }: UseSurveyPo
         clearTimeout(autoProceedTimeoutRef.current ?? undefined);
         autoProceedTimeoutRef.current = window.setTimeout(
           handleNextQuestion,
-          AUTO_PROCEED_DURATION,
+          SURVEY_POPOVER_AUTO_PROCEED_DURATION,
         );
       }
     },

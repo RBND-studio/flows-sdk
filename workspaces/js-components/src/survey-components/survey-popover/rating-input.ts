@@ -1,4 +1,4 @@
-import type { RatingDisplayType, RatingQuestion } from "@flows/shared";
+import { SURVEY_EMOJIS, type RatingDisplayType, type RatingQuestion } from "@flows/shared";
 import type { TemplateResult } from "lit";
 import { html } from "lit";
 import { repeat } from "lit/directives/repeat.js";
@@ -85,8 +85,6 @@ type DisplayRenderProps = {
   activeIndex?: number;
 };
 
-const emojis = ["😞", "😐", "😊", "😀", "😍"];
-
 const DisplayRender = ({
   displayType,
   index,
@@ -107,7 +105,7 @@ const DisplayRender = ({
   }
 
   if (displayType === "emojis") {
-    return html`<span>${emojis[index]}</span>`;
+    return html`<span>${SURVEY_EMOJIS[index]}</span>`;
   }
 
   return null;

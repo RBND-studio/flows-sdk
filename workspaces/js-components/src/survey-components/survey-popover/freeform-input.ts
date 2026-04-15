@@ -1,9 +1,7 @@
-import type { FreeformQuestion } from "@flows/shared";
+import { SURVEY_POPOVER_DEFAULT_FREEFORM_PLACEHOLDER, type FreeformQuestion } from "@flows/shared";
 import type { TemplateResult } from "lit";
 import { useQuestionContext } from "./question-context";
 import { Input } from "../../internal-components/input";
-
-const DEFAULT_PLACEHOLDER = "Start typing...";
 
 type Props = {
   question: FreeformQuestion;
@@ -27,7 +25,7 @@ export const FreeformInput = ({ question, legendId, descriptionId }: Props): Tem
     "aria-describedby": descriptionId,
     defaultValue: value,
     onInput: handleChange,
-    placeholder: question.placeholder || DEFAULT_PLACEHOLDER,
+    placeholder: question.placeholder || SURVEY_POPOVER_DEFAULT_FREEFORM_PLACEHOLDER,
     rows: 4,
   });
 };

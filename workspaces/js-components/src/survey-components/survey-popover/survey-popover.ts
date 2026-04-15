@@ -1,10 +1,17 @@
-import type {
-  SurveyComponentProps,
-  SurveyPopoverProps as LibrarySurveyPopoverProps,
-  Survey,
-  FlowsProperties,
-  SurveyPopoverPosition,
-  SurveyQuestion,
+import {
+  type SurveyComponentProps,
+  type SurveyPopoverProps as LibrarySurveyPopoverProps,
+  type Survey,
+  type FlowsProperties,
+  type SurveyPopoverPosition,
+  type SurveyQuestion,
+  SURVEY_POPOVER_CLOSE_ANIMATION_DURATION,
+  SURVEY_POPOVER_TRANSITION_DURATION,
+  SURVEY_POPOVER_AUTO_PROCEED_DURATION,
+  SURVEY_POPOVER_DEFAULT_POSITION,
+  SURVEY_POPOVER_DEFAULT_NEXT_BUTTON_LABEL,
+  SURVEY_POPOVER_DEFAULT_SUBMIT_BUTTON_LABEL,
+  SURVEY_POPOVER_AUTO_CLOSE_TIMEOUT,
 } from "@flows/shared";
 import { html, LitElement } from "lit";
 import { property, query, state } from "lit/decorators.js";
@@ -22,16 +29,9 @@ import { RatingInput } from "./rating-input";
 import { SingleChoiceInput } from "./single-choice-input";
 import { MultipleChoiceInput } from "./multiple-choice-input";
 import { Button } from "../../internal-components/button";
-import { AUTO_CLOSE_TIMEOUT, EndScreen } from "./end-screen";
+import { EndScreen } from "./end-screen";
 
 export type SurveyPopoverProps = SurveyComponentProps<LibrarySurveyPopoverProps>;
-
-const DEFAULT_POSITION: SurveyPopoverPosition = "bottom-right";
-const DEFAULT_NEXT_BUTTON_LABEL = "Next";
-const DEFAULT_SUBMIT_BUTTON_LABEL = "Submit";
-const TRANSITION_DURATION = 240;
-const CLOSE_ANIMATION_DURATION = 160;
-const AUTO_PROCEED_DURATION = 320;
 
 class SurveyPopover extends SignalWatcher(LitElement) implements SurveyPopoverProps {
   @property()
@@ -110,7 +110,7 @@ class SurveyPopover extends SignalWatcher(LitElement) implements SurveyPopoverPr
       clearTimeout(this.autoCloseTimeout);
       this.autoCloseTimeout = setTimeout(() => {
         this.handleClose(this.complete);
-      }, AUTO_CLOSE_TIMEOUT);
+      }, SURVEY_POPOVER_AUTO_CLOSE_TIMEOUT);
     }
   }
 
@@ -125,7 +125,7 @@ class SurveyPopover extends SignalWatcher(LitElement) implements SurveyPopoverPr
   handleClose(callback: () => void) {
     clearTimeout(this.closeTimeout);
     this._isClosing = true;
-    this.closeTimeout = setTimeout(callback, CLOSE_ANIMATION_DURATION);
+    this.closeTimeout = setTimeout(callback, SURVEY_POPOVER_CLOSE_ANIMATION_DURATION);
   }
 
   navigateTo(nextIndex: number) {
@@ -151,7 +151,7 @@ class SurveyPopover extends SignalWatcher(LitElement) implements SurveyPopoverPr
           }
         });
       });
-    }, TRANSITION_DURATION);
+    }, SURVEY_POPOVER_TRANSITION_DURATION);
   }
 
   handleNextQuestion() {
@@ -176,7 +176,7 @@ class SurveyPopover extends SignalWatcher(LitElement) implements SurveyPopoverPr
       clearTimeout(this.autoProceedTimeout);
       this.autoProceedTimeout = setTimeout(() => {
         this.handleNextQuestion();
-      }, AUTO_PROCEED_DURATION);
+      }, SURVEY_POPOVER_AUTO_PROCEED_DURATION);
     }
   }
 
@@ -189,9 +189,9 @@ class SurveyPopover extends SignalWatcher(LitElement) implements SurveyPopoverPr
     if (!currentQuestion) return null;
     this.handleUpdateQuestionContext();
 
-    const position = this.position || DEFAULT_POSITION;
-    const nextButtonLabel = this.nextButtonLabel || DEFAULT_NEXT_BUTTON_LABEL;
-    const submitButtonLabel = this.submitButtonLabel || DEFAULT_SUBMIT_BUTTON_LABEL;
+    const position = this.position || SURVEY_POPOVER_DEFAULT_POSITION;
+    const nextButtonLabel = this.nextButtonLabel || SURVEY_POPOVER_DEFAULT_NEXT_BUTTON_LABEL;
+    const submitButtonLabel = this.submitButtonLabel || SURVEY_POPOVER_DEFAULT_SUBMIT_BUTTON_LABEL;
 
     const legendId = `${currentQuestion.id}-legend`;
     const descriptionId = `${currentQuestion.id}-description`;
