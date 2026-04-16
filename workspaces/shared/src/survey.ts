@@ -1,4 +1,4 @@
-import type { SurveyPopoverPosition } from "./types";
+import type { SurveyPopoverPosition, SurveyQuestion } from "./types";
 
 const SESSION_STORAGE_KEY = "flows-running-surveys";
 
@@ -38,3 +38,28 @@ export const SURVEY_POPOVER_AUTO_CLOSE_TIMEOUT = 3000;
 export const SURVEY_EMOJIS = ["😞", "😐", "😊", "😀", "😍"];
 export const SURVEY_POPOVER_DEFAULT_OTHER_LABEL = "Other";
 export const SURVEY_POPOVER_DEFAULT_FREEFORM_PLACEHOLDER = "Start typing...";
+
+export const isSurveyQuestionAnswered = ({
+  question,
+  value,
+  otherSelected,
+  optionIdsLength,
+}: {
+  question: SurveyQuestion;
+  value?: string;
+  otherSelected?: boolean;
+  optionIdsLength?: number;
+}): boolean => {
+  if (question.type === "freeform") {
+    return !!value?.trim();
+  }
+  if (question.type === "rating") {
+    return !!value?.trim();
+  }
+  if (question.type === "single-choice" || question.type === "multiple-choice") {
+    const otherOptionFilled = otherSelected && !!value?.trim();
+    return !!optionIdsLength || !!otherOptionFilled;
+  }
+
+  return true;
+};

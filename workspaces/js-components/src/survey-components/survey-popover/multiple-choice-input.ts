@@ -45,6 +45,6 @@ export const MultipleChoiceInput = ({ descriptionId, legendId, question }: Props
         `;
       },
     )}
-    ${question.otherOption ? OtherOption({ question: question }) : null}
+    ${question.otherOption ? OtherOption({ question }) : null}
   </div>`;
 };

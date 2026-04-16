@@ -97,11 +97,13 @@ const DisplayRender = ({
 
   if (displayType === "stars") {
     const highlight = activeIndex !== undefined && index <= activeIndex;
-    return html` <span
+
+    return html`<span
       class="flows_basicsV2_survey_popover_rating_star"
       data-highlight=${highlight ? "true" : "false"}
-      >${highlight ? StarFilled16() : StarEmpty16()}</span
-    >`;
+    >
+      ${highlight ? StarFilled16() : StarEmpty16()}
+    </span>`;
   }
 
   if (displayType === "emojis") {

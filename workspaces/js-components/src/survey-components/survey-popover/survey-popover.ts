@@ -95,6 +95,7 @@ class SurveyPopover extends SignalWatcher(LitElement) implements SurveyPopoverPr
     super.disconnectedCallback();
 
     clearTimeout(this.autoCloseTimeout);
+    clearTimeout(this.autoProceedTimeout);
     clearTimeout(this.closeTimeout);
   }
 

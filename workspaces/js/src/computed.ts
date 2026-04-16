@@ -1,11 +1,7 @@
 import { computed } from "@preact/signals-core";
 import { pathnameMatch } from "@flows/shared";
 import { blocks, config, pathname, runningSurveyIds, runningTours } from "./store";
-import {
-  blockToActiveBlock,
-  surveyBlockToActiveBlock,
-  tourToActiveBlock,
-} from "./lib/active-block";
+import { itemToActiveBlock } from "./lib/active-block";
 
 export const visibleBlocks = computed(() => {
   const blocksValue = blocks.value;
@@ -52,33 +48,18 @@ export const visibleTours = computed(() => {
 
 export const floatingItems = computed(() => {
   const configValue = config.value;
+  const visibleBlocksValue = visibleBlocks.value;
+  const visibleToursValue = visibleTours.value;
 
-  const floatingBlocks = visibleBlocks.value
-    .filter((b) => !b.slottable)
-    .flatMap((block) => {
-      if (block.type === "survey")
-        return surveyBlockToActiveBlock({
-          block,
-          userProperties: configValue?.userProperties ?? {},
-        });
-      return blockToActiveBlock({
-        block,
-        userProperties: configValue?.userProperties ?? {},
-      });
-    });
-  const floatingTourBlocks = visibleTours.value
-    .filter((t) => {
+  const items = [
+    ...visibleBlocksValue.filter((b) => !b.slottable),
+    ...visibleToursValue.filter((t) => {
       const activeStep = t.block.tourBlocks?.at(t.currentBlockIndex);
       return !activeStep?.slottable;
-    })
-    .flatMap((tour) =>
-      tourToActiveBlock({
-        block: tour.block,
-        currentIndex: tour.currentBlockIndex,
-        userProperties: configValue?.userProperties ?? {},
-      }),
-    );
-  return [...floatingBlocks, ...floatingTourBlocks];
+    }),
+  ];
+
+  return items.flatMap((item) => itemToActiveBlock(item, configValue?.userProperties ?? {}));
 });
 
 export const slotBlocks = computed(() => visibleBlocks.value.filter((b) => b.slottable));

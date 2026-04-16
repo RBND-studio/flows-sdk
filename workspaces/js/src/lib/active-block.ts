@@ -8,6 +8,7 @@ import {
   type UserProperties,
   createSurveyComponentProps,
 } from "@flows/shared";
+import type { RunningTour } from "../store";
 import { removeBlock, updateBlock } from "../store";
 import { nextTourStep, previousTourStep, cancelTour } from "./tour";
 import { postSurvey, sendActivate, sendEvent } from "./api";
@@ -27,6 +28,32 @@ const setStateMemory: SetStateMemory = async ({ blockId, key, value }) => {
     propertyKey: key,
     properties: { value },
   });
+};
+
+type TourItem = RunningTour & { block: Block };
+export const isBlock = (item: Block | TourItem): item is Block => "type" in item;
+export const itemToActiveBlock = (
+  item: Block | TourItem,
+  userProperties: UserProperties,
+): ActiveBlock | [] => {
+  if (isBlock(item) && item.type === "component")
+    return blockToActiveBlock({
+      block: item,
+      userProperties,
+    });
+  if (isBlock(item) && item.type === "survey")
+    return surveyBlockToActiveBlock({
+      block: item,
+      userProperties,
+    });
+  if (!isBlock(item))
+    return tourToActiveBlock({
+      block: item.block,
+      currentIndex: item.currentBlockIndex,
+      userProperties,
+    });
+
+  return [];
 };
 
 export const blockToActiveBlock = ({

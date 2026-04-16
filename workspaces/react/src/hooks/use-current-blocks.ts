@@ -2,11 +2,7 @@ import { type ActiveBlock, type Block, pathnameMatch } from "@flows/shared";
 import { useMemo } from "react";
 import { type RunningTour, useFlowsContext } from "../flows-context";
 import { usePathname } from "../contexts/pathname-context";
-import {
-  blockToActiveBlock,
-  surveyBlockToActiveBlock,
-  tourBlockToActiveBlock,
-} from "../lib/active-block";
+import { itemToActiveBlock } from "../lib/active-block";
 import { getSlot } from "../lib/selectors";
 
 export const useVisibleBlocks = (): Block[] => {
@@ -58,29 +54,19 @@ export const useCurrentFloatingBlocks = (): ActiveBlock[] => {
   const visibleTours = useVisibleTours();
   const { removeBlock, updateBlock, userProperties } = useFlowsContext();
 
-  const floatingBlocks = useMemo(
-    () =>
-      visibleBlocks
-        .filter((b) => !b.slottable)
-        .flatMap((block) => {
-          if (block.type === "survey")
-            return surveyBlockToActiveBlock({ block, removeBlock, updateBlock, userProperties });
-          return blockToActiveBlock({ block, removeBlock, updateBlock, userProperties });
-        }),
-    [removeBlock, userProperties, updateBlock, visibleBlocks],
-  );
-  const floatingTourBlocks = useMemo(
-    () =>
-      visibleTours
-        .filter((tour) => {
-          const activeStep = tour.activeStep;
-          return activeStep && !activeStep.slottable;
-        })
-        .flatMap((tour) => tourBlockToActiveBlock({ tour, userProperties })),
-    [userProperties, visibleTours],
-  );
+  return useMemo(() => {
+    const items = [
+      ...visibleBlocks.filter((b) => !b.slottable),
+      ...visibleTours.filter((tour) => {
+        const activeStep = tour.activeStep;
+        return activeStep && !activeStep.slottable;
+      }),
+    ];
 
-  return [...floatingBlocks, ...floatingTourBlocks];
+    return items.flatMap((item) =>
+      itemToActiveBlock(item, { removeBlock, updateBlock, userProperties }),
+    );
+  }, [removeBlock, updateBlock, userProperties, visibleBlocks, visibleTours]);
 };
 
 const isBlock = (item: Block | RunningTour): item is Block => "type" in item;
@@ -107,24 +93,7 @@ export const useCurrentSlotBlocks = (slotId: string): ActiveBlock[] => {
     );
     return [...slotBlocks, ...slotTourBlocks]
       .sort((a, b) => getSlotIndex(a) - getSlotIndex(b))
-      .flatMap((item) => {
-        if (isBlock(item) && item.type === "component")
-          return blockToActiveBlock({
-            block: item,
-            removeBlock,
-            updateBlock,
-            userProperties,
-          });
-        if (isBlock(item) && item.type === "survey")
-          return surveyBlockToActiveBlock({
-            block: item,
-            removeBlock,
-            updateBlock,
-            userProperties,
-          });
-        if (!isBlock(item)) return tourBlockToActiveBlock({ tour: item, userProperties });
-        return [];
-      });
+      .flatMap((item) => itemToActiveBlock(item, { removeBlock, updateBlock, userProperties }));
   }, [removeBlock, slotId, userProperties, updateBlock, visibleBlocks, visibleTours]);
 
   return sortedActiveBlocks;

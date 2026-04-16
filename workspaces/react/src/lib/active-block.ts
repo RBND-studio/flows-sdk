@@ -30,6 +30,34 @@ const getSetStateMemory = (updateBlock: UpdateBlock): SetStateMemory => {
   };
 };
 
+const isBlock = (item: Block | RunningTour): item is Block => "type" in item;
+
+export const itemToActiveBlock = (
+  item: Block | RunningTour,
+  {
+    removeBlock,
+    updateBlock,
+    userProperties,
+  }: { removeBlock: RemoveBlock; updateBlock: UpdateBlock; userProperties: UserProperties },
+): ActiveBlock | [] => {
+  if (isBlock(item) && item.type === "component")
+    return blockToActiveBlock({
+      block: item,
+      removeBlock,
+      updateBlock,
+      userProperties,
+    });
+  if (isBlock(item) && item.type === "survey")
+    return surveyBlockToActiveBlock({
+      block: item,
+      removeBlock,
+      updateBlock,
+      userProperties,
+    });
+  if (!isBlock(item)) return tourBlockToActiveBlock({ tour: item, userProperties });
+  return [];
+};
+
 export const blockToActiveBlock = ({
   block,
   removeBlock,

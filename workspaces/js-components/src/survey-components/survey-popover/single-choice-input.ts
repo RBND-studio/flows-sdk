@@ -20,7 +20,7 @@ export const SingleChoiceInput = ({ question, onAnswer, legendId, descriptionId 
     onAnswer();
   };
 
-  return html` <div
+  return html`<div
     class="flows_basicsV2_survey_popover_option_list"
     role="radiogroup"
     aria-labelledby=${legendId}
