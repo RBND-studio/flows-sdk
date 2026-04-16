@@ -2,7 +2,7 @@ import { type ActiveBlock, type Block, pathnameMatch } from "@flows/shared";
 import { useMemo } from "react";
 import { type RunningTour, useFlowsContext } from "../flows-context";
 import { usePathname } from "../contexts/pathname-context";
-import { itemToActiveBlock } from "../lib/active-block";
+import { isBlock, itemToActiveBlock } from "../lib/active-block";
 import { getSlot } from "../lib/selectors";
 
 export const useVisibleBlocks = (): Block[] => {
@@ -68,8 +68,6 @@ export const useCurrentFloatingBlocks = (): ActiveBlock[] => {
     );
   }, [removeBlock, updateBlock, userProperties, visibleBlocks, visibleTours]);
 };
-
-const isBlock = (item: Block | RunningTour): item is Block => "type" in item;
 
 const getSlotIndex = (item: Block | RunningTour): number => {
   if (isBlock(item)) return item.slotIndex ?? 0;

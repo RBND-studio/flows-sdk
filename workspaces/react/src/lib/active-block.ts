@@ -30,7 +30,7 @@ const getSetStateMemory = (updateBlock: UpdateBlock): SetStateMemory => {
   };
 };
 
-const isBlock = (item: Block | RunningTour): item is Block => "type" in item;
+export const isBlock = (item: Block | RunningTour): item is Block => "type" in item;
 
 export const itemToActiveBlock = (
   item: Block | RunningTour,
