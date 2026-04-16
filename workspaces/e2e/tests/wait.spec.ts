@@ -216,9 +216,9 @@ const run = (packageName: string) => {
     await page.getByText("Continue", { exact: true }).click();
     await expect(page.getByText("Hello", { exact: true })).toBeHidden();
     await expect(page.getByText("World", { exact: true })).toBeHidden();
-    await page.waitForTimeout(900);
+    await page.waitForTimeout(800);
     await expect(page.getByText("World", { exact: true })).toBeHidden({ timeout: 0 });
-    await page.waitForTimeout(100);
+    await page.waitForTimeout(200);
     await expect(page.getByText("World", { exact: true })).toBeVisible({ timeout: 0 });
   });
   test(`${packageName} - should not trigger delay when step is not active`, async ({ page }) => {

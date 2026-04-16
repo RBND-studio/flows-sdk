@@ -25,6 +25,7 @@ interface Props {
 }
 
 interface Return {
+  blocksState: Block[] | null;
   blocks: Block[];
   removeBlock: RemoveBlock;
   updateBlock: UpdateBlock;
@@ -126,5 +127,5 @@ export const useBlocks = ({
     });
   }, []);
 
-  return { blocks, error, wsError, removeBlock, updateBlock };
+  return { blocksState, blocks, error, wsError, removeBlock, updateBlock };
 };

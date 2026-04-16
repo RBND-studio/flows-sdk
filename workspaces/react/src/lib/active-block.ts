@@ -6,24 +6,13 @@ import {
   createActiveBlockProxy,
   createTourComponentProps,
   type UserProperties,
+  createSurveyComponentProps,
 } from "@flows/shared";
 import { type RemoveBlock, type UpdateBlock, type RunningTour } from "../flows-context";
-import { sendActivate, sendEvent } from "./api";
+import { postSurvey, sendActivate, sendEvent } from "./api";
 
-export const blockToActiveBlock = ({
-  block,
-  removeBlock,
-  updateBlock,
-  userProperties,
-}: {
-  block: Block;
-  removeBlock: RemoveBlock;
-  updateBlock: UpdateBlock;
-  userProperties: UserProperties;
-}): ActiveBlock | [] => {
-  if (!block.componentType) return [];
-
-  const setStateMemory: SetStateMemory = async ({ blockId, key, value }) => {
+const getSetStateMemory = (updateBlock: UpdateBlock): SetStateMemory => {
+  return async ({ blockId, key, value }) => {
     updateBlock(blockId, (b) => ({
       ...b,
       propertyMeta: b.propertyMeta?.map((sp) => {
@@ -39,6 +28,23 @@ export const blockToActiveBlock = ({
       properties: { value },
     });
   };
+};
+
+export const blockToActiveBlock = ({
+  block,
+  removeBlock,
+  updateBlock,
+  userProperties,
+}: {
+  block: Block;
+  removeBlock: RemoveBlock;
+  updateBlock: UpdateBlock;
+  userProperties: UserProperties;
+}): ActiveBlock | [] => {
+  if (block.type !== "component") return [];
+  if (!block.componentType) return [];
+
+  const setStateMemory = getSetStateMemory(updateBlock);
 
   const props = createComponentProps({
     block,
@@ -50,7 +56,7 @@ export const blockToActiveBlock = ({
 
   const activeBlock: ActiveBlock = {
     id: block.id,
-    type: "component",
+    type: block.type as ActiveBlock["type"],
     component: block.componentType,
     props,
   };
@@ -83,6 +89,43 @@ export const tourBlockToActiveBlock = ({
     tourBlockId: tour.block.id,
     type: "tour-component",
     component: activeStep.componentType,
+    props,
+  };
+
+  return createActiveBlockProxy(activeBlock, sendActivate);
+};
+
+export const surveyBlockToActiveBlock = ({
+  block,
+  userProperties,
+  removeBlock,
+  updateBlock,
+}: {
+  block: Block;
+  userProperties: UserProperties;
+  updateBlock: UpdateBlock;
+  removeBlock: RemoveBlock;
+}): ActiveBlock | [] => {
+  if (block.type !== "survey") return [];
+  if (!block.componentType) return [];
+
+  const setStateMemory = getSetStateMemory(updateBlock);
+
+  const props = createSurveyComponentProps({
+    block,
+    userProperties,
+    removeBlock,
+    exitNodeCb: ({ key, blockId }) => sendEvent({ name: "transition", blockId, propertyKey: key }),
+    setStateMemory,
+    submitSurvey: postSurvey,
+  });
+
+  if (!props) return [];
+
+  const activeBlock: ActiveBlock = {
+    id: block.id,
+    type: "survey",
+    component: block.componentType,
     props,
   };
 

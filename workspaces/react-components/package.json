@@ -1,6 +1,6 @@
 {
   "name": "@flows/react-components",
-  "version": "2.7.0",
+  "version": "2.8.1",
   "description": "Built-in components for Flows React SDK",
   "keywords": [
     "react",
@@ -43,14 +43,15 @@
     "@types/react": "^19.2.14",
     "jest": "^30.2.0",
     "jest-environment-jsdom": "^30.2.0",
-    "ts-jest": "^29.4.6",
+    "ts-jest": "^29.4.9",
     "tsup": "^8.5.1",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.2"
   },
   "dependencies": {
     "@floating-ui/react-dom": "^2.1.8",
     "clsx": "^2.1.1",
-    "dompurify": "^3.3.2"
+    "dompurify": "^3.4.0",
+    "es-toolkit": "^1.45.1"
   },
   "peerDependencies": {
     "@flows/react": ">=1.18.0",
@@ -66,6 +67,11 @@
       "types": "./dist/tour.d.ts",
       "import": "./dist/tour.mjs",
       "require": "./dist/tour.js"
+    },
+    "./survey": {
+      "types": "./dist/survey.d.ts",
+      "import": "./dist/survey.mjs",
+      "require": "./dist/survey.js"
     },
     "./index.css": {
       "import": "./dist/index.css",

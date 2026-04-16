@@ -49,19 +49,18 @@
   "devDependencies": {
     "@flows/shared": "workspace:*",
     "@flows/styles": "workspace:*",
-    "@swc/core": "^1.15.8",
     "@types/jest": "^30.0.0",
     "@types/node": "^24",
     "jest": "^30.2.0",
-    "ts-jest": "^29.4.6",
+    "ts-jest": "^29.4.9",
     "tsup": "^8.5.1",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.2"
   },
   "dependencies": {
     "@lit-labs/preact-signals": "^1.0.3",
     "@preact/signals-core": "^1.13.0",
     "clsx": "^2.1.1",
-    "es-toolkit": "^1.43.0",
+    "es-toolkit": "^1.45.1",
     "lit": "^3.3.2"
   }
 }

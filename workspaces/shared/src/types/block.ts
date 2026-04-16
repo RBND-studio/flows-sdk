@@ -1,4 +1,5 @@
 import { type StateMemoryTrigger } from "./components";
+import type { ApiSurvey } from "./api-survey";
 
 export type TourWaitInteraction =
   | "navigation"
@@ -47,11 +48,14 @@ export interface TourTrigger {
   $and?: TourTriggerExpression[];
 }
 
+export type BlockType = "component" | "tour" | "survey";
+export type TourStepType = "tour-component" | "wait";
+
 export interface Block {
   id: string;
   workflowId: string;
   key?: string;
-  type: string;
+  type: BlockType;
   componentType?: string;
   data: Record<string, unknown>;
   propertyMeta?: PropertyMeta[];
@@ -67,13 +71,15 @@ export interface Block {
   tour_trigger?: TourTrigger;
   tourBlocks?: TourStep[];
   currentTourIndex?: number;
+
+  survey?: ApiSurvey;
 }
 
 export interface TourStep {
   id: string;
   workflowId: string;
   key?: string;
-  type: string;
+  type: TourStepType;
   componentType?: string;
   data: Record<string, unknown>;
   propertyMeta?: PropertyMeta[];
