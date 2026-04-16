@@ -78,11 +78,7 @@ const SurveyPopover: FC<SurveyPopoverProps> = (props) => {
       data-closing={isClosing || undefined}
       onTransitionEnd={handleHeightTransitionEnd}
     >
-      <div
-        key={questionIndex}
-        className="flows_basicsV2_survey_popover_content"
-        data-exiting={isExiting || undefined}
-      >
+      <div className="flows_basicsV2_survey_popover_content" data-exiting={isExiting || undefined}>
         <fieldset className="flows_basicsV2_survey_popover_fieldset">
           <Text
             as="legend"
@@ -113,7 +109,11 @@ const SurveyPopover: FC<SurveyPopoverProps> = (props) => {
             }}
           />
 
-          <QuestionProvider question={currentQuestion}>
+          <QuestionProvider
+            question={currentQuestion}
+            // Key to reset the context state value when switching to a different question
+            key={currentQuestion.id}
+          >
             {currentQuestion.type === "freeform" && (
               <FreeformInput
                 question={currentQuestion}

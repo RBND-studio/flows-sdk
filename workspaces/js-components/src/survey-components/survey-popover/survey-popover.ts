@@ -209,10 +209,13 @@ class SurveyPopover extends SignalWatcher(LitElement) implements SurveyPopoverPr
       <div
         class="flows_basicsV2_survey_popover"
         data-position=${position}
-        data-closing=${this._isClosing}
+        ?data-closing=${this._isClosing || undefined}
       >
-        <div class="flows_basicsV2_survey_popover_content" data-exiting=${this._isExiting}>
-          <fieldset>
+        <div
+          class="flows_basicsV2_survey_popover_content"
+          ?data-exiting=${this._isExiting || undefined}
+        >
+          <fieldset class="flows_basicsV2_survey_popover_fieldset">
             ${Text({
               id: legendId,
               as: "legend",
