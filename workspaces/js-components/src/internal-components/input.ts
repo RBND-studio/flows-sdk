@@ -14,7 +14,6 @@ type Props = {
   defaultValue?: string;
   placeholder?: string;
   rows?: number;
-  name?: string;
   "aria-labelledby"?: string;
   "aria-describedby"?: string;
   ref?: RefOrCallback;
@@ -34,7 +33,6 @@ export const Input = ({
   type,
   "aria-labelledby": ariaLabelledBy,
   "aria-describedby": ariaDescribedBy,
-  name,
   ref: _ref,
 }: Props): TemplateResult => {
   const tag = as === "textarea" ? textareaLiteral : inputLiteral;
@@ -50,6 +48,5 @@ export const Input = ({
     rows=${ifDefined(rows)}
     aria-labelledby=${ifDefined(ariaLabelledBy)}
     aria-describedby=${ifDefined(ariaDescribedBy)}
-    name=${ifDefined(name)}
   />`;
 };

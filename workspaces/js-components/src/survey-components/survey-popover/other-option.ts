@@ -72,7 +72,6 @@ export const OtherOption = ({ question }: Props) => {
           defaultValue: value,
           onInput: handleInputChange,
           onBlur: handleBlur,
-          name: "other",
           ref: inputRef,
           placeholder: otherLabel,
         })
