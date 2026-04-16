@@ -98,6 +98,13 @@ const getSurvey = (tour_trigger?: TourTriggerExpression[]): Block => ({
         description: "Question",
         optional: true,
       },
+      {
+        id: "question-2",
+        type: "freeform",
+        title: "World",
+        description: "Question",
+        optional: true,
+      },
     ],
   },
 });
@@ -361,6 +368,19 @@ const run = (packageName: string) => {
       });
       await expect(page.getByText("Hello", { exact: true })).toBeHidden();
       await consoleMessagePromise;
+    });
+    test(`${packageName} - should save running surveys to sessionStorage`, async ({ page }) => {
+      const block = getSurvey([{ type: "click", value: "h1" }]);
+      await mockBlocksEndpoint(page, [block]);
+      await page.goto(`/${packageName}.html`);
+      await expect(page.getByText("Hello", { exact: true })).toBeHidden();
+      await page.locator("h1").click();
+      await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+      await page.getByText("Next", { exact: true }).click();
+      await expect(page.getByText("World", { exact: true })).toBeVisible();
+      await expect(page.getByText("Hello", { exact: true })).toBeHidden();
+      await page.reload();
+      await expect(page.getByText("World", { exact: true })).toBeVisible();
     });
   });
 };

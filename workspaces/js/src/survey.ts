@@ -1,8 +1,13 @@
 import { effect } from "@preact/signals-core";
 import { blocks, blocksState, pathname, runningSurveyIds } from "./store";
 import type { Block } from "@flows/shared";
-import { blockTriggerMatch, getPathname } from "@flows/shared";
+import { blockTriggerMatch, getPathname, saveSessionStorageRunningSurveys } from "@flows/shared";
 import { debounce } from "es-toolkit";
+
+// Save surveys to sessionStorage
+effect(() => {
+  saveSessionStorageRunningSurveys(runningSurveyIds.value);
+});
 
 const startSurveysIfNeeded = (
   blocks: Block[],

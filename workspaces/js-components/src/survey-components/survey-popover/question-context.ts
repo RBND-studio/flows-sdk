@@ -10,8 +10,6 @@ type IQuestionContext = {
 };
 type ContextData = Omit<IQuestionContext, "refresh">;
 
-export const currentQuestionValue = signal<SurveyQuestion>();
-
 export const questionToContextValue = (question: SurveyQuestion): ContextData => ({
   value: "getValue" in question ? question.getValue() : undefined,
   optionIds: "getSelectedOptionIds" in question ? question.getSelectedOptionIds() : [],
@@ -24,10 +22,11 @@ export const getDefaultQuestionState = (): ContextData => ({
   otherSelected: false,
 });
 
+export const currentQuestionSignal = signal<SurveyQuestion>();
 export const questionState = signal<ContextData>(getDefaultQuestionState());
 
 const refresh = (): void => {
-  const currentQuestion = currentQuestionValue.value;
+  const currentQuestion = currentQuestionSignal.value;
   if (currentQuestion) {
     questionState.value = questionToContextValue(currentQuestion);
   } else {

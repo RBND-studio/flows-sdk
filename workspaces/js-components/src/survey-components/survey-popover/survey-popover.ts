@@ -21,7 +21,7 @@ import DOMPurify from "dompurify";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import { IconButton } from "../../internal-components/icon-button";
 import { Close16 } from "../../icons/close-16";
-import { currentQuestionValue, questionState, questionToContextValue } from "./question-context";
+import { currentQuestionSignal, questionState, questionToContextValue } from "./question-context";
 import { FreeformInput } from "./freeform-input";
 import { SignalWatcher } from "@lit-labs/preact-signals";
 import { SurveyNextButton } from "./survey-next-button";
@@ -116,10 +116,11 @@ class SurveyPopover extends SignalWatcher(LitElement) implements SurveyPopoverPr
   }
 
   handleUpdateQuestionContext() {
-    const currentQuestion = this.survey.questions[this._questionIndex];
+    const currentQuestion = this.currentQuestion;
 
-    if (currentQuestion && currentQuestion.id !== currentQuestionValue.peek()?.id) {
+    if (currentQuestion && currentQuestion !== currentQuestionSignal.peek()) {
       questionState.value = questionToContextValue(currentQuestion);
+      currentQuestionSignal.value = currentQuestion;
     }
   }
 

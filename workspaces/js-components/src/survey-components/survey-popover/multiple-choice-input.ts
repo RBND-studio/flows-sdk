@@ -34,6 +34,7 @@ export const MultipleChoiceInput = ({ descriptionId, legendId, question }: Props
         return html`
           <button
             role="checkbox"
+            type="button"
             aria-checked=${isSelected}
             class="flows_basicsV2_survey_popover_choice_option"
             data-selected=${isSelected ? "true" : "false"}

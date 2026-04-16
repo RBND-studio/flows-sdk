@@ -17,6 +17,8 @@ export const useRunningSurveys = ({ blocksState: blocks }: Props): string[] => {
   const [runningSurveyIds, setRunningSurveyIds] = useState<string[]>(
     getSessionStorageRunningSurveys(),
   );
+
+  // Save surveys to sessionStorage
   useEffect(() => {
     saveSessionStorageRunningSurveys(runningSurveyIds);
   }, [runningSurveyIds]);
