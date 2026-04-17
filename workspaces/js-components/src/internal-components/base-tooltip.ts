@@ -125,13 +125,7 @@ class BaseTooltip extends LitElement {
 
     return html`
       <div class="flows_basicsV2_tooltip_root">
-        ${
-          this.overlay
-            ? html`
-                <div class="flows_basicsV2_tooltip_overlay"></div>
-              `
-            : null
-        }
+        ${this.overlay ? html` <div class="flows_basicsV2_tooltip_overlay"></div> ` : null}
         <div class="flows_basicsV2_tooltip_tooltip">
           ${Text({
             variant: "title",
@@ -148,30 +142,24 @@ class BaseTooltip extends LitElement {
               }),
             ),
           })}
-          ${
-            this.dots || Boolean(buttons.length)
-              ? html`<div class="flows_basicsV2_tooltip_footer">
+          ${this.dots || Boolean(buttons.length)
+            ? html`<div class="flows_basicsV2_tooltip_footer">
                 ${this.dots}
-                ${
-                  buttons.length
-                    ? html`<div className="flows_basicsV2_tooltip_buttons_wrapper">
+                ${buttons.length
+                  ? html`<div className="flows_basicsV2_tooltip_buttons_wrapper">
                       <div className="flows_basicsV2_tooltip_buttons">${buttons}</div>
                     </div>`
-                    : null
-                }
+                  : null}
               </div>`
-              : null
-          }
-          ${
-            this.onClose
-              ? IconButton({
-                  "aria-label": "Close",
-                  className: "flows_basicsV2_tooltip_close",
-                  children: Close16(),
-                  onClick: this.onClose,
-                })
-              : null
-          }
+            : null}
+          ${this.onClose
+            ? IconButton({
+                "aria-label": "Close",
+                className: "flows_basicsV2_tooltip_close",
+                children: Close16(),
+                onClick: this.onClose,
+              })
+            : null}
 
           <div
             class=${clsx("flows_basicsV2_tooltip_arrow", "flows_basicsV2_tooltip_arrow-bottom")}
@@ -184,9 +172,10 @@ class BaseTooltip extends LitElement {
     `;
   }
 }
+const baseTooltipTagName = "flows-base-tooltip";
 export const defineBaseTooltip = (): void => {
-  if (!customElements.get("flows-base-tooltip"))
-    customElements.define("flows-base-tooltip", BaseTooltip);
+  if (!customElements.get(baseTooltipTagName))
+    customElements.define(baseTooltipTagName, BaseTooltip);
 };
 
 const DISTANCE = 4;

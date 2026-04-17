@@ -143,12 +143,6 @@ importers:
       '@floating-ui/dom':
         specifier: ^1.7.5
         version: 1.7.6
-      '@lit-labs/preact-signals':
-        specifier: ^1.0.3
-        version: 1.0.3
-      '@preact/signals-core':
-        specifier: ^1.13.0
-        version: 1.13.0
       clsx:
         specifier: ^2.1.1
         version: 2.1.1

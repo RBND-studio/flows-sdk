@@ -3,19 +3,20 @@ import {
   type MultipleChoiceQuestion,
   type SingleChoiceQuestion,
 } from "@flows/shared";
-import { useQuestionContext } from "./question-context";
 import { html } from "lit";
 import { Input } from "../../internal-components/input";
 import { createRef } from "lit/directives/ref.js";
+import type { IQuestionContext } from "./question-context";
 
 type Props = {
   question: SingleChoiceQuestion | MultipleChoiceQuestion;
+  context: IQuestionContext;
 };
 
 const inputRef = createRef();
 
-export const OtherOption = ({ question }: Props) => {
-  const { value, otherSelected, refresh } = useQuestionContext();
+export const OtherOption = ({ question, context }: Props) => {
+  const { value, otherSelected, refresh } = context;
   const type = question.type === "single-choice" ? "radio" : "checkbox";
 
   const handleClick = () => {

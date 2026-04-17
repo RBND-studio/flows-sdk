@@ -1,39 +1,40 @@
 import {
-  type SurveyComponentProps,
+  type FlowsProperties,
   type SurveyPopoverProps as LibrarySurveyPopoverProps,
   type Survey,
-  type FlowsProperties,
+  type SurveyComponentProps,
   type SurveyPopoverPosition,
   type SurveyQuestion,
-  SURVEY_POPOVER_CLOSE_ANIMATION_DURATION,
-  SURVEY_POPOVER_TRANSITION_DURATION,
-  SURVEY_POPOVER_AUTO_PROCEED_DURATION,
-  SURVEY_POPOVER_DEFAULT_POSITION,
-  SURVEY_POPOVER_DEFAULT_NEXT_BUTTON_LABEL,
-  SURVEY_POPOVER_DEFAULT_SUBMIT_BUTTON_LABEL,
   SURVEY_POPOVER_AUTO_CLOSE_TIMEOUT,
+  SURVEY_POPOVER_AUTO_PROCEED_DURATION,
+  SURVEY_POPOVER_CLOSE_ANIMATION_DURATION,
+  SURVEY_POPOVER_DEFAULT_NEXT_BUTTON_LABEL,
+  SURVEY_POPOVER_DEFAULT_POSITION,
+  SURVEY_POPOVER_DEFAULT_SUBMIT_BUTTON_LABEL,
+  SURVEY_POPOVER_TRANSITION_DURATION,
 } from "@flows/shared";
-import { html, LitElement } from "lit";
-import { property, query, state } from "lit/decorators.js";
-import { Text } from "../../internal-components/text";
 import clsx from "clsx";
 import DOMPurify from "dompurify";
+import { html, LitElement } from "lit";
+import { property, query, state } from "lit/decorators.js";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
-import { IconButton } from "../../internal-components/icon-button";
 import { Close16 } from "../../icons/close-16";
-import { currentQuestionSignal, questionState, questionToContextValue } from "./question-context";
-import { FreeformInput } from "./freeform-input";
-import { SignalWatcher } from "@lit-labs/preact-signals";
-import { SurveyNextButton } from "./survey-next-button";
-import { RatingInput } from "./rating-input";
-import { SingleChoiceInput } from "./single-choice-input";
-import { MultipleChoiceInput } from "./multiple-choice-input";
 import { Button } from "../../internal-components/button";
+import { IconButton } from "../../internal-components/icon-button";
+import { Text } from "../../internal-components/text";
 import { EndScreen } from "./end-screen";
+import { FreeformInput } from "./freeform-input";
+import { MultipleChoiceInput } from "./multiple-choice-input";
+import type { IQuestionContext, QuestionContextData } from "./question-context";
+import { getDefaultQuestionState, questionToContextValue } from "./question-context";
+import { defineRatingInput } from "./rating-input";
+import { SingleChoiceInput } from "./single-choice-input";
+import { SurveyNextButton } from "./survey-next-button";
 
 export type SurveyPopoverProps = SurveyComponentProps<LibrarySurveyPopoverProps>;
 
-class SurveyPopover extends SignalWatcher(LitElement) implements SurveyPopoverProps {
+defineRatingInput();
+class SurveyPopover extends LitElement implements SurveyPopoverProps {
   @property()
   position?: SurveyPopoverPosition;
 
@@ -70,6 +71,8 @@ class SurveyPopover extends SignalWatcher(LitElement) implements SurveyPopoverPr
   private accessor _isClosing = false;
   @state()
   private accessor _isExiting = false;
+  @state()
+  private accessor _questionContextData: QuestionContextData = getDefaultQuestionState();
 
   autoCloseTimeout: number;
   autoProceedTimeout: number;
@@ -87,8 +90,9 @@ class SurveyPopover extends SignalWatcher(LitElement) implements SurveyPopoverPr
   connectedCallback(): void {
     super.connectedCallback();
 
-    this._questionIndex = this.survey.getCurrentQuestionIndex();
     this.popoverElement?.addEventListener("transitionend", this.handleTransitionEnd.bind(this));
+
+    this.handleChangeQuestionIndex(this.survey.getCurrentQuestionIndex());
   }
 
   disconnectedCallback(): void {
@@ -106,21 +110,19 @@ class SurveyPopover extends SignalWatcher(LitElement) implements SurveyPopoverPr
     return this._questionIndex === this.survey.questions.length - 1;
   }
 
+  handleChangeQuestionIndex(newIndex: number) {
+    this._questionIndex = newIndex;
+    if (this.currentQuestion) {
+      this._questionContextData = questionToContextValue(this.currentQuestion);
+    }
+  }
+
   updated(_changedProperties: Map<string, unknown>): void {
     if (this.currentQuestion?.type === "end-screen" && this.autoCloseAfterSubmit) {
       clearTimeout(this.autoCloseTimeout);
       this.autoCloseTimeout = setTimeout(() => {
         this.handleClose(this.complete);
       }, SURVEY_POPOVER_AUTO_CLOSE_TIMEOUT);
-    }
-  }
-
-  handleUpdateQuestionContext() {
-    const currentQuestion = this.currentQuestion;
-
-    if (currentQuestion && currentQuestion !== currentQuestionSignal.peek()) {
-      questionState.value = questionToContextValue(currentQuestion);
-      currentQuestionSignal.value = currentQuestion;
     }
   }
 
@@ -138,7 +140,7 @@ class SurveyPopover extends SignalWatcher(LitElement) implements SurveyPopoverPr
     }
     this._isExiting = true;
     setTimeout(() => {
-      this._questionIndex = nextIndex;
+      this.handleChangeQuestionIndex(nextIndex);
       this._isExiting = false;
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
@@ -182,6 +184,17 @@ class SurveyPopover extends SignalWatcher(LitElement) implements SurveyPopoverPr
     }
   }
 
+  handleRefreshQuestionContext() {
+    if (!this.currentQuestion) return;
+    this._questionContextData = questionToContextValue(this.currentQuestion);
+  }
+  get questionContext(): IQuestionContext {
+    return {
+      ...this._questionContextData,
+      refresh: this.handleRefreshQuestionContext.bind(this),
+    };
+  }
+
   createRenderRoot(): this {
     return this;
   }
@@ -189,7 +202,6 @@ class SurveyPopover extends SignalWatcher(LitElement) implements SurveyPopoverPr
   render(): unknown {
     const currentQuestion = this.currentQuestion;
     if (!currentQuestion) return null;
-    this.handleUpdateQuestionContext();
 
     const position = this.position || SURVEY_POPOVER_DEFAULT_POSITION;
     const nextButtonLabel = this.nextButtonLabel || SURVEY_POPOVER_DEFAULT_NEXT_BUTTON_LABEL;
@@ -247,15 +259,21 @@ class SurveyPopover extends SignalWatcher(LitElement) implements SurveyPopoverPr
               variant: "body",
             })}
             ${currentQuestion.type === "freeform"
-              ? FreeformInput({ descriptionId, legendId, question: currentQuestion })
-              : null}
-            ${currentQuestion.type === "rating"
-              ? RatingInput({
-                  question: currentQuestion,
+              ? FreeformInput({
                   descriptionId,
                   legendId,
-                  onAnswer: this.handleAutoProceed.bind(this),
+                  question: currentQuestion,
+                  context: this.questionContext,
                 })
+              : null}
+            ${currentQuestion.type === "rating"
+              ? html`<flows-popover-survey-rating-input
+                  descriptionId=${descriptionId}
+                  legendId=${legendId}
+                  .question=${currentQuestion}
+                  .onAnswer=${this.handleAutoProceed.bind(this)}
+                  .context=${this.questionContext}
+                ></flows-popover-survey-rating-input>`
               : null}
             ${currentQuestion.type === "single-choice"
               ? SingleChoiceInput({
@@ -263,10 +281,16 @@ class SurveyPopover extends SignalWatcher(LitElement) implements SurveyPopoverPr
                   descriptionId,
                   legendId,
                   onAnswer: this.handleAutoProceed.bind(this),
+                  context: this.questionContext,
                 })
               : null}
             ${currentQuestion.type === "multiple-choice"
-              ? MultipleChoiceInput({ descriptionId, legendId, question: currentQuestion })
+              ? MultipleChoiceInput({
+                  descriptionId,
+                  legendId,
+                  question: currentQuestion,
+                  context: this.questionContext,
+                })
               : null}
             ${currentQuestion.type === "link"
               ? Button({
@@ -293,6 +317,7 @@ class SurveyPopover extends SignalWatcher(LitElement) implements SurveyPopoverPr
                   label: this.isLastQuestion ? submitButtonLabel : nextButtonLabel,
                   question: currentQuestion,
                   onClick: this.handleNextButton.bind(this),
+                  context: this.questionContext,
                 })
               : null}
             ${this.dismissible && currentQuestion.type !== "end-screen"

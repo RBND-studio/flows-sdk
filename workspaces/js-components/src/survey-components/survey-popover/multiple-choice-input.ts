@@ -1,17 +1,19 @@
 import type { MultipleChoiceQuestion } from "@flows/shared";
-import { useQuestionContext } from "./question-context";
+
 import { html } from "lit";
 import { repeat } from "lit/directives/repeat.js";
 import { OtherOption } from "./other-option";
+import type { IQuestionContext } from "./question-context";
 
 type Props = {
   question: MultipleChoiceQuestion;
   legendId: string;
   descriptionId: string;
+  context: IQuestionContext;
 };
 
-export const MultipleChoiceInput = ({ descriptionId, legendId, question }: Props) => {
-  const { optionIds, refresh } = useQuestionContext();
+export const MultipleChoiceInput = ({ descriptionId, legendId, question, context }: Props) => {
+  const { optionIds, refresh } = context;
 
   return html`<div
     class="flows_basicsV2_survey_popover_option_list"
@@ -46,6 +48,6 @@ export const MultipleChoiceInput = ({ descriptionId, legendId, question }: Props
         `;
       },
     )}
-    ${question.otherOption ? OtherOption({ question }) : null}
+    ${question.otherOption ? OtherOption({ question, context }) : null}
   </div>`;
 };

@@ -2,16 +2,17 @@ import { isSurveyQuestionAnswered, type SurveyQuestion } from "@flows/shared";
 import type { TemplateResult } from "lit";
 import { html } from "lit";
 import { Button } from "../../internal-components/button";
-import { useQuestionContext } from "./question-context";
+import type { IQuestionContext } from "./question-context";
 
 type Props = {
   question: SurveyQuestion;
   onClick: () => void;
   label: string;
+  context: IQuestionContext;
 };
 
-export const SurveyNextButton = ({ question, onClick, label }: Props): TemplateResult => {
-  const { value, optionIds, otherSelected } = useQuestionContext();
+export const SurveyNextButton = ({ question, onClick, label, context }: Props): TemplateResult => {
+  const { value, optionIds, otherSelected } = context;
 
   const disabled = question.optional
     ? false

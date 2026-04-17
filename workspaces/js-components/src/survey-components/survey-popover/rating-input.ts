@@ -1,81 +1,104 @@
 import { SURVEY_EMOJIS, type RatingDisplayType, type RatingQuestion } from "@flows/shared";
 import type { TemplateResult } from "lit";
-import { html } from "lit";
+import { html, LitElement } from "lit";
 import { repeat } from "lit/directives/repeat.js";
-import { useQuestionContext } from "./question-context";
+import type { IQuestionContext } from "./question-context";
 import { range } from "es-toolkit";
-import { signal } from "@preact/signals-core";
 import { StarFilled16 } from "../../icons/star-filled-16";
 import { StarEmpty16 } from "../../icons/star-empty-16";
 import { Text } from "../../internal-components/text";
+import { property, state } from "lit/decorators.js";
 
 type Props = {
   question: RatingQuestion;
   onAnswer: () => void;
   legendId: string;
   descriptionId: string;
+  context: IQuestionContext;
 };
 
-const hoverIndexSignal = signal<number | null>(null);
+class RatingInput extends LitElement implements Props {
+  @property({ attribute: false })
+  question: RatingQuestion;
 
-export const RatingInput = ({
-  descriptionId,
-  legendId,
-  onAnswer,
-  question,
-}: Props): TemplateResult => {
-  const { value, refresh } = useQuestionContext();
-  const hoverIndex = hoverIndexSignal.value;
+  @property({ attribute: false })
+  onAnswer: () => void;
 
-  const handleSetValue = (value: string) => {
-    question.setValue(value);
-    refresh();
-    onAnswer();
-  };
+  @property({ type: String })
+  legendId: string;
 
-  const options = range(question.minValue, question.maxValue + 1);
-  const valueIndex = options.findIndex((optValue) => optValue.toString() === value);
+  @property({ type: String })
+  descriptionId: string;
 
-  return html`<div
-      class="flows_basicsV2_survey_popover_rating_list"
-      role="radiogroup"
-      aria-labelledby=${legendId}
-      aria-describedby=${descriptionId}
-    >
-      ${repeat(
-        options,
-        (optValue) => optValue,
-        (optValue, index) => {
-          const isSelected = value === optValue.toString();
-          return html`
-            <button
-              class="flows_basicsV2_survey_popover_rating_option"
-              role="radio"
-              type="button"
-              aria-checked=${isSelected}
-              aria-label="${optValue} out of ${question.maxValue}"
-              @click=${() => handleSetValue(optValue.toString())}
-              data-selected=${isSelected ? "true" : "false"}
-              @pointerenter=${() => (hoverIndexSignal.value = index)}
-              @pointerleave=${() => (hoverIndexSignal.value = null)}
-            >
-              ${DisplayRender({
-                displayType: question.displayType,
-                index: index,
-                value: optValue,
-                activeIndex: hoverIndex ?? valueIndex,
-              })}
-            </button>
-          `;
-        },
-      )}
-    </div>
-    ${question.upperBoundLabel && question.lowerBoundLabel
-      ? html`<div class="flows_basicsV2_survey_popover_bound_labels">
-          ${Text({ variant: "body", children: question.lowerBoundLabel })}
-          ${Text({ variant: "body", children: question.upperBoundLabel })}
-        </div>`
-      : null}`;
+  @property({ attribute: false })
+  context: IQuestionContext;
+
+  @state()
+  private accessor hoverIndex: number | null = null;
+
+  createRenderRoot(): this {
+    return this;
+  }
+
+  render() {
+    const { value, refresh } = this.context;
+
+    const handleSetValue = (value: string) => {
+      this.question.setValue(value);
+      refresh();
+      this.onAnswer();
+    };
+
+    const options = range(this.question.minValue, this.question.maxValue + 1);
+    const valueIndex = options.findIndex((optValue) => optValue.toString() === value);
+
+    return html`<div
+        class="flows_basicsV2_survey_popover_rating_list"
+        role="radiogroup"
+        aria-labelledby=${this.legendId}
+        aria-describedby=${this.descriptionId}
+      >
+        ${repeat(
+          options,
+          (optValue) => optValue,
+          (optValue, index) => {
+            const isSelected = value === optValue.toString();
+            return html`
+              <button
+                class="flows_basicsV2_survey_popover_rating_option"
+                role="radio"
+                type="button"
+                aria-checked=${isSelected}
+                aria-label="${optValue} out of ${this.question.maxValue}"
+                @click=${() => handleSetValue(optValue.toString())}
+                data-selected=${isSelected ? "true" : "false"}
+                @pointerenter=${() => (this.hoverIndex = index)}
+                @pointerleave=${() => (this.hoverIndex = null)}
+              >
+                ${DisplayRender({
+                  displayType: this.question.displayType,
+                  index: index,
+                  value: optValue,
+                  activeIndex: this.hoverIndex ?? valueIndex,
+                })}
+              </button>
+            `;
+          },
+        )}
+      </div>
+      ${this.question.upperBoundLabel && this.question.lowerBoundLabel
+        ? html`<div class="flows_basicsV2_survey_popover_bound_labels">
+            ${Text({ variant: "body", children: this.question.lowerBoundLabel })}
+            ${Text({ variant: "body", children: this.question.upperBoundLabel })}
+          </div>`
+        : null}`;
+  }
+}
+const ratingInputTagName = "flows-popover-survey-rating-input";
+export const defineRatingInput = () => {
+  if (!customElements.get(ratingInputTagName)) {
+    customElements.define(ratingInputTagName, RatingInput);
+  }
 };
 
 type DisplayRenderProps = {

@@ -1,16 +1,22 @@
 import { SURVEY_POPOVER_DEFAULT_FREEFORM_PLACEHOLDER, type FreeformQuestion } from "@flows/shared";
 import type { TemplateResult } from "lit";
-import { useQuestionContext } from "./question-context";
 import { Input } from "../../internal-components/input";
+import type { IQuestionContext } from "./question-context";
 
 type Props = {
   question: FreeformQuestion;
   legendId: string;
   descriptionId: string;
+  context: IQuestionContext;
 };
 
-export const FreeformInput = ({ question, legendId, descriptionId }: Props): TemplateResult => {
-  const { value, refresh } = useQuestionContext();
+export const FreeformInput = ({
+  question,
+  legendId,
+  descriptionId,
+  context,
+}: Props): TemplateResult => {
+  const { value, refresh } = context;
 
   const handleChange = (e: InputEvent) => {
     const target = e.target as HTMLTextAreaElement;

@@ -1,7 +1,7 @@
 import type { SingleChoiceQuestion } from "@flows/shared";
 import { html } from "lit";
 import { repeat } from "lit/directives/repeat.js";
-import { useQuestionContext } from "./question-context";
+import type { IQuestionContext } from "./question-context";
 import { OtherOption } from "./other-option";
 
 type Props = {
@@ -9,10 +9,17 @@ type Props = {
   onAnswer: () => void;
   legendId: string;
   descriptionId: string;
+  context: IQuestionContext;
 };
 
-export const SingleChoiceInput = ({ question, onAnswer, legendId, descriptionId }: Props) => {
-  const { optionIds, refresh } = useQuestionContext();
+export const SingleChoiceInput = ({
+  question,
+  onAnswer,
+  legendId,
+  descriptionId,
+  context,
+}: Props) => {
+  const { optionIds, refresh } = context;
 
   const handleClick = (optionId: string) => {
     question.setSelectedOptionIds([optionId]);
@@ -44,6 +51,6 @@ export const SingleChoiceInput = ({ question, onAnswer, legendId, descriptionId 
         </button>`;
       },
     )}
-    ${question.otherOption ? OtherOption({ question }) : null}
+    ${question.otherOption ? OtherOption({ question, context }) : null}
   </div>`;
 };
