@@ -5,7 +5,6 @@ import {
 } from "@flows/shared";
 import { html } from "lit";
 import { Input } from "../../internal-components/input";
-import { createRef } from "lit/directives/ref.js";
 import type { IQuestionContext } from "./question-context";
 
 type Props = {
@@ -13,20 +12,21 @@ type Props = {
   context: IQuestionContext;
 };
 
-const inputRef = createRef();
-
 export const OtherOption = ({ question, context }: Props) => {
   const { value, otherSelected, refresh } = context;
   const type = question.type === "single-choice" ? "radio" : "checkbox";
 
-  const handleClick = () => {
+  const handleClick = (event: MouseEvent) => {
     const selected = question.type === "multiple-choice" ? !otherSelected : true;
     question.setOtherSelected(selected);
     refresh();
 
     // Focus the input element with a delay because it's not rendered when the button is clicked
     setTimeout(() => {
-      const inputEl = inputRef.value as HTMLInputElement | null;
+      const target = event.target as HTMLElement;
+      const inputEl = target.parentElement?.querySelector<HTMLInputElement>(
+        ".flows_basicsV2_survey_popover_other_option_input",
+      );
       inputEl?.focus();
     }, 10);
   };
@@ -73,7 +73,6 @@ export const OtherOption = ({ question, context }: Props) => {
           defaultValue: value,
           onInput: handleInputChange,
           onBlur: handleBlur,
-          ref: inputRef,
           placeholder: otherLabel,
         })
       : otherLabel}

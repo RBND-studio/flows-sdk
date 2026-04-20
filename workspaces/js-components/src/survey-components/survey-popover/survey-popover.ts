@@ -17,6 +17,7 @@ import clsx from "clsx";
 import DOMPurify from "dompurify";
 import { html, LitElement } from "lit";
 import { property, query, state } from "lit/decorators.js";
+import { ifDefined } from "lit/directives/if-defined.js";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import { Close16 } from "../../icons/close-16";
 import { Button } from "../../internal-components/button";
@@ -90,8 +91,6 @@ class SurveyPopover extends LitElement implements SurveyPopoverProps {
   connectedCallback(): void {
     super.connectedCallback();
 
-    this.popoverElement?.addEventListener("transitionend", this.handleTransitionEnd.bind(this));
-
     this.handleChangeQuestionIndex(this.survey.getCurrentQuestionIndex());
   }
 
@@ -101,6 +100,10 @@ class SurveyPopover extends LitElement implements SurveyPopoverProps {
     clearTimeout(this.autoCloseTimeout);
     clearTimeout(this.autoProceedTimeout);
     clearTimeout(this.closeTimeout);
+  }
+
+  protected firstUpdated(): void {
+    this.popoverElement?.addEventListener("transitionend", this.handleTransitionEnd.bind(this));
   }
 
   get currentQuestion(): SurveyQuestion | undefined {
@@ -222,11 +225,11 @@ class SurveyPopover extends LitElement implements SurveyPopoverProps {
       <div
         class="flows_basicsV2_survey_popover"
         data-position=${position}
-        ?data-closing=${this._isClosing || undefined}
+        data-closing=${ifDefined(this._isClosing || undefined)}
       >
         <div
           class="flows_basicsV2_survey_popover_content"
-          ?data-exiting=${this._isExiting || undefined}
+          data-exiting=${ifDefined(this._isExiting || undefined)}
         >
           <fieldset class="flows_basicsV2_survey_popover_fieldset">
             ${Text({

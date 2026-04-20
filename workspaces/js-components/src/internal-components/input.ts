@@ -1,8 +1,6 @@
 import clsx from "clsx";
 import type { TemplateResult } from "lit";
 import { ifDefined } from "lit/directives/if-defined.js";
-import type { RefOrCallback } from "lit/directives/ref.js";
-import { ref } from "lit/directives/ref.js";
 import { literal, html } from "lit/static-html.js";
 
 type Props = {
@@ -16,7 +14,6 @@ type Props = {
   rows?: number;
   "aria-labelledby"?: string;
   "aria-describedby"?: string;
-  ref?: RefOrCallback;
 };
 
 const inputLiteral = literal`input`;
@@ -33,12 +30,10 @@ export const Input = ({
   type,
   "aria-labelledby": ariaLabelledBy,
   "aria-describedby": ariaDescribedBy,
-  ref: _ref,
 }: Props): TemplateResult => {
   const tag = as === "textarea" ? textareaLiteral : inputLiteral;
 
   return html`<${tag}
-    ${_ref ? ref(_ref) : undefined}
     class=${clsx("flows_basicsV2_input", className)}
     @input=${onInput}
     @blur=${onBlur}
