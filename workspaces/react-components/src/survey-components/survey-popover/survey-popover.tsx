@@ -24,14 +24,8 @@ import { useSurveyPopover } from "./use-survey-popover";
 export type SurveyPopoverProps = SurveyComponentProps<LibrarySurveyPopoverProps>;
 
 const SurveyPopover: FC<SurveyPopoverProps> = (props) => {
-  const {
-    survey,
-    dismissible,
-    autoProceedAfterAnswer,
-    autoCloseAfterSubmit = true,
-    complete,
-    cancel,
-  } = props;
+  const { survey, dismissible, autoProceedAfterAnswer, autoCloseAfterSubmit, complete, cancel } =
+    props;
 
   const {
     popoverRef,
