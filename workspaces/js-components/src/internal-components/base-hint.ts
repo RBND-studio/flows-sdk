@@ -103,7 +103,7 @@ class BaseHint extends LitElement {
     this.observerCleanup?.();
   }
 
-  protected firstUpdated(_changedProperties: PropertyValues): void {
+  firstUpdated(_changedProperties: PropertyValues): void {
     if (!this.targetElement) {
       log.error("Cannot render Hint without target element");
     }
@@ -125,7 +125,7 @@ class BaseHint extends LitElement {
     );
   }
 
-  protected updated(_changedProperties: PropertyValues): void {
+  updated(_changedProperties: PropertyValues): void {
     const reference = this.target;
     const tooltip = this.tooltip;
     if (!tooltip) return;

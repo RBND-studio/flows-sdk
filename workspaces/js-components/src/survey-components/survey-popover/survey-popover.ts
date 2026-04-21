@@ -93,17 +93,25 @@ class SurveyPopover extends LitElement implements SurveyPopoverProps {
 
     this.handleChangeQuestionIndex(this.survey.getCurrentQuestionIndex());
   }
-
   disconnectedCallback(): void {
     super.disconnectedCallback();
 
     clearTimeout(this.autoCloseTimeout);
     clearTimeout(this.autoProceedTimeout);
     clearTimeout(this.closeTimeout);
+    this.popoverElement?.removeEventListener("transitionend", this.handleTransitionEnd.bind(this));
   }
 
-  protected firstUpdated(): void {
+  firstUpdated(): void {
     this.popoverElement?.addEventListener("transitionend", this.handleTransitionEnd.bind(this));
+  }
+  updated(_changedProperties: Map<string, unknown>): void {
+    if (this.currentQuestion?.type === "end-screen" && this.autoCloseAfterSubmit) {
+      clearTimeout(this.autoCloseTimeout);
+      this.autoCloseTimeout = setTimeout(() => {
+        this.handleClose(this.complete);
+      }, SURVEY_POPOVER_AUTO_CLOSE_TIMEOUT);
+    }
   }
 
   get currentQuestion(): SurveyQuestion | undefined {
@@ -117,15 +125,6 @@ class SurveyPopover extends LitElement implements SurveyPopoverProps {
     this._questionIndex = newIndex;
     if (this.currentQuestion) {
       this._questionContextData = questionToContextValue(this.currentQuestion);
-    }
-  }
-
-  updated(_changedProperties: Map<string, unknown>): void {
-    if (this.currentQuestion?.type === "end-screen" && this.autoCloseAfterSubmit) {
-      clearTimeout(this.autoCloseTimeout);
-      this.autoCloseTimeout = setTimeout(() => {
-        this.handleClose(this.complete);
-      }, SURVEY_POPOVER_AUTO_CLOSE_TIMEOUT);
     }
   }
 

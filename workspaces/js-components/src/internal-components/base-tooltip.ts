@@ -81,7 +81,7 @@ class BaseTooltip extends LitElement {
     this.observerCleanup?.();
   }
 
-  protected firstUpdated(_changedProperties: PropertyValues): void {
+  firstUpdated(_changedProperties: PropertyValues): void {
     if (!this.targetElement) {
       log.error("Cannot render Tooltip without target element");
     }
