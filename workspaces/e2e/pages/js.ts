@@ -9,6 +9,7 @@ import {
 import { setupJsComponents } from "@flows/js-components";
 import * as _components from "@flows/js-components/components";
 import * as _tourComponents from "@flows/js-components/tour-components";
+import * as _surveyComponents from "@flows/js-components/survey-components";
 import "@flows/js-components/index.css";
 import type { StateMemory as IStateMemory } from "@flows/js";
 import { startWorkflow } from "@flows/js";
@@ -134,8 +135,11 @@ const tourComponents = {
   Card,
   Action,
 };
+const surveyComponents = {
+  ..._surveyComponents,
+};
 
-setupJsComponents({ components, tourComponents });
+setupJsComponents({ components, tourComponents, surveyComponents });
 
 addFloatingBlocksChangeListener((blocks) => {
   if (!noCurrentBlocks)

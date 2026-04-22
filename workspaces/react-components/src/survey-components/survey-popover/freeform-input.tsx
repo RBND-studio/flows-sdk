@@ -1,9 +1,7 @@
-import type { FreeformQuestion } from "@flows/shared";
+import { SURVEY_POPOVER_DEFAULT_FREEFORM_PLACEHOLDER, type FreeformQuestion } from "@flows/shared";
 import type { FC } from "react";
 import { useQuestionContext } from "./question-context";
 import { Input } from "../../internal-components/input";
-
-const DEFAULT_PLACEHOLDER = "Start typing...";
 
 type Props = {
   question: FreeformQuestion;
@@ -27,7 +25,7 @@ export const FreeformInput: FC<Props> = ({ question, descriptionId, legendId }) 
       aria-describedby={descriptionId}
       defaultValue={value}
       onChange={handleChange}
-      placeholder={question.placeholder || DEFAULT_PLACEHOLDER}
+      placeholder={question.placeholder || SURVEY_POPOVER_DEFAULT_FREEFORM_PLACEHOLDER}
       rows={4}
     />
   );

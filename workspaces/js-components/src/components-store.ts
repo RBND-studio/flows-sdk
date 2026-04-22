@@ -4,10 +4,11 @@ import {
   type getCurrentFloatingBlocks,
   type getCurrentSlotBlocks,
 } from "@flows/js";
-import { type Components, type TourComponents } from "./types";
+import type { Components, SurveyComponents, TourComponents } from "./types";
 
 export const components: Components = {};
 export const tourComponents: TourComponents = {};
+export const surveyComponents: SurveyComponents = {};
 
 export const jsMethods: {
   addFloatingBlocksChangeListener?: typeof addFloatingBlocksChangeListener;

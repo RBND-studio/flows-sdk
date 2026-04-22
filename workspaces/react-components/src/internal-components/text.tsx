@@ -3,7 +3,7 @@ import { type FC } from "react";
 
 interface Props extends React.HTMLAttributes<HTMLParagraphElement> {
   variant: "title" | "body";
-  as?: React.ElementType;
+  as?: "legend" | "p";
 }
 
 export const Text: FC<Props> = ({ className, variant, as: Component = "p", ...props }) => {

@@ -76,7 +76,7 @@ export const SettingsPanel = ({ position, onPositionChange }: Props): TemplateRe
           Make sure to keep your SDK up to date for the best experience.
         </p>
       </div>
-      <p>${packageAndVersion}</p>
+      <p class="flows-debug-version">${packageAndVersion}</p>
     </div>
   `;
 };

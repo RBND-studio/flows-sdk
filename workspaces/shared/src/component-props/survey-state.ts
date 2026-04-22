@@ -44,14 +44,14 @@ export class SurveyState {
   nextQuestion(): number {
     if (this.questionIndex < this.questionsLength - 1) {
       this.questionIndex += 1;
-      this.save();
+      this.save(true);
     }
     return this.questionIndex;
   }
   previousQuestion(): number {
     if (this.questionIndex > 0) {
       this.questionIndex -= 1;
-      this.save();
+      this.save(true);
     }
     return this.questionIndex;
   }
@@ -67,8 +67,11 @@ export class SurveyState {
     sessionStorage.setItem(SurveyState.getSessionStorageKey(this.surveyId), JSON.stringify(data));
   }
   debouncedSaveToSessionStorage = debounce(this.saveToSessionStorage.bind(this), 500);
-  save() {
+  save(immediate = false): void {
     this.debouncedSaveToSessionStorage();
+    if (immediate) {
+      this.debouncedSaveToSessionStorage.flush();
+    }
   }
 
   static instancesBySurveyId: Map<string, SurveyState> = new Map();

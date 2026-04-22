@@ -8,8 +8,9 @@ import { LitElement } from "lit";
 import { state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
 import { getBlockRenderKey, type ActiveBlock } from "@flows/shared";
+import type { SurveyComponents } from "./types";
 import { type Components, type TourComponents } from "./types";
-import { components, jsMethods, tourComponents } from "./components-store";
+import { components, jsMethods, surveyComponents, tourComponents } from "./components-store";
 import { FlowsSlot } from "./slot";
 import { Block } from "./block";
 
@@ -52,6 +53,7 @@ class FlowsFloatingBlocks extends LitElement {
 export interface SetupJsComponentsOptions {
   components: Components;
   tourComponents: TourComponents;
+  surveyComponents: SurveyComponents;
 
   /**
    * Optional method from `@flows/js` useful when its reference cannot be imported directly. e.g. in CDN usage.
@@ -80,10 +82,12 @@ export interface SetupJsComponentsOptions {
  * import { setupJsComponents } from "@flows/js-components";
  * import * as components from "@flows/js-components/components";
  * import * as tourComponents from "@flows/js-components/tour-components";
+ * import * as surveyComponents from "@flows/js-components/survey-components";
  *
  * setupJsComponents({
  *   components: { ...components },
  *   tourComponents: { ...tourComponents },
+ *   surveyComponents: { ...surveyComponents },
  * });
  * ```
  * And add `<flows-floating-blocks>` at the end of the `<body>` tag:
@@ -103,28 +107,31 @@ export const setupJsComponents = (options: SetupJsComponentsOptions): void => {
     jsMethods.addSlotBlocksChangeListener = options.addSlotBlocksChangeListener;
   if (options.getCurrentSlotBlocks) jsMethods.getCurrentSlotBlocks = options.getCurrentSlotBlocks;
 
-  Object.entries(options.components).forEach(([name, Cmp]) => {
-    components[name] = Cmp;
+  const elements = [
+    ...Object.entries(options.components).map(([name, Cmp]) => {
+      components[name] = Cmp;
+      const tagName = `flows-${name.toLowerCase()}`;
+      return [tagName, Cmp] as const;
+    }),
+    ...Object.entries(options.tourComponents).map(([name, Cmp]) => {
+      tourComponents[name] = Cmp;
+      const tagName = `flows-tour-${name.toLowerCase()}`;
+      return [tagName, Cmp] as const;
+    }),
+    ...Object.entries(options.surveyComponents).map(([name, Cmp]) => {
+      surveyComponents[name] = Cmp;
+      const tagName = `flows-survey-${name.toLowerCase()}`;
+      return [tagName, Cmp] as const;
+    }),
+  ];
 
-    // Component may be already defined
+  elements.forEach(([tagName, Cmp]) => {
+    // Element may be already defined
+    if (customElements.get(tagName)) return;
+    // Element with the same class may be already defined
     if (customElements.getName(Cmp)) return;
 
-    const tagName = `flows-${name.toLowerCase()}`;
-    if (!customElements.get(tagName)) {
-      customElements.define(tagName, Cmp);
-    }
-  });
-
-  Object.entries(options.tourComponents).forEach(([name, Cmp]) => {
-    tourComponents[name] = Cmp;
-
-    // Component may be already defined
-    if (customElements.getName(Cmp)) return;
-
-    const tagName = `flows-tour-${name.toLowerCase()}`;
-    if (!customElements.get(tagName)) {
-      customElements.define(tagName, Cmp);
-    }
+    customElements.define(tagName, Cmp);
   });
 
   const floatingBlocksTag = "flows-floating-blocks";

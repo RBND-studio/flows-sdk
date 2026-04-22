@@ -1,0 +1,80 @@
+import {
+  SURVEY_POPOVER_DEFAULT_OTHER_LABEL,
+  type MultipleChoiceQuestion,
+  type SingleChoiceQuestion,
+} from "@flows/shared";
+import { html } from "lit";
+import { Input } from "../../internal-components/input";
+import type { IQuestionContext } from "./question-context";
+
+type Props = {
+  question: SingleChoiceQuestion | MultipleChoiceQuestion;
+  context: IQuestionContext;
+};
+
+export const OtherOption = ({ question, context }: Props) => {
+  const { value, otherSelected, refresh } = context;
+  const type = question.type === "single-choice" ? "radio" : "checkbox";
+
+  const handleClick = (event: MouseEvent) => {
+    const selected = question.type === "multiple-choice" ? !otherSelected : true;
+    question.setOtherSelected(selected);
+    refresh();
+
+    // Focus the input element with a delay because it's not rendered when the button is clicked
+    setTimeout(() => {
+      const target = event.target as HTMLElement;
+      const inputEl = target.parentElement?.querySelector<HTMLInputElement>(
+        ".flows_basicsV2_survey_popover_other_option_input",
+      );
+      inputEl?.focus();
+    }, 10);
+  };
+  const handlePointerDown = (e: PointerEvent) => {
+    // Prevent calling onBlur when clicking the button
+    e.preventDefault();
+  };
+  const handleInputChange = (e: InputEvent) => {
+    const target = e.target as HTMLInputElement;
+    question.setValue(target.value);
+    refresh();
+  };
+  const handleBlur = () => {
+    if (!value) {
+      question.setOtherSelected(false);
+      refresh();
+    }
+  };
+
+  const otherLabel = question.otherLabel || SURVEY_POPOVER_DEFAULT_OTHER_LABEL;
+
+  return html`<div
+    class="flows_basicsV2_survey_popover_choice_option flows_basicsV2_survey_popover_other_option"
+    data-selected=${otherSelected ? "true" : "false"}
+  >
+    <button
+      role=${type}
+      aria-checked=${otherSelected}
+      @click=${handleClick}
+      @pointerdown=${handlePointerDown}
+      type="button"
+      class="flows_basicsV2_survey_popover_other_option_button"
+    >
+      <span
+        class=${type === "radio"
+          ? "flows_basicsV2_survey_popover_radio_indicator"
+          : "flows_basicsV2_survey_popover_checkbox_indicator"}
+      ></span>
+    </button>
+    ${otherSelected
+      ? Input({
+          type: "text",
+          className: "flows_basicsV2_survey_popover_other_option_input",
+          defaultValue: value,
+          onInput: handleInputChange,
+          onBlur: handleBlur,
+          placeholder: otherLabel,
+        })
+      : otherLabel}
+  </div>`;
+};

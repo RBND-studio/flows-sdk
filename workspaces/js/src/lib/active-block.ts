@@ -6,10 +6,55 @@ import {
   createActiveBlockProxy,
   createTourComponentProps,
   type UserProperties,
+  createSurveyComponentProps,
 } from "@flows/shared";
+import type { RunningTour } from "../store";
 import { removeBlock, updateBlock } from "../store";
 import { nextTourStep, previousTourStep, cancelTour } from "./tour";
-import { sendActivate, sendEvent } from "./api";
+import { postSurvey, sendActivate, sendEvent } from "./api";
+
+const setStateMemory: SetStateMemory = async ({ blockId, key, value }) => {
+  updateBlock(blockId, (b) => ({
+    ...b,
+    propertyMeta: b.propertyMeta?.map((sp) => {
+      if (sp.type === "state-memory" && sp.key === key) return { ...sp, value };
+      return sp;
+    }),
+  }));
+
+  await sendEvent({
+    name: "set-state-memory",
+    blockId,
+    propertyKey: key,
+    properties: { value },
+  });
+};
+
+type TourItem = RunningTour & { block: Block };
+export const isBlock = (item: Block | TourItem): item is Block => "type" in item;
+export const itemToActiveBlock = (
+  item: Block | TourItem,
+  userProperties: UserProperties,
+): ActiveBlock | [] => {
+  if (isBlock(item) && item.type === "component")
+    return blockToActiveBlock({
+      block: item,
+      userProperties,
+    });
+  if (isBlock(item) && item.type === "survey")
+    return surveyBlockToActiveBlock({
+      block: item,
+      userProperties,
+    });
+  if (!isBlock(item))
+    return tourToActiveBlock({
+      block: item.block,
+      currentIndex: item.currentBlockIndex,
+      userProperties,
+    });
+
+  return [];
+};
 
 export const blockToActiveBlock = ({
   block,
@@ -19,23 +64,6 @@ export const blockToActiveBlock = ({
   userProperties: UserProperties;
 }): ActiveBlock | [] => {
   if (!block.componentType) return [];
-
-  const setStateMemory: SetStateMemory = async ({ blockId, key, value }) => {
-    updateBlock(blockId, (b) => ({
-      ...b,
-      propertyMeta: b.propertyMeta?.map((sp) => {
-        if (sp.type === "state-memory" && sp.key === key) return { ...sp, value };
-        return sp;
-      }),
-    }));
-
-    await sendEvent({
-      name: "set-state-memory",
-      blockId,
-      propertyKey: key,
-      properties: { value },
-    });
-  };
 
   const props = createComponentProps({
     block,
@@ -90,6 +118,37 @@ export const tourToActiveBlock = ({
     tourBlockId: block.id,
     type: "tour-component",
     component: activeStep.componentType,
+    props,
+  };
+
+  return createActiveBlockProxy(activeBlock, sendActivate);
+};
+
+export const surveyBlockToActiveBlock = ({
+  block,
+  userProperties,
+}: {
+  block: Block;
+  userProperties: UserProperties;
+}): ActiveBlock | [] => {
+  if (block.type !== "survey") return [];
+  if (!block.componentType) return [];
+
+  const props = createSurveyComponentProps({
+    block,
+    userProperties,
+    setStateMemory,
+    removeBlock,
+    exitNodeCb: ({ key, blockId }) => sendEvent({ name: "transition", blockId, propertyKey: key }),
+    submitSurvey: postSurvey,
+  });
+
+  if (!props) return [];
+
+  const activeBlock: ActiveBlock = {
+    id: block.id,
+    type: "survey",
+    component: block.componentType,
     props,
   };
 

@@ -1,4 +1,4 @@
-import type { WorkflowsResponse } from "@flows/shared";
+import type { ApiSurveyAnswer, WorkflowsResponse } from "@flows/shared";
 import { type EventRequest, getApi, log } from "@flows/shared";
 import { config } from "../store";
 import { packageAndVersion } from "./constants";
@@ -17,6 +17,21 @@ export const sendEvent = async (props: SendEventProps): Promise<void> => {
     environment,
     organizationId,
     userId,
+  });
+};
+
+export const postSurvey = async (
+  props: Omit<ApiSurveyAnswer, "userId" | "environment" | "organizationId" | "url">,
+) => {
+  const configuration = config.value;
+  if (!configuration) return;
+  const { apiUrl, environment, organizationId, userId } = configuration;
+  await getApi(apiUrl, packageAndVersion).postSurvey({
+    ...props,
+    environment,
+    organizationId,
+    userId,
+    url: window.location.href,
   });
 };
 

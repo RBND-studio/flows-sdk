@@ -6,6 +6,7 @@ export * from "./language";
 export * from "./log";
 export * from "./matchers";
 export * from "./pathname";
+export * from "./survey";
 export * from "./tour-trigger";
 export * from "./types";
 export * from "./websocket-message";

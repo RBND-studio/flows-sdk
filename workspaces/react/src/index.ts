@@ -3,15 +3,18 @@ export type {
   ActiveBlock,
   BlockState,
   FlowsProperties,
-  LanguageOption,
-  LinkComponentProps,
-  LinkComponentType,
-  Locale,
   StateMemory,
+  // Localization
+  Locale,
+  LanguageOption,
+  // Workflow
   Workflow,
   WorkflowStatus,
   WorkflowFrequency,
   WorkflowUserState,
+  // Link
+  LinkComponentProps,
+  LinkComponentType,
   // Components
   ComponentProps,
   TourComponentProps,

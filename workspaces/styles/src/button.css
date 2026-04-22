@@ -20,6 +20,10 @@
   border: none;
 }
 
+.flows_basicsV2_button:hover {
+  text-decoration: none;
+}
+
 .flows_basicsV2_button_primary {
   background-color: var(--flows-basicsV2-bg-primary);
   border: var(--flows-basicsV2-border-primary);

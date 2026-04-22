@@ -1,7 +1,7 @@
-import { useMemo, type FC } from "react";
+import { type FC } from "react";
 import { Button } from "../../internal-components/button";
 import { useQuestionContext } from "./question-context";
-import type { SurveyQuestion } from "@flows/shared";
+import { isSurveyQuestionAnswered, type SurveyQuestion } from "@flows/shared";
 
 type Props = {
   question: SurveyQuestion;
@@ -12,20 +12,14 @@ type Props = {
 export const SurveyNextButton: FC<Props> = ({ onClick, label, question }) => {
   const { value, optionIds, otherSelected } = useQuestionContext();
 
-  const disabled = useMemo(() => {
-    if (question.optional) return false;
-
-    if (question.type === "freeform") {
-      return !value?.trim();
-    }
-    if (question.type === "rating") {
-      return !value?.trim();
-    }
-    if (question.type === "single-choice" || question.type === "multiple-choice") {
-      const otherOptionFilled = otherSelected && value?.trim();
-      return !optionIds.length && !otherOptionFilled;
-    }
-  }, [question.type, value, optionIds, otherSelected, question.optional]);
+  const disabled = question.optional
+    ? false
+    : !isSurveyQuestionAnswered({
+        question,
+        value,
+        otherSelected,
+        optionIdsLength: optionIds.length,
+      });
 
   return (
     <div className="flows_basicsV2_survey_popover_footer">

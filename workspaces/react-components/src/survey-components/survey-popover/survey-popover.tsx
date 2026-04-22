@@ -1,6 +1,9 @@
-import type {
-  SurveyComponentProps,
-  SurveyPopoverProps as LibrarySurveyPopoverProps,
+import {
+  type SurveyComponentProps,
+  type SurveyPopoverProps as LibrarySurveyPopoverProps,
+  SURVEY_POPOVER_DEFAULT_POSITION,
+  SURVEY_POPOVER_DEFAULT_NEXT_BUTTON_LABEL,
+  SURVEY_POPOVER_DEFAULT_SUBMIT_BUTTON_LABEL,
 } from "@flows/shared";
 import clsx from "clsx";
 import DOMPurify from "dompurify";
@@ -20,19 +23,9 @@ import { useSurveyPopover } from "./use-survey-popover";
 
 export type SurveyPopoverProps = SurveyComponentProps<LibrarySurveyPopoverProps>;
 
-const DEFAULT_POSITION: SurveyPopoverProps["position"] = "bottom-right";
-const DEFAULT_NEXT_BUTTON_LABEL = "Next";
-const DEFAULT_SUBMIT_BUTTON_LABEL = "Submit";
-
 const SurveyPopover: FC<SurveyPopoverProps> = (props) => {
-  const {
-    survey,
-    dismissible,
-    autoProceedAfterAnswer,
-    autoCloseAfterSubmit = true,
-    complete,
-    cancel,
-  } = props;
+  const { survey, dismissible, autoProceedAfterAnswer, autoCloseAfterSubmit, complete, cancel } =
+    props;
 
   const {
     popoverRef,
@@ -49,9 +42,9 @@ const SurveyPopover: FC<SurveyPopoverProps> = (props) => {
   const currentQuestion = survey.questions.at(questionIndex);
   if (!currentQuestion) return null;
 
-  const position = props.position || DEFAULT_POSITION;
-  const nextButtonLabel = props.nextButtonLabel || DEFAULT_NEXT_BUTTON_LABEL;
-  const submitButtonLabel = props.submitButtonLabel || DEFAULT_SUBMIT_BUTTON_LABEL;
+  const position = props.position || SURVEY_POPOVER_DEFAULT_POSITION;
+  const nextButtonLabel = props.nextButtonLabel || SURVEY_POPOVER_DEFAULT_NEXT_BUTTON_LABEL;
+  const submitButtonLabel = props.submitButtonLabel || SURVEY_POPOVER_DEFAULT_SUBMIT_BUTTON_LABEL;
 
   const legendId = `${currentQuestion.id}-legend`;
   const descriptionId = `${currentQuestion.id}-description`;
@@ -79,11 +72,7 @@ const SurveyPopover: FC<SurveyPopoverProps> = (props) => {
       data-closing={isClosing || undefined}
       onTransitionEnd={handleHeightTransitionEnd}
     >
-      <div
-        key={questionIndex}
-        className="flows_basicsV2_survey_popover_content"
-        data-exiting={isExiting || undefined}
-      >
+      <div className="flows_basicsV2_survey_popover_content" data-exiting={isExiting || undefined}>
         <fieldset className="flows_basicsV2_survey_popover_fieldset">
           <Text
             as="legend"
@@ -114,7 +103,11 @@ const SurveyPopover: FC<SurveyPopoverProps> = (props) => {
             }}
           />
 
-          <QuestionProvider question={currentQuestion}>
+          <QuestionProvider
+            question={currentQuestion}
+            // Key to reset the context state value when switching to a different question
+            key={currentQuestion.id}
+          >
             {currentQuestion.type === "freeform" && (
               <FreeformInput
                 question={currentQuestion}
@@ -147,7 +140,7 @@ const SurveyPopover: FC<SurveyPopoverProps> = (props) => {
             )}
             {currentQuestion.type === "link" && (
               <Button
-                href={currentQuestion.url ? currentQuestion.url : undefined}
+                href={currentQuestion.url || undefined}
                 variant="primary"
                 target={currentQuestion.openInNew ? "_blank" : undefined}
                 className="flows_basicsV2_survey_popover_link_button"

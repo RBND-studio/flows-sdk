@@ -43,32 +43,32 @@ const getBlock = ({
   survey: { id: randomUUID(), blockStateId: randomUUID(), questions },
 });
 
-const waitForSurveySubmit = ({
-  page,
-  block,
-  questions,
-  urlMatcher = (url) => url === "http://localhost:3000/react.html",
-}: {
-  page: Page;
-  block: Block;
-  questions: ApiSurveyQuestionAnswer[];
-  urlMatcher?: (url: string) => boolean;
-}) =>
-  page.waitForRequest((req) => {
-    const body = req.postDataJSON();
-    return (
-      req.url() === "https://api.flows-cloud.com/v2/sdk/survey" &&
-      body.userId === "testUserId" &&
-      body.environment === "prod" &&
-      body.organizationId === "orgId" &&
-      body.surveyId === block.survey?.id &&
-      body.blockStateId === block.survey?.blockStateId &&
-      urlMatcher(body.url) &&
-      isDeepStrictEqual(body.questions, questions)
-    );
-  });
-
 const run = (packageName: string) => {
+  const waitForSurveySubmit = ({
+    page,
+    block,
+    questions,
+    urlMatcher = (url) => url === `http://localhost:3000/${packageName}.html`,
+  }: {
+    page: Page;
+    block: Block;
+    questions: ApiSurveyQuestionAnswer[];
+    urlMatcher?: (url: string) => boolean;
+  }) =>
+    page.waitForRequest((req) => {
+      const body = req.postDataJSON();
+      return (
+        req.url() === "https://api.flows-cloud.com/v2/sdk/survey" &&
+        body.userId === "testUserId" &&
+        body.environment === "prod" &&
+        body.organizationId === "orgId" &&
+        body.surveyId === block.survey?.id &&
+        body.blockStateId === block.survey?.blockStateId &&
+        urlMatcher(body.url) &&
+        isDeepStrictEqual(body.questions, questions)
+      );
+    });
+
   test(`${packageName} - question header and survey options`, async ({ page }) => {
     await mockBlocksEndpoint(page, [
       getBlock({
@@ -408,11 +408,13 @@ const run = (packageName: string) => {
         page,
         block,
         questions: [{ questionId: "question-1", clickedLink: true }],
-        urlMatcher: (url) => url.startsWith("http://localhost:3000/react.html?LinkComponent=true"),
+        urlMatcher: (url) => url === `http://localhost:3000/${packageName}.html?LinkComponent=true`,
       });
       await page.getByRole("link", { name: "Go to another page" }).click();
       await submitReq;
-      await expect(page).toHaveURL(`/${packageName}.html?LinkComponent=true#/another-page`);
+      if (packageName === "react")
+        await expect(page).toHaveURL(`/${packageName}.html?LinkComponent=true#/another-page`);
+      if (packageName === "js") await expect(page).toHaveURL(`/another-page`);
     });
     test(`${packageName} - shouldn't send unanswered optional link`, async ({ page }) => {
       const block = getBlock({
@@ -478,7 +480,8 @@ const run = (packageName: string) => {
         page,
         block,
         questions: [{ questionId: "question-1", textResponse: "Answer" }],
-        urlMatcher: (url) => url.startsWith("http://localhost:3000/react.html?LinkComponent=true"),
+        urlMatcher: (url) =>
+          url.startsWith(`http://localhost:3000/${packageName}.html?LinkComponent=true`),
       });
       await page.locator(".flows_basicsV2_survey_popover_submit").click();
       await submitReq;
@@ -486,7 +489,9 @@ const run = (packageName: string) => {
       await expect(page.getByText("Thanks for your feedback", { exact: true })).toBeVisible();
       await expect(page.locator(".flows_basicsV2_survey_popover_close")).toHaveCount(0);
       await page.getByRole("link", { name: "Back to app" }).click();
-      await expect(page).toHaveURL(`/${packageName}.html?LinkComponent=true#/another-page`);
+      if (packageName === "react")
+        await expect(page).toHaveURL(`/${packageName}.html?LinkComponent=true#/another-page`);
+      if (packageName === "js") await expect(page).toHaveURL(`/another-page`);
     });
   });
 
@@ -523,6 +528,4 @@ const run = (packageName: string) => {
 };
 
 run("react");
-// TODO: uncomment once survey is implemented for JS
-// and also in tour-trigger.spec.ts
-// run("js");
+run("js");

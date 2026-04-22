@@ -40,6 +40,7 @@
     "@floating-ui/dom": "^1.7.5",
     "clsx": "^2.1.1",
     "dompurify": "^3.4.0",
+    "es-toolkit": "^1.45.1",
     "lit": "^3.3.2"
   },
   "devDependencies": {
@@ -71,6 +72,11 @@
       "types": "./dist/tour-components.d.ts",
       "import": "./dist/tour-components.mjs",
       "require": "./dist/tour-components.js"
+    },
+    "./survey-components": {
+      "types": "./dist/survey-components.d.ts",
+      "import": "./dist/survey-components.mjs",
+      "require": "./dist/survey-components.js"
     },
     "./index.css": {
       "import": "./dist/index.css",

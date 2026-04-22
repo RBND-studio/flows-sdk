@@ -1,4 +1,9 @@
-import { type Block, logSlottableBlocksError, type BlockUpdatesMessage } from "@flows/shared";
+import {
+  type Block,
+  logSlottableBlocksError,
+  type BlockUpdatesMessage,
+  getSessionStorageRunningSurveys,
+} from "@flows/shared";
 import { computed, effect, signal } from "@preact/signals-core";
 import { type FlowsOptions } from "./types/configuration";
 
@@ -37,3 +42,5 @@ export interface RunningTour {
 }
 export const tourBlocks = computed(() => blocks.value.filter((b) => b.type === "tour"));
 export const runningTours = signal<RunningTour[]>([]);
+
+export const runningSurveyIds = signal<string[]>(getSessionStorageRunningSurveys());
