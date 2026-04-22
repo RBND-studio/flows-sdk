@@ -113,8 +113,16 @@ export interface EventRequest {
   properties?: Record<string, unknown>;
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- ignore
-export const getApi = (apiUrl: string, version: string) => ({
+export interface Api {
+  getBlocks: (body: GetBlocksRequest) => Promise<BlocksResponse>;
+  getWorkflows: (body: WorkflowsRequest) => Promise<WorkflowsResponse>;
+  sendEvent: (body: EventRequest) => Promise<void>;
+  postSurvey: (body: ApiSurveyAnswer) => Promise<void>;
+}
+
+export type ApiFactory = (apiUrl: string, version: string) => Api;
+
+export const getApi: ApiFactory = (apiUrl, version) => ({
   getBlocks: (body: GetBlocksRequest) =>
     f<BlocksResponse>(`${apiUrl}/v2/sdk/blocks`, { method: "POST", body, version }),
   getWorkflows: (body: WorkflowsRequest) =>

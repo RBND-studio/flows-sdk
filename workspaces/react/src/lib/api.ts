@@ -6,9 +6,11 @@ import type { ApiSurveyAnswer } from "@flows/shared";
 type SendEventProps = Omit<EventRequest, "userId" | "environment" | "organizationId">;
 
 export const sendEvent = async (props: SendEventProps): Promise<void> => {
-  const { apiUrl, environment, organizationId, userId } = globalConfig;
+  const { apiUrl, environment, organizationId, userId, apiFactory } = globalConfig;
   if (!apiUrl || !environment || !organizationId || !userId) return;
-  await getApi(apiUrl, packageAndVersion).sendEvent({
+  const api = apiFactory ? apiFactory(apiUrl, packageAndVersion) : getApi(apiUrl, packageAndVersion);
+
+  await api.sendEvent({
     ...props,
     environment,
     organizationId,
@@ -19,9 +21,10 @@ export const sendEvent = async (props: SendEventProps): Promise<void> => {
 export const postSurvey = async (
   props: Omit<ApiSurveyAnswer, "userId" | "environment" | "organizationId" | "url">,
 ) => {
-  const { apiUrl, environment, organizationId, userId } = globalConfig;
+  const { apiUrl, environment, organizationId, userId, apiFactory } = globalConfig;
   if (!apiUrl || !environment || !organizationId || !userId) return;
-  await getApi(apiUrl, packageAndVersion).postSurvey({
+  const api = apiFactory ? apiFactory(apiUrl, packageAndVersion) : getApi(apiUrl, packageAndVersion);
+  await api.postSurvey({
     ...props,
     environment,
     organizationId,
@@ -43,11 +46,12 @@ export const sendActivate = async (blockId: string): Promise<void> => {
  * @returns A promise resolving to a {@link WorkflowsResponse} object containing an array of enabled workflows.
  */
 export const fetchWorkflows = async (): Promise<WorkflowsResponse> => {
-  const { apiUrl, environment, organizationId, userId } = globalConfig;
+  const { apiUrl, environment, organizationId, userId, apiFactory } = globalConfig;
   if (!apiUrl || !environment || !organizationId || !userId) {
     log.error("fetchWorkflows() called before rendering <FlowsProvider>");
     return { workflows: [] };
   }
 
-  return getApi(apiUrl, packageAndVersion).getWorkflows({ environment, organizationId, userId });
+  const api = apiFactory ? apiFactory(apiUrl, packageAndVersion) : getApi(apiUrl, packageAndVersion);
+  return api.getWorkflows({ environment, organizationId, userId });
 };

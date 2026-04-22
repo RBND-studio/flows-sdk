@@ -6,6 +6,7 @@ import {
   log,
   parseWebsocketMessage,
   type UserProperties,
+  type ApiFactory,
 } from "@flows/shared";
 import { blocks, blocksError, blocksState, pendingMessages } from "../store";
 import { type Disconnect, websocket } from "./websocket";
@@ -13,6 +14,7 @@ import { packageAndVersion } from "./constants";
 
 interface Props {
   apiUrl: string;
+  apiFactory?: ApiFactory;
   environment: string;
   organizationId: string;
   userId: string;
@@ -23,7 +25,9 @@ interface Props {
 let disconnect: Disconnect | null = null;
 
 export const connectToWebsocketAndFetchBlocks = (props: Props): void => {
-  const { environment, organizationId, userId, apiUrl } = props;
+  const { environment, organizationId, userId, apiUrl, apiFactory } = props;
+  const api = apiFactory ? apiFactory(apiUrl, packageAndVersion) : getApi(apiUrl, packageAndVersion);
+
   const params = { environment, organizationId, userId };
   const wsUrl = (() => {
     const wsBase = apiUrl.replace("https://", "wss://").replace("http://", "ws://");
@@ -32,7 +36,7 @@ export const connectToWebsocketAndFetchBlocks = (props: Props): void => {
 
   const fetchBlocks = (): void => {
     blocksError.value = false;
-    void getApi(apiUrl, packageAndVersion)
+    void api
       .getBlocks({
         ...params,
         language: getUserLanguage(props.language),

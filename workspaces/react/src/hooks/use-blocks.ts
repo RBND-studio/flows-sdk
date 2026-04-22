@@ -10,6 +10,7 @@ import {
   logSlottableBlocksError,
   parseWebsocketMessage,
   type BlockUpdatesMessage,
+  type ApiFactory,
 } from "@flows/shared";
 import { packageAndVersion } from "../lib/constants";
 import { type RemoveBlock, type UpdateBlock } from "../flows-context";
@@ -17,6 +18,7 @@ import { useWebsocket } from "./use-websocket";
 
 interface Props {
   apiUrl: string;
+  apiFactory?: ApiFactory;
   environment: string;
   organizationId: string;
   userId: string;
@@ -35,6 +37,7 @@ interface Return {
 
 export const useBlocks = ({
   apiUrl,
+  apiFactory = getApi,
   environment,
   organizationId,
   userId,
@@ -59,7 +62,7 @@ export const useBlocks = ({
 
   const fetchBlocks = useCallback(() => {
     setError(false);
-    void getApi(apiUrl, packageAndVersion)
+    void apiFactory(apiUrl, packageAndVersion)
       .getBlocks({
         ...params,
         language: getUserLanguage(language),
@@ -84,7 +87,7 @@ export const useBlocks = ({
         setError(true);
         log.error("Failed to load blocks", err);
       });
-  }, [apiUrl, language, params]);
+  }, [apiFactory, apiUrl, language, params]);
 
   const websocketUrl = useMemo(() => {
     if (usageLimited) return;

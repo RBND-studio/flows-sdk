@@ -1,3 +1,4 @@
+import type { ApiFactory} from "@flows/shared";
 import { type LanguageOption, type UserProperties } from "@flows/shared";
 
 export interface FlowsOptions {
@@ -21,6 +22,10 @@ export interface FlowsOptions {
    * Custom API URL useful when using proxy to send Flows requests through your own domain.
    */
   apiUrl?: string;
+  /**
+   * Custom API factory function. By default, the SDK uses the `getApi` function exported from `@flows/shared/src/api`, but you can provide your own implementation if you need to customize how API requests are made (e.g., to add custom headers, use a different HTTP client, etc.). If you provide this option, it will be used instead of the default `getApi` function to create the API instance that the SDK uses for all its requests.
+   */
+  apiFactory?: ApiFactory;
   /**
    * Language used to enable [localization](https://flows.sh/docs/localization). Based on the set language, the correct translation for the block data will be selected.
    * - `disabled` (default) - The user will be served content in the default language group of your organization.
