@@ -60,9 +60,11 @@ export const useBlocks = ({
     userPropertiesRef.current = userProperties;
   }, [userProperties]);
 
+  const api = useMemo(() => apiFactory(apiUrl, packageAndVersion), [apiFactory, apiUrl]);
+
   const fetchBlocks = useCallback(() => {
     setError(false);
-    void apiFactory(apiUrl, packageAndVersion)
+    void api
       .getBlocks({
         ...params,
         language: getUserLanguage(language),
@@ -87,18 +89,9 @@ export const useBlocks = ({
         setError(true);
         log.error("Failed to load blocks", err);
       });
-  }, [apiFactory, apiUrl, language, params]);
+  }, [api, language, params]);
 
-  const websocketUrl = useMemo(() => {
-    if (usageLimited) return;
-    const baseUrl = apiUrl.replace("https://", "wss://").replace("http://", "ws://");
-    return `${baseUrl}/ws/sdk/block-updates?${new URLSearchParams(params).toString()}`;
-  }, [apiUrl, params, usageLimited]);
-
-  const onMessage = useCallback((event: MessageEvent<unknown>) => {
-    const data = parseWebsocketMessage(event);
-    if (!data) return;
-
+  const handleBlockUpdate = useCallback((data: BlockUpdatesMessage) => {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- there will be more message types in the future
     if (data.type === "block-updates") {
       setBlocksState((prev) => {
@@ -110,6 +103,25 @@ export const useBlocks = ({
       });
     }
   }, []);
+
+  const onMessage = useCallback((event: MessageEvent<unknown>) => {
+    const data = parseWebsocketMessage(event);
+    if (!data) return;
+    handleBlockUpdate(data);
+  }, [handleBlockUpdate]);
+
+  useEffect(() => {
+    if (!api.listenToBlockUpdates) return;
+    fetchBlocks();
+    return api.listenToBlockUpdates(params, handleBlockUpdate);
+  }, [api, fetchBlocks, handleBlockUpdate, params]);
+
+  const websocketUrl = useMemo(() => {
+    if (usageLimited || api.listenToBlockUpdates) return;
+    const baseUrl = apiUrl.replace("https://", "wss://").replace("http://", "ws://");
+    return `${baseUrl}/ws/sdk/block-updates?${new URLSearchParams(params).toString()}`;
+  }, [api, apiUrl, params, usageLimited]);
+
   const { error: wsError } = useWebsocket({ url: websocketUrl, onMessage, onOpen: fetchBlocks });
 
   // Log error about slottable blocks without slotId

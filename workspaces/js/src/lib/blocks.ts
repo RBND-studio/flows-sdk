@@ -7,6 +7,7 @@ import {
   parseWebsocketMessage,
   type UserProperties,
   type ApiFactory,
+  type BlockUpdatesMessage,
 } from "@flows/shared";
 import { blocks, blocksError, blocksState, pendingMessages } from "../store";
 import { type Disconnect, websocket } from "./websocket";
@@ -58,10 +59,8 @@ export const connectToWebsocketAndFetchBlocks = (props: Props): void => {
         log.error("Failed to load blocks", err);
       });
   };
-  const onMessage = (event: MessageEvent<unknown>): void => {
-    const data = parseWebsocketMessage(event);
-    if (!data) return;
 
+  const handleBlockUpdate = (data: BlockUpdatesMessage): void => {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- there will be more message types in the future
     if (data.type === "block-updates") {
       if (!blocksState.value) pendingMessages.value = [...pendingMessages.value, data];
@@ -69,8 +68,20 @@ export const connectToWebsocketAndFetchBlocks = (props: Props): void => {
     }
   };
 
+  const onMessage = (event: MessageEvent<unknown>): void => {
+    const data = parseWebsocketMessage(event);
+    if (!data) return;
+    handleBlockUpdate(data);
+  };
+
   // Disconnect previous connection if it exists
   disconnect?.();
+
+  if (api.listenToBlockUpdates) {
+    fetchBlocks();
+    disconnect = api.listenToBlockUpdates(params, handleBlockUpdate);
+    return;
+  }
 
   const websocketResult = websocket({ url: wsUrl, onMessage, onOpen: fetchBlocks });
   disconnect = websocketResult.disconnect;

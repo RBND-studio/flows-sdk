@@ -1,5 +1,6 @@
 import { type Block } from "./types";
 import type { ApiSurveyAnswer } from "./types/api-survey";
+import { type BlockUpdatesMessage } from "./websocket-message";
 
 const f = <T>(
   url: string,
@@ -118,6 +119,13 @@ export interface Api {
   getWorkflows: (body: WorkflowsRequest) => Promise<WorkflowsResponse>;
   sendEvent: (body: EventRequest) => Promise<void>;
   postSurvey: (body: ApiSurveyAnswer) => Promise<void>;
+  /**
+   * Optional alternative to the built-in WebSocket connection for receiving block updates. When provided, the SDK will call this function instead of opening a WebSocket. Returns a cleanup function that stops listening.
+   */
+  listenToBlockUpdates?: (
+    params: { environment: string; organizationId: string; userId: string },
+    onMessage: (message: BlockUpdatesMessage) => void,
+  ) => () => void;
 }
 
 export type ApiFactory = (apiUrl: string, version: string) => Api;
