@@ -15,6 +15,9 @@ export type {
   // Link
   LinkComponentProps,
   LinkComponentType,
+  // API
+  Api,
+  ApiFactory,
   // Components
   ComponentProps,
   TourComponentProps,
