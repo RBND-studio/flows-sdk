@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@flows/js": "^1.21.0",
-    "@flows/js-components": "^2.7.0",
+    "@flows/js-components": "^2.7.1",
     "@unhead/vue": "^2.0.19",
     "nuxt": "^4.2.1",
     "vue": "^3.5.24",

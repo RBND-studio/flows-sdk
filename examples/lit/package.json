@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@flows/js": "^1.21.0",
-    "@flows/js-components": "^2.7.0",
+    "@flows/js-components": "^2.7.1",
     "lit": "^3.3.2"
   },
   "devDependencies": {
