@@ -32,8 +32,8 @@
     "@angular/platform-server": "^20.3.0",
     "@angular/router": "^20.3.0",
     "@angular/ssr": "^20.3.10",
-    "@flows/js": "^1.18.2",
-    "@flows/js-components": "^2.2.1",
+    "@flows/js": "^1.21.0",
+    "@flows/js-components": "^2.7.0",
     "express": "^5.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"

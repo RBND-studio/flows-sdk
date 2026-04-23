@@ -8,6 +8,7 @@ import { init } from "@flows/js";
 import { setupJsComponents } from "@flows/js-components";
 import * as components from "@flows/js-components/components";
 import * as tourComponents from "@flows/js-components/tour-components";
+import * as surveyComponents from "@flows/js-components/survey-components";
 
 import "@flows/js-components/index.css";
 
@@ -50,6 +51,9 @@ export class MyElement extends LitElement {
       tourComponents: {
         ...tourComponents,
         Banner: TourBanner,
+      },
+      surveyComponents: {
+        ...surveyComponents
       },
     });
   }

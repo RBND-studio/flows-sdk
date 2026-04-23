@@ -37,7 +37,7 @@
 		"vite": "^7.3.2"
 	},
 	"dependencies": {
-		"@flows/js": "^1.18.2",
-		"@flows/js-components": "^2.2.1"
+		"@flows/js": "^1.21.0",
+		"@flows/js-components": "^2.7.0"
 	}
 }
