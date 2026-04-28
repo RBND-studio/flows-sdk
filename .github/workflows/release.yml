@@ -52,4 +52,7 @@ jobs:
       - run: git config user.name "flows-bot[bot]"
       - run: git config user.email "170794745+flows-bot[bot]@users.noreply.github.com"
       - run: pnpm install
-      - run: node scripts/release.js --release=${{ github.event.inputs.type }} --package=${{ github.event.inputs.package }}
+      - env:
+          RELEASE_TYPE: ${{ github.event.inputs.type }}
+          PACKAGE_NAME: ${{ github.event.inputs.package }}
+        run: node scripts/release.js --release=$RELEASE_TYPE --package=$PACKAGE_NAME
