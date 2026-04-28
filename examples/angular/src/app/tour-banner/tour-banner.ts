@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { FlowsProperties, TourComponentProps } from '@flows/js';
 
@@ -8,7 +9,7 @@ type Props = TourComponentProps<{
 
 @Component({
   selector: 'app-tour-banner',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './tour-banner.html',
   styleUrl: './tour-banner.css',
 })

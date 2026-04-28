@@ -11,6 +11,7 @@ const {
 const { setupJsComponents } = flows_js_components;
 const components = flows_js_components_components;
 const tourComponents = flows_js_components_tour_components;
+const surveyComponents = flows_js_components_survey_components;
 
 import { Banner } from "./banner.js";
 import { TourBanner } from "./tour-banner.js";
@@ -31,6 +32,9 @@ setupJsComponents({
     ...tourComponents,
     // Example of custom "Banner" component for tours
     Banner: TourBanner,
+  },
+  surveyComponents: {
+    ...surveyComponents
   },
 
   // We need to pass @flows/js methods to fix non working cross package imports in CDN setup

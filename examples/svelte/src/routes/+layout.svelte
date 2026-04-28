@@ -6,6 +6,7 @@
 	import { setupJsComponents } from '@flows/js-components';
 	import * as components from '@flows/js-components/components';
 	import * as tourComponents from '@flows/js-components/tour-components';
+	import * as surveyComponents from "@flows/js-components/survey-components";
 	import '@flows/js-components/index.css';
 
 	import Banner from './banner.svelte';
@@ -17,7 +18,7 @@
 		init({
 			organizationId: 'YOUR_ORGANIZATION_ID',
 			userId: 'YOUR_USER_ID',
-			environment: 'production'
+			environment: 'production',
 		});
 		setupJsComponents({
 			components: {
@@ -27,6 +28,9 @@
 			tourComponents: {
 				...tourComponents,
 				Banner: TourBanner.element!
+			},
+			surveyComponents: {
+				...surveyComponents
 			}
 		});
 	});
