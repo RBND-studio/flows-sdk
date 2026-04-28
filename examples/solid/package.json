@@ -8,8 +8,8 @@
     "version": "vinxi version"
   },
   "dependencies": {
-    "@flows/js": "^1.19.2",
-    "@flows/js-components": "^2.2.3",
+    "@flows/js": "^1.21.0",
+    "@flows/js-components": "^2.7.1",
     "@solidjs/meta": "^0.29.4",
     "@solidjs/router": "^0.15.4",
     "@solidjs/start": "^1.2.1",

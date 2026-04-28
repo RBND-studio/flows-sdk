@@ -6,6 +6,7 @@ import { setupJsComponents } from "@flows/js-components";
 
 import * as components from "@flows/js-components/components";
 import * as tourComponents from "@flows/js-components/tour-components";
+import * as surveyComponents from "@flows/js-components/survey-components";
 
 // Don't forget to import the CSS styles for Flows components
 import "@flows/js-components/index.css";
@@ -56,6 +57,9 @@ export const Flows = () => {
         ...tourComponents,
         // Example of custom "Banner" component for tours
         Banner: TourBanner,
+      },
+      surveyComponents: {
+        ...surveyComponents
       },
     });
   });
