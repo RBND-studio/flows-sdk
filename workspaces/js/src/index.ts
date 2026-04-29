@@ -4,6 +4,7 @@ export type {
   BlockState,
   FlowsProperties,
   StateMemory,
+  CustomFetch,
   // Localization
   Locale,
   LanguageOption,

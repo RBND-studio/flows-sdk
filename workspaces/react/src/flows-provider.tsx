@@ -1,4 +1,4 @@
-import { type LanguageOption, type LinkComponentType, type UserProperties } from "@flows/shared";
+import type { CustomFetch, LanguageOption, LinkComponentType, UserProperties } from "@flows/shared";
 import { useEffect, type FC, type ReactNode } from "react";
 import { Debug } from "./components/debug";
 import { FloatingBlocks } from "./components/floating-blocks";
@@ -34,6 +34,10 @@ export interface FlowsProviderProps {
    * Custom API URL useful when using proxy to send Flows requests through your own domain.
    */
   apiUrl?: string;
+  /**
+   * Custom fetch implementation useful when you need to customize api requests with custom headers, credentials, etc.
+   */
+  customFetch?: CustomFetch;
   /**
    * Components used for workflow blocks.
    */
@@ -137,6 +141,7 @@ const isProps = (props: FlowsProviderProps): props is Props => {
 const FlowsProviderInner: FC<Props> = ({
   children,
   apiUrl = "https://api.flows-cloud.com",
+  customFetch,
   environment,
   organizationId,
   userId,
@@ -153,6 +158,7 @@ const FlowsProviderInner: FC<Props> = ({
   globalConfig.environment = environment;
   globalConfig.organizationId = organizationId;
   globalConfig.userId = userId;
+  globalConfig.customFetch = customFetch;
 
   const { blocksState, blocks, error, wsError, removeBlock, updateBlock } = useBlocks({
     apiUrl,
@@ -161,6 +167,7 @@ const FlowsProviderInner: FC<Props> = ({
     userId,
     userProperties,
     language,
+    customFetch,
   });
 
   const runningTours = useRunningTours({ blocks, removeBlock });
