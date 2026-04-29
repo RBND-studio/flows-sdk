@@ -1,4 +1,4 @@
-import type { Action as IAction } from "@flows/js";
+import type { CustomFetch, Action as IAction, LanguageOption } from "@flows/js";
 import {
   init,
   resetAllWorkflowsProgress,
@@ -13,13 +13,26 @@ import * as _surveyComponents from "@flows/js-components/survey-components";
 import "@flows/js-components/index.css";
 import type { StateMemory as IStateMemory } from "@flows/js";
 import { startWorkflow } from "@flows/js";
-import type { LanguageOption } from "@flows/shared";
 import { css, LitElement } from "lit";
 import { property } from "lit/decorators.js";
 import type { FlowsProperties } from "@flows/js";
 import { html, unsafeStatic } from "lit/static-html.js";
 
+const customFetchFn: CustomFetch = (url, options) => {
+  return fetch(url, {
+    ...options,
+    headers: {
+      ...(options?.headers as Record<string, string>),
+      "x-test-header": "my-custom-value",
+    },
+  });
+};
+
 const apiUrl = new URLSearchParams(window.location.search).get("apiUrl") ?? undefined;
+const customFetch =
+  new URLSearchParams(window.location.search).get("customFetch") === "true"
+    ? customFetchFn
+    : undefined;
 const noCurrentBlocks =
   new URLSearchParams(window.location.search).get("noCurrentBlocks") === "true";
 const language = new URLSearchParams(window.location.search).get("language") as LanguageOption;
@@ -117,6 +130,7 @@ init({
   userId: "testUserId",
   language,
   apiUrl,
+  customFetch,
   userProperties: {
     email: "test@flows.sh",
     age: 10,
