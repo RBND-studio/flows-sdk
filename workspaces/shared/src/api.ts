@@ -1,5 +1,6 @@
 import { type Block } from "./types";
 import type { ApiSurveyAnswer } from "./types/api-survey";
+import { type BlockUpdatesMessage } from "./websocket-message";
 
 const f = <T>(
   url: string,
@@ -113,8 +114,23 @@ export interface EventRequest {
   properties?: Record<string, unknown>;
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- ignore
-export const getApi = (apiUrl: string, version: string) => ({
+export interface Api {
+  getBlocks: (body: GetBlocksRequest) => Promise<BlocksResponse>;
+  getWorkflows: (body: WorkflowsRequest) => Promise<WorkflowsResponse>;
+  sendEvent: (body: EventRequest) => Promise<void>;
+  postSurvey: (body: ApiSurveyAnswer) => Promise<void>;
+  /**
+   * Optional alternative to the built-in WebSocket connection for receiving block updates. When provided, the SDK will call this function instead of opening a WebSocket. Returns a cleanup function that stops listening.
+   */
+  listenToBlockUpdates?: (
+    params: { environment: string; organizationId: string; userId: string },
+    onMessage: (message: BlockUpdatesMessage) => void,
+  ) => () => void;
+}
+
+export type ApiFactory = (apiUrl: string, version: string) => Api;
+
+export const getApi: ApiFactory = (apiUrl, version) => ({
   getBlocks: (body: GetBlocksRequest) =>
     f<BlocksResponse>(`${apiUrl}/v2/sdk/blocks`, { method: "POST", body, version }),
   getWorkflows: (body: WorkflowsRequest) =>

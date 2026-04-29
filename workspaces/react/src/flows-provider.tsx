@@ -1,4 +1,4 @@
-import { type LanguageOption, type LinkComponentType, type UserProperties } from "@flows/shared";
+import { type ApiFactory, type LanguageOption, type LinkComponentType, type UserProperties } from "@flows/shared";
 import { useEffect, type FC, type ReactNode } from "react";
 import { Debug } from "./components/debug";
 import { FloatingBlocks } from "./components/floating-blocks";
@@ -34,6 +34,10 @@ export interface FlowsProviderProps {
    * Custom API URL useful when using proxy to send Flows requests through your own domain.
    */
   apiUrl?: string;
+  /**
+   * Custom API factory function. By default, the SDK uses the `getApi` function exported from `@flows/shared/src/api`, but you can provide your own implementation if you need to customize how API requests are made (e.g., to add custom headers, use a different HTTP client, etc.). If you provide this option, it will be used instead of the default `getApi` function to create the API instance that the SDK uses for all its requests.
+   */
+  apiFactory?: ApiFactory;
   /**
    * Components used for workflow blocks.
    */
@@ -137,6 +141,7 @@ const isProps = (props: FlowsProviderProps): props is Props => {
 const FlowsProviderInner: FC<Props> = ({
   children,
   apiUrl = "https://api.flows-cloud.com",
+  apiFactory,
   environment,
   organizationId,
   userId,
@@ -153,9 +158,11 @@ const FlowsProviderInner: FC<Props> = ({
   globalConfig.environment = environment;
   globalConfig.organizationId = organizationId;
   globalConfig.userId = userId;
+  globalConfig.apiFactory = apiFactory;
 
   const { blocksState, blocks, error, wsError, removeBlock, updateBlock } = useBlocks({
     apiUrl,
+    apiFactory,
     environment,
     organizationId,
     userId,

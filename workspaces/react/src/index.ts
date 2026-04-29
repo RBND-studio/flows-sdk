@@ -15,6 +15,9 @@ export type {
   // Link
   LinkComponentProps,
   LinkComponentType,
+  // API
+  Api,
+  ApiFactory,
   // Components
   ComponentProps,
   TourComponentProps,
@@ -30,5 +33,6 @@ export type {
   MultipleChoiceQuestion,
 } from "@flows/shared";
 export * from "./components/flows-slot";
+export { useFlowsContext } from "./flows-context";
 export { FlowsProvider } from "./flows-provider";
 export * from "./methods";

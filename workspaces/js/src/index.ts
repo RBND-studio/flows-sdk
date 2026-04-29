@@ -25,6 +25,9 @@ export type {
   EndScreenQuestion,
   SingleChoiceQuestion,
   MultipleChoiceQuestion,
+  // API
+  Api,
+  ApiFactory,
 } from "@flows/shared";
 export * from "./init";
 export * from "./methods";
