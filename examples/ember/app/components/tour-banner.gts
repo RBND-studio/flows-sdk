@@ -1,9 +1,19 @@
 import Component from '@glimmer/component';
 import { on } from '@ember/modifier';
+import type { TourComponentProps } from '@flows/js';
 
-export default class TourBanner extends Component {
+type Signature =  {
+  Args: {
+    props: TourComponentProps<{
+      title: string;
+      body: string;
+    }>
+  }
+}
+
+export default class TourBanner extends Component<Signature> {
   handlePrevious = () => {
-    this.args.props.previous()
+    this.args.props.previous?.()
   }
 
   handleContinue = () => {

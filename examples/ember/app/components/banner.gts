@@ -1,7 +1,18 @@
 import Component from '@glimmer/component';
 import { on } from '@ember/modifier';
+import type { ComponentProps } from '@flows/js';
 
-export default class Banner extends Component {
+type Signature =  {
+  Args: {
+    props: ComponentProps<{
+      title: string;
+      body: string;
+      close: () => void;
+    }>
+  }
+}
+
+export default class Banner extends Component<Signature> {
   handleClose = () => {
     this.args.props.close()
   }

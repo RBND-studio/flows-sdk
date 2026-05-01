@@ -2,22 +2,32 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { computed } from '@ember/object';
 import { registerDestructor } from '@ember/destroyable';
-import { addSlotBlocksChangeListener, getCurrentSlotBlocks } from "@flows/js"
+import { addSlotBlocksChangeListener, getCurrentSlotBlocks, type ActiveBlock } from "@flows/js"
 
 import FlowsBlock from './flows-block';
+import type Owner from '@ember/owner';
+
+type Signature =  {
+  Args: {
+    id: string;
+  }
+  Blocks: {
+    default: []
+  }
+}
 
 // Ember implementation of the <flows-slot> from @flows/js-components
 // Because we cannot use Ember components with @flows/js-components, we implemented the same logic with a few lines of code
-export default class FlowsSlot extends Component {
-  @tracked blocks = [];
+export default class FlowsSlot extends Component<Signature> {
+  @tracked blocks: ActiveBlock[] = [];
 
   @computed("blocks")
   get noBlocks() {
     return this.blocks.length === 0;
   }
 
-  constructor(...args) {
-    super(...args);
+  constructor(owner: Owner, args: Signature['Args']) {
+    super(owner, args);
     
     const slotId = this.args.id;
 

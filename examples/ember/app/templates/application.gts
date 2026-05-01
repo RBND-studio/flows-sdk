@@ -25,9 +25,8 @@ import FlowsSlot from '../components/flows-slot';
     </div>
   </FlowsSlot>
 
-  
   {{! The following component displays Ember's default welcome message. }}
-  <WelcomePage @extension="gjs" />
+  <WelcomePage @extension="gts" />
   {{! Feel free to remove this! }}
 
   <flows-floating-blocks></flows-floating-blocks>

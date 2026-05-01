@@ -2,19 +2,36 @@ import Component from '@glimmer/component';
 
 import Banner from './banner';
 import TourBanner from './tour-banner';
+import type { ActiveBlock, ComponentProps, SurveyComponentProps, TourComponentProps } from '@flows/js';
 
-const components = {
-  Banner,
+type ComponentSignature = {
+  Args: { props: ComponentProps }
 }
-const tourComponents = {
+type TourComponentSignature = {
+  Args: { props: TourComponentProps }
+}
+type SurveyComponentSignature = {
+  Args: { props: SurveyComponentProps }
+}
+
+const components: Record<string, typeof Component<ComponentSignature>> = {
+  Banner,
+} 
+const tourComponents: Record<string, typeof Component<TourComponentSignature>> = {
   Banner: TourBanner,
 }
-const surveyComponents = {
-
+const surveyComponents: Record<string, typeof Component<SurveyComponentSignature>> = {
 }
 
+type Signature =  {
+  Args: {
+    blockData: ActiveBlock
+  }
+}
+
+
 // Helper component to render component based on received block data. Used for both floating and slot blocks.
-export default class FlowsBlock extends Component {
+export default class FlowsBlock extends Component<Signature> {
   get Component(){
     const blockType = this.args.blockData?.type;
     const componentName = this.args.blockData?.component;
@@ -25,7 +42,7 @@ export default class FlowsBlock extends Component {
     if(blockType === 'tour-component'){
       return tourComponents[componentName];
     }
-    if(blockType === 'survey-component'){
+    if(blockType === 'survey'){
       return surveyComponents[componentName];
     }
   }

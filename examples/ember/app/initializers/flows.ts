@@ -11,7 +11,7 @@ import "@flows/js-components/index.css";
 // Helper empty custom component to get rid of console errors when @flows/js-components tries to render component that is not defined
 class NoopComponent extends HTMLElement {}
 
-export function initialize(application) {
+export function initialize() {
   init({
     organizationId: "2d646d66-2543-42a1-914d-69584e73ed42",
     userId: "ember-user",

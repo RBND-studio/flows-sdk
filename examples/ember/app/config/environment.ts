@@ -1,7 +1,7 @@
 import loadConfigFromMeta from "@embroider/config-meta-loader";
 import { assert } from "@ember/debug";
 
-const config = loadConfigFromMeta("ember-example");
+const config = loadConfigFromMeta("ember-example") as unknown;
 
 assert("config is not an object", typeof config === "object" && config !== null);
 assert(
@@ -18,4 +18,10 @@ assert(
 );
 assert("APP was not detected on your config", "APP" in config && typeof config.APP === "object");
 
-export default config;
+export default config as {
+  modulePrefix: string;
+  podModulePrefix?: string;
+  locationType: string;
+  rootURL: string;
+  APP: Record<string, unknown>;
+} & Record<string, unknown>;

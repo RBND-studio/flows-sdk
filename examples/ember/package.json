@@ -26,15 +26,17 @@
     "lint:hbs:fix": "ember-template-lint . --fix",
     "lint:js": "eslint . --cache",
     "lint:js:fix": "eslint . --fix",
+    "lint:types": "ember-tsc --noEmit",
     "start": "vite",
-    "test": "vite build --mode development && ember test --path dist",
-    "ember": "ember"
+    "test": "vite build --mode development && ember test --path dist"
   },
   "devDependencies": {
     "@babel/core": "^7.29.0",
     "@babel/eslint-parser": "^7.28.6",
     "@babel/plugin-transform-runtime": "^7.29.0",
+    "@babel/plugin-transform-typescript": "^7.28.6",
     "@babel/runtime": "^7.29.2",
+    "@ember/app-tsconfig": "^1.0.3",
     "@ember/optional-features": "^3.0.0",
     "@ember/string": "^4.0.1",
     "@ember/test-helpers": "^5.4.1",
@@ -48,7 +50,12 @@
     "@embroider/vite": "^1.7.2",
     "@eslint/js": "^9.39.4",
     "@glimmer/component": "^2.0.0",
+    "@glint/ember-tsc": "^1.5.0",
+    "@glint/template": "^1.7.7",
+    "@glint/tsserver-plugin": "^2.4.0",
     "@rollup/plugin-babel": "^6.1.0",
+    "@types/qunit": "^2.19.13",
+    "@types/rsvp": "^4.0.9",
     "@warp-drive/core": "~5.8.1",
     "@warp-drive/ember": "~5.8.1",
     "@warp-drive/json-api": "~5.8.1",
@@ -82,6 +89,8 @@
     "stylelint": "^16.26.1",
     "stylelint-config-standard": "^38.0.0",
     "testem": "^3.19.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.58.0",
     "vite": "^7.3.1"
   },
   "engines": {

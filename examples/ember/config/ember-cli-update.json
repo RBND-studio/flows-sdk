@@ -8,7 +8,7 @@
         {
           "name": "@ember/app-blueprint",
           "isBaseBlueprint": true,
-          "options": ["--ci-provider=github", "--no-warp-drive"]
+          "options": ["--ci-provider=github", "--typescript", "--no-warp-drive"]
         }
       ]
     }
