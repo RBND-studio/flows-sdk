@@ -11,6 +11,7 @@ const Tooltip: FC<TooltipProps> = (props) => {
       body={props.body}
       targetElement={props.targetElement}
       placement={props.placement}
+      scrollPosition={props.scrollPosition}
       overlay={!props.hideOverlay}
       onClose={props.dismissible ? props.close : undefined}
       primaryButton={props.primaryButton}

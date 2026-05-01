@@ -7,7 +7,13 @@ import {
   shift,
   type Side,
 } from "@floating-ui/dom";
-import { type Action, log, type Placement } from "@flows/shared";
+import type { TooltipScrollPosition } from "@flows/shared";
+import {
+  type Action,
+  log,
+  type TooltipPlacement,
+  tooltipScrollPositionToScrollLogicalPosition,
+} from "@flows/shared";
 import { clsx } from "clsx";
 // eslint-disable-next-line import/no-named-as-default -- correct import
 import DOMPurify from "dompurify";
@@ -30,7 +36,9 @@ class BaseTooltip extends LitElement {
   @property()
   targetElement: string;
   @property()
-  placement?: Placement;
+  placement?: TooltipPlacement;
+  @property()
+  scrollPosition?: TooltipScrollPosition;
   @property({ type: Boolean })
   overlay?: boolean;
 
@@ -57,6 +65,25 @@ class BaseTooltip extends LitElement {
 
   autoUpdateCleanup: (() => void) | null = null;
   observerCleanup: (() => void) | null = null;
+
+  updated(changedProperties: PropertyValues): void {
+    console.log(
+      "updated",
+      changedProperties,
+      this._reference,
+      changedProperties.has("_reference"),
+      this.scrollPosition,
+    );
+    if (changedProperties.has("_reference") && this._reference) {
+      const blockScrollPosition = tooltipScrollPositionToScrollLogicalPosition(this.scrollPosition);
+      if (!blockScrollPosition) return;
+
+      this._reference.scrollIntoView({
+        behavior: "smooth",
+        block: blockScrollPosition,
+      });
+    }
+  }
 
   connectedCallback(): void {
     super.connectedCallback();
@@ -193,7 +220,7 @@ export const updateTooltip = ({
 }: {
   reference: Element;
   tooltip: HTMLElement;
-  placement?: Placement;
+  placement?: TooltipPlacement;
   arrowEls: [HTMLElement, HTMLElement];
   overlay: HTMLElement | null;
 }): Promise<void> => {
