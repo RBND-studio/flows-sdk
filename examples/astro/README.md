@@ -2,8 +2,7 @@
 
 An example project showcasing how to use Flows with Astro to build native product growth experiences.
 
-<!-- TODO: add -->
-<!-- ![Cover](./cover.png) -->
+![Cover](./cover.png)
 
 This example extends the Astro starter project with the [`@flows/js`](https://www.npmjs.com/package/@flows/js) and [`@flows/js-components`](https://www.npmjs.com/package/@flows/js-components) packages to demonstrate how to integrate Flows into your application.
 
@@ -19,7 +18,12 @@ The `@flows/js-components` package includes ready-to-use components to build in-
 
 ### Custom components
 
-Extends Flows by creating your own components. Because the components need to be valid Web Components you cannot use Astro components for this. If you're using client side framework in you Astro project like React, Solid, Svelte or Vue, you can follow one of [other example projects](../README.md). Or just create your own custom element with Vanilla JavaScript or lightweight [Lit library](../lit/README.md).
+Extend Flows by creating your own components for workflows and tours. Because the components need to be valid Web Components, Astro components cannot be used directly:
+
+- For simple custom components, use Vanilla JavaScript or the lightweight [Lit library](../lit/README.md) to build compatible Web Components.
+- **Recommended**: If you're using a client-side framework in your Astro project like React, Solid, Svelte, or Vue, follow one of the [other example projects](../README.md) which show how to integrate framework components with Flows.
+
+Note that to use these custom components you need to define them in your Flows organization with the same properties and exit nodes. For detailed instructions on building custom components, see the [custom components documentation](https://flows.sh/docs/components/custom).
 
 ### Flows slots
 
