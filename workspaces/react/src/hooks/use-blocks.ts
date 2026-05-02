@@ -87,7 +87,7 @@ export const useBlocks = ({
         setError(true);
         log.error("Failed to load blocks", err);
       });
-  }, [apiUrl, language, params]);
+  }, [apiUrl, language, params, customFetch]);
 
   const websocketUrl = useMemo(() => {
     if (usageLimited) return;
