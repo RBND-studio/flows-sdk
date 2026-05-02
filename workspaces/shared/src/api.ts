@@ -10,7 +10,7 @@ const getFetch =
   ): Promise<T> => {
     const fetchFn = ctx.customFetch ?? fetch;
 
-    return fetchFn(ctx.baseUrl + url, {
+    return fetchFn(new URL(url, ctx.baseUrl).toString(), {
       method,
       headers: {
         "Content-Type": "application/json",

@@ -1,1 +1,1 @@
-export type CustomFetch = typeof window.fetch;
+export type CustomFetch = typeof globalThis.fetch;
