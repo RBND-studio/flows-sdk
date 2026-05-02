@@ -5,7 +5,7 @@ import {
   shift,
   useFloating,
 } from "@floating-ui/react-dom";
-import { type Action, log, type Placement } from "@flows/shared";
+import { type Action, log, type TooltipPlacement } from "@flows/shared";
 import { type FC, type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 // eslint-disable-next-line import/no-named-as-default -- correct import
 import DOMPurify from "dompurify";
@@ -21,7 +21,7 @@ interface Props {
   body: string;
 
   targetElement: string;
-  placement?: Placement;
+  placement?: TooltipPlacement;
   offsetX?: number;
   offsetY?: number;
 
