@@ -1,5 +1,5 @@
 import { autoUpdate, computePosition, flip, offset, shift } from "@floating-ui/dom";
-import { type Action, log, type Placement } from "@flows/shared";
+import { type Action, log, type TooltipPlacement } from "@flows/shared";
 import { html, LitElement, type PropertyValues, type TemplateResult } from "lit";
 import { property, query, queryAll, state } from "lit/decorators.js";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
@@ -25,7 +25,7 @@ class BaseHint extends LitElement {
   @property()
   targetElement: string;
   @property()
-  placement?: Placement;
+  placement?: TooltipPlacement;
   @property({ type: Number })
   offsetX?: number;
   @property({ type: Number })
@@ -223,7 +223,7 @@ export const updateTargetButton = ({
 }: {
   reference: Element;
   el: HTMLElement;
-  placement?: Placement;
+  placement?: TooltipPlacement;
   offsetX?: number;
   offsetY?: number;
 }): Promise<void> => {
@@ -242,7 +242,7 @@ export const updateTooltip = ({
 }: {
   reference: Element;
   el: HTMLElement;
-  placement?: Placement;
+  placement?: TooltipPlacement;
 }): Promise<void> => {
   return computePosition(reference, el, {
     placement,

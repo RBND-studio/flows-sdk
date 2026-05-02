@@ -1,7 +1,7 @@
 import {
   type TourHintProps,
   type FlowsProperties,
-  type Placement,
+  type TooltipPlacement,
   type TourComponentProps,
   type Action,
 } from "@flows/shared";
@@ -35,7 +35,7 @@ class Hint extends LitElement implements HintProps {
   targetElement: string;
 
   @property({ type: String })
-  placement?: Placement;
+  placement?: TooltipPlacement;
 
   @property({ type: Number })
   offsetX?: number;

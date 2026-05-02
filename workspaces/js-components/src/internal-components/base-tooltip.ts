@@ -7,11 +7,19 @@ import {
   shift,
   type Side,
 } from "@floating-ui/dom";
-import { type Action, log, type Placement } from "@flows/shared";
+import type { TooltipScrollPosition } from "@flows/shared";
+import {
+  type Action,
+  log,
+  type TooltipPlacement,
+  tooltipScrollPositionToScrollLogicalPosition,
+  tooltipScrollToTarget,
+} from "@flows/shared";
 import { clsx } from "clsx";
 // eslint-disable-next-line import/no-named-as-default -- correct import
 import DOMPurify from "dompurify";
-import { html, LitElement, type PropertyValues, type TemplateResult } from "lit";
+import type { TemplateResult } from "lit";
+import { html, LitElement, type PropertyValues } from "lit";
 import { property, query, queryAll, state } from "lit/decorators.js";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import { Close16 } from "../icons/close-16";
@@ -30,7 +38,9 @@ class BaseTooltip extends LitElement {
   @property()
   targetElement: string;
   @property()
-  placement?: Placement;
+  placement?: TooltipPlacement;
+  @property()
+  scrollPosition?: TooltipScrollPosition;
   @property({ type: Boolean })
   overlay?: boolean;
 
@@ -43,6 +53,10 @@ class BaseTooltip extends LitElement {
   @property({ attribute: false })
   onClose?: () => void;
 
+  get blockScrollPosition(): ScrollLogicalPosition | undefined {
+    return tooltipScrollPositionToScrollLogicalPosition(this.scrollPosition);
+  }
+
   @query(".flows_basicsV2_tooltip_tooltip")
   tooltip: HTMLElement;
 
@@ -54,9 +68,42 @@ class BaseTooltip extends LitElement {
 
   @state()
   private _reference: Element | null = null;
+  @state()
+  private _isTargetInView = false;
 
   autoUpdateCleanup: (() => void) | null = null;
   observerCleanup: (() => void) | null = null;
+  scrollToTargetCleanup: (() => void) | null = null;
+
+  updated(changedProperties: PropertyValues): void {
+    if (changedProperties.has("_reference") && this._reference && this.blockScrollPosition) {
+      this.scrollToTargetCleanup = tooltipScrollToTarget({
+        reference: this._reference,
+        blockScrollPosition: this.blockScrollPosition,
+        onTargetInView: () => {
+          this._isTargetInView = true;
+        },
+      });
+    }
+
+    const tooltip = this.tooltip;
+    const reference = this._reference;
+    if (!this.autoUpdateCleanup && tooltip && reference) {
+      this.autoUpdateCleanup = autoUpdate(
+        reference,
+        tooltip,
+        () =>
+          void updateTooltip({
+            reference,
+            tooltip,
+            arrowEls: this.arrows,
+            overlay: this.overlayElement,
+            placement: this.placement,
+          }),
+        { animationFrame: true },
+      );
+    }
+  }
 
   connectedCallback(): void {
     super.connectedCallback();
@@ -79,31 +126,13 @@ class BaseTooltip extends LitElement {
 
     this.autoUpdateCleanup?.();
     this.observerCleanup?.();
+    this.scrollToTargetCleanup?.();
   }
 
   firstUpdated(_changedProperties: PropertyValues): void {
     if (!this.targetElement) {
       log.error("Cannot render Tooltip without target element");
     }
-
-    const reference = this._reference;
-    if (!reference) return;
-
-    const tooltip = this.tooltip;
-
-    this.autoUpdateCleanup = autoUpdate(
-      reference,
-      tooltip,
-      () =>
-        void updateTooltip({
-          reference,
-          tooltip,
-          arrowEls: this.arrows,
-          overlay: this.overlayElement,
-          placement: this.placement,
-        }),
-      { animationFrame: true },
-    );
   }
 
   createRenderRoot(): this {
@@ -116,6 +145,8 @@ class BaseTooltip extends LitElement {
       log.error("Cannot render Tooltip without target element");
       return null;
     }
+    // Avoid rendering the tooltip when scrollPosition is defined and the target element is not in view
+    if (this.blockScrollPosition && !this._isTargetInView) return null;
 
     const buttons = [];
     if (this.secondaryButton)
@@ -193,7 +224,7 @@ export const updateTooltip = ({
 }: {
   reference: Element;
   tooltip: HTMLElement;
-  placement?: Placement;
+  placement?: TooltipPlacement;
   arrowEls: [HTMLElement, HTMLElement];
   overlay: HTMLElement | null;
 }): Promise<void> => {
