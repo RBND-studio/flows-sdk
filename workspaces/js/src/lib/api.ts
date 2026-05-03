@@ -11,8 +11,8 @@ type SendEventProps = Pick<
 export const sendEvent = async (props: SendEventProps): Promise<void> => {
   const configuration = config.value;
   if (!configuration) return;
-  const { environment, organizationId, userId, apiUrl } = configuration;
-  await getApi(apiUrl, packageAndVersion).sendEvent({
+  const { environment, organizationId, userId, apiUrl, customFetch } = configuration;
+  await getApi({ apiUrl, version: packageAndVersion, customFetch }).sendEvent({
     ...props,
     environment,
     organizationId,
@@ -25,8 +25,8 @@ export const postSurvey = async (
 ) => {
   const configuration = config.value;
   if (!configuration) return;
-  const { apiUrl, environment, organizationId, userId } = configuration;
-  await getApi(apiUrl, packageAndVersion).postSurvey({
+  const { apiUrl, environment, organizationId, userId, customFetch } = configuration;
+  await getApi({ apiUrl, version: packageAndVersion, customFetch }).postSurvey({
     ...props,
     environment,
     organizationId,
@@ -54,6 +54,10 @@ export const fetchWorkflows = async (): Promise<WorkflowsResponse> => {
     return { workflows: [] };
   }
 
-  const { environment, organizationId, userId, apiUrl } = configuration;
-  return getApi(apiUrl, packageAndVersion).getWorkflows({ environment, organizationId, userId });
+  const { environment, organizationId, userId, apiUrl, customFetch } = configuration;
+  return getApi({ apiUrl, version: packageAndVersion, customFetch }).getWorkflows({
+    environment,
+    organizationId,
+    userId,
+  });
 };

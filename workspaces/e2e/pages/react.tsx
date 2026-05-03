@@ -3,6 +3,8 @@ import type {
   StateMemory as IStateMemory,
   Action as IAction,
   LinkComponentType,
+  CustomFetch,
+  LanguageOption,
 } from "@flows/react";
 import {
   FlowsProvider,
@@ -23,9 +25,22 @@ import * as components from "@flows/react-components";
 import * as tourComponents from "@flows/react-components/tour";
 import * as surveyComponents from "@flows/react-components/survey";
 import "@flows/react-components/index.css";
-import type { LanguageOption } from "@flows/shared";
+
+const customFetchFn: CustomFetch = (url, options) => {
+  return fetch(url, {
+    ...options,
+    headers: {
+      ...(options?.headers as Record<string, string>),
+      "x-test-header": "my-custom-value",
+    },
+  });
+};
 
 const apiUrl = new URLSearchParams(window.location.search).get("apiUrl") ?? undefined;
+const customFetch =
+  new URLSearchParams(window.location.search).get("customFetch") === "true"
+    ? customFetchFn
+    : undefined;
 const noUserId = new URLSearchParams(window.location.search).get("noUserId") === "true";
 const noCurrentBlocks =
   new URLSearchParams(window.location.search).get("noCurrentBlocks") === "true";
@@ -149,6 +164,7 @@ createRoot(document.getElementById("root")!).render(
           age: 10,
         }}
         apiUrl={apiUrl}
+        customFetch={customFetch}
         components={{ ...components, Card, BlockTrigger, StateMemory, Action }}
         tourComponents={{ ...tourComponents, Card, Action }}
         surveyComponents={{ ...surveyComponents }}

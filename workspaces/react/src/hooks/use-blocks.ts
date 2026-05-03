@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { CustomFetch } from "@flows/shared";
 import {
   getApi,
   log,
@@ -17,6 +18,7 @@ import { useWebsocket } from "./use-websocket";
 
 interface Props {
   apiUrl: string;
+  customFetch?: CustomFetch;
   environment: string;
   organizationId: string;
   userId: string;
@@ -35,6 +37,7 @@ interface Return {
 
 export const useBlocks = ({
   apiUrl,
+  customFetch,
   environment,
   organizationId,
   userId,
@@ -59,7 +62,7 @@ export const useBlocks = ({
 
   const fetchBlocks = useCallback(() => {
     setError(false);
-    void getApi(apiUrl, packageAndVersion)
+    void getApi({ apiUrl, version: packageAndVersion, customFetch })
       .getBlocks({
         ...params,
         language: getUserLanguage(language),
@@ -84,7 +87,7 @@ export const useBlocks = ({
         setError(true);
         log.error("Failed to load blocks", err);
       });
-  }, [apiUrl, language, params]);
+  }, [apiUrl, language, params, customFetch]);
 
   const websocketUrl = useMemo(() => {
     if (usageLimited) return;

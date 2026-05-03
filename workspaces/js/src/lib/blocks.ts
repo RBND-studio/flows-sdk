@@ -2,28 +2,20 @@ import {
   applyUpdateMessageToBlocksState,
   getApi,
   getUserLanguage,
-  type LanguageOption,
   log,
   parseWebsocketMessage,
-  type UserProperties,
 } from "@flows/shared";
-import { blocks, blocksError, blocksState, pendingMessages } from "../store";
+import { blocks, blocksError, blocksState, config, pendingMessages } from "../store";
 import { type Disconnect, websocket } from "./websocket";
 import { packageAndVersion } from "./constants";
 
-interface Props {
-  apiUrl: string;
-  environment: string;
-  organizationId: string;
-  userId: string;
-  userProperties?: UserProperties;
-  language?: LanguageOption;
-}
-
 let disconnect: Disconnect | null = null;
 
-export const connectToWebsocketAndFetchBlocks = (props: Props): void => {
-  const { environment, organizationId, userId, apiUrl } = props;
+export const connectToWebsocketAndFetchBlocks = (): void => {
+  const configuration = config.value;
+  if (!configuration) return;
+
+  const { environment, organizationId, userId, apiUrl, customFetch } = configuration;
   const params = { environment, organizationId, userId };
   const wsUrl = (() => {
     const wsBase = apiUrl.replace("https://", "wss://").replace("http://", "ws://");
@@ -32,11 +24,11 @@ export const connectToWebsocketAndFetchBlocks = (props: Props): void => {
 
   const fetchBlocks = (): void => {
     blocksError.value = false;
-    void getApi(apiUrl, packageAndVersion)
+    void getApi({ apiUrl, version: packageAndVersion, customFetch })
       .getBlocks({
         ...params,
-        language: getUserLanguage(props.language),
-        userProperties: props.userProperties,
+        language: getUserLanguage(configuration.language),
+        userProperties: configuration.userProperties,
       })
       .then((res) => {
         const blocksWithUpdates = pendingMessages.value.reduce(
