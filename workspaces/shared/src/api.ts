@@ -1,26 +1,32 @@
+import type { CustomFetch } from "./types";
 import { type Block } from "./types";
 import type { ApiSurveyAnswer } from "./types/api-survey";
 
-const f = <T>(
-  url: string,
-  { body, method, version }: { method?: string; body?: unknown; version: string },
-): Promise<T> =>
-  fetch(url, {
-    method,
-    headers: {
-      "Content-Type": "application/json",
-      "x-flows-version": version,
-    },
-    body: body ? JSON.stringify(body) : undefined,
-  }).then(async (res) => {
-    const text = await res.text();
-    const resBody = (text ? JSON.parse(text) : undefined) as T;
-    if (!res.ok) {
-      const errorBody = resBody as undefined | { message?: string };
-      throw new Error(errorBody?.message ?? res.statusText);
-    }
-    return resBody;
-  });
+const getFetch =
+  (ctx: { customFetch?: CustomFetch; baseUrl: string }) =>
+  <T>(
+    url: string,
+    { body, method, version }: { method?: string; body?: unknown; version: string },
+  ): Promise<T> => {
+    const fetchFn = ctx.customFetch ?? fetch;
+
+    return fetchFn(new URL(url, ctx.baseUrl).toString(), {
+      method,
+      headers: {
+        "Content-Type": "application/json",
+        "x-flows-version": version,
+      },
+      body: body ? JSON.stringify(body) : undefined,
+    }).then(async (res) => {
+      const text = await res.text();
+      const resBody = (text ? JSON.parse(text) : undefined) as T;
+      if (!res.ok) {
+        const errorBody = resBody as undefined | { message?: string };
+        throw new Error(errorBody?.message ?? res.statusText);
+      }
+      return resBody;
+    });
+  };
 
 // POST /v2/sdk/blocks
 
@@ -114,13 +120,22 @@ export interface EventRequest {
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- ignore
-export const getApi = (apiUrl: string, version: string) => ({
-  getBlocks: (body: GetBlocksRequest) =>
-    f<BlocksResponse>(`${apiUrl}/v2/sdk/blocks`, { method: "POST", body, version }),
-  getWorkflows: (body: WorkflowsRequest) =>
-    f<WorkflowsResponse>(`${apiUrl}/v2/sdk/workflows`, { method: "POST", body, version }),
-  sendEvent: (body: EventRequest) =>
-    f(`${apiUrl}/v2/sdk/events`, { method: "POST", body, version }),
-  postSurvey: (body: ApiSurveyAnswer) =>
-    f(`${apiUrl}/v2/sdk/survey`, { method: "POST", body, version }),
-});
+export const getApi = ({
+  apiUrl,
+  version,
+  customFetch,
+}: {
+  apiUrl: string;
+  version: string;
+  customFetch?: CustomFetch;
+}) => {
+  const f = getFetch({ customFetch, baseUrl: apiUrl });
+  return {
+    getBlocks: (body: GetBlocksRequest) =>
+      f<BlocksResponse>("/v2/sdk/blocks", { method: "POST", body, version }),
+    getWorkflows: (body: WorkflowsRequest) =>
+      f<WorkflowsResponse>("/v2/sdk/workflows", { method: "POST", body, version }),
+    sendEvent: (body: EventRequest) => f("/v2/sdk/events", { method: "POST", body, version }),
+    postSurvey: (body: ApiSurveyAnswer) => f("/v2/sdk/survey", { method: "POST", body, version }),
+  };
+};
