@@ -1,6 +1,6 @@
 import { type StateMemory, type Action } from "./components";
 
-export type Placement =
+export type TooltipPlacement =
   | "top"
   | "right"
   | "bottom"
@@ -13,6 +13,7 @@ export type Placement =
   | "bottom-end"
   | "left-start"
   | "left-end";
+export type TooltipScrollPosition = "top" | "center" | "bottom" | "nearest" | "none";
 
 export type ModalPosition =
   | "center"
@@ -39,7 +40,8 @@ export interface TooltipProps {
   secondaryButton?: Action;
 
   targetElement: string;
-  placement?: Placement;
+  placement?: TooltipPlacement;
+  scrollPosition?: TooltipScrollPosition;
   dismissible: boolean;
   hideOverlay: boolean;
 
@@ -54,7 +56,8 @@ export interface TourTooltipProps {
   secondaryButton?: Action;
 
   targetElement: string;
-  placement?: Placement;
+  placement?: TooltipPlacement;
+  scrollPosition?: TooltipScrollPosition;
   dismissible: boolean;
   hideOverlay: boolean;
   hideProgress: boolean;
@@ -99,7 +102,7 @@ export interface HintProps {
   secondaryButton?: Action;
 
   targetElement: string;
-  placement?: Placement;
+  placement?: TooltipPlacement;
   offsetX?: number;
   offsetY?: number;
   dismissible: boolean;
@@ -115,7 +118,7 @@ export interface TourHintProps {
   secondaryButton?: Action;
 
   targetElement: string;
-  placement?: Placement;
+  placement?: TooltipPlacement;
   offsetX?: number;
   offsetY?: number;
   dismissible: boolean;

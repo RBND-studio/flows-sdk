@@ -1,9 +1,10 @@
-import {
-  type ComponentProps,
-  type Placement,
-  type FlowsProperties,
-  type TooltipProps as LibraryTooltipProps,
-  type Action,
+import type {
+  ComponentProps,
+  TooltipPlacement,
+  FlowsProperties,
+  TooltipProps as LibraryTooltipProps,
+  Action,
+  TooltipScrollPosition,
 } from "@flows/shared";
 import { html, LitElement, type TemplateResult } from "lit";
 import { property } from "lit/decorators.js";
@@ -32,7 +33,10 @@ class Tooltip extends LitElement implements TooltipProps {
   dismissible: boolean;
 
   @property({ type: String })
-  placement?: Placement;
+  placement?: TooltipPlacement;
+
+  @property({ type: String })
+  scrollPosition?: TooltipScrollPosition;
 
   @property({ type: Boolean })
   hideOverlay: boolean;
@@ -55,6 +59,7 @@ class Tooltip extends LitElement implements TooltipProps {
       .body=${this.body}
       .targetElement=${this.targetElement}
       .placement=${this.placement}
+      .scrollPosition=${this.scrollPosition}
       .overlay=${!this.hideOverlay}
       .onClose=${this.dismissible ? this.close : undefined}
       .primaryButton=${this.primaryButton}

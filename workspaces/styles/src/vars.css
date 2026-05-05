@@ -61,6 +61,7 @@
   --flows-basicsV2-tooltip-overlayPadding: 4px;
   --flows-basicsV2-tooltip-minWidth: 200px;
   --flows-basicsV2-tooltip-maxWidth: 320px;
+  --flows-basicsV2-tooltip-targetScrollMargin: 24px;
 
   --flows-basicsV2-modal-overlayBackground: var(--flows-basicsV2-bg-overlay);
   --flows-basicsV2-modal-padding: var(--flows-basicsV2-size-xxl);

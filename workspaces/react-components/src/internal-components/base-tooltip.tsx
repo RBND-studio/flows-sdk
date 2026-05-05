@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReferenceType } from "@floating-ui/react-dom";
 import {
   arrow,
   flip,
@@ -10,8 +11,15 @@ import {
   type Placement,
   type Side,
 } from "@floating-ui/react-dom";
-import { log, type Action } from "@flows/shared";
+import type { TooltipScrollPosition } from "@flows/shared";
+import {
+  log,
+  tooltipScrollPositionToScrollLogicalPosition,
+  tooltipScrollToTarget,
+  type Action,
+} from "@flows/shared";
 import { clsx } from "clsx";
+import type { RefObject } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState, type FC, type ReactNode } from "react";
 // eslint-disable-next-line import/no-named-as-default -- correct import
 import DOMPurify from "dompurify";
@@ -34,6 +42,7 @@ interface Props {
   body: string;
   targetElement: string;
   placement?: Placement;
+  scrollPosition?: TooltipScrollPosition;
   overlay?: boolean;
 
   dots?: ReactNode;
@@ -41,9 +50,6 @@ interface Props {
   secondaryButton?: Action;
   onClose?: () => void;
 }
-
-const autoUpdate: typeof floatingAutoUpdate = (ref, floating, update) =>
-  floatingAutoUpdate(ref, floating, update, { animationFrame: true });
 
 export const BaseTooltip: FC<Props> = (props) => {
   const firstRender = useFirstRender();
@@ -55,7 +61,8 @@ export const BaseTooltip: FC<Props> = (props) => {
   const { refs, middlewareData, placement, x, y } = useFloating({
     placement: props.placement,
     elements: { reference },
-    whileElementsMounted: autoUpdate,
+    whileElementsMounted: (ref, floating, update) =>
+      autoUpdate({ ref, floating, update, overlayRef }),
     middleware: [
       flip({ fallbackPlacements: ["top", "bottom", "left", "right"] }),
       shift({ crossAxis: true, padding: BOUNDARY_PADDING }),
@@ -96,6 +103,20 @@ export const BaseTooltip: FC<Props> = (props) => {
     };
   }, [reference]);
 
+  const [isTargetInView, setIsTargetInView] = useState(false);
+  const blockScrollPosition = tooltipScrollPositionToScrollLogicalPosition(props.scrollPosition);
+  useEffect(() => {
+    if (!reference || !blockScrollPosition) return;
+
+    const cleanup = tooltipScrollToTarget({
+      reference,
+      blockScrollPosition,
+      onTargetInView: () => setIsTargetInView(true),
+    });
+
+    return cleanup;
+  }, [reference, blockScrollPosition]);
+
   useEffect(() => {
     if (!props.targetElement) {
       log.error("Cannot render Tooltip without target element");
@@ -105,6 +126,8 @@ export const BaseTooltip: FC<Props> = (props) => {
   if (!reference) return null;
   // Avoid rendering on client render to prevent hydration issues
   if (firstRender) return null;
+  // Avoid rendering the tooltip when scrollPosition is defined and the target element is not in view
+  if (blockScrollPosition && !isTargetInView) return null;
 
   if (refs.floating.current) {
     refs.floating.current.style.left = `${x}px`;
@@ -123,14 +146,6 @@ export const BaseTooltip: FC<Props> = (props) => {
     arrowRef.current.style.bottom = "";
     arrowRef.current.style[staticSide] = `${-ARROW_SIZE}px`;
   });
-
-  if (overlayRef.current) {
-    const targetPosition = reference.getBoundingClientRect();
-    overlayRef.current.style.top = `${targetPosition.top}px`;
-    overlayRef.current.style.left = `${targetPosition.left}px`;
-    overlayRef.current.style.width = `${targetPosition.width}px`;
-    overlayRef.current.style.height = `${targetPosition.height}px`;
-  }
 
   const buttons = [];
   if (props.secondaryButton)
@@ -196,3 +211,31 @@ export const BaseTooltip: FC<Props> = (props) => {
     </div>
   );
 };
+
+const autoUpdate = ({
+  floating,
+  ref,
+  update,
+  overlayRef,
+}: {
+  ref: ReferenceType;
+  floating: HTMLElement;
+  update: () => void;
+  overlayRef: RefObject<HTMLDivElement | null>;
+}): (() => void) =>
+  floatingAutoUpdate(
+    ref,
+    floating,
+    () => {
+      if (overlayRef.current) {
+        const targetPosition = ref.getBoundingClientRect();
+        overlayRef.current.style.top = `${targetPosition.top}px`;
+        overlayRef.current.style.left = `${targetPosition.left}px`;
+        overlayRef.current.style.width = `${targetPosition.width}px`;
+        overlayRef.current.style.height = `${targetPosition.height}px`;
+      }
+
+      update();
+    },
+    { animationFrame: true },
+  );

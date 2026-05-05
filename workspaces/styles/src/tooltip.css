@@ -1,3 +1,7 @@
+.flows_basicsV2_tooltip_scroll_target {
+  scroll-margin: var(--flows-basicsV2-tooltip-targetScrollMargin);
+}
+
 .flows_basicsV2_tooltip_root {
   width: 100%;
   top: 0;
