@@ -1,0 +1,33 @@
+---
+// Don't forget to import the CSS styles for Flows components
+import "@flows/js-components/index.css";
+---
+
+<script>
+  import { init } from "@flows/js";
+  import { setupJsComponents } from "@flows/js-components";
+
+  import * as components from "@flows/js-components/components";
+  import * as tourComponents from "@flows/js-components/tour-components";
+  import * as surveyComponents from "@flows/js-components/survey-components";
+
+
+  init({
+      organizationId: "YOUR_ORGANIZATION_ID",
+      userId: "YOUR_USER_ID",
+      environment: "production",
+    });
+     setupJsComponents({
+      components: {
+        ...components,
+      },
+      tourComponents: {
+        ...tourComponents,
+      },
+      surveyComponents: {
+        ...surveyComponents,
+      },
+    });
+</script>
+
+<flows-floating-blocks></flows-floating-blocks>
