@@ -34,6 +34,7 @@
     "jest.config.js",
     "package.json",
     "pnpm-*.yaml",
-    "test-results"
+    "test-results",
+    "out"
   ]
 }
