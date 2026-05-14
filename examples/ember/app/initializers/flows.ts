@@ -13,8 +13,8 @@ class NoopComponent extends HTMLElement {}
 
 export function initialize() {
   init({
-    organizationId: "2d646d66-2543-42a1-914d-69584e73ed42",
-    userId: "ember-user",
+    organizationId: "YOUR_ORGANIZATION_ID",
+    userId: "YOUR_USER_ID",
     environment: "production",
   });
   setupJsComponents({
