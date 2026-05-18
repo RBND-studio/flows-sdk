@@ -30,6 +30,7 @@ export const SingleChoiceInput = ({ question, onAnswer, legendId, descriptionId 
         return (
           <button
             key={option.id}
+            // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role
             role="radio"
             type="button"
             aria-checked={isSelected}
