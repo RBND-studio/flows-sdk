@@ -1,11 +1,11 @@
 import { computed } from "@preact/signals-core";
 import { pathnameMatch } from "@flows/shared";
-import { blocks, config, pathname, runningSurveyIds, runningTours } from "./store";
+import { blocks, config, pathname, runningSurveyBlockStateIds, runningTours } from "./store";
 import { itemToActiveBlock } from "./lib/active-block";
 
 export const visibleBlocks = computed(() => {
   const blocksValue = blocks.value;
-  const runningSurveyIdsValue = runningSurveyIds.value;
+  const runningSurveyIdsValue = runningSurveyBlockStateIds.value;
   const pathnameValue = pathname.value;
 
   const runningSurveyIdsSet = new Set(runningSurveyIdsValue);

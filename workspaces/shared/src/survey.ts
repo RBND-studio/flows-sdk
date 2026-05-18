@@ -21,11 +21,11 @@ export const getSessionStorageRunningSurveys = (): string[] => {
   }
 };
 
-export const saveSessionStorageRunningSurveys = (runningSurveyIds: string[]): void => {
+export const saveSessionStorageRunningSurveys = (runningBlockStateIds: string[]): void => {
   if (typeof window === "undefined") return;
 
   try {
-    sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(runningSurveyIds));
+    sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(runningBlockStateIds));
   } catch {
     log.error("Failed to write to sessionStorage");
   }
