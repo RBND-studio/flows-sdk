@@ -82,11 +82,11 @@ class SurveyPopover extends LitElement implements SurveyPopoverProps {
   @query(".flows_basicsV2_survey_popover")
   private popoverElement?: HTMLElement;
 
-  handleTransitionEnd(event: TransitionEvent) {
+  handleTransitionEnd = (event: TransitionEvent) => {
     if (event.propertyName === "height" && event.target === this.popoverElement) {
       this.popoverElement.style.height = "";
     }
-  }
+  };
 
   connectedCallback(): void {
     super.connectedCallback();
@@ -99,11 +99,11 @@ class SurveyPopover extends LitElement implements SurveyPopoverProps {
     clearTimeout(this.autoCloseTimeout);
     clearTimeout(this.autoProceedTimeout);
     clearTimeout(this.closeTimeout);
-    this.popoverElement?.removeEventListener("transitionend", this.handleTransitionEnd.bind(this));
+    this.popoverElement?.removeEventListener("transitionend", this.handleTransitionEnd);
   }
 
   firstUpdated(): void {
-    this.popoverElement?.addEventListener("transitionend", this.handleTransitionEnd.bind(this));
+    this.popoverElement?.addEventListener("transitionend", this.handleTransitionEnd);
   }
   updated(_changedProperties: Map<string, unknown>): void {
     if (this.currentQuestion?.type === "end-screen" && this.autoCloseAfterSubmit) {
