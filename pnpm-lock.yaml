@@ -101,8 +101,8 @@ importers:
         specifier: ^1.0.3
         version: 1.0.3
       '@preact/signals-core':
-        specifier: ^1.13.0
-        version: 1.13.0
+        specifier: ^1.14.2
+        version: 1.14.2
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -1452,8 +1452,8 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  '@preact/signals-core@1.13.0':
-    resolution: {integrity: sha512-slT6XeTCAbdql61GVLlGU4x7XHI7kCZV5Um5uhE4zLX4ApgiiXc0UYFvVOKq06xcovzp7p+61l68oPi563ARKg==}
+  '@preact/signals-core@1.14.2':
+    resolution: {integrity: sha512-RZHdBj9ZF4n40Rp4jS052EHHjBWf96P9oNdXPfhQTovCuWY9iQn3Gq+gOTJSgBO9A/JBuPfMOWsSX/lIU9Pc/A==}
 
   '@rolldown/binding-android-arm64@1.0.0-rc.18':
     resolution: {integrity: sha512-lIDyUAfD7U3+BWKzdxMbJcsYHuqXqmGz40aeRqvuAm3y5TkJSYTBW2RDrn65DJFPQqVjUAUqq5uz8urzQ8aBdQ==}
@@ -4507,7 +4507,7 @@ snapshots:
 
   '@lit-labs/preact-signals@1.0.3':
     dependencies:
-      '@preact/signals-core': 1.13.0
+      '@preact/signals-core': 1.14.2
       lit: 3.3.3
 
   '@lit-labs/ssr-dom-shim@1.6.0': {}
@@ -4673,7 +4673,7 @@ snapshots:
     dependencies:
       playwright: 1.60.0
 
-  '@preact/signals-core@1.13.0': {}
+  '@preact/signals-core@1.14.2': {}
 
   '@rolldown/binding-android-arm64@1.0.0-rc.18':
     optional: true
