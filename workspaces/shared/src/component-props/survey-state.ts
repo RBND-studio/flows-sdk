@@ -12,15 +12,15 @@ type PersistedSurveyState = {
 };
 
 export class SurveyState {
-  surveyId: string;
+  blockStateId: string;
   questionsLength = 0;
 
   questionIndex = 0;
   questions: { [questionId: string]: QuestionState } = {};
 
-  constructor(surveyId: string) {
-    this.surveyId = surveyId;
-    SurveyState.instancesBySurveyId.set(surveyId, this);
+  private constructor(blockStateId: string) {
+    this.blockStateId = blockStateId;
+    SurveyState.instancesByBlockStateId.set(blockStateId, this);
   }
 
   updateQuestion(questionId: string, update: Partial<QuestionState>): void {
@@ -56,15 +56,18 @@ export class SurveyState {
     return this.questionIndex;
   }
 
-  static getSessionStorageKey(surveyId: string): string {
-    return `flows-survey-state-${surveyId}`;
+  static getSessionStorageKey(blockStateId: string): string {
+    return `flows-survey-state-${blockStateId}`;
   }
   saveToSessionStorage(): void {
     const data: PersistedSurveyState = {
       questionIndex: this.questionIndex,
       questions: this.questions,
     };
-    sessionStorage.setItem(SurveyState.getSessionStorageKey(this.surveyId), JSON.stringify(data));
+    sessionStorage.setItem(
+      SurveyState.getSessionStorageKey(this.blockStateId),
+      JSON.stringify(data),
+    );
   }
   debouncedSaveToSessionStorage = debounce(this.saveToSessionStorage.bind(this), 500);
   save(immediate = false): void {
@@ -74,26 +77,37 @@ export class SurveyState {
     }
   }
 
-  static instancesBySurveyId: Map<string, SurveyState> = new Map();
-  static getInstance(surveyId: string): SurveyState {
-    const existing = SurveyState.instancesBySurveyId.get(surveyId);
-    if (existing) return existing;
+  static instancesByBlockStateId: Map<string, SurveyState> = new Map();
+  static getInstance(
+    blockStateId: string,
+    context: {
+      questionsLength: number;
+    },
+  ): SurveyState {
+    const existingState = SurveyState.instancesByBlockStateId.get(blockStateId);
+    if (existingState) {
+      existingState.questionsLength = context.questionsLength;
+      return existingState;
+    }
 
-    const persistedState = sessionStorage.getItem(SurveyState.getSessionStorageKey(surveyId));
+    const persistedState = sessionStorage.getItem(SurveyState.getSessionStorageKey(blockStateId));
     try {
       if (!persistedState) throw new Error();
       const parsedState = JSON.parse(persistedState) as PersistedSurveyState;
-      const manager = new SurveyState(surveyId);
-      manager.questionIndex = parsedState.questionIndex;
-      manager.questions = parsedState.questions;
-      return manager;
+      const savedState = new SurveyState(blockStateId);
+      savedState.questionIndex = parsedState.questionIndex;
+      savedState.questions = parsedState.questions;
+      savedState.questionsLength = context.questionsLength;
+      return savedState;
     } catch {
-      return new SurveyState(surveyId);
+      const newState = new SurveyState(blockStateId);
+      newState.questionsLength = context.questionsLength;
+      return newState;
     }
   }
   deleteInstance(): void {
     this.debouncedSaveToSessionStorage.cancel();
-    SurveyState.instancesBySurveyId.delete(this.surveyId);
-    sessionStorage.removeItem(SurveyState.getSessionStorageKey(this.surveyId));
+    SurveyState.instancesByBlockStateId.delete(this.blockStateId);
+    sessionStorage.removeItem(SurveyState.getSessionStorageKey(this.blockStateId));
   }
 }

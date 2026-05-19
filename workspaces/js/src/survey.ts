@@ -1,12 +1,12 @@
 import { effect } from "@preact/signals-core";
-import { blocks, blocksState, pathname, runningSurveyIds } from "./store";
+import { blocks, blocksState, pathname, runningSurveyBlockStateIds } from "./store";
 import type { Block } from "@flows/shared";
 import { blockTriggerMatch, getPathname, saveSessionStorageRunningSurveys } from "@flows/shared";
 import { debounce } from "es-toolkit";
 
 // Save surveys to sessionStorage
 effect(() => {
-  saveSessionStorageRunningSurveys(runningSurveyIds.value);
+  saveSessionStorageRunningSurveys(runningSurveyBlockStateIds.value);
 });
 
 const startSurveysIfNeeded = (
@@ -14,14 +14,16 @@ const startSurveysIfNeeded = (
   ctx: { pathname: string; event?: MouseEvent },
 ): void => {
   const surveyBlocks = blocks.filter((b) => b.type === "survey");
-  const runningSurveyIdsSet = new Set(runningSurveyIds.peek());
+  const runningSurveyBlockStateIdsSet = new Set(runningSurveyBlockStateIds.peek());
 
   surveyBlocks.forEach((block) => {
-    if (runningSurveyIdsSet.has(block.id)) return;
+    const blockStateId = block.survey?.blockStateId;
+    if (!blockStateId) return;
+    if (runningSurveyBlockStateIdsSet.has(blockStateId)) return;
     const triggerMatch = blockTriggerMatch(block.tour_trigger, ctx);
     if (!triggerMatch) return;
 
-    runningSurveyIds.value = [...runningSurveyIds.peek(), block.id];
+    runningSurveyBlockStateIds.value = [...runningSurveyBlockStateIds.peek(), blockStateId];
   });
 };
 
@@ -30,8 +32,15 @@ effect(() => {
   const blocks = blocksState.value;
   if (!blocks) return;
 
-  const surveyBlockIds = new Set(blocks.filter((b) => b.type === "survey").map((b) => b.id));
-  runningSurveyIds.value = runningSurveyIds.peek().filter((id) => surveyBlockIds.has(id));
+  const surveyBlockStateIds = new Set(
+    blocks
+      .filter((b) => b.type === "survey")
+      .map((b) => b.survey?.blockStateId)
+      .filter((id): id is string => !!id),
+  );
+  runningSurveyBlockStateIds.value = runningSurveyBlockStateIds
+    .peek()
+    .filter((id) => surveyBlockStateIds.has(id));
 });
 
 // Handle trigger by navigation

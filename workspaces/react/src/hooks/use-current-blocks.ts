@@ -6,13 +6,16 @@ import { isBlock, itemToActiveBlock } from "../lib/active-block";
 import { getSlot } from "../lib/selectors";
 
 export const useVisibleBlocks = (): Block[] => {
-  const { blocks, runningSurveyIds } = useFlowsContext();
+  const { blocks, runningSurveyBlockStateIds } = useFlowsContext();
   const pathname = usePathname();
   return useMemo(() => {
-    const runningSurveyIdsSet = new Set(runningSurveyIds);
+    const runningSurveyBlockStateIdsSet = new Set(runningSurveyBlockStateIds);
 
     return blocks.filter((b) => {
-      if (b.type === "survey" && !runningSurveyIdsSet.has(b.id)) return false;
+      if (b.type === "survey") {
+        const blockStateId = b.survey?.blockStateId;
+        if (!blockStateId || !runningSurveyBlockStateIdsSet.has(blockStateId)) return false;
+      }
 
       const pageTargetingMatch = pathnameMatch({
         pathname,
@@ -22,7 +25,7 @@ export const useVisibleBlocks = (): Block[] => {
 
       return pageTargetingMatch;
     });
-  }, [blocks, pathname, runningSurveyIds]);
+  }, [blocks, pathname, runningSurveyBlockStateIds]);
 };
 
 const useVisibleTours = (): RunningTour[] => {

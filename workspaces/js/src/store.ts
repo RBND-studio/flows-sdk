@@ -43,4 +43,4 @@ export interface RunningTour {
 export const tourBlocks = computed(() => blocks.value.filter((b) => b.type === "tour"));
 export const runningTours = signal<RunningTour[]>([]);
 
-export const runningSurveyIds = signal<string[]>(getSessionStorageRunningSurveys());
+export const runningSurveyBlockStateIds = signal<string[]>(getSessionStorageRunningSurveys());

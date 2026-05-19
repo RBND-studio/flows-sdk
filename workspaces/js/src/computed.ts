@@ -1,17 +1,20 @@
 import { computed } from "@preact/signals-core";
 import { pathnameMatch } from "@flows/shared";
-import { blocks, config, pathname, runningSurveyIds, runningTours } from "./store";
+import { blocks, config, pathname, runningSurveyBlockStateIds, runningTours } from "./store";
 import { itemToActiveBlock } from "./lib/active-block";
 
 export const visibleBlocks = computed(() => {
   const blocksValue = blocks.value;
-  const runningSurveyIdsValue = runningSurveyIds.value;
+  const runningSurveyBlockStateIdsValue = runningSurveyBlockStateIds.value;
   const pathnameValue = pathname.value;
 
-  const runningSurveyIdsSet = new Set(runningSurveyIdsValue);
+  const runningSurveyBlockStateIdsSet = new Set(runningSurveyBlockStateIdsValue);
 
   return blocksValue.filter((b) => {
-    if (b.type === "survey" && !runningSurveyIdsSet.has(b.id)) return false;
+    if (b.type === "survey") {
+      const blockStateId = b.survey?.blockStateId;
+      if (!blockStateId || !runningSurveyBlockStateIdsSet.has(blockStateId)) return false;
+    }
 
     const pageTargetingMatch = pathnameMatch({
       pathname: pathnameValue,

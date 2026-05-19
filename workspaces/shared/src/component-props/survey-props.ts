@@ -51,7 +51,9 @@ export const createSurveyComponentProps = (props: {
       return;
     }
 
-    const surveyState = SurveyState.getInstance(survey.id);
+    const surveyState = SurveyState.getInstance(survey.blockStateId, {
+      questionsLength: survey.questions.length,
+    });
 
     await props.submitSurvey({
       surveyId: survey.id,
@@ -100,8 +102,13 @@ export const createSurveyComponentProps = (props: {
     surveyState.deleteInstance();
   };
 
-  const surveyState = SurveyState.getInstance(survey.id);
-  surveyState.questionsLength = survey.questions.length;
+  // When blockStateId is null, the survey block is part of block-state property and doesn't have a block state yet
+  // As a result all of the survey methods will be no-ops
+  const surveyState = survey.blockStateId
+    ? SurveyState.getInstance(survey.blockStateId, {
+        questionsLength: survey.questions.length,
+      })
+    : null;
 
   const questions = survey.questions.map((question): SurveyQuestion | null => {
     const questionBase: QuestionBase<SurveyQuestionType> = {
@@ -117,8 +124,8 @@ export const createSurveyComponentProps = (props: {
         ...questionBase,
         type: "freeform",
         placeholder: template(question.textPlaceholder ?? "", props.userProperties),
-        setValue: (value) => surveyState.updateQuestion(question.id, { textResponse: value }),
-        getValue: () => surveyState.getQuestionValue(question.id),
+        setValue: (value) => surveyState?.updateQuestion(question.id, { textResponse: value }),
+        getValue: () => surveyState?.getQuestionValue(question.id),
       };
     }
     if (questionBase.type === "rating") {
@@ -130,8 +137,8 @@ export const createSurveyComponentProps = (props: {
         maxValue: question.maxValue ?? 5,
         lowerBoundLabel: template(question.lowerBoundLabel ?? "", props.userProperties),
         upperBoundLabel: template(question.upperBoundLabel ?? "", props.userProperties),
-        setValue: (value) => surveyState.updateQuestion(question.id, { textResponse: value }),
-        getValue: () => surveyState.getQuestionValue(question.id),
+        setValue: (value) => surveyState?.updateQuestion(question.id, { textResponse: value }),
+        getValue: () => surveyState?.getQuestionValue(question.id),
       };
     }
     if (questionBase.type === "single-choice") {
@@ -147,21 +154,21 @@ export const createSurveyComponentProps = (props: {
             label: template(option.label, props.userProperties),
           }),
         ),
-        getSelectedOptionIds: () => surveyState.getQuestionOptionIds(question.id),
+        getSelectedOptionIds: () => surveyState?.getQuestionOptionIds(question.id) ?? [],
         setSelectedOptionIds: (optionIds) =>
-          surveyState.updateQuestion(question.id, {
+          surveyState?.updateQuestion(question.id, {
             optionIds: optionIds,
             otherSelected: false,
             textResponse: undefined,
           }),
-        setValue: (value) => surveyState.updateQuestion(question.id, { textResponse: value }),
-        getValue: () => surveyState.getQuestionValue(question.id),
+        setValue: (value) => surveyState?.updateQuestion(question.id, { textResponse: value }),
+        getValue: () => surveyState?.getQuestionValue(question.id),
         setOtherSelected: (selected) => {
           const update: Partial<QuestionState> = { otherSelected: selected, optionIds: [] };
           if (!selected) update.textResponse = undefined;
-          surveyState.updateQuestion(question.id, update);
+          surveyState?.updateQuestion(question.id, update);
         },
-        getOtherSelected: () => surveyState.getOtherSelected(question.id),
+        getOtherSelected: () => surveyState?.getOtherSelected(question.id) ?? false,
       };
     }
     if (questionBase.type === "multiple-choice") {
@@ -177,19 +184,19 @@ export const createSurveyComponentProps = (props: {
             label: template(option.label, props.userProperties),
           }),
         ),
-        getSelectedOptionIds: () => surveyState.getQuestionOptionIds(question.id),
+        getSelectedOptionIds: () => surveyState?.getQuestionOptionIds(question.id) ?? [],
         setSelectedOptionIds: (optionIds) =>
-          surveyState.updateQuestion(question.id, {
+          surveyState?.updateQuestion(question.id, {
             optionIds: optionIds,
           }),
-        getValue: () => surveyState.getQuestionValue(question.id),
-        setValue: (value) => surveyState.updateQuestion(question.id, { textResponse: value }),
+        getValue: () => surveyState?.getQuestionValue(question.id),
+        setValue: (value) => surveyState?.updateQuestion(question.id, { textResponse: value }),
         setOtherSelected: (selected) => {
           const update: Partial<QuestionState> = { otherSelected: selected };
           if (!selected) update.textResponse = undefined;
-          surveyState.updateQuestion(question.id, update);
+          surveyState?.updateQuestion(question.id, update);
         },
-        getOtherSelected: () => surveyState.getOtherSelected(question.id),
+        getOtherSelected: () => surveyState?.getOtherSelected(question.id) ?? false,
       };
     }
     if (questionBase.type === "link") {
@@ -199,7 +206,7 @@ export const createSurveyComponentProps = (props: {
         url: template(question.url ?? "", props.userProperties),
         openInNew: question.openInNew ?? false,
         linkLabel: template(question.linkLabel ?? "", props.userProperties),
-        setClicked: () => surveyState.updateQuestion(question.id, { clickedLink: true }),
+        setClicked: () => surveyState?.updateQuestion(question.id, { clickedLink: true }),
       };
     }
     if (questionBase.type === "end-screen") {
@@ -219,9 +226,9 @@ export const createSurveyComponentProps = (props: {
 
   const surveyProp: Survey = {
     questions: filteredQuestions,
-    getCurrentQuestionIndex: () => surveyState.questionIndex,
+    getCurrentQuestionIndex: () => surveyState?.questionIndex ?? 0,
     nextQuestion: () => {
-      const newIndex = surveyState.nextQuestion();
+      const newIndex = surveyState?.nextQuestion() ?? 0;
       const newQuestion = filteredQuestions.at(newIndex);
 
       if (newQuestion?.type === "end-screen") {
@@ -230,7 +237,10 @@ export const createSurveyComponentProps = (props: {
 
       return newIndex;
     },
-    previousQuestion: surveyState.previousQuestion.bind(surveyState),
+    previousQuestion: () => {
+      const newIndex = surveyState?.previousQuestion() ?? 0;
+      return newIndex;
+    },
     submit: handleSubmit,
   };
 
