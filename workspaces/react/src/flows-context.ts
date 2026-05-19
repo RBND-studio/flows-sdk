@@ -21,7 +21,7 @@ export interface IFlowsContext {
   tourComponents: TourComponents;
   surveyComponents: SurveyComponents;
   runningTours: RunningTour[];
-  runningSurveyIds: string[];
+  runningSurveyBlockStateIds: string[];
   removeBlock: RemoveBlock;
   updateBlock: UpdateBlock;
 }
@@ -35,7 +35,7 @@ export const FlowsContext = createContext<IFlowsContext>({
   tourComponents: {},
   surveyComponents: {},
   runningTours: [],
-  runningSurveyIds: [],
+  runningSurveyBlockStateIds: [],
   userProperties: {},
   removeBlock: noop,
   updateBlock: noop,

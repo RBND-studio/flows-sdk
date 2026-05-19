@@ -171,7 +171,7 @@ const FlowsProviderInner: FC<Props> = ({
   });
 
   const runningTours = useRunningTours({ blocks, removeBlock });
-  const runningSurveyIds = useRunningSurveys({ blocksState });
+  const runningSurveyBlockStateIds = useRunningSurveys({ blocksState });
 
   useEffect(() => {
     window.__flows_LinkComponent = LinkComponent;
@@ -184,7 +184,7 @@ const FlowsProviderInner: FC<Props> = ({
         blocks,
         components,
         runningTours,
-        runningSurveyIds,
+        runningSurveyBlockStateIds,
         tourComponents,
         surveyComponents,
         removeBlock,

@@ -270,9 +270,12 @@ const run = (packageName: string) => {
 
     test(`${packageName} - should ignore trigger with running survey`, async ({ page }) => {
       const block = getSurvey([{ type: "navigation", operator: "eq", values: ["/wrong"] }]);
-      await page.addInitScript((surveyId) => {
-        window.sessionStorage.setItem("flows-running-surveys", JSON.stringify([surveyId]));
-      }, block.id);
+      await page.addInitScript((surveyBlockStateId) => {
+        window.sessionStorage.setItem(
+          "flows-running-surveys",
+          JSON.stringify([surveyBlockStateId]),
+        );
+      }, block.survey?.blockStateId);
       await mockBlocksEndpoint(page, [block]);
       await page.goto(`/${packageName}.html`);
       await expect(page.getByText("Hello", { exact: true })).toBeVisible();
