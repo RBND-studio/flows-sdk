@@ -43,6 +43,7 @@ export const RatingInput = ({ question, onAnswer, legendId, descriptionId }: Pro
           return (
             <button
               className="flows_basicsV2_survey_popover_rating_option"
+              // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role
               role="radio"
               type="button"
               aria-checked={isSelected}
