@@ -25,7 +25,6 @@
     "dev": "tsup --env.NODE_ENV development",
     "build": "tsup --env.NODE_ENV production",
     "tsc": "tsc -p tsconfig.json",
-    "version": "pnpm version",
     "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",
     "prepare": "pnpm build"

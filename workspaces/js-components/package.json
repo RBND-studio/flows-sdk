@@ -33,7 +33,6 @@
     "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",
     "tsc": "tsc -p tsconfig.json",
-    "version": "pnpm version",
     "prepare": "pnpm build"
   },
   "dependencies": {
