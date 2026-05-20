@@ -6,6 +6,11 @@ interface Props {
   block: ActiveBlock;
 }
 
+/**
+ * Takes ActiveBlock from `useCurrentFloatingBlocks` or `useCurrentSlotBlocks` and renders it with appropriate component passed to FlowsProvider.
+ *
+ * Useful for advanced rendering implementations.
+ */
 export const Block: FC<Props> = ({ block }) => {
   const { components, tourComponents, surveyComponents } = useFlowsContext();
 
