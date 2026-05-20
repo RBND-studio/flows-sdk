@@ -6,6 +6,7 @@ import {
   addFloatingBlocksChangeListener,
   fetchWorkflows,
 } from "@flows/js";
+import type { FlowsSlot } from "@flows/js-components";
 import { setupJsComponents } from "@flows/js-components";
 import * as _components from "@flows/js-components/components";
 import * as _tourComponents from "@flows/js-components/tour-components";
@@ -36,6 +37,7 @@ const customFetch =
 const noCurrentBlocks =
   new URLSearchParams(window.location.search).get("noCurrentBlocks") === "true";
 const language = new URLSearchParams(window.location.search).get("language") as LanguageOption;
+const slotLimit = new URLSearchParams(window.location.search).get("slotLimit");
 
 class Card extends LitElement {
   @property({ type: String })
@@ -181,3 +183,6 @@ addFloatingBlocksChangeListener((blocks) => {
 document.querySelector("#fetchWorkflows")?.addEventListener("click", () => {
   void fetchWorkflows();
 });
+
+const flowsSlotElement = document.querySelector<FlowsSlot>("flows-slot");
+if (flowsSlotElement) flowsSlotElement.limit = slotLimit ? Number(slotLimit) : undefined;

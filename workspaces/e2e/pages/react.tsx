@@ -47,6 +47,7 @@ const noCurrentBlocks =
 const language = new URLSearchParams(window.location.search).get("language") as LanguageOption;
 const enableLinkComponent =
   new URLSearchParams(window.location.search).get("LinkComponent") === "true";
+const slotLimit = new URLSearchParams(window.location.search).get("slotLimit");
 
 const Card: FC<ComponentProps<{ text: string }>> = (props) => (
   <div
@@ -124,7 +125,11 @@ const Home: FC = () => {
       <h1>heading 1</h1>
       <h2>Subtitle</h2>
 
-      <FlowsSlot id="my-slot" placeholder={<p>Slot placeholder</p>} />
+      <FlowsSlot
+        id="my-slot"
+        limit={slotLimit ? Number(slotLimit) : undefined}
+        placeholder={<p>Slot placeholder</p>}
+      />
 
       {!noCurrentBlocks && <p className="current-blocks">{JSON.stringify(floatingBlocks)}</p>}
 
