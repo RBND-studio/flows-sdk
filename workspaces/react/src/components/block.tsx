@@ -7,9 +7,11 @@ interface Props {
 }
 
 /**
- * Takes ActiveBlock from `useCurrentFloatingBlocks` or `useCurrentSlotBlocks` and renders it with appropriate component passed to FlowsProvider.
+ * Renders a single `ActiveBlock` using the matching component from `components`, `tourComponents`, or `surveyComponents` registered in `FlowsProvider`.
  *
- * Useful for advanced rendering implementations.
+ * `ActiveBlock` can be obtained from `useCurrentFloatingBlocks` or `useCurrentSlotBlocks`.
+ *
+ * Useful for advanced block rendering implementations.
  */
 export const Block: FC<Props> = ({ block }) => {
   const { components, tourComponents, surveyComponents } = useFlowsContext();

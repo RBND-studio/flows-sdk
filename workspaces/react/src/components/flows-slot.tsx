@@ -7,9 +7,11 @@ export interface FlowsSlotProps {
   id: string;
   placeholder?: ReactNode;
   /**
-   * Optional limit of how many blocks to render in this slot. If not provided, all blocks will be rendered.
+   * Limit of how many blocks to render in this slot. Defaults to no limit.
    *
-   * Useful when multiple blocks are matching the same slot.
+   * Useful when multiple blocks match the same slot.
+   *
+   * @default undefined
    */
   limit?: number;
 }
