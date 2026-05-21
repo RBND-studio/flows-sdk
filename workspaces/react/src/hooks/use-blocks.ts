@@ -67,9 +67,16 @@ export const useBlocks = ({
     }
   }, [userProperties]);
 
+  const activeFetchRef = useRef<Promise<void> | null>(null);
+  const queuedFetchRef = useRef(false);
   const fetchBlocks = useCallback(() => {
+    if (activeFetchRef.current) {
+      queuedFetchRef.current = true;
+      return;
+    }
+
     setError(false);
-    void getApi({ apiUrl, version: packageAndVersion, customFetch })
+    activeFetchRef.current = getApi({ apiUrl, version: packageAndVersion, customFetch })
       .getBlocks({
         ...params,
         language: getUserLanguage(language),
@@ -93,6 +100,12 @@ export const useBlocks = ({
       .catch((err: unknown) => {
         setError(true);
         log.error("Failed to load blocks", err);
+      })
+      .finally(() => {
+        activeFetchRef.current = null;
+        if (!queuedFetchRef.current) return;
+        queuedFetchRef.current = false;
+        fetchBlocks();
       });
   }, [apiUrl, language, params, customFetch]);
 
@@ -101,11 +114,13 @@ export const useBlocks = ({
   fetchBlocksRef.current = fetchBlocks;
   const blocksStateRef = useRef(blocksState);
   blocksStateRef.current = blocksState;
+  const firstRenderRef = useRef(true);
   useEffect(() => {
-    const blocksStateValue = blocksStateRef.current;
-    if (blocksStateValue !== null) {
-      fetchBlocksRef.current();
+    if (firstRenderRef.current) {
+      firstRenderRef.current = false;
+      return;
     }
+    fetchBlocksRef.current();
   }, [userPropertiesState]);
 
   const websocketUrl = useMemo(() => {
