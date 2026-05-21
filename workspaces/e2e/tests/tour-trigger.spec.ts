@@ -1,4 +1,10 @@
-import type { Block, TourTrigger, TourTriggerExpression, TourTriggerType } from "@flows/shared";
+import type {
+  ApiSurvey,
+  Block,
+  TourTrigger,
+  TourTriggerExpression,
+  TourTriggerType,
+} from "@flows/shared";
 import test, { expect } from "@playwright/test";
 import { randomUUID } from "crypto";
 import { mockBlocksEndpoint } from "./utils";
@@ -384,6 +390,21 @@ const run = (packageName: string) => {
       await expect(page.getByText("Hello", { exact: true })).toBeHidden();
       await page.reload();
       await expect(page.getByText("World", { exact: true })).toBeVisible();
+    });
+    test(`${packageName} - should be hidden with different block state ID`, async ({ page }) => {
+      const block = getSurvey([{ type: "click", value: "h1" }]);
+      await mockBlocksEndpoint(page, [block]);
+      await page.goto(`/${packageName}.html`);
+      await expect(page.getByText("Hello", { exact: true })).toBeHidden();
+      await page.locator("h1").click();
+      await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+      const surveyBlockWithDifferentBlockStateId: Block = {
+        ...block,
+        survey: { ...(block.survey as ApiSurvey), blockStateId: randomUUID() },
+      };
+      await mockBlocksEndpoint(page, [surveyBlockWithDifferentBlockStateId]);
+      await page.reload();
+      await expect(page.getByText("Hello", { exact: true })).toBeHidden();
     });
   });
 };

@@ -33,3 +33,4 @@ export type {
 export * from "./components/flows-slot";
 export { FlowsProvider } from "./flows-provider";
 export * from "./methods";
+export { Block } from "./components/block";

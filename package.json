@@ -11,6 +11,7 @@
     "shared": "pnpm --filter shared",
     "tsc": "pnpm -r tsc",
     "test": "pnpm -r test",
+    "build": "pnpm -r build",
     "lint": "oxlint --type-aware",
     "commitlint": "commitlint --edit",
     "pre-push": "concurrently \"pnpm lint\" \"pnpm test\" \"pnpm tsc\" \"pnpm spellcheck\"",
