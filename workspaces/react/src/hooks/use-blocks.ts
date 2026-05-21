@@ -11,6 +11,7 @@ import {
   logSlottableBlocksError,
   parseWebsocketMessage,
   type BlockUpdatesMessage,
+  isUserPropertiesEqual,
 } from "@flows/shared";
 import { packageAndVersion } from "../lib/constants";
 import { type RemoveBlock, type UpdateBlock } from "../flows-context";
@@ -55,9 +56,15 @@ export const useBlocks = ({
     () => ({ environment, organizationId, userId }),
     [environment, organizationId, userId],
   );
-  const userPropertiesRef = useRef(userProperties);
+
+  const [userPropertiesState, setUserPropertiesState] = useState(userProperties);
+  const userPropertiesStateRef = useRef(userPropertiesState);
+  userPropertiesStateRef.current = userPropertiesState;
   useEffect(() => {
-    userPropertiesRef.current = userProperties;
+    const stateValue = userPropertiesStateRef.current;
+    if (!isUserPropertiesEqual(stateValue, userProperties)) {
+      setUserPropertiesState(userProperties);
+    }
   }, [userProperties]);
 
   const fetchBlocks = useCallback(() => {
@@ -66,7 +73,7 @@ export const useBlocks = ({
       .getBlocks({
         ...params,
         language: getUserLanguage(language),
-        userProperties: userPropertiesRef.current,
+        userProperties: userPropertiesStateRef.current,
       })
       .then((res) => {
         setBlocksState(pendingMessages.current.reduce(applyUpdateMessageToBlocksState, res.blocks));
@@ -88,6 +95,18 @@ export const useBlocks = ({
         log.error("Failed to load blocks", err);
       });
   }, [apiUrl, language, params, customFetch]);
+
+  // Refetch blocks when userProperties change
+  const fetchBlocksRef = useRef(fetchBlocks);
+  fetchBlocksRef.current = fetchBlocks;
+  const blocksStateRef = useRef(blocksState);
+  blocksStateRef.current = blocksState;
+  useEffect(() => {
+    const blocksStateValue = blocksStateRef.current;
+    if (blocksStateValue !== null) {
+      fetchBlocksRef.current();
+    }
+  }, [userPropertiesState]);
 
   const websocketUrl = useMemo(() => {
     if (usageLimited) return;

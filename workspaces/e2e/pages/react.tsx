@@ -16,7 +16,7 @@ import {
   fetchWorkflows,
 } from "@flows/react";
 import type { FC } from "react";
-import { StrictMode } from "react";
+import { StrictMode, useState } from "react";
 import { createRoot } from "react-dom/client";
 
 import { HashRouter, Link, Route, Routes } from "react-router";
@@ -156,8 +156,10 @@ const LinkComponent: LinkComponentType = ({ href, children, className, onClick }
   </Link>
 );
 
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
+const App: FC = () => {
+  const [count, setCount] = useState(0);
+
+  return (
     <HashRouter>
       <FlowsProvider
         organizationId="orgId"
@@ -167,6 +169,7 @@ createRoot(document.getElementById("root")!).render(
         userProperties={{
           email: "test@flows.sh",
           age: 10,
+          count,
         }}
         apiUrl={apiUrl}
         customFetch={customFetch}
@@ -179,7 +182,14 @@ createRoot(document.getElementById("root")!).render(
           <Route index element={<Home />} />
           <Route path="/another-page" element={<AnotherPage />} />
         </Routes>
+        <button onClick={() => setCount((p) => p + 1)}>Increment</button>
       </FlowsProvider>
     </HashRouter>
+  );
+};
+
+createRoot(document.getElementById("root")!).render(
+  <StrictMode>
+    <App />
   </StrictMode>,
 );
