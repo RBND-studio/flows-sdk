@@ -29,7 +29,7 @@ export interface FlowsProviderProps {
   /**
    * Object with custom [user properties](https://flows.sh/docs/users/properties). Values can be string, number, boolean, or date.
    *
-   * When this value changes, the SDK will automatically refetch blocks to reflect the updated user properties.
+   * When any of the property changes, the SDK will automatically refetch blocks to reflect the updated user properties.
    */
   userProperties?: UserProperties;
   /**

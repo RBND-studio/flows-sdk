@@ -112,8 +112,6 @@ export const useBlocks = ({
   // Refetch blocks when userProperties change
   const fetchBlocksRef = useRef(fetchBlocks);
   fetchBlocksRef.current = fetchBlocks;
-  const blocksStateRef = useRef(blocksState);
-  blocksStateRef.current = blocksState;
   const firstRenderRef = useRef(true);
   useEffect(() => {
     if (firstRenderRef.current) {
