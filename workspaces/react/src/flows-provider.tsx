@@ -28,6 +28,8 @@ export interface FlowsProviderProps {
   userId: string | null;
   /**
    * Object with custom [user properties](https://flows.sh/docs/users/properties). Values can be string, number, boolean, or date.
+   *
+   * When this value changes, the SDK will automatically refetch blocks to reflect the updated user properties.
    */
   userProperties?: UserProperties;
   /**
