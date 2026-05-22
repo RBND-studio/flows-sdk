@@ -8,13 +8,11 @@ interface Props {
   setPanelPage: (page: PanelPage) => void;
   sdkSetupValid: boolean;
   blocks: Block[];
-  activeBlockCount: number;
   organizationId: string;
   pathname: string;
 }
 
 export const HomePanel = ({
-  activeBlockCount,
   blocks,
   organizationId,
   sdkSetupValid,
@@ -47,7 +45,7 @@ export const HomePanel = ({
         onClick: () => {
           setPanelPage("blocks");
         },
-        secondary: `${blocks.length} loaded, ${activeBlockCount} active`,
+        secondary: `${blocks.length} loaded`,
       })}
       ${DebugItem({
         label: "Pathname",

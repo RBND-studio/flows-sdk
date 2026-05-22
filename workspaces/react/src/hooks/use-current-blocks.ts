@@ -2,23 +2,30 @@ import { type ActiveBlock, type Block, pathnameMatch } from "@flows/shared";
 import { useMemo } from "react";
 import { type RunningTour, useFlowsContext } from "../flows-context";
 import { usePathname } from "../contexts/pathname-context";
-import { blockToActiveBlock, tourBlockToActiveBlock } from "../lib/active-block";
+import { isBlock, itemToActiveBlock } from "../lib/active-block";
 import { getSlot } from "../lib/selectors";
 
 export const useVisibleBlocks = (): Block[] => {
-  const { blocks } = useFlowsContext();
+  const { blocks, runningSurveyBlockStateIds } = useFlowsContext();
   const pathname = usePathname();
-  return useMemo(
-    () =>
-      blocks.filter((b) =>
-        pathnameMatch({
-          pathname,
-          operator: b.page_targeting_operator,
-          value: b.page_targeting_values,
-        }),
-      ),
-    [blocks, pathname],
-  );
+  return useMemo(() => {
+    const runningSurveyBlockStateIdsSet = new Set(runningSurveyBlockStateIds);
+
+    return blocks.filter((b) => {
+      if (b.type === "survey") {
+        const blockStateId = b.survey?.blockStateId;
+        if (!blockStateId || !runningSurveyBlockStateIdsSet.has(blockStateId)) return false;
+      }
+
+      const pageTargetingMatch = pathnameMatch({
+        pathname,
+        operator: b.page_targeting_operator,
+        value: b.page_targeting_values,
+      });
+
+      return pageTargetingMatch;
+    });
+  }, [blocks, pathname, runningSurveyBlockStateIds]);
 };
 
 const useVisibleTours = (): RunningTour[] => {
@@ -48,30 +55,22 @@ const useVisibleTours = (): RunningTour[] => {
 export const useCurrentFloatingBlocks = (): ActiveBlock[] => {
   const visibleBlocks = useVisibleBlocks();
   const visibleTours = useVisibleTours();
-  const { removeBlock, updateBlock } = useFlowsContext();
+  const { removeBlock, updateBlock, userProperties } = useFlowsContext();
 
-  const floatingBlocks = useMemo(
-    () =>
-      visibleBlocks
-        .filter((b) => !b.slottable)
-        .flatMap((block) => blockToActiveBlock({ block, removeBlock, updateBlock })),
-    [removeBlock, updateBlock, visibleBlocks],
-  );
-  const floatingTourBlocks = useMemo(
-    () =>
-      visibleTours
-        .filter((tour) => {
-          const activeStep = tour.activeStep;
-          return activeStep && !activeStep.slottable;
-        })
-        .flatMap(tourBlockToActiveBlock),
-    [visibleTours],
-  );
+  return useMemo(() => {
+    const items = [
+      ...visibleBlocks.filter((b) => !b.slottable),
+      ...visibleTours.filter((tour) => {
+        const activeStep = tour.activeStep;
+        return activeStep && !activeStep.slottable;
+      }),
+    ];
 
-  return [...floatingBlocks, ...floatingTourBlocks];
+    return items.flatMap((item) =>
+      itemToActiveBlock(item, { removeBlock, updateBlock, userProperties }),
+    );
+  }, [removeBlock, updateBlock, userProperties, visibleBlocks, visibleTours]);
 };
-
-const isBlock = (item: Block | RunningTour): item is Block => "type" in item;
 
 const getSlotIndex = (item: Block | RunningTour): number => {
   if (isBlock(item)) return item.slotIndex ?? 0;
@@ -86,7 +85,7 @@ const getSlotIndex = (item: Block | RunningTour): number => {
 export const useCurrentSlotBlocks = (slotId: string): ActiveBlock[] => {
   const visibleBlocks = useVisibleBlocks();
   const visibleTours = useVisibleTours();
-  const { removeBlock, updateBlock } = useFlowsContext();
+  const { removeBlock, updateBlock, userProperties } = useFlowsContext();
 
   const sortedActiveBlocks = useMemo(() => {
     const slotBlocks = visibleBlocks.filter((b) => b.slottable && getSlot(b) === slotId);
@@ -95,11 +94,8 @@ export const useCurrentSlotBlocks = (slotId: string): ActiveBlock[] => {
     );
     return [...slotBlocks, ...slotTourBlocks]
       .sort((a, b) => getSlotIndex(a) - getSlotIndex(b))
-      .flatMap((item) => {
-        if (isBlock(item)) return blockToActiveBlock({ block: item, removeBlock, updateBlock });
-        return tourBlockToActiveBlock(item);
-      });
-  }, [removeBlock, slotId, updateBlock, visibleBlocks, visibleTours]);
+      .flatMap((item) => itemToActiveBlock(item, { removeBlock, updateBlock, userProperties }));
+  }, [removeBlock, slotId, userProperties, updateBlock, visibleBlocks, visibleTours]);
 
   return sortedActiveBlocks;
 };

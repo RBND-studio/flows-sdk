@@ -1,5 +1,5 @@
-.flows_iconButton {
-  border-radius: var(--flows-borderRadius-small);
+.flows_basicsV2_iconButton {
+  border-radius: var(--flows-basicsV2-borderRadius-m);
   cursor: pointer;
   transition:
     background-color 120ms ease-in-out,
@@ -12,6 +12,6 @@
   display: grid;
   place-items: center;
 }
-.flows_iconButton:hover {
-  background-color: var(--flows-bg-hover);
+.flows_basicsV2_iconButton:hover {
+  background-color: var(--flows-basicsV2-bg-hover);
 }

@@ -16,16 +16,8 @@ let locationChangeInterval: number | null = null;
 export const init = ({ debug, onDebugShortcut, ...options }: FlowsOptions): void => {
   const apiUrl = options.apiUrl ?? "https://api.flows-cloud.com";
   config.value = { ...options, apiUrl };
-  const { environment, organizationId, userId, userProperties, language } = options;
 
-  connectToWebsocketAndFetchBlocks({
-    apiUrl,
-    environment,
-    organizationId,
-    userId,
-    userProperties,
-    language,
-  });
+  connectToWebsocketAndFetchBlocks();
 
   if (locationChangeInterval !== null) clearInterval(locationChangeInterval);
   locationChangeInterval = window.setInterval(() => {

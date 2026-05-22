@@ -65,3 +65,51 @@ describe("elementContains", () => {
     expect(matchers.elementContains({ eventTarget: el, value: undefined })).toBe(false);
   });
 });
+
+describe("elementExists", () => {
+  it("should return false if selector is not a string", () => {
+    expect(matchers.elementExists(123)).toBe(false);
+    expect(matchers.elementExists(null)).toBe(false);
+    expect(matchers.elementExists(undefined)).toBe(false);
+    expect(matchers.elementExists({})).toBe(false);
+    expect(matchers.elementExists(false)).toBe(false);
+  });
+  it("should return true if selector is an empty string", () => {
+    expect(matchers.elementExists("")).toBe(true);
+    expect(matchers.elementExists(" ")).toBe(true);
+    expect(matchers.elementExists("   ")).toBe(true);
+  });
+  it("should return false if element doesn't exist", () => {
+    expect(matchers.elementExists(".non-existent")).toBe(false);
+  });
+  it("should return true if element exists", () => {
+    const el = document.createElement("div");
+    el.classList.add("existent");
+    document.body.appendChild(el);
+    expect(matchers.elementExists(".existent")).toBe(true);
+  });
+});
+
+describe("elementNotExists", () => {
+  it("should return false if selector is not a string", () => {
+    expect(matchers.elementNotExists(123)).toBe(false);
+    expect(matchers.elementNotExists(null)).toBe(false);
+    expect(matchers.elementNotExists(undefined)).toBe(false);
+    expect(matchers.elementNotExists({})).toBe(false);
+    expect(matchers.elementNotExists(false)).toBe(false);
+  });
+  it("should return true if selector is an empty string", () => {
+    expect(matchers.elementNotExists("")).toBe(true);
+    expect(matchers.elementNotExists(" ")).toBe(true);
+    expect(matchers.elementNotExists("   ")).toBe(true);
+  });
+  it("should return true if element doesn't exist", () => {
+    expect(matchers.elementNotExists(".non-existent")).toBe(true);
+  });
+  it("should return false if element exists", () => {
+    const el = document.createElement("div");
+    el.classList.add("existent");
+    document.body.appendChild(el);
+    expect(matchers.elementNotExists(".existent")).toBe(false);
+  });
+});

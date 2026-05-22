@@ -4,33 +4,70 @@ import {
   createComponentProps,
   type SetStateMemory,
   createActiveBlockProxy,
+  createTourComponentProps,
+  type UserProperties,
+  createSurveyComponentProps,
 } from "@flows/shared";
+import type { RunningTour } from "../store";
 import { removeBlock, updateBlock } from "../store";
 import { nextTourStep, previousTourStep, cancelTour } from "./tour";
-import { sendActivate, sendEvent } from "./api";
+import { postSurvey, sendActivate, sendEvent } from "./api";
 
-export const blockToActiveBlock = (block: Block): ActiveBlock | [] => {
-  if (!block.componentType) return [];
+const setStateMemory: SetStateMemory = async ({ blockId, key, value }) => {
+  updateBlock(blockId, (b) => ({
+    ...b,
+    propertyMeta: b.propertyMeta?.map((sp) => {
+      if (sp.type === "state-memory" && sp.key === key) return { ...sp, value };
+      return sp;
+    }),
+  }));
 
-  const setStateMemory: SetStateMemory = async ({ blockId, key, value }) => {
-    updateBlock(blockId, (b) => ({
-      ...b,
-      propertyMeta: b.propertyMeta?.map((sp) => {
-        if (sp.type === "state-memory" && sp.key === key) return { ...sp, value };
-        return sp;
-      }),
-    }));
+  await sendEvent({
+    name: "set-state-memory",
+    blockId,
+    propertyKey: key,
+    properties: { value },
+  });
+};
 
-    await sendEvent({
-      name: "set-state-memory",
-      blockId,
-      propertyKey: key,
-      properties: { value },
+type TourItem = RunningTour & { block: Block };
+export const isBlock = (item: Block | TourItem): item is Block => "type" in item;
+export const itemToActiveBlock = (
+  item: Block | TourItem,
+  userProperties: UserProperties,
+): ActiveBlock | [] => {
+  if (isBlock(item) && item.type === "component")
+    return blockToActiveBlock({
+      block: item,
+      userProperties,
     });
-  };
+  if (isBlock(item) && item.type === "survey")
+    return surveyBlockToActiveBlock({
+      block: item,
+      userProperties,
+    });
+  if (!isBlock(item))
+    return tourToActiveBlock({
+      block: item.block,
+      currentIndex: item.currentBlockIndex,
+      userProperties,
+    });
+
+  return [];
+};
+
+export const blockToActiveBlock = ({
+  block,
+  userProperties,
+}: {
+  block: Block;
+  userProperties: UserProperties;
+}): ActiveBlock | [] => {
+  if (!block.componentType) return [];
 
   const props = createComponentProps({
     block,
+    userProperties,
     removeBlock,
     exitNodeCb: ({ key, blockId }) => sendEvent({ name: "transition", blockId, propertyKey: key }),
     setStateMemory,
@@ -46,40 +83,73 @@ export const blockToActiveBlock = (block: Block): ActiveBlock | [] => {
   return createActiveBlockProxy(activeBlock, sendActivate);
 };
 
-export const tourToActiveBlock = (block: Block, currentIndex: number): ActiveBlock | [] => {
+export const tourToActiveBlock = ({
+  block,
+  currentIndex,
+  userProperties,
+}: {
+  block: Block;
+  currentIndex: number;
+  userProperties: UserProperties;
+}): ActiveBlock | [] => {
   const tourBlocks = block.tourBlocks;
   if (!tourBlocks?.length) return [];
   const activeStep = tourBlocks.at(currentIndex);
   if (!activeStep?.componentType) return [];
 
-  const isFirstStep = currentIndex === 0;
-
-  const handlePrevious = (): void => {
-    previousTourStep(block, currentIndex);
-  };
-  const handleContinue = (): void => {
-    nextTourStep(block, currentIndex);
-  };
-  const handleCancel = (): void => {
-    cancelTour(block.id);
-  };
+  const props = createTourComponentProps({
+    tourSteps: tourBlocks,
+    tourStep: activeStep,
+    currentIndex,
+    userProperties,
+    handleContinue: () => {
+      nextTourStep(block, currentIndex);
+    },
+    handlePrevious: () => {
+      previousTourStep(block, currentIndex);
+    },
+    handleCancel: () => {
+      cancelTour(block.id);
+    },
+  });
 
   const activeBlock: ActiveBlock = {
     id: activeStep.id,
     tourBlockId: block.id,
     type: "tour-component",
     component: activeStep.componentType,
-    props: {
-      __flows: {
-        id: activeStep.id,
-        key: activeStep.key,
-        workflowId: activeStep.workflowId,
-      },
-      ...activeStep.data,
-      previous: !isFirstStep ? handlePrevious : undefined,
-      continue: handleContinue,
-      cancel: handleCancel,
-    },
+    props,
+  };
+
+  return createActiveBlockProxy(activeBlock, sendActivate);
+};
+
+export const surveyBlockToActiveBlock = ({
+  block,
+  userProperties,
+}: {
+  block: Block;
+  userProperties: UserProperties;
+}): ActiveBlock | [] => {
+  if (block.type !== "survey") return [];
+  if (!block.componentType) return [];
+
+  const props = createSurveyComponentProps({
+    block,
+    userProperties,
+    setStateMemory,
+    removeBlock,
+    exitNodeCb: ({ key, blockId }) => sendEvent({ name: "transition", blockId, propertyKey: key }),
+    submitSurvey: postSurvey,
+  });
+
+  if (!props) return [];
+
+  const activeBlock: ActiveBlock = {
+    id: block.id,
+    type: "survey",
+    component: block.componentType,
+    props,
   };
 
   return createActiveBlockProxy(activeBlock, sendActivate);

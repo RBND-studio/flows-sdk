@@ -1,12 +1,31 @@
 export type {
+  Action,
   ActiveBlock,
   BlockState,
-  ComponentProps,
   FlowsProperties,
-  LanguageOption,
-  Locale,
   StateMemory,
+  CustomFetch,
+  // Localization
+  Locale,
+  LanguageOption,
+  // Workflow
+  Workflow,
+  WorkflowStatus,
+  WorkflowFrequency,
+  WorkflowUserState,
+  // Components
+  ComponentProps,
   TourComponentProps,
+  SurveyComponentProps,
+  // Survey
+  SurveyQuestion,
+  Survey,
+  LinkQuestion,
+  RatingQuestion,
+  FreeformQuestion,
+  EndScreenQuestion,
+  SingleChoiceQuestion,
+  MultipleChoiceQuestion,
 } from "@flows/shared";
 export * from "./init";
 export * from "./methods";

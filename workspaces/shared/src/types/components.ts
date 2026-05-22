@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any -- needed for loose types */
 
+import type { Survey } from "./survey";
+
 /**
  * Properties provided by Flows based on block and block template setup.
  */
@@ -13,9 +15,17 @@ export interface FlowsProperties {
    */
   key?: string;
   /**
-   * Id of the workflow this block belongs to.
+   * Id of the workflow this block belongs to. You can find it in the Flows app in the workflow detail by opening the three dot menu in the top right corner.
    */
   workflowId: string;
+  /**
+   * Total number of visible tour steps (components) in the current tour. Logic steps (e.g. wait) are not counted.
+   */
+  tourVisibleStepCount?: number;
+  /**
+   * 0-based index of the currently visible tour step (component) in the current tour. Logic steps (e.g. wait) are not counted.
+   */
+  tourVisibleStepIndex?: number;
 }
 
 export type ComponentProps<T extends Record<string, any> = any> = {
@@ -33,6 +43,27 @@ export type TourComponentProps<T extends Record<string, any> = any> = {
 
   continue: () => void;
   previous?: () => void;
+  cancel: () => void;
+} & T;
+
+export type SurveyComponentProps<T extends Record<string, any> = any> = {
+  /**
+   * Properties provided by Flows based on block and block template setup.
+   */
+  __flows: FlowsProperties;
+
+  /**
+   * The survey object provided by Flows, containing information about the survey and functions to interact with it.
+   */
+  survey: Survey;
+
+  /**
+   * Exits the survey block with `complete` exit node.
+   */
+  complete: () => void;
+  /**
+   * Exits the survey block with `cancel` exit node.
+   */
   cancel: () => void;
 } & T;
 
@@ -70,6 +101,30 @@ export interface StateMemory {
    * Triggers you have setup in the workflow for this state memory property.
    */
   triggers: StateMemoryTrigger[];
+}
+/**
+ * The object representing action property in your component properties.
+ */
+export interface Action {
+  /**
+   * The label of the element used to trigger the action (eg. button text).
+   */
+  label: string;
+  /**
+   * Optional URL to navigate to when the action is triggered.
+   * When provided no special handling is done, you need to handle the navigation yourself using a link or similar.
+   */
+  url?: string;
+  /**
+   * Optional flag to open the URL in a new tab.
+   * When provided no special handling is done, you need to pass this to the element that will handle the navigation.
+   */
+  openInNew?: boolean;
+  /**
+   * Function to call when the action is triggered.
+   * Currently supports only transition to a specified exit node.
+   */
+  callAction?: () => Promise<void>;
 }
 
 /**

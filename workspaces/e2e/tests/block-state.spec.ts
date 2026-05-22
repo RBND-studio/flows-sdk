@@ -1,6 +1,7 @@
-import { Block } from "@flows/shared";
+import type { Block } from "@flows/shared";
 import { expect, test } from "@playwright/test";
 import { randomUUID } from "crypto";
+import { mockBlocksEndpoint } from "./utils";
 
 test.beforeEach(async ({ page }) => {
   await page.routeWebSocket(
@@ -17,7 +18,7 @@ const getBlocks = (): Block[] => {
     data: {
       title: "Block State Title",
     },
-    propertyMeta: [{ key: "checked2", type: "state-memory" }],
+    propertyMeta: [{ key: "checked2", type: "state-memory", value: false }],
     slottable: false,
     exitNodes: [],
     type: "component",
@@ -41,7 +42,7 @@ const getBlocks = (): Block[] => {
       slottable: false,
       exitNodes: [],
       type: "component",
-      componentType: "Modal",
+      componentType: "BasicsV2Modal",
     },
   ];
 };
@@ -49,16 +50,14 @@ const getBlocks = (): Block[] => {
 const run = (packageName: string) => {
   test(`${packageName} - should pass block state to the component props`, async ({ page }) => {
     const blocks = getBlocks();
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks } });
-    });
+    await mockBlocksEndpoint(page, blocks);
     await page.goto(`/${packageName}.html`);
     await expect(page.locator(".current-blocks")).toHaveText(
       JSON.stringify([
         {
           id: blocks[0]?.id,
           type: "component",
-          component: "Modal",
+          component: "BasicsV2Modal",
           props: {
             __flows: {
               id: blocks[0]?.id,

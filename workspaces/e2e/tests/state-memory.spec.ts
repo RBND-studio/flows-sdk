@@ -1,6 +1,7 @@
-import { Block } from "@flows/shared";
+import type { Block } from "@flows/shared";
 import { expect, test } from "@playwright/test";
 import { randomUUID } from "crypto";
+import { mockBlocksEndpoint } from "./utils";
 
 test.beforeEach(async ({ page }) => {
   await page.routeWebSocket(
@@ -26,6 +27,7 @@ const getBlocks = (): Block[] => [
       {
         key: "checked2",
         type: "state-memory",
+        value: false,
       },
     ],
     slottable: false,
@@ -38,9 +40,7 @@ const getBlocks = (): Block[] => [
 const run = (packageName: string) => {
   test(`${packageName} - should add state memory to props`, async ({ page }) => {
     const blocks = getBlocks();
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks } });
-    });
+    await mockBlocksEndpoint(page, blocks);
     await page.goto(`/${packageName}.html`);
     await expect(page.locator(".current-blocks")).toHaveText(
       JSON.stringify([

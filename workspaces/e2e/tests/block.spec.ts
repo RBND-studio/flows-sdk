@@ -1,6 +1,7 @@
-import { Block } from "@flows/shared";
+import type { Block } from "@flows/shared";
 import { expect, test } from "@playwright/test";
 import { randomUUID } from "crypto";
+import { mockBlocksEndpoint } from "./utils";
 
 const getBlocks = (): Block[] =>
   [
@@ -9,7 +10,7 @@ const getBlocks = (): Block[] =>
       workflowId: randomUUID(),
       key: "my-key",
       type: "component",
-      componentType: "Modal",
+      componentType: "BasicsV2Modal",
       data: {},
       exitNodes: [],
       slottable: false,
@@ -31,7 +32,7 @@ const getBlocks = (): Block[] =>
           key: "tour-block-key",
           slottable: false,
           type: "tour-component",
-          componentType: "Modal",
+          componentType: "BasicsV2Modal",
         },
       ],
     },
@@ -46,25 +47,21 @@ test.beforeEach(async ({ page }) => {
 
 const run = (packageName: string) => {
   test(`${packageName} - return empty blocks`, async ({ page }) => {
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [] } });
-    });
+    await mockBlocksEndpoint(page, []);
     await page.goto(`/${packageName}.html`);
     await expect(page.locator(".current-blocks")).toHaveText(JSON.stringify([]));
   });
 
   test(`${packageName} - return floating blocks`, async ({ page }) => {
     const blocks = getBlocks();
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks } });
-    });
+    await mockBlocksEndpoint(page, blocks);
     await page.goto(`/${packageName}.html`);
     await expect(page.locator(".current-blocks")).toHaveText(
       JSON.stringify([
         {
           id: blocks[0]?.id,
           type: "component",
-          component: "Modal",
+          component: "BasicsV2Modal",
           props: {
             __flows: {
               id: blocks[0]?.id,
@@ -77,12 +74,14 @@ const run = (packageName: string) => {
           id: blocks[1]?.tourBlocks?.[0]?.id,
           tourBlockId: blocks[1]?.id,
           type: "tour-component",
-          component: "Modal",
+          component: "BasicsV2Modal",
           props: {
             __flows: {
               id: blocks[1]?.tourBlocks?.[0]?.id,
               key: "tour-block-key",
               workflowId: blocks[1]?.tourBlocks?.[0]?.workflowId,
+              tourVisibleStepCount: 1,
+              tourVisibleStepIndex: 0,
             },
           },
         },

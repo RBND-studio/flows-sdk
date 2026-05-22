@@ -1,27 +1,54 @@
-import {
+import type {
   ComponentProps,
+  StateMemory as IStateMemory,
+  Action as IAction,
+  LinkComponentType,
+  CustomFetch,
+  LanguageOption,
+} from "@flows/react";
+import {
   FlowsProvider,
   FlowsSlot,
   resetAllWorkflowsProgress,
   resetWorkflowProgress,
   startWorkflow,
-  StateMemory as IStateMemory,
   useCurrentFloatingBlocks,
+  fetchWorkflows,
 } from "@flows/react";
-import { FC, StrictMode } from "react";
+import type { FC } from "react";
+import { StrictMode, useState } from "react";
 import { createRoot } from "react-dom/client";
+
+import { HashRouter, Link, Route, Routes } from "react-router";
 
 import * as components from "@flows/react-components";
 import * as tourComponents from "@flows/react-components/tour";
+import * as surveyComponents from "@flows/react-components/survey";
 import "@flows/react-components/index.css";
-import { LanguageOption } from "@flows/shared";
+
+const customFetchFn: CustomFetch = (url, options) => {
+  return fetch(url, {
+    ...options,
+    headers: {
+      ...(options?.headers as Record<string, string>),
+      "x-test-header": "my-custom-value",
+    },
+  });
+};
 
 const apiUrl = new URLSearchParams(window.location.search).get("apiUrl") ?? undefined;
+const customFetch =
+  new URLSearchParams(window.location.search).get("customFetch") === "true"
+    ? customFetchFn
+    : undefined;
 const noUserId = new URLSearchParams(window.location.search).get("noUserId") === "true";
 const noCurrentBlocks =
   new URLSearchParams(window.location.search).get("noCurrentBlocks") === "true";
 const language = new URLSearchParams(window.location.search).get("language") as LanguageOption;
 const organizationId = new URLSearchParams(window.location.search).get("organizationId");
+const enableLinkComponent =
+  new URLSearchParams(window.location.search).get("LinkComponent") === "true";
+const slotLimit = new URLSearchParams(window.location.search).get("slotLimit");
 
 const Card: FC<ComponentProps<{ text: string }>> = (props) => (
   <div
@@ -71,7 +98,23 @@ const StateMemory: FC<
   </div>
 );
 
-const App: FC = () => {
+const Action: FC<ComponentProps<{ title: string; action: IAction }>> = (props) => {
+  const ActionEl = props.action.url ? "a" : "button";
+  return (
+    <div className="flows-card">
+      <p>{props.title}</p>
+      <ActionEl
+        href={props.action.url}
+        target={props.action.openInNew ? "_blank" : undefined}
+        onClick={props.action.callAction}
+      >
+        {props.action.label}
+      </ActionEl>
+    </div>
+  );
+};
+
+const Home: FC = () => {
   const floatingBlocks = useCurrentFloatingBlocks();
 
   const handleChangeLocation = () => {
@@ -83,7 +126,11 @@ const App: FC = () => {
       <h1>heading 1</h1>
       <h2>Subtitle</h2>
 
-      <FlowsSlot id="my-slot" placeholder={<p>Slot placeholder</p>} />
+      <FlowsSlot
+        id="my-slot"
+        limit={slotLimit ? Number(slotLimit) : undefined}
+        placeholder={<p>Slot placeholder</p>}
+      />
 
       {!noCurrentBlocks && <p className="current-blocks">{JSON.stringify(floatingBlocks)}</p>}
 
@@ -91,26 +138,59 @@ const App: FC = () => {
       <button onClick={() => resetWorkflowProgress("my-workflow-id")}>resetWorkflowProgress</button>
       <button onClick={() => startWorkflow("my-start-block")}>startWorkflow</button>
       <button onClick={handleChangeLocation}>changeLocation</button>
+      <button onClick={() => fetchWorkflows()}>fetchWorkflows</button>
     </>
+  );
+};
+
+const AnotherPage: FC = () => {
+  return (
+    <>
+      <h1>Another Page</h1>
+    </>
+  );
+};
+
+const LinkComponent: LinkComponentType = ({ href, children, className, onClick }) => (
+  <Link to={href} className={className} onClick={onClick}>
+    {children}
+  </Link>
+);
+
+const App: FC = () => {
+  const [count, setCount] = useState(0);
+
+  return (
+    <HashRouter>
+      <FlowsProvider
+        organizationId={organizationId ?? "orgId"}
+        environment="prod"
+        userId={noUserId ? null : "testUserId"}
+        language={language}
+        userProperties={{
+          email: "test@flows.sh",
+          age: 10,
+          count,
+        }}
+        apiUrl={apiUrl}
+        customFetch={customFetch}
+        components={{ ...components, Card, BlockTrigger, StateMemory, Action }}
+        tourComponents={{ ...tourComponents, Card, Action }}
+        surveyComponents={{ ...surveyComponents }}
+        LinkComponent={enableLinkComponent ? LinkComponent : undefined}
+      >
+        <Routes>
+          <Route index element={<Home />} />
+          <Route path="/another-page" element={<AnotherPage />} />
+        </Routes>
+        <button onClick={() => setCount((p) => p + 1)}>Increment</button>
+      </FlowsProvider>
+    </HashRouter>
   );
 };
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <FlowsProvider
-      organizationId={organizationId ?? "orgId"}
-      environment="prod"
-      userId={noUserId ? null : "testUserId"}
-      language={language}
-      userProperties={{
-        email: "test@flows.sh",
-        age: 10,
-      }}
-      apiUrl={apiUrl}
-      components={{ ...components, Card, BlockTrigger, StateMemory }}
-      tourComponents={{ ...tourComponents, Card }}
-    >
-      <App />
-    </FlowsProvider>
+    <App />
   </StrictMode>,
 );

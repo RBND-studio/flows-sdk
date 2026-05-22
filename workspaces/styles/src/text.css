@@ -1,15 +1,15 @@
-.flows_text {
-  font-family: var(--flows-font-family);
+.flows_basicsV2_text {
+  font-family: var(--flows-basicsV2-font-family);
   margin: 0;
 }
 
-.flows_text_body {
-  font-size: var(--flows-base-font-size);
-  line-height: var(--flows-base-line-height);
+.flows_basicsV2_text_body {
+  font-size: var(--flows-basicsV2-base-font-size);
+  line-height: var(--flows-basicsV2-base-line-height);
 }
 
-.flows_text_title {
-  font-size: var(--flows-title-font-size);
-  line-height: var(--flows-title-line-height);
-  font-weight: var(--flows-title-font-weight);
+.flows_basicsV2_text_title {
+  font-size: var(--flows-basicsV2-title-font-size);
+  line-height: var(--flows-basicsV2-title-line-height);
+  font-weight: var(--flows-basicsV2-title-font-weight);
 }

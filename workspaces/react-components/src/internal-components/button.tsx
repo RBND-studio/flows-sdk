@@ -1,18 +1,65 @@
-import classNames from "classnames";
+import { type ButtonSize, type ButtonVariant } from "@flows/shared";
+import { clsx } from "clsx";
 import { type FC, type ReactNode } from "react";
 
 interface Props {
   className?: string;
   children?: ReactNode;
   onClick?: () => void;
-  variant: "primary" | "secondary";
+  variant: ButtonVariant;
+  size?: ButtonSize;
+  href?: string;
+  target?: "_blank";
+  disabled?: boolean;
 }
 
-export const Button: FC<Props> = ({ className, variant, ...props }) => {
+const isInternalLink = (href: string, target?: Props["target"]): boolean => {
+  if (target === "_blank") return false;
+  try {
+    const _url = new URL(href);
+    return false;
+  } catch {
+    return true;
+  }
+};
+
+export const Button: FC<Props> = ({
+  className: classNameProp,
+  variant,
+  size = "default",
+  disabled,
+  ...props
+}) => {
+  const className = clsx(
+    "flows_basicsV2_button",
+    `flows_basicsV2_button_${variant}`,
+    `flows_basicsV2_button_size_${size}`,
+    disabled && "flows_basicsV2_button_disabled",
+    classNameProp,
+  );
+
+  const LinkComponent = window.__flows_LinkComponent;
+  const href = props.href;
+  if (
+    LinkComponent &&
+    typeof LinkComponent === "function" &&
+    href &&
+    isInternalLink(href, props.target)
+  ) {
+    return (
+      <LinkComponent href={href} className={className} onClick={props.onClick}>
+        {props.children}
+      </LinkComponent>
+    );
+  }
+
+  const Cmp = props.href ? "a" : "button";
+
   return (
-    <button
-      type="button"
-      className={classNames("flows_button", `flows_button_${variant}`, className)}
+    <Cmp
+      type={Cmp === "button" ? "button" : undefined}
+      disabled={Cmp === "button" ? disabled : undefined}
+      className={className}
       {...props}
     />
   );

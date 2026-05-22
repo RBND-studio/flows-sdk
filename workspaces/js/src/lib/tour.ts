@@ -1,5 +1,7 @@
 import {
   elementContains,
+  elementExists,
+  elementNotExists,
   getPathname,
   pathnameMatch,
   tourTriggerMatch,
@@ -25,7 +27,7 @@ const startToursIfNeeded = (
 
   tourBlocksValue.forEach((block) => {
     if (runningTourBlockIds.has(block.id)) return;
-    const triggerMatch = tourTriggerMatch(block.tour_trigger, ctx);
+    const triggerMatch = tourTriggerMatch(block, ctx);
     if (!triggerMatch) return;
 
     runningTours.value = [
@@ -52,12 +54,16 @@ export const previousTourStep = (tourBlock: Block, currentIndex: number): void =
 
   if (isFirstStep) return;
   const newIndex = currentIndex - 1;
-  updateTourState(tourBlock.id, (t) => ({ ...t, currentBlockIndex: newIndex }));
   void sendEvent({
     name: "tour-update",
     blockId: tourBlock.id,
     properties: { currentTourIndex: newIndex },
   });
+
+  // Update the step with a timeout to avoid navigation with href from the previous step
+  setTimeout(() => {
+    updateTourState(tourBlock.id, (t) => ({ ...t, currentBlockIndex: newIndex }));
+  }, 0);
 };
 
 export const nextTourStep = (tourBlock: Block, currentIndex: number): void => {
@@ -68,12 +74,16 @@ export const nextTourStep = (tourBlock: Block, currentIndex: number): void => {
     void sendEvent({ name: "transition", blockId: tourBlock.id, propertyKey: "complete" });
   } else {
     const newIndex = currentIndex + 1;
-    updateTourState(tourBlock.id, (t) => ({ ...t, currentBlockIndex: newIndex }));
     void sendEvent({
       name: "tour-update",
       blockId: tourBlock.id,
       properties: { currentTourIndex: newIndex },
     });
+
+    // Update the step with a timeout to avoid navigation with href from the next step
+    setTimeout(() => {
+      updateTourState(tourBlock.id, (t) => ({ ...t, currentBlockIndex: newIndex }));
+    }, 0);
   }
 };
 
@@ -194,19 +204,58 @@ effect(() => {
   startToursIfNeeded(tourBlocksValue, { pathname: pathnameValue });
 });
 
-// Handle trigger by DOM element
+const handleTourElementWaits = (tours: RunningTour[]): void => {
+  const blocksById = new Map(blocks.peek().map((block) => [block.id, block]));
+
+  tours.forEach((tour) => {
+    const tourBlock = blocksById.get(tour.blockId);
+    if (!tourBlock) return;
+    const activeStep = tourBlock.tourBlocks?.at(tour.currentBlockIndex);
+    if (!activeStep) return;
+    const tourWait = activeStep.tourWait;
+    if (!tourWait) return;
+    const waitElement = tourWait.element;
+
+    if (tourWait.interaction === "dom-element") {
+      const pageMatch = pathnameMatch({
+        pathname: getPathname(),
+        operator: tourWait.page?.operator,
+        value: tourWait.page?.value,
+      });
+      const domElementMatch = elementExists(waitElement);
+      if (domElementMatch && pageMatch) nextTourStep(tourBlock, tour.currentBlockIndex);
+    }
+    if (tourWait.interaction === "not-dom-element") {
+      const pageMatch = pathnameMatch({
+        pathname: getPathname(),
+        operator: tourWait.page?.operator,
+        value: tourWait.page?.value,
+      });
+      const notDomElementMatch = elementNotExists(waitElement);
+      if (notDomElementMatch && pageMatch) nextTourStep(tourBlock, tour.currentBlockIndex);
+    }
+  });
+};
+
+// Handle trigger and wait by DOM element
 effect(() => {
   // Ensure this effect runs only in the browser environment because of the MutationObserver
   if (typeof window === "undefined") return;
 
   const tourBlocksValue = tourBlocks.value;
+  const runningToursValue = runningTours.value;
 
-  const debouncedCallback = debounce(() => {
+  const callback = (): void => {
     startToursIfNeeded(tourBlocksValue, { pathname: getPathname() });
-  }, 32);
+    handleTourElementWaits(runningToursValue);
+  };
+
+  const debouncedCallback = debounce(callback, 32);
 
   const observer = new MutationObserver(debouncedCallback);
   observer.observe(document.body, { childList: true, subtree: true, attributes: true });
+  // Run once to catch existing elements
+  debouncedCallback();
   return () => {
     observer.disconnect();
   };

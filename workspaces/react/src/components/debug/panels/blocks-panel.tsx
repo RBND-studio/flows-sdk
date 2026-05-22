@@ -3,18 +3,13 @@ import { type ReactNode } from "react";
 
 interface Props {
   blocks: Block[];
-  activeBlockCount: number;
 }
 
-export const BlocksPanel = ({ blocks, activeBlockCount }: Props): ReactNode => {
+export const BlocksPanel = ({ blocks }: Props): ReactNode => {
   return (
     <>
       <p className="flows-debug-info-line">
         <strong>Loaded blocks:</strong> {blocks.length}
-      </p>
-
-      <p className="flows-debug-info-line">
-        <strong>Active blocks:</strong> {activeBlockCount}
       </p>
 
       <p className="flows-debug-info-line">

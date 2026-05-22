@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react";
 
+const querySelector = <E extends Element = Element>(selector: string): E | null => {
+  if (typeof window === "undefined") return null;
+
+  return document.querySelector(selector);
+};
+
 /**
  * React hook that queries the DOM for an element and updates when the element
  * is added to or removed from the DOM.
@@ -10,7 +16,7 @@ import { useState, useEffect } from "react";
 export function useQuerySelector<T extends Element>(selector?: string | null): T | null {
   const [element, setElement] = useState<T | null>(
     // Initial state
-    selector ? document.querySelector<T>(selector) : null,
+    selector ? querySelector<T>(selector) : null,
   );
 
   useEffect(() => {

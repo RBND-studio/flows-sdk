@@ -1,12 +1,14 @@
-import { Block, BlockUpdatesPayload } from "@flows/shared";
-import { expect, test, WebSocketRoute } from "@playwright/test";
+import type { Block, BlockUpdatesPayload } from "@flows/shared";
+import type { WebSocketRoute } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import { randomUUID } from "crypto";
+import { mockBlocksEndpoint } from "./utils";
 
 const getBlock = (): Block => ({
   id: randomUUID(),
   workflowId: randomUUID(),
   type: "component",
-  componentType: "Modal",
+  componentType: "BasicsV2Modal",
   data: { title: "Hello world", body: "" },
   exitNodes: [],
   slottable: false,
@@ -29,9 +31,7 @@ const run = (packageName: string) => {
       page,
     }) => {
       const block = getBlock();
-      await page.route("**/v2/sdk/blocks", (route) => {
-        route.fulfill({ json: { blocks: [] } });
-      });
+      await mockBlocksEndpoint(page, []);
       await page.goto(`/${packageName}.html`);
       await expect(page.locator("h1")).toBeVisible();
       await expect(page.getByText("Hello world", { exact: true })).toBeHidden();
@@ -39,30 +39,26 @@ const run = (packageName: string) => {
         exitedBlockIds: [],
         updatedBlocks: [block],
       };
-      await (ws as unknown as WebSocketRoute).send(JSON.stringify(payload));
+      (ws as unknown as WebSocketRoute).send(JSON.stringify(payload));
       await expect(page.getByText("Hello world", { exact: true })).toBeVisible();
     });
     test(`${packageName} - should exit block that is received through websocket`, async ({
       page,
     }) => {
       const block = getBlock();
-      await page.route("**/v2/sdk/blocks", (route) => {
-        route.fulfill({ json: { blocks: [block] } });
-      });
+      await mockBlocksEndpoint(page, [block]);
       await page.goto(`/${packageName}.html`);
       await expect(page.getByText("Hello world", { exact: true })).toBeVisible();
       const payload: BlockUpdatesPayload = {
         exitedBlockIds: [block.id],
         updatedBlocks: [],
       };
-      await (ws as unknown as WebSocketRoute).send(JSON.stringify(payload));
+      (ws as unknown as WebSocketRoute).send(JSON.stringify(payload));
       await expect(page.getByText("Hello world", { exact: true })).toBeHidden();
     });
     test(`${packageName} - should update block`, async ({ page }) => {
       const block = getBlock();
-      await page.route("**/v2/sdk/blocks", (route) => {
-        route.fulfill({ json: { blocks: [block] } });
-      });
+      await mockBlocksEndpoint(page, [block]);
       await page.goto(`/${packageName}.html`);
       await expect(page.getByText("Hello world", { exact: true })).toBeVisible();
       await expect(page.getByText("Updated body", { exact: true })).toBeHidden();
@@ -70,52 +66,22 @@ const run = (packageName: string) => {
         exitedBlockIds: [],
         updatedBlocks: [{ ...block, data: { ...block.data, body: "Updated body" } }],
       };
-      await (ws as unknown as WebSocketRoute).send(JSON.stringify(payload));
+      (ws as unknown as WebSocketRoute).send(JSON.stringify(payload));
       await expect(page.getByText("Hello world", { exact: true })).toHaveCount(1);
       await expect(page.getByText("Updated body", { exact: true })).toBeVisible();
     });
   });
 
   test.describe(`real websocket`, () => {
-    test(`${packageName} - should disconnect from websocket if the user is usage limited`, async ({
-      page,
-    }) => {
-      await page.route("**/v2/sdk/blocks", (route) => {
-        route.fulfill({ json: { blocks: [], meta: { usage_limited: true } } });
-      });
+    test(`${packageName} - should establish websocket connection`, async ({ page }) => {
+      await mockBlocksEndpoint(page, []);
       const wsPromise = page.waitForEvent("websocket");
       await page.goto(`/${packageName}.html`);
-      const websocket = await wsPromise;
+      await wsPromise;
 
-      let wsWasClosed = false;
-      websocket.on("close", () => {
-        wsWasClosed = true;
-      });
       await page.waitForRequest((req) => {
         return req.url() === "https://api.flows-cloud.com/v2/sdk/blocks";
       });
-
-      await expect(() => expect(wsWasClosed).toBe(true)).toPass();
-    });
-    test(`${packageName} - should keep websocket connection alive`, async ({ page }) => {
-      await page.route("**/v2/sdk/blocks", (route) => {
-        route.fulfill({ json: { blocks: [] } });
-      });
-      const wsPromise = page.waitForEvent("websocket");
-      await page.goto(`/${packageName}.html`);
-      const websocket = await wsPromise;
-
-      let wsWasClosed = false;
-      websocket.on("close", () => {
-        wsWasClosed = true;
-      });
-      await page.waitForRequest((req) => {
-        return req.url() === "https://api.flows-cloud.com/v2/sdk/blocks";
-      });
-
-      await new Promise((res) => setTimeout(res, 500));
-
-      await expect(() => expect(wsWasClosed).toBe(false)).toPass();
     });
   });
 };

@@ -1,35 +1,22 @@
 import { type FC } from "react";
-import { type ComponentProps } from "@flows/shared";
-import { Button } from "../internal-components/button";
+import { type ComponentProps, type ModalProps as LibraryModalProps } from "@flows/shared";
 import { BaseModal } from "../internal-components/base-modal";
 
-export type ModalProps = ComponentProps<{
-  title: string;
-  body: string;
-  continueText?: string;
-  showCloseButton: boolean;
-  hideOverlay: boolean;
+export type ModalProps = ComponentProps<LibraryModalProps>;
 
-  continue: () => void;
-  close: () => void;
-}>;
-
-export const Modal: FC<ModalProps> = (props) => {
-  const buttons = [];
-  if (props.continueText)
-    buttons.push(
-      <Button key="continue" variant="primary" onClick={props.continue}>
-        {props.continueText}
-      </Button>,
-    );
-
+const Modal: FC<ModalProps> = (props) => {
   return (
     <BaseModal
       title={props.title}
       body={props.body}
-      buttons={buttons.length ? buttons : undefined}
+      primaryButton={props.primaryButton}
+      secondaryButton={props.secondaryButton}
       overlay={!props.hideOverlay}
-      onClose={props.showCloseButton ? props.close : undefined}
+      onClose={props.dismissible ? props.close : undefined}
+      position={props.position}
+      size={props.size}
     />
   );
 };
+
+export const BasicsV2Modal = Modal;

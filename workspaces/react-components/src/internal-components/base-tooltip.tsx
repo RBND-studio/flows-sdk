@@ -1,43 +1,58 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type FC, type ReactNode } from "react";
+import type { ReferenceType } from "@floating-ui/react-dom";
 import {
-  useFloating,
-  shift,
-  offset,
   arrow,
   flip,
-  type Side,
-  type Placement,
   autoUpdate as floatingAutoUpdate,
+  offset,
+  shift,
+  useFloating,
+  type Placement,
+  type Side,
 } from "@floating-ui/react-dom";
-import classNames from "classnames";
-import { log } from "@flows/shared";
-import { Close16 } from "../icons/close16";
+import type { TooltipScrollPosition } from "@flows/shared";
+import {
+  log,
+  tooltipScrollPositionToScrollLogicalPosition,
+  tooltipScrollToTarget,
+  type Action,
+} from "@flows/shared";
+import { clsx } from "clsx";
+import type { RefObject } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type FC, type ReactNode } from "react";
+// eslint-disable-next-line import/no-named-as-default -- correct import
+import DOMPurify from "dompurify";
+import { useFirstRender } from "../hooks/use-first-render";
 import { useQuerySelector } from "../hooks/use-query-selector";
-import { Text } from "./text";
+import { Close16 } from "../icons/close16";
+import { ActionButton } from "./action-button";
 import { IconButton } from "./icon-button";
+import { Text } from "./text";
 
 const DISTANCE = 4;
 const ARROW_SIZE = 6;
 const OFFSET_DISTANCE = DISTANCE + ARROW_SIZE;
 const BOUNDARY_PADDING = 8;
 const ARROW_EDGE_PADDING = 8;
+const TARGET_ELEMENT_DATA_ATTRIBUTE = "data-flows-tooltip-target";
 
 interface Props {
   title: string;
   body: string;
   targetElement: string;
-  buttons?: ReactNode;
-  onClose?: () => void;
   placement?: Placement;
+  scrollPosition?: TooltipScrollPosition;
   overlay?: boolean;
+
+  dots?: ReactNode;
+  primaryButton?: Action;
+  secondaryButton?: Action;
+  onClose?: () => void;
 }
 
-const autoUpdate: typeof floatingAutoUpdate = (ref, floating, update) =>
-  floatingAutoUpdate(ref, floating, update, { animationFrame: true });
-
 export const BaseTooltip: FC<Props> = (props) => {
+  const firstRender = useFirstRender();
   const topArrowRef = useRef<HTMLDivElement>(null);
   const bottomArrowRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -46,7 +61,8 @@ export const BaseTooltip: FC<Props> = (props) => {
   const { refs, middlewareData, placement, x, y } = useFloating({
     placement: props.placement,
     elements: { reference },
-    whileElementsMounted: autoUpdate,
+    whileElementsMounted: (ref, floating, update) =>
+      autoUpdate({ ref, floating, update, overlayRef }),
     middleware: [
       flip({ fallbackPlacements: ["top", "bottom", "left", "right"] }),
       shift({ crossAxis: true, padding: BOUNDARY_PADDING }),
@@ -57,23 +73,21 @@ export const BaseTooltip: FC<Props> = (props) => {
 
   const [enterAnimationEnded, setEnterAnimationEnded] = useState(false);
   useEffect(() => {
+    // Show enter animation in tour after the tooltip was hidden because the target element isn't on page
+    if (!reference) setEnterAnimationEnded(false);
+  }, [reference]);
+  useEffect(() => {
     if (enterAnimationEnded) return;
     const el = refs.floating.current;
     if (!el) return;
-    const handleAnimationEnd = (): void => {
-      setEnterAnimationEnded(true);
-    };
     const hasAnimation = window.getComputedStyle(el).animationName !== "none";
     if (!hasAnimation) {
       setEnterAnimationEnded(true);
-      return;
     }
-
-    el.addEventListener("animationend", handleAnimationEnd);
-    return () => {
-      el.removeEventListener("animationend", handleAnimationEnd);
-    };
   }, [enterAnimationEnded, refs.floating]);
+  const handleAnimationEnd = useCallback((): void => {
+    setEnterAnimationEnded(true);
+  }, []);
 
   const staticSide = useMemo((): Side => {
     if (placement.includes("top")) return "bottom";
@@ -83,12 +97,37 @@ export const BaseTooltip: FC<Props> = (props) => {
   }, [placement]);
 
   useEffect(() => {
+    reference?.setAttribute(TARGET_ELEMENT_DATA_ATTRIBUTE, "true");
+    return () => {
+      reference?.removeAttribute(TARGET_ELEMENT_DATA_ATTRIBUTE);
+    };
+  }, [reference]);
+
+  const [isTargetInView, setIsTargetInView] = useState(false);
+  const blockScrollPosition = tooltipScrollPositionToScrollLogicalPosition(props.scrollPosition);
+  useEffect(() => {
+    if (!reference || !blockScrollPosition) return;
+
+    const cleanup = tooltipScrollToTarget({
+      reference,
+      blockScrollPosition,
+      onTargetInView: () => setIsTargetInView(true),
+    });
+
+    return cleanup;
+  }, [reference, blockScrollPosition]);
+
+  useEffect(() => {
     if (!props.targetElement) {
       log.error("Cannot render Tooltip without target element");
     }
   }, [props.targetElement]);
 
   if (!reference) return null;
+  // Avoid rendering on client render to prevent hydration issues
+  if (firstRender) return null;
+  // Avoid rendering the tooltip when scrollPosition is defined and the target element is not in view
+  if (blockScrollPosition && !isTargetInView) return null;
 
   if (refs.floating.current) {
     refs.floating.current.style.left = `${x}px`;
@@ -108,47 +147,95 @@ export const BaseTooltip: FC<Props> = (props) => {
     arrowRef.current.style[staticSide] = `${-ARROW_SIZE}px`;
   });
 
-  if (overlayRef.current) {
-    const targetPosition = reference.getBoundingClientRect();
-    overlayRef.current.style.top = `${targetPosition.top}px`;
-    overlayRef.current.style.left = `${targetPosition.left}px`;
-    overlayRef.current.style.width = `${targetPosition.width}px`;
-    overlayRef.current.style.height = `${targetPosition.height}px`;
-  }
+  const buttons = [];
+  if (props.secondaryButton)
+    buttons.push(
+      <ActionButton key="secondary" action={props.secondaryButton} variant="secondary" />,
+    );
+  if (props.primaryButton)
+    buttons.push(<ActionButton key="primary" action={props.primaryButton} variant="primary" />);
 
   return (
-    <div className="flows_tooltip_root">
-      {props.overlay ? <div className="flows_tooltip_overlay" ref={overlayRef} /> : null}
+    <div className="flows_basicsV2_tooltip_root">
+      {props.overlay ? <div className="flows_basicsV2_tooltip_overlay" ref={overlayRef} /> : null}
       <div
-        className="flows_tooltip_tooltip"
+        className="flows_basicsV2_tooltip_tooltip"
         ref={refs.setFloating}
         data-open={enterAnimationEnded ? "true" : "false"}
+        onAnimationEnd={handleAnimationEnd}
       >
-        <Text className="flows_tooltip_title" variant="title">
+        <Text className="flows_basicsV2_tooltip_title" variant="title">
           {props.title}
         </Text>
         <Text
           variant="body"
-          className="flows_tooltip_body"
-          dangerouslySetInnerHTML={{ __html: props.body }}
+          className="flows_basicsV2_tooltip_body"
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(props.body, {
+              FORCE_BODY: true,
+              ADD_ATTR: ["target"],
+            }),
+          }}
         />
 
-        {props.buttons ? <div className="flows_tooltip_footer">{props.buttons}</div> : null}
+        {(props.dots ?? buttons.length) ? (
+          <div className="flows_basicsV2_tooltip_footer">
+            {props.dots}
+            {buttons.length ? (
+              <div className="flows_basicsV2_tooltip_buttons_wrapper">
+                <div className="flows_basicsV2_tooltip_buttons">{buttons}</div>
+              </div>
+            ) : null}
+          </div>
+        ) : null}
+
         {props.onClose ? (
-          <IconButton aria-label="Close" className="flows_tooltip_close" onClick={props.onClose}>
+          <IconButton
+            aria-label="Close"
+            className="flows_basicsV2_tooltip_close"
+            onClick={props.onClose}
+          >
             <Close16 />
           </IconButton>
         ) : null}
 
         <div
-          className={classNames("flows_tooltip_arrow", "flows_tooltip_arrow-bottom")}
+          className={clsx("flows_basicsV2_tooltip_arrow", "flows_basicsV2_tooltip_arrow-bottom")}
           ref={bottomArrowRef}
         />
         <div
-          className={classNames("flows_tooltip_arrow", "flows_tooltip_arrow-top")}
+          className={clsx("flows_basicsV2_tooltip_arrow", "flows_basicsV2_tooltip_arrow-top")}
           ref={topArrowRef}
         />
       </div>
     </div>
   );
 };
+
+const autoUpdate = ({
+  floating,
+  ref,
+  update,
+  overlayRef,
+}: {
+  ref: ReferenceType;
+  floating: HTMLElement;
+  update: () => void;
+  overlayRef: RefObject<HTMLDivElement | null>;
+}): (() => void) =>
+  floatingAutoUpdate(
+    ref,
+    floating,
+    () => {
+      if (overlayRef.current) {
+        const targetPosition = ref.getBoundingClientRect();
+        overlayRef.current.style.top = `${targetPosition.top}px`;
+        overlayRef.current.style.left = `${targetPosition.left}px`;
+        overlayRef.current.style.width = `${targetPosition.width}px`;
+        overlayRef.current.style.height = `${targetPosition.height}px`;
+      }
+
+      update();
+    },
+    { animationFrame: true },
+  );

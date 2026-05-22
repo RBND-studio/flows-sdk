@@ -1,0 +1,13 @@
+.flows_basicsV2_progress {
+  flex: 1;
+  height: 8px;
+  background-color: var(--flows-basicsV2-bg-strong);
+  border-radius: var(--flows-basicsV2-borderRadius-m);
+  overflow: hidden;
+}
+
+.flows_basicsV2_progress_indicator {
+  height: 100%;
+  background-color: var(--flows-basicsV2-bg-primary);
+  transition: width 150ms ease-in-out;
+}

@@ -1,6 +1,7 @@
-import { Block } from "@flows/shared";
+import type { Block } from "@flows/shared";
 import test, { expect } from "@playwright/test";
 import { randomUUID } from "crypto";
+import { mockBlocksEndpoint } from "./utils";
 
 const getBlock = ({ componentType }: { componentType: string }): Block => ({
   id: randomUUID(),
@@ -41,10 +42,8 @@ test.beforeEach(async ({ page }) => {
 const run = (packageName: string) => {
   test(`${packageName} - shouldn't call activate without matching component`, async ({ page }) => {
     const wrongCmpBlock = getBlock({ componentType: "WrongCmp" });
-    const modalBlock = getBlock({ componentType: "Modal" });
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [wrongCmpBlock, modalBlock] } });
-    });
+    const modalBlock = getBlock({ componentType: "BasicsV2Modal" });
+    await mockBlocksEndpoint(page, [wrongCmpBlock, modalBlock]);
     await page.goto(`/${packageName}.html?noCurrentBlocks=true`);
     let wrongCmpReqWasSent = false;
     page.on("request", (req) => {
@@ -65,17 +64,14 @@ const run = (packageName: string) => {
       );
     });
 
-    await expect(page.locator(".flows_modal_modal")).toBeVisible();
+    await expect(page.locator(".flows_basicsV2_modal_modal")).toBeVisible();
     await modalReqPromise;
-    await expect(wrongCmpReqWasSent).toBe(false);
+    expect(wrongCmpReqWasSent).toBe(false);
   });
   test(`${packageName} - should call activate for workflow block`, async ({ page }) => {
-    const block = getBlock({ componentType: "Modal" });
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [block] } });
-    });
-    await page.goto(`/${packageName}.html?noCurrentBlocks=true`);
-    await page.waitForRequest((req) => {
+    const block = getBlock({ componentType: "BasicsV2Modal" });
+    await mockBlocksEndpoint(page, [block]);
+    const reqPromise = page.waitForRequest((req) => {
       const body = req.postDataJSON();
       const headers = req.headers();
       return (
@@ -88,14 +84,13 @@ const run = (packageName: string) => {
         body.blockId === block.id
       );
     });
+    await page.goto(`/${packageName}.html?noCurrentBlocks=true`);
+    await reqPromise;
   });
   test(`${packageName} - should call activate for tour block`, async ({ page }) => {
-    const block = getTour({ componentType: "Modal" });
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [block] } });
-    });
-    await page.goto(`/${packageName}.html?noCurrentBlocks=true`);
-    await page.waitForRequest((req) => {
+    const block = getTour({ componentType: "BasicsV2Modal" });
+    await mockBlocksEndpoint(page, [block]);
+    const reqPromise = page.waitForRequest((req) => {
       const body = req.postDataJSON();
       const headers = req.headers();
       return (
@@ -108,6 +103,8 @@ const run = (packageName: string) => {
         body.blockId === block.tourBlocks?.[0]?.id
       );
     });
+    await page.goto(`/${packageName}.html?noCurrentBlocks=true`);
+    await reqPromise;
   });
 };
 

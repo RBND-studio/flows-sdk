@@ -5,11 +5,13 @@ export default defineConfig((options) => {
 
   return {
     entry: ["src/index.ts"],
-    clean: true,
     format: ["cjs", "esm"],
     minify: true,
     dts: {
       compilerOptions: {
+        // Temporary workaround to make tsup work with Typescript 6+
+        // More info: https://github.com/egoist/tsup/issues/1388
+        ignoreDeprecations: "6.0",
         paths: {
           "@flows/shared": ["../shared/src/index.ts"],
         },

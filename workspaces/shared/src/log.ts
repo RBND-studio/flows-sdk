@@ -13,4 +13,7 @@ export const log = {
   warn: (message: string, ...args: unknown[]): void => {
     console.warn(`${badge} ${message}`, badgeCss, "", ...args);
   },
+  info: (message: string, ...args: unknown[]): void => {
+    console.info(`${badge} ${message}`, badgeCss, "", ...args);
+  },
 };

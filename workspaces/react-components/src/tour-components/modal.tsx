@@ -1,39 +1,31 @@
 import { type FC } from "react";
-import { type TourComponentProps } from "@flows/shared";
+import { type TourModalProps, type TourComponentProps } from "@flows/shared";
 import { BaseModal } from "../internal-components/base-modal";
-import { Button } from "../internal-components/button";
+import { Dots } from "../internal-components/dots";
 
-export type ModalProps = TourComponentProps<{
-  title: string;
-  body: string;
-  continueText?: string;
-  previousText?: string;
-  showCloseButton: boolean;
-  hideOverlay: boolean;
-}>;
+export type ModalProps = TourComponentProps<TourModalProps>;
 
-export const Modal: FC<ModalProps> = (props) => {
-  const buttons = [];
-  if (props.previous && props.previousText)
-    buttons.push(
-      <Button key="previous" variant="secondary" onClick={props.previous}>
-        {props.previousText}
-      </Button>,
-    );
-  if (props.continueText)
-    buttons.push(
-      <Button key="continue" variant="primary" onClick={props.continue}>
-        {props.continueText}
-      </Button>,
-    );
+const Modal: FC<ModalProps> = (props) => {
+  const dots = !props.hideProgress ? (
+    <Dots
+      count={props.__flows.tourVisibleStepCount ?? 0}
+      index={props.__flows.tourVisibleStepIndex ?? 0}
+    />
+  ) : null;
 
   return (
     <BaseModal
       title={props.title}
       body={props.body}
       overlay={!props.hideOverlay}
-      buttons={buttons.length ? buttons : undefined}
-      onClose={props.showCloseButton ? props.cancel : undefined}
+      primaryButton={props.primaryButton}
+      secondaryButton={props.secondaryButton}
+      onClose={props.dismissible ? props.cancel : undefined}
+      position={props.position}
+      size={props.size}
+      dots={dots}
     />
   );
 };
+
+export const BasicsV2Modal = Modal;

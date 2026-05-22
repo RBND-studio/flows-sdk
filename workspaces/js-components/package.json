@@ -20,7 +20,7 @@
     "product-adoption",
     "product-tours"
   ],
-  "version": "1.2.1",
+  "version": "2.9.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/RBND-studio/flows-sdk.git"
@@ -28,32 +28,33 @@
   "license": "MIT",
   "sideEffects": false,
   "scripts": {
-    "dev": "tsup --watch --env.NODE_ENV development",
+    "dev": "tsup --env.NODE_ENV development",
     "build": "tsup --env.NODE_ENV production && node scripts/rename-global-modules.js",
     "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",
-    "lint": "eslint src",
     "tsc": "tsc -p tsconfig.json",
-    "version": "pnpm version",
     "prepare": "pnpm build"
   },
   "dependencies": {
-    "@floating-ui/dom": "^1.7.2"
+    "@floating-ui/dom": "^1.7.5",
+    "clsx": "^2.1.1",
+    "dompurify": "^3.4.2",
+    "es-toolkit": "^1.45.1",
+    "lit": "^3.3.3"
   },
   "devDependencies": {
     "@flows/js": "workspace:*",
     "@flows/shared": "workspace:*",
     "@flows/styles": "workspace:*",
     "@types/jest": "^30.0.0",
-    "@types/node": "^22",
-    "jest": "^30.0.4",
-    "rimraf": "^6.0.1",
-    "ts-jest": "^29.4.0",
-    "tsup": "^8.5.0",
-    "typescript": "^5.8.3"
+    "@types/node": "^24",
+    "jest": "^30.3.0",
+    "ts-jest": "^29.4.9",
+    "tsup": "^8.5.1",
+    "typescript": "^6.0.3"
   },
   "peerDependencies": {
-    "@flows/js": "*"
+    "@flows/js": ">=1.18.0"
   },
   "exports": {
     ".": {
@@ -70,6 +71,11 @@
       "types": "./dist/tour-components.d.ts",
       "import": "./dist/tour-components.mjs",
       "require": "./dist/tour-components.js"
+    },
+    "./survey-components": {
+      "types": "./dist/survey-components.d.ts",
+      "import": "./dist/survey-components.mjs",
+      "require": "./dist/survey-components.js"
     },
     "./index.css": {
       "import": "./dist/index.css",

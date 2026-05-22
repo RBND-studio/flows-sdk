@@ -1,5 +1,10 @@
-import { type BlockUpdatesPayload, type Block } from "@flows/shared";
-import { computed, signal } from "@preact/signals-core";
+import {
+  type Block,
+  logSlottableBlocksError,
+  type BlockUpdatesMessage,
+  getSessionStorageRunningSurveys,
+} from "@flows/shared";
+import { computed, effect, signal } from "@preact/signals-core";
 import { type FlowsOptions } from "./types/configuration";
 
 type Configuration = Omit<FlowsOptions, "apiUrl"> & { apiUrl: string };
@@ -11,7 +16,13 @@ export const pathname = signal<string>();
 // The blocks value is null until the SDK is initialized
 export const blocksState = signal<Block[] | null>(null);
 export const blocks = computed(() => blocksState.value ?? []);
-export const pendingMessages = signal<BlockUpdatesPayload[]>([]);
+export const pendingMessages = signal<BlockUpdatesMessage[]>([]);
+
+// Log error about slottable blocks without slotId
+effect(() => {
+  const blocksValue = blocks.value;
+  logSlottableBlocksError(blocksValue);
+});
 
 export const blocksError = signal(false);
 export const wsError = signal(false);
@@ -31,3 +42,5 @@ export interface RunningTour {
 }
 export const tourBlocks = computed(() => blocks.value.filter((b) => b.type === "tour"));
 export const runningTours = signal<RunningTour[]>([]);
+
+export const runningSurveyBlockStateIds = signal<string[]>(getSessionStorageRunningSurveys());

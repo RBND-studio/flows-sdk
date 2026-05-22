@@ -1,18 +1,40 @@
 import { type StateMemoryTrigger } from "./components";
+import type { ApiSurvey } from "./api-survey";
 
-interface TourWait {
-  interaction: string;
+export type TourWaitInteraction =
+  | "navigation"
+  | "click"
+  | "delay"
+  | "dom-element"
+  | "not-dom-element";
+export interface TourWait {
+  interaction: TourWaitInteraction;
   element?: string;
   page?: { operator: string; value: string[] };
   ms?: number;
 }
 
-export interface PropertyMeta {
+type PropertyMetaType = "state-memory" | "block-state" | "action";
+interface PropertyMetaTemplate<T extends PropertyMetaType> {
   key: string;
-  type: string;
-  value?: unknown;
-  triggers?: StateMemoryTrigger[];
+  type: T;
 }
+type StateMemoryPropertyMeta = PropertyMetaTemplate<"state-memory"> & {
+  value: boolean;
+  triggers?: StateMemoryTrigger[];
+};
+type BlockStatePropertyMeta = PropertyMetaTemplate<"block-state"> & {
+  value: Block;
+};
+interface ActionPropertyMeta extends PropertyMetaTemplate<"action"> {
+  value: {
+    label: string;
+    exitNode?: string;
+    url?: string;
+    openInNew?: boolean;
+  };
+}
+export type PropertyMeta = ActionPropertyMeta | BlockStatePropertyMeta | StateMemoryPropertyMeta;
 
 export type TourTriggerType = "navigation" | "click" | "dom-element" | "not-dom-element";
 export interface TourTriggerExpression {
@@ -26,11 +48,14 @@ export interface TourTrigger {
   $and?: TourTriggerExpression[];
 }
 
+export type BlockType = "component" | "tour" | "survey";
+export type TourStepType = "tour-component" | "wait";
+
 export interface Block {
   id: string;
   workflowId: string;
   key?: string;
-  type: string;
+  type: BlockType;
   componentType?: string;
   data: Record<string, unknown>;
   propertyMeta?: PropertyMeta[];
@@ -46,15 +71,18 @@ export interface Block {
   tour_trigger?: TourTrigger;
   tourBlocks?: TourStep[];
   currentTourIndex?: number;
+
+  survey?: ApiSurvey;
 }
 
 export interface TourStep {
   id: string;
   workflowId: string;
   key?: string;
-  type: string;
+  type: TourStepType;
   componentType?: string;
   data: Record<string, unknown>;
+  propertyMeta?: PropertyMeta[];
 
   slottable: boolean;
   slotId?: string;

@@ -1,41 +1,62 @@
 import {
   flip,
+  autoUpdate as floatingAutoUpdate,
   offset,
   shift,
   useFloating,
-  autoUpdate as floatingAutoUpdate,
 } from "@floating-ui/react-dom";
-import { log, type Placement } from "@flows/shared";
-import { type ReactNode, useCallback, useEffect, useState, type FC } from "react";
+import { type Action, log, type TooltipPlacement } from "@flows/shared";
+import { type FC, type ReactNode, useCallback, useEffect, useRef, useState } from "react";
+// eslint-disable-next-line import/no-named-as-default -- correct import
+import DOMPurify from "dompurify";
+import { useFirstRender } from "../hooks/use-first-render";
 import { useQuerySelector } from "../hooks/use-query-selector";
 import { Close16 } from "../icons/close16";
-import { Text } from "./text";
+import { ActionButton } from "./action-button";
 import { IconButton } from "./icon-button";
+import { Text } from "./text";
 
 interface Props {
   title: string;
   body: string;
 
   targetElement: string;
-  placement?: Placement;
+  placement?: TooltipPlacement;
   offsetX?: number;
   offsetY?: number;
 
-  buttons?: ReactNode;
+  dots?: ReactNode;
+  primaryButton?: Action;
+  secondaryButton?: Action;
   onClose?: () => void;
 }
 
 const CLOSE_TIMEOUT = 300;
 const BOUNDARY_PADDING = 8;
 const DISTANCE = 4;
+const TARGET_ELEMENT_DATA_ATTRIBUTE = "data-flows-hint-target";
 
 const autoUpdate: typeof floatingAutoUpdate = (ref, floating, update) =>
   floatingAutoUpdate(ref, floating, update, { animationFrame: true });
 
 export const BaseHint: FC<Props> = (props) => {
+  const firstRender = useFirstRender();
   const [tooltipOpen, setTooltipOpen] = useState(false);
+  const [tooltipClosing, setTooltipClosing] = useState(false);
+  const closeTimeoutRef = useRef<number>(null);
   const handleOpen = useCallback(() => {
     setTooltipOpen(true);
+    setTooltipClosing(false);
+    window.clearTimeout(closeTimeoutRef.current ?? undefined);
+    closeTimeoutRef.current = null;
+  }, []);
+  const handleClose = useCallback(() => {
+    setTooltipClosing(true);
+    closeTimeoutRef.current = window.setTimeout(() => {
+      setTooltipOpen(false);
+      setTooltipClosing(false);
+      closeTimeoutRef.current = null;
+    }, CLOSE_TIMEOUT);
   }, []);
 
   const reference = useQuerySelector(props.targetElement);
@@ -60,15 +81,6 @@ export const BaseHint: FC<Props> = (props) => {
   });
   const tooltipRef = tooltipFloating.refs.floating;
 
-  const [tooltipClosing, setTooltipClosing] = useState(false);
-  const handleClose = useCallback(() => {
-    setTooltipClosing(true);
-    setTimeout(() => {
-      setTooltipOpen(false);
-      setTooltipClosing(false);
-    }, CLOSE_TIMEOUT);
-  }, []);
-
   useEffect(() => {
     const handleWindowClick = (e: MouseEvent): void => {
       const target = e.target as Node;
@@ -88,12 +100,29 @@ export const BaseHint: FC<Props> = (props) => {
   }, [handleClose, dotRef, tooltipRef]);
 
   useEffect(() => {
+    reference?.setAttribute(TARGET_ELEMENT_DATA_ATTRIBUTE, "true");
+    return () => {
+      reference?.removeAttribute(TARGET_ELEMENT_DATA_ATTRIBUTE);
+    };
+  }, [reference]);
+
+  useEffect(() => {
     if (!props.targetElement) {
       log.error("Cannot render Hint without target element");
     }
   }, [props.targetElement]);
 
   if (!reference) return null;
+  // Avoid rendering on client render to prevent hydration issues
+  if (firstRender) return null;
+
+  const buttons = [];
+  if (props.secondaryButton)
+    buttons.push(
+      <ActionButton key="secondary" action={props.secondaryButton} variant="secondary" />,
+    );
+  if (props.primaryButton)
+    buttons.push(<ActionButton key="primary" action={props.primaryButton} variant="primary" />);
 
   return (
     <>
@@ -105,28 +134,47 @@ export const BaseHint: FC<Props> = (props) => {
         }}
         aria-label="Open hint"
         type="button"
-        className="flows_hint_hotspot"
-        onClick={tooltipOpen ? handleClose : handleOpen}
+        className="flows_basicsV2_hint_hotspot"
+        onClick={tooltipOpen && !tooltipClosing ? handleClose : handleOpen}
       />
 
       {tooltipOpen ? (
         <div
-          className="flows_tooltip_tooltip flows_hint_tooltip"
+          className="flows_basicsV2_tooltip_tooltip flows_basicsV2_hint_tooltip"
           data-open={!tooltipClosing ? "true" : "false"}
           ref={tooltipFloating.refs.setFloating}
           style={{ left: tooltipFloating.x, top: tooltipFloating.y }}
         >
-          <Text className="flows_tooltip_title" variant="title">
+          <Text className="flows_basicsV2_tooltip_title" variant="title">
             {props.title}
           </Text>
           <Text
             variant="body"
-            className="flows_tooltip_body"
-            dangerouslySetInnerHTML={{ __html: props.body }}
+            className="flows_basicsV2_tooltip_body"
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(props.body, {
+                FORCE_BODY: true,
+                ADD_ATTR: ["target"],
+              }),
+            }}
           />
-          {props.buttons ? <div className="flows_tooltip_footer">{props.buttons}</div> : null}
+          {(props.dots ?? buttons.length) ? (
+            <div className="flows_basicsV2_tooltip_footer">
+              {props.dots}
+              {buttons.length ? (
+                <div className="flows_basicsV2_tooltip_buttons_wrapper">
+                  <div className="flows_basicsV2_tooltip_buttons">{buttons}</div>
+                </div>
+              ) : null}
+            </div>
+          ) : null}
+
           {props.onClose ? (
-            <IconButton aria-label="Close" className="flows_tooltip_close" onClick={props.onClose}>
+            <IconButton
+              aria-label="Close"
+              className="flows_basicsV2_tooltip_close"
+              onClick={props.onClose}
+            >
               <Close16 />
             </IconButton>
           ) : null}

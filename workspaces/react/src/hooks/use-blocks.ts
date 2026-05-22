@@ -1,14 +1,17 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { CustomFetch } from "@flows/shared";
 import {
   getApi,
   log,
   type UserProperties,
   type Block,
-  type TourStep,
-  type BlockUpdatesPayload,
   type LanguageOption,
   getUserLanguage,
   applyUpdateMessageToBlocksState,
+  logSlottableBlocksError,
+  parseWebsocketMessage,
+  type BlockUpdatesMessage,
+  isUserPropertiesEqual,
 } from "@flows/shared";
 import { packageAndVersion } from "../lib/constants";
 import { type RemoveBlock, type UpdateBlock } from "../flows-context";
@@ -16,6 +19,7 @@ import { useWebsocket } from "./use-websocket";
 
 interface Props {
   apiUrl: string;
+  customFetch?: CustomFetch;
   environment: string;
   organizationId: string;
   userId: string;
@@ -24,6 +28,7 @@ interface Props {
 }
 
 interface Return {
+  blocksState: Block[] | null;
   blocks: Block[];
   removeBlock: RemoveBlock;
   updateBlock: UpdateBlock;
@@ -33,6 +38,7 @@ interface Return {
 
 export const useBlocks = ({
   apiUrl,
+  customFetch,
   environment,
   organizationId,
   userId,
@@ -44,40 +50,76 @@ export const useBlocks = ({
   const blocks = useMemo(() => blocksState ?? [], [blocksState]);
 
   const [usageLimited, setUsageLimited] = useState(false);
-  const pendingMessages = useRef<BlockUpdatesPayload[]>([]);
+  const pendingMessages = useRef<BlockUpdatesMessage[]>([]);
 
   const params = useMemo(
     () => ({ environment, organizationId, userId }),
     [environment, organizationId, userId],
   );
-  const userPropertiesRef = useRef(userProperties);
+
+  const [userPropertiesState, setUserPropertiesState] = useState(userProperties);
+  const userPropertiesStateRef = useRef(userPropertiesState);
+  userPropertiesStateRef.current = userPropertiesState;
   useEffect(() => {
-    userPropertiesRef.current = userProperties;
+    const stateValue = userPropertiesStateRef.current;
+    if (!isUserPropertiesEqual(stateValue, userProperties)) {
+      setUserPropertiesState(userProperties);
+    }
   }, [userProperties]);
 
+  const activeFetchRef = useRef<Promise<void> | null>(null);
+  const queuedFetchRef = useRef(false);
   const fetchBlocks = useCallback(() => {
+    if (activeFetchRef.current) {
+      queuedFetchRef.current = true;
+      return;
+    }
+
     setError(false);
-    void getApi(apiUrl, packageAndVersion)
+    activeFetchRef.current = getApi({ apiUrl, version: packageAndVersion, customFetch })
       .getBlocks({
         ...params,
         language: getUserLanguage(language),
-        userProperties: userPropertiesRef.current,
+        userProperties: userPropertiesStateRef.current,
       })
       .then((res) => {
-        const blocksWithUpdates = pendingMessages.current.reduce(
-          applyUpdateMessageToBlocksState,
-          res.blocks,
-        );
-        setBlocksState(blocksWithUpdates);
-        pendingMessages.current = [];
+        setBlocksState(pendingMessages.current.reduce(applyUpdateMessageToBlocksState, res.blocks));
+        pendingMessages.current.length = 0;
+        setTimeout(() => {
+          if (pendingMessages.current.length) {
+            const pendingMessagesCurrent = [...pendingMessages.current];
+            pendingMessages.current.length = 0;
+            setBlocksState((prev) =>
+              pendingMessagesCurrent.reduce(applyUpdateMessageToBlocksState, prev ?? []),
+            );
+          }
+        }, 0);
 
         if (res.meta?.usage_limited) setUsageLimited(true);
       })
       .catch((err: unknown) => {
         setError(true);
         log.error("Failed to load blocks", err);
+      })
+      .finally(() => {
+        activeFetchRef.current = null;
+        if (!queuedFetchRef.current) return;
+        queuedFetchRef.current = false;
+        fetchBlocks();
       });
-  }, [apiUrl, language, params]);
+  }, [apiUrl, language, params, customFetch]);
+
+  // Refetch blocks when userProperties change
+  const fetchBlocksRef = useRef(fetchBlocks);
+  fetchBlocksRef.current = fetchBlocks;
+  const firstRenderRef = useRef(true);
+  useEffect(() => {
+    if (firstRenderRef.current) {
+      firstRenderRef.current = false;
+      return;
+    }
+    fetchBlocksRef.current();
+  }, [userPropertiesState]);
 
   const websocketUrl = useMemo(() => {
     if (usageLimited) return;
@@ -86,28 +128,25 @@ export const useBlocks = ({
   }, [apiUrl, params, usageLimited]);
 
   const onMessage = useCallback((event: MessageEvent<unknown>) => {
-    // TODO: add debug logging
-    // console.log("Message from server", event.data);
-    const data = JSON.parse(event.data as string) as BlockUpdatesPayload;
-    setBlocksState((prev) => {
-      if (!prev) {
-        pendingMessages.current.push(data);
-        return prev;
-      }
-      return applyUpdateMessageToBlocksState(prev, data);
-    });
+    const data = parseWebsocketMessage(event);
+    if (!data) return;
+
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- there will be more message types in the future
+    if (data.type === "block-updates") {
+      setBlocksState((prev) => {
+        if (!prev) {
+          pendingMessages.current.push(data);
+          return prev;
+        }
+        return applyUpdateMessageToBlocksState(prev, data);
+      });
+    }
   }, []);
   const { error: wsError } = useWebsocket({ url: websocketUrl, onMessage, onOpen: fetchBlocks });
 
   // Log error about slottable blocks without slotId
   useEffect(() => {
-    blocks.forEach((b) => {
-      logSlottableError(b);
-
-      b.tourBlocks?.forEach((tb) => {
-        logSlottableError(tb);
-      });
-    });
+    logSlottableBlocksError(blocks);
   }, [blocks]);
 
   const removeBlock: RemoveBlock = useCallback((blockId) => {
@@ -123,12 +162,5 @@ export const useBlocks = ({
     });
   }, []);
 
-  return { blocks, error, wsError, removeBlock, updateBlock };
-};
-
-const logSlottableError = (b: Block | TourStep): void => {
-  if (b.slottable && !b.slotId)
-    log.error(
-      `Encountered workflow block "${b.componentType}" that is slottable but has no slotId`,
-    );
+  return { blocksState, blocks, error, wsError, removeBlock, updateBlock };
 };

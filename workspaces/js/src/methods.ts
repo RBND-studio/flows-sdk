@@ -1,11 +1,10 @@
 import { computed, effect, type ReadonlySignal } from "@preact/signals-core";
 import { type ActiveBlock, type Block } from "@flows/shared";
-import { type RunningTour } from "./store";
-import { blockToActiveBlock, tourToActiveBlock } from "./lib/active-block";
+import { config, type RunningTour } from "./store";
+import { isBlock, itemToActiveBlock } from "./lib/active-block";
 import { sendEvent } from "./lib/api";
 import { floatingItems, slotBlocks, visibleTours } from "./computed";
 
-const isBlock = (item: Block | RunningTour): item is Block => "type" in item;
 const getSlotIndex = (item: Block | (RunningTour & { block: Block })): number => {
   if (isBlock(item)) return item.slotIndex ?? 0;
   const activeStep = item.block.tourBlocks?.at(item.currentBlockIndex);
@@ -15,16 +14,15 @@ const getSlotIndex = (item: Block | (RunningTour & { block: Block })): number =>
 const computedActiveBlocksBySlotId = new Map<string, ReadonlySignal<ActiveBlock[]>>();
 const addActiveSlotBlocksComputed = (slotId: string): ReadonlySignal<ActiveBlock[]> => {
   const newComputed = computed(() => {
+    const configValue = config.value;
+
     const workflowBlocks = slotBlocks.value.filter((b) => b.slottable && b.slotId === slotId);
     const tours = visibleTours.value.filter((t) => {
       const activeStep = t.block.tourBlocks?.at(t.currentBlockIndex);
       return activeStep?.slottable && activeStep.slotId === slotId;
     });
     const sorted = [...workflowBlocks, ...tours].sort((a, b) => getSlotIndex(a) - getSlotIndex(b));
-    return sorted.flatMap((item) => {
-      if (isBlock(item)) return blockToActiveBlock(item);
-      return tourToActiveBlock(item.block, item.currentBlockIndex);
-    });
+    return sorted.flatMap((item) => itemToActiveBlock(item, configValue?.userProperties ?? {}));
   });
   computedActiveBlocksBySlotId.set(slotId, newComputed);
   return newComputed;
@@ -106,7 +104,7 @@ export const resetAllWorkflowsProgress = (): Promise<void> => sendEvent({ name: 
 
 /**
  * Reset progress of one workflow for the current user in the current environment.
- * @param workflowId - UUID of the workflow to reset progress for
+ * @param workflowId - UUID of the workflow to reset. You can find it in the Flows app in the workflow detail by opening the three dot menu in the top right corner.
  */
 export const resetWorkflowProgress = (workflowId: string): Promise<void> =>
   sendEvent({ name: "reset-progress", workflowId });
@@ -121,3 +119,5 @@ export const resetWorkflowProgress = (workflowId: string): Promise<void> =>
  */
 export const startWorkflow = (blockKey: string): Promise<void> =>
   sendEvent({ name: "workflow-start", blockKey });
+
+export { fetchWorkflows } from "./lib/api";

@@ -1,0 +1,17 @@
+.flows_basicsV2_dots {
+  justify-content: center;
+  display: flex;
+  gap: var(--flows-basicsV2-progress-dots-gap);
+  overflow: hidden;
+}
+
+.flows_basicsV2_dots_dot {
+  width: var(--flows-basicsV2-progress-dots-size);
+  height: var(--flows-basicsV2-progress-dots-size);
+  border-radius: 50%;
+  flex-shrink: 0;
+  background-color: var(--flows-basicsV2-bg-strong);
+}
+.flows_basicsV2_dots_dot_active {
+  background-color: var(--flows-basicsV2-bg-primary);
+}

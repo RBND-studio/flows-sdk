@@ -3,12 +3,10 @@ import { html, type TemplateResult } from "lit";
 
 interface Props {
   blocks: Block[];
-  activeBlockCount: number;
 }
 
-export const BlocksPanel = ({ blocks, activeBlockCount }: Props): TemplateResult => {
+export const BlocksPanel = ({ blocks }: Props): TemplateResult => {
   return html`<p class="flows-debug-info-line"><strong>Loaded blocks:</strong> ${blocks.length}</p>
-    <p class="flows-debug-info-line"><strong>Active blocks:</strong> ${activeBlockCount}</p>
     <p class="flows-debug-info-line">
       <strong>Blocks JSON:</strong>
     </p>

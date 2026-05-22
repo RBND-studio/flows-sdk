@@ -13,6 +13,11 @@ const renameItems = [
     originalValue: "flows_js_components",
     newValue: "flows_js_components_tour_components",
   },
+  {
+    filename: "survey-components.global.js",
+    originalValue: "flows_js_components",
+    newValue: "flows_js_components_survey_components",
+  }
 ];
 
 renameItems.forEach(({ filename, originalValue, newValue }) => {

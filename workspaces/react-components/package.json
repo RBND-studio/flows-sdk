@@ -1,6 +1,6 @@
 {
   "name": "@flows/react-components",
-  "version": "1.2.1",
+  "version": "2.9.0",
   "description": "Built-in components for Flows React SDK",
   "keywords": [
     "react",
@@ -21,11 +21,9 @@
     "product-tours"
   ],
   "scripts": {
-    "dev": "tsup --watch --env.NODE_ENV development",
+    "dev": "tsup --env.NODE_ENV development",
     "build": "tsup --env.NODE_ENV production",
-    "lint": "eslint src",
     "tsc": "tsc -p tsconfig.json",
-    "version": "pnpm version",
     "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",
     "prepare": "pnpm build"
@@ -40,20 +38,23 @@
     "@flows/shared": "workspace:*",
     "@flows/styles": "workspace:*",
     "@types/jest": "^30.0.0",
-    "@types/node": "^22",
-    "@types/react": "^19.1.8",
-    "jest": "^30.0.4",
-    "jest-environment-jsdom": "^30.0.4",
-    "ts-jest": "^29.4.0",
-    "tsup": "^8.5.0",
-    "typescript": "^5.8.3"
-  },
-  "peerDependencies": {
-    "react": ">=17.0.2"
+    "@types/node": "^24",
+    "@types/react": "^19.2.14",
+    "jest": "^30.3.0",
+    "jest-environment-jsdom": "^30.4.1",
+    "ts-jest": "^29.4.9",
+    "tsup": "^8.5.1",
+    "typescript": "^6.0.3"
   },
   "dependencies": {
-    "@floating-ui/react-dom": "^2.1.4",
-    "classnames": "^2.5.1"
+    "@floating-ui/react-dom": "^2.1.8",
+    "clsx": "^2.1.1",
+    "dompurify": "^3.4.2",
+    "es-toolkit": "^1.45.1"
+  },
+  "peerDependencies": {
+    "@flows/react": ">=1.18.0",
+    "react": ">=17.0.2"
   },
   "exports": {
     ".": {
@@ -65,6 +66,11 @@
       "types": "./dist/tour.d.ts",
       "import": "./dist/tour.mjs",
       "require": "./dist/tour.js"
+    },
+    "./survey": {
+      "types": "./dist/survey.d.ts",
+      "import": "./dist/survey.mjs",
+      "require": "./dist/survey.js"
     },
     "./index.css": {
       "import": "./dist/index.css",

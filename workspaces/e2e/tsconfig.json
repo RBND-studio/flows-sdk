@@ -1,7 +1,12 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false,
+    "strictPropertyInitialization": false,
+    "noUncheckedSideEffectImports": false,
+    "types": ["node"]
   },
   "include": ["tests/**/*", "pages/**/*"]
 }

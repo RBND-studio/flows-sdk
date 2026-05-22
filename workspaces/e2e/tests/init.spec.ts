@@ -1,6 +1,8 @@
-import { Block, BlockUpdatesPayload } from "@flows/shared";
-import { expect, Route, test, WebSocketRoute } from "@playwright/test";
+import type { Block, BlockUpdatesPayload } from "@flows/shared";
+import type { Route, WebSocketRoute } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import { randomUUID } from "crypto";
+import { mockBlocksEndpoint } from "./utils";
 
 let ws: WebSocketRoute | null = null;
 test.beforeEach(async ({ page }) => {
@@ -16,7 +18,7 @@ const getBlock = (): Block => ({
   id: randomUUID(),
   workflowId: randomUUID(),
   type: "component",
-  componentType: "Modal",
+  componentType: "BasicsV2Modal",
   data: { title: "Hello world", body: "" },
   exitNodes: [],
   slottable: false,
@@ -25,9 +27,7 @@ const getBlock = (): Block => ({
 
 const run = (packageName: string) => {
   test(`${packageName} - should call blocks with correct parameters`, async ({ page }) => {
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [] } });
-    });
+    await mockBlocksEndpoint(page, []);
     const blocksReq = page.waitForRequest((req) => {
       const body = req.postDataJSON();
       const headers = req.headers();
@@ -46,9 +46,7 @@ const run = (packageName: string) => {
     await blocksReq;
   });
   test(`${packageName} - should call custom apiUrl`, async ({ page }) => {
-    await page.route("**/v2/sdk/blocks", (route) => {
-      route.fulfill({ json: { blocks: [] } });
-    });
+    await mockBlocksEndpoint(page, []);
     const blocksReq = page.waitForRequest((req) => {
       const body = req.postDataJSON();
       const headers = req.headers();
@@ -84,10 +82,30 @@ const run = (packageName: string) => {
     };
     ws?.send(JSON.stringify(payload));
     await expect(page.getByText("Hello world", { exact: true })).toBeHidden();
-    (blocksRoute as Route | null)?.fulfill({ json: { blocks: [] } });
+    await (blocksRoute as Route | null)?.fulfill({ json: { blocks: [] } });
     await expect(page.getByText("Hello world", { exact: true })).toBeVisible();
   });
 };
+
+test("react - should refetch blocks on userProperties change", async ({ page }) => {
+  await mockBlocksEndpoint(page, []);
+  const firstBlocksReq = page.waitForRequest((req) => {
+    const body = req.postDataJSON();
+    return (
+      req.url() === "https://api.flows-cloud.com/v2/sdk/blocks" && body.userProperties.count === 0
+    );
+  });
+  await page.goto(`/react.html`);
+  await firstBlocksReq;
+  const secondBlocksReq = page.waitForRequest((req) => {
+    const body = req.postDataJSON();
+    return (
+      req.url() === "https://api.flows-cloud.com/v2/sdk/blocks" && body.userProperties.count === 1
+    );
+  });
+  await page.getByText("Increment", { exact: true }).click();
+  await secondBlocksReq;
+});
 
 run("js");
 run("react");

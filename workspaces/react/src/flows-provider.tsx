@@ -1,14 +1,15 @@
-import { type FC, type ReactNode } from "react";
-import { type LanguageOption, type UserProperties } from "@flows/shared";
-import { type TourComponents, type Components } from "./types";
-import { FlowsContext } from "./flows-context";
-import { useRunningTours } from "./hooks/use-running-tours";
-import { useBlocks } from "./hooks/use-blocks";
-import { PathnameProvider } from "./contexts/pathname-context";
-import { TourController } from "./tour-controller";
-import { globalConfig } from "./lib/store";
-import { FloatingBlocks } from "./components/floating-blocks";
+import type { CustomFetch, LanguageOption, LinkComponentType, UserProperties } from "@flows/shared";
+import { useEffect, type FC, type ReactNode } from "react";
 import { Debug } from "./components/debug";
+import { FloatingBlocks } from "./components/floating-blocks";
+import { PathnameProvider } from "./contexts/pathname-context";
+import { FlowsContext } from "./flows-context";
+import { useBlocks } from "./hooks/use-blocks";
+import { useRunningTours } from "./hooks/use-running-tours";
+import { globalConfig } from "./lib/store";
+import { TourController } from "./tour-controller";
+import { type SurveyComponents, type Components, type TourComponents } from "./types";
+import { useRunningSurveys } from "./hooks/use-running-surveys";
 
 export interface FlowsProviderProps {
   /**
@@ -27,12 +28,18 @@ export interface FlowsProviderProps {
   userId: string | null;
   /**
    * Object with custom [user properties](https://flows.sh/docs/users/properties). Values can be string, number, boolean, or date.
+   *
+   * When any of the property changes, the SDK will automatically refetch blocks to reflect the updated user properties.
    */
   userProperties?: UserProperties;
   /**
    * Custom API URL useful when using proxy to send Flows requests through your own domain.
    */
   apiUrl?: string;
+  /**
+   * Custom fetch implementation useful when you need to customize api requests with custom headers, credentials, etc.
+   */
+  customFetch?: CustomFetch;
   /**
    * Components used for workflow blocks.
    */
@@ -42,11 +49,15 @@ export interface FlowsProviderProps {
    */
   tourComponents: TourComponents;
   /**
+   * Components used for survey blocks.
+   */
+  surveyComponents: SurveyComponents;
+  /**
    * Language used to enable [localization](https://flows.sh/docs/localization). Based on the set language, the correct translation for the block data will be selected.
    * - `disabled` (default) - The user will be served content in the default language group of your organization.
    * - `automatic` - Automatically detect the user's language and use the matching language group. The language is determined by the `Navigator.language` property in the browser.
    * - Manual - A specific language string, e.g. `en-US`, `fr-FR`, etc. This will use the matching language group for the specified language. See [https://www.localeplanet.com/icu/](https://www.localeplanet.com/icu/) for a full list of supported languages.
-   * @defaultValue `disabled`
+   * @default "disabled"
    */
   language?: LanguageOption;
   /**
@@ -80,6 +91,37 @@ export interface FlowsProviderProps {
    */
   onDebugShortcut?: (event: KeyboardEvent) => boolean;
 
+  /**
+   * Custom Link component used for client-side navigation when using components from `@flows/react-components`. Otherwise each link click will result in a full page reload.
+   *
+   * Expects link component from your router, for example Link from "next/link". The LinkComponent should accept `href`, `className`, `onClick` and `children` props and render html `<a>` element.
+   *
+   * The LinkComponent will be used for all URLs without domain and without "openInNew" (target="_blank").
+   * - `/about` - internal link, use LinkComponent
+   * - `?search=test` - internal link, use LinkComponent
+   * - `https://example.com` - external link, use standard `<a>` element
+   * - `/about` with `openInNew` - external link, use standard `<a>` element with `target="_blank"`
+   *
+   * @example
+   * ```tsx
+   * import { Link } from "react-router";
+   * import { LinkComponentType } from "@flows/react";
+   *
+   * // Adapt "react-router" Link to Flows LinkComponentType
+   * const LinkComponent: LinkComponentType = ({ href, children, className, onClick }) => (
+   *   <Link to={href} className={className} onClick={onClick}>
+   *     {children}
+   *   </Link>
+   * )
+   *
+   * // Pass the LinkComponent to FlowsProvider
+   * <FlowsProvider
+   *   LinkComponent={LinkComponent}
+   * />
+   * ```
+   */
+  LinkComponent?: LinkComponentType;
+
   children: ReactNode;
 }
 
@@ -101,39 +143,52 @@ const isProps = (props: FlowsProviderProps): props is Props => {
 const FlowsProviderInner: FC<Props> = ({
   children,
   apiUrl = "https://api.flows-cloud.com",
+  customFetch,
   environment,
   organizationId,
   userId,
   components,
   tourComponents,
-  userProperties,
+  surveyComponents,
+  userProperties = {},
   language,
   debug,
   onDebugShortcut,
+  LinkComponent,
 }) => {
   globalConfig.apiUrl = apiUrl;
   globalConfig.environment = environment;
   globalConfig.organizationId = organizationId;
   globalConfig.userId = userId;
+  globalConfig.customFetch = customFetch;
 
-  const { blocks, error, wsError, removeBlock, updateBlock } = useBlocks({
+  const { blocksState, blocks, error, wsError, removeBlock, updateBlock } = useBlocks({
     apiUrl,
     environment,
     organizationId,
     userId,
     userProperties,
     language,
+    customFetch,
   });
 
   const runningTours = useRunningTours({ blocks, removeBlock });
+  const runningSurveyBlockStateIds = useRunningSurveys({ blocksState });
+
+  useEffect(() => {
+    window.__flows_LinkComponent = LinkComponent;
+  }, [LinkComponent]);
 
   return (
     <FlowsContext.Provider
       value={{
+        userProperties,
         blocks,
         components,
         runningTours,
+        runningSurveyBlockStateIds,
         tourComponents,
+        surveyComponents,
         removeBlock,
         updateBlock,
       }}

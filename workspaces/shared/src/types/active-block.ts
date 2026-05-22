@@ -10,9 +10,9 @@ export interface ActiveBlock {
    */
   tourBlockId?: string;
   /**
-   * Type of the block, either "component" or "tour-component".
+   * Type of the block, either "component" or "tour-component" or "survey".
    */
-  type: "component" | "tour-component";
+  type: "component" | "tour-component" | "survey";
   /**
    * The UI Component used to render this block.
    */

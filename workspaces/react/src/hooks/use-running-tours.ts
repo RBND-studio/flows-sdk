@@ -35,7 +35,7 @@ export const useRunningTours = ({ blocks, removeBlock }: Props): RunningTour[] =
       const runningTourBlockIds = new Set(runningToursRef.current.map((t) => t.blockId));
       tourBlocks.forEach((block) => {
         if (runningTourBlockIds.has(block.id)) return;
-        const triggerMatch = tourTriggerMatch(block.tour_trigger, ctx);
+        const triggerMatch = tourTriggerMatch(block, ctx);
         if (!triggerMatch) return;
 
         setRunningTours((prev) => {
@@ -65,6 +65,8 @@ export const useRunningTours = ({ blocks, removeBlock }: Props): RunningTour[] =
 
     const observer = new MutationObserver(debouncedCallback);
     observer.observe(document.body, { childList: true, subtree: true, attributes: true });
+    // Run once to catch existing elements
+    debouncedCallback();
     return () => {
       observer.disconnect();
     };
@@ -108,16 +110,24 @@ export const useRunningTours = ({ blocks, removeBlock }: Props): RunningTour[] =
             void sendEvent({ name: "transition", propertyKey: "complete", blockId });
           } else {
             const newIndex = currentBlockIndex + 1;
-            setCurrentBlockIndex(blockId, newIndex);
             sendTourUpdate(newIndex);
+
+            // Update the step with a timeout to avoid navigation with href from the next step
+            setTimeout(() => {
+              setCurrentBlockIndex(blockId, newIndex);
+            }, 0);
           }
         };
         const handlePrevious = (): void => {
           let newIndex = currentBlockIndex === 0 ? currentBlockIndex : currentBlockIndex - 1;
           while (newIndex > 0 && block.tourBlocks && !block.tourBlocks.at(newIndex)?.componentType)
             newIndex -= 1;
-          setCurrentBlockIndex(blockId, newIndex);
           sendTourUpdate(newIndex);
+
+          // Update the step with a timeout to avoid navigation with href from the previous step
+          setTimeout(() => {
+            setCurrentBlockIndex(blockId, newIndex);
+          }, 0);
         };
         const handleCancel = (): void => {
           removeBlock(blockId);

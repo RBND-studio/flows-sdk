@@ -3,6 +3,7 @@ import {
   debugEnabledSessionStorageKey,
   getDefaultDebugEnabled,
   isDebugShortcut,
+  log,
 } from "@flows/shared";
 import { ErrorBoundary } from "../error-boundary";
 import { type DebugPanelProps } from "./debug-panel";
@@ -23,19 +24,31 @@ export const Debug: FC<Props> = (props) => {
 type Props = {
   enabled?: boolean;
   onDebugKeydown?: (event: KeyboardEvent) => boolean;
-} & DebugPanelProps;
+} & Omit<DebugPanelProps, "forceOpen">;
 
 const DebugInner: FC<Props> = ({ enabled: forceEnabled, onDebugKeydown, ...props }) => {
-  const [enabled, setEnabled] = useState(getDefaultDebugEnabled(forceEnabled));
+  const [debugState, setDebugState] = useState<{ enabled: boolean; forceOpen: boolean }>({
+    enabled: getDefaultDebugEnabled(forceEnabled),
+    forceOpen: false,
+  });
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent): void => {
       const shortcutMatcher = onDebugKeydown ?? isDebugShortcut;
       if (shortcutMatcher(e)) {
-        setEnabled((prev) => {
-          const newValue = !prev;
+        setDebugState((prev) => {
+          const newValue = !prev.enabled;
           sessionStorage.setItem(debugEnabledSessionStorageKey, String(newValue));
-          return newValue;
+
+          // Info log for user feedback
+          if (newValue) log.info(`Debug mode enabled`);
+          else log.info(`Debug mode disabled`);
+
+          return {
+            enabled: newValue,
+            // Force open is set to true when enabling debug mode via keyboard shortcut
+            forceOpen: newValue,
+          };
         });
       }
     };
@@ -46,11 +59,11 @@ const DebugInner: FC<Props> = ({ enabled: forceEnabled, onDebugKeydown, ...props
     };
   }, [onDebugKeydown]);
 
-  if (!enabled) return null;
+  if (!debugState.enabled) return null;
 
   return (
     <ErrorBoundary>
-      <DebugPanel {...props} />
+      <DebugPanel forceOpen={debugState.forceOpen} {...props} />
     </ErrorBoundary>
   );
 };

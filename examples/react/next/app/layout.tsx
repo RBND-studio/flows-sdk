@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Link from "next/link";
 import "./globals.css";
 
 import { FlowsProvider } from "@flows/react";
 import * as components from "@flows/react-components";
 import * as tourComponents from "@flows/react-components/tour";
+import * as surveyComponents from "@flows/react-components/survey";
 import "@flows/react-components/index.css";
 
 import { Banner } from "@/components/banner";
 import { TourBanner } from "@/components/tour-banner";
+import { Flows } from "@/app/flows";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,21 +36,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <FlowsProvider
-          organizationId="YOUR_ORGANIZATION_ID"
-          userId="YOUR_USER_ID"
-          environment="production"
-          components={{
-            ...components,
-            Banner: Banner,
-          }}
-          tourComponents={{
-            ...tourComponents,
-            Banner: TourBanner,
-          }}
-        >
-          {children}
-        </FlowsProvider>
+        <Flows>{children}</Flows>
       </body>
     </html>
   );

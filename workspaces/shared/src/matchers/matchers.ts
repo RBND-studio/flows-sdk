@@ -45,3 +45,15 @@ export const elementContains = ({
   if (!value) return false;
   return Array.from(document.querySelectorAll(value)).some((el) => el.contains(eventTarget));
 };
+
+export const elementExists = (selector: unknown): boolean => {
+  if (typeof selector !== "string") return false;
+  if (!selector.trim()) return true;
+  return Boolean(document.querySelector(selector));
+};
+
+export const elementNotExists = (selector: unknown): boolean => {
+  if (typeof selector !== "string") return false;
+  if (!selector.trim()) return true;
+  return !document.querySelector(selector);
+};

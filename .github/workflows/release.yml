@@ -24,30 +24,35 @@ on:
           - js
           - js-components
 
+permissions:
+  id-token: write # Required for OIDC
+  contents: write # Required to create GH releases
+
 jobs:
   npm-publish:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
-      - uses: actions/create-github-app-token@v2
+      - uses: actions/create-github-app-token@v3
         id: app-token
         with:
           app-id: 906021
           private-key: ${{ secrets.FLOWS_BOT_PRIVATE_KEY }}
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           token: ${{ steps.app-token.outputs.token }}
           # Make sure the value of GITHUB_TOKEN will not be persisted in repo's config
           persist-credentials: false
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: pnpm/action-setup@91ab88e2619ed1f46221f0ba42d1492c02baf788
+      - uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 24
+          registry-url: "https://registry.npmjs.org"
           cache: "pnpm"
       - run: git remote set-url origin https://flows-bot[bot]:${{ steps.app-token.outputs.token }}@github.com/${{ github.repository }}
       - run: git config user.name "flows-bot[bot]"
       - run: git config user.email "170794745+flows-bot[bot]@users.noreply.github.com"
-      - run: npm config set //registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}
       - run: pnpm install
-      - run: node scripts/release.js --release=${{ github.event.inputs.type }} --package=${{ github.event.inputs.package }}
+      - env:
+          RELEASE_TYPE: ${{ github.event.inputs.type }}
+          PACKAGE_NAME: ${{ github.event.inputs.package }}
+        run: node scripts/release.js --release=$RELEASE_TYPE --package=$PACKAGE_NAME

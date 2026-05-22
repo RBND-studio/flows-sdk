@@ -1,4 +1,4 @@
-import { useState, type FC, useMemo, type ReactNode, useCallback } from "react";
+import { useState, type FC, type ReactNode, useCallback } from "react";
 import {
   booleanToString,
   type DebugPanelPosition,
@@ -12,7 +12,6 @@ import {
 import debugStyles from "@flows/styles/debug.css";
 import { clsx } from "clsx";
 import { useFlowsContext } from "../../flows-context";
-import { useVisibleBlocks } from "../../hooks/use-current-blocks";
 import { usePathname } from "../../contexts/pathname-context";
 import { Logo } from "./icons/logo";
 import { UserPanel } from "./panels/user-panel";
@@ -26,6 +25,11 @@ import { DebugSection } from "./debug-section";
 import { PathnamePanel } from "./panels/pathname-panel";
 
 export interface DebugPanelProps {
+  /**
+   * Opens the debug panel by default (when it gets enabled)
+   */
+  forceOpen: boolean;
+
   organizationId: string;
   environment: string;
   userId: string;
@@ -36,6 +40,7 @@ export interface DebugPanelProps {
 }
 
 const DebugPanel: FC<DebugPanelProps> = ({
+  forceOpen,
   blocksError,
   wsError,
   environment,
@@ -43,7 +48,7 @@ const DebugPanel: FC<DebugPanelProps> = ({
   userId,
   userProperties,
 }) => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(forceOpen);
   const toggleOpen = (): void => {
     setOpen((p) => !p);
   };
@@ -60,13 +65,7 @@ const DebugPanel: FC<DebugPanelProps> = ({
   }, []);
 
   const pathname = usePathname();
-  const { runningTours, blocks } = useFlowsContext();
-  const visibleBlocks = useVisibleBlocks();
-  const activeBlockCount = useMemo(() => {
-    const activeWorkflowBlockCount = visibleBlocks.filter((b) => b.type === "component").length;
-    const activeTourCount = runningTours.filter((tour) => Boolean(tour.activeStep)).length;
-    return activeWorkflowBlockCount + activeTourCount;
-  }, [runningTours, visibleBlocks]);
+  const { blocks } = useFlowsContext();
 
   const statusItems = [
     { key: "organizationId", valid: organizationId && uuidV4Regex.test(organizationId) },
@@ -98,8 +97,7 @@ const DebugPanel: FC<DebugPanelProps> = ({
           })}
         />
       );
-    if (panelPage === "blocks")
-      return <BlocksPanel blocks={blocks} activeBlockCount={activeBlockCount} />;
+    if (panelPage === "blocks") return <BlocksPanel blocks={blocks} />;
     if (panelPage === "pathname") return <PathnamePanel pathname={pathname} />;
     if (panelPage === "settings")
       return <SettingsPanel position={position} onPositionChange={handleChangePosition} />;
@@ -111,7 +109,6 @@ const DebugPanel: FC<DebugPanelProps> = ({
         setPanelPage={setPanelPage}
         sdkSetupValid={sdkSetupValid}
         blocks={blocks}
-        activeBlockCount={activeBlockCount}
         organizationId={organizationId}
       />
     );

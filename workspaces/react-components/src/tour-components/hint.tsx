@@ -1,40 +1,17 @@
-import { type Placement, type TourComponentProps } from "@flows/shared";
+import { type TourHintProps, type TourComponentProps } from "@flows/shared";
 import { type FC } from "react";
 import { BaseHint } from "../internal-components/base-hint";
-import { Button } from "../internal-components/button";
+import { Dots } from "../internal-components/dots";
 
-export type HintProps = TourComponentProps<{
-  title: string;
-  body: string;
-  continueText?: string;
-  previousText?: string;
-  showCloseButton: boolean;
+export type HintProps = TourComponentProps<TourHintProps>;
 
-  targetElement: string;
-  placement?: Placement;
-  offsetX?: number;
-  offsetY?: number;
-}>;
-
-export const Hint: FC<HintProps> = (props) => {
-  const previousButton = props.previous && props.previousText && (
-    <Button variant="secondary" onClick={props.previous}>
-      {props.previousText}
-    </Button>
-  );
-  const continueButton = props.continueText && (
-    <Button variant="primary" onClick={props.continue}>
-      {props.continueText}
-    </Button>
-  );
-  const buttons =
-    Boolean(continueButton) || Boolean(previousButton) ? (
-      <>
-        {/* The empty div ensures elements are aligned correctly when there is no continue button */}
-        {previousButton ?? <div aria-hidden />}
-        {continueButton ?? <div aria-hidden />}
-      </>
-    ) : null;
+const Hint: FC<HintProps> = (props) => {
+  const dots = !props.hideProgress ? (
+    <Dots
+      count={props.__flows.tourVisibleStepCount ?? 0}
+      index={props.__flows.tourVisibleStepIndex ?? 0}
+    />
+  ) : null;
 
   return (
     <BaseHint
@@ -44,10 +21,14 @@ export const Hint: FC<HintProps> = (props) => {
       offsetX={props.offsetX}
       offsetY={props.offsetY}
       placement={props.placement}
-      onClose={props.showCloseButton ? props.cancel : undefined}
-      buttons={buttons}
+      onClose={props.dismissible ? props.cancel : undefined}
+      primaryButton={props.primaryButton}
+      secondaryButton={props.secondaryButton}
+      dots={dots}
       // Needed to avoid reusing html elements between tour steps. Otherwise the tooltip exit animation is triggered.
       key={props.__flows.id}
     />
   );
 };
+
+export const BasicsV2Hint = Hint;
