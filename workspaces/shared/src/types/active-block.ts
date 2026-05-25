@@ -1,18 +1,20 @@
-import { type FlowsProperties } from "./components";
+import type { ComponentProps, SurveyComponentProps, TourComponentProps } from "./components";
 
-export interface ActiveBlock {
+type ActiveBlockBase<T extends string, P extends ComponentProps> = {
   /**
    * Unique identifier of the block, useful for stable key during rendering. Keep in mind each workflow version will have a different id for each block.
    */
   id: string;
   /**
-   * Unique identifier of the tour block this tour-component belongs to. Keep in mind each workflow version will have a different id for each block.
+   * Unique identifier of the tour block this `tour-component` belongs to. Useful for stable key during rendering. Keep in mind each workflow version will have a different id for each block.
+   *
+   * Prefer this over `id` when rendering tour steps to reuse HTML elements between individual tour steps.
    */
   tourBlockId?: string;
   /**
    * Type of the block, either "component" or "tour-component" or "survey".
    */
-  type: "component" | "tour-component" | "survey";
+  type: T;
   /**
    * The UI Component used to render this block.
    */
@@ -20,8 +22,17 @@ export interface ActiveBlock {
   /**
    * Props to be passed to the component including both data and exit node methods.
    */
-  props: { __flows: FlowsProperties } & Record<string, unknown>;
-}
+  props: P;
+};
+
+type ComponentActiveBlock = ActiveBlockBase<"component", ComponentProps<Record<string, unknown>>>;
+type TourComponentActiveBlock = ActiveBlockBase<
+  "tour-component",
+  TourComponentProps<Record<string, unknown>>
+>;
+type SurveyActiveBlock = ActiveBlockBase<"survey", SurveyComponentProps<Record<string, unknown>>>;
+
+export type ActiveBlock = ComponentActiveBlock | TourComponentActiveBlock | SurveyActiveBlock;
 
 export const createActiveBlockProxy = (
   block: ActiveBlock,
