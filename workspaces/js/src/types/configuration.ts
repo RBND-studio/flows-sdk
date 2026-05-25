@@ -1,4 +1,4 @@
-import type { CustomFetch, LanguageOption, UserProperties } from "@flows/shared";
+import type { CustomFetch, LanguageOption, OnNavigate, UserProperties } from "@flows/shared";
 
 export interface FlowsOptions {
   /**
@@ -63,4 +63,33 @@ export interface FlowsOptions {
    * ```
    */
   onDebugShortcut?: (event: KeyboardEvent) => boolean;
+
+  /**
+   * Custom navigation method used for client-side navigation when using components from `@flows/js-components`. Otherwise each link click will result in a full page reload.
+   *
+   * Expects function from your router library, for example navigateTo() from Nuxt. The function receives href and PointerEvent.
+   *
+   * The onNavigate will be used for all URLs without domain and without "openInNew" (target="_blank").
+   * - `/about` - internal link, onNavigate will be called
+   * - `?search=test` - internal link, onNavigate will be called
+   * - `https://example.com` - external link, onNavigate will not called and standard `<a>` element will be used
+   * - `/about` with `openInNew` - external link, onNavigate will not be called and standard `<a>` element with `target="_blank"` will be used
+   *
+   * @example
+   * ```tsx
+   * import { init } from "@flows/js";
+   *
+   * // Pass custom navigation method to `init`
+   * init({
+   *   onNavigate: (href, event) => {
+   *     // Prevent full page reload
+   *     event.preventDefault();
+   *
+   *     // Use your router's navigation method here, for example navigateTo() from Nuxt
+   *     navigateTo(href);
+   *   }
+   * })
+   * ```
+   */
+  onNavigate?: OnNavigate;
 }
