@@ -27,7 +27,7 @@
     "husky": "^9.1.7",
     "minimist": "^1.2.8",
     "oxfmt": "^0.48.0",
-    "oxlint": "^1.63.0",
+    "oxlint": "^1.66.0",
     "oxlint-tsgolint": "^0.22.1"
   },
   "packageManager": "pnpm@11.1.3",
