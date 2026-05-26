@@ -130,7 +130,8 @@ class Action extends LitElement {
 
 const onNavigate: OnNavigate = (href, event) => {
   event.preventDefault();
-  window.history.pushState({}, "", `#${href}`);
+  const to = href.startsWith("/") ? href : `/${href}`;
+  window.history.pushState({}, "", `#${to}`);
 };
 
 init({

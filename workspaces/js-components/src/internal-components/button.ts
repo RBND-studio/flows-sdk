@@ -38,6 +38,9 @@ export const Button = ({
   );
 
   const handleClick = (event: PointerEvent) => {
+    // The click is fired before the navigation, this is in line with how e.g. "next/link" works
+    onClick?.();
+
     const navigationHandler = window.__flows_onNavigate;
     if (
       navigationHandler &&
@@ -47,8 +50,6 @@ export const Button = ({
     ) {
       navigationHandler(href, event);
     }
-
-    onClick?.();
   };
 
   return html`
