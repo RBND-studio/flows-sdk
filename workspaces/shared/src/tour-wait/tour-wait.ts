@@ -9,7 +9,8 @@ export const processTourWait = (
 
   return {
     ...tourWait,
-    element: tourWait.element ? template(tourWait.element, userProperties) : undefined,
+    element:
+      typeof tourWait.element === "string" ? template(tourWait.element, userProperties) : undefined,
     page: tourWait.page
       ? {
           ...tourWait.page,
