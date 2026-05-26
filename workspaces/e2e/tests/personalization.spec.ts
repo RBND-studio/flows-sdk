@@ -1,6 +1,6 @@
 import test, { expect } from "@playwright/test";
 import { getTour, mockBlocksEndpoint } from "./utils";
-import type { Block, TourStep } from "@flows/shared";
+import type { Block, TourStep, TourWait } from "@flows/shared";
 import { randomUUID } from "crypto";
 
 test.beforeEach(async ({ page }) => {
@@ -42,10 +42,12 @@ const getTourStep = ({
   title,
   linkLabel,
   linkUrl,
+  tourWait,
 }: {
   title: string;
   linkLabel: string;
   linkUrl: string;
+  tourWait?: TourWait;
 }): TourStep => ({
   id: randomUUID(),
   workflowId: randomUUID(),
@@ -53,6 +55,7 @@ const getTourStep = ({
   componentType: "BasicsV2Modal",
   data: { title },
   slottable: false,
+  tourWait,
   propertyMeta: [
     {
       key: "primaryButton",
@@ -60,6 +63,7 @@ const getTourStep = ({
       value: {
         label: linkLabel,
         url: linkUrl,
+        exitNode: "continue",
       },
     },
   ],
@@ -221,6 +225,66 @@ const run = (packageName: string) => {
         "href",
         "https://example.com/test@flows.sh/profile",
       );
+    });
+    test(`${packageName} - should fill tour wait page value`, async ({ page }) => {
+      await mockBlocksEndpoint(page, [
+        getTour({
+          tourBlocks: [
+            getTourStep({
+              title: "Step 1",
+              linkLabel: "Continue",
+              linkUrl: "",
+            }),
+            getTourStep({
+              title: "",
+              linkLabel: "",
+              linkUrl: "",
+              tourWait: {
+                interaction: "navigation",
+                page: {
+                  operator: "endsWith",
+                  value: ["?age={{age}}"],
+                },
+              },
+            }),
+            getTourStep({
+              title: "Step 3",
+              linkLabel: "",
+              linkUrl: "",
+            }),
+          ],
+        }),
+      ]);
+      await page.goto(`/${packageName}.html?age=10`);
+      await expect(page.getByText("Step 1", { exact: true })).toBeVisible();
+      await page.getByText("Continue", { exact: true }).click();
+      await expect(page.getByText("Step 3", { exact: true })).toBeVisible();
+    });
+    test(`${packageName} - should fill tour wait element`, async ({ page }) => {
+      await mockBlocksEndpoint(page, [
+        getTour({
+          tourBlocks: [
+            getTourStep({
+              title: "Step 1",
+              linkLabel: "Continue",
+              linkUrl: "",
+              tourWait: {
+                interaction: "click",
+                element: ".age-{{age}}",
+              },
+            }),
+            getTourStep({
+              title: "Step 2",
+              linkLabel: "",
+              linkUrl: "",
+            }),
+          ],
+        }),
+      ]);
+      await page.goto(`/${packageName}.html`);
+      await expect(page.getByText("Step 1", { exact: true })).toBeVisible();
+      await page.locator(".age-10").click();
+      await expect(page.getByText("Step 2", { exact: true })).toBeVisible();
     });
   });
 };

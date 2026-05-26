@@ -9,6 +9,7 @@ export * from "./matchers";
 export * from "./pathname";
 export * from "./survey";
 export * from "./tour-trigger";
+export * from "./tour-wait/tour-wait";
 export * from "./types";
 export * from "./user-properties/user-properties";
 export * from "./websocket-message";

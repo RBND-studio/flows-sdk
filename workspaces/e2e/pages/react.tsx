@@ -123,7 +123,7 @@ const Home: FC = () => {
   return (
     <>
       <h1>heading 1</h1>
-      <h2>Subtitle</h2>
+      <h2 className="age-10">Subtitle</h2>
 
       <FlowsSlot
         id="my-slot"

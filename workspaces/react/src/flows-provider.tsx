@@ -10,6 +10,7 @@ import { globalConfig } from "./lib/store";
 import { TourController } from "./tour-controller";
 import { type SurveyComponents, type Components, type TourComponents } from "./types";
 import { useRunningSurveys } from "./hooks/use-running-surveys";
+import { useUserProperties } from "./hooks/use-user-properties";
 
 export interface FlowsProviderProps {
   /**
@@ -150,7 +151,7 @@ const FlowsProviderInner: FC<Props> = ({
   components,
   tourComponents,
   surveyComponents,
-  userProperties = {},
+  userProperties: _userProperties = {},
   language,
   debug,
   onDebugShortcut,
@@ -161,6 +162,8 @@ const FlowsProviderInner: FC<Props> = ({
   globalConfig.organizationId = organizationId;
   globalConfig.userId = userId;
   globalConfig.customFetch = customFetch;
+
+  const userProperties = useUserProperties(_userProperties);
 
   const { blocksState, blocks, error, wsError, removeBlock, updateBlock } = useBlocks({
     apiUrl,
