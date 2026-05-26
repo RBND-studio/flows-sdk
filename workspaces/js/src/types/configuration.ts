@@ -65,30 +65,30 @@ export interface FlowsOptions {
   onDebugShortcut?: (event: KeyboardEvent) => boolean;
 
   /**
-   * Custom navigation method used for client-side navigation when using components from `@flows/js-components`. Otherwise each link click will result in a full page reload.
+   * Custom navigation handler for client-side navigation when using components from `@flows/js-components`.
+   * Without this, every link click results in a full page reload.
    *
-   * Expects function from your router library, for example navigateTo() from Nuxt. The function receives href and PointerEvent.
+   * Expects a function from your router library (e.g. `navigateTo()` from Nuxt).
+   * The function receives the `href` string and the `PointerEvent`.
    *
-   * The onNavigate will be used for all URLs without domain and without "openInNew" (target="_blank").
-   * - `/about` - internal link, onNavigate will be called
-   * - `?search=test` - internal link, onNavigate will be called
-   * - `https://example.com` - external link, onNavigate will not called and standard `<a>` element will be used
-   * - `/about` with `openInNew` - external link, onNavigate will not be called and standard `<a>` element with `target="_blank"` will be used
+   * `onNavigate` is called for internal links (relative URLs) without `target="_blank"`:
+   * - `/about` — internal, `onNavigate` is called
+   * - `?search=test` — internal, `onNavigate` is called
+   * - `https://example.com` — external URL, `onNavigate` is not called
+   * - `/about` with `openInNew` — internal URL with `target="_blank"`, `onNavigate` is not called
    *
    * @example
-   * ```tsx
+   * ```ts
    * import { init } from "@flows/js";
    *
-   * // Pass custom navigation method to `init`
    * init({
    *   onNavigate: (href, event) => {
    *     // Prevent full page reload
    *     event.preventDefault();
-   *
-   *     // Use your router's navigation method here, for example navigateTo() from Nuxt
+   *     // Use your router's navigation method, e.g. navigateTo() from Nuxt
    *     navigateTo(href);
    *   }
-   * })
+   * });
    * ```
    */
   onNavigate?: OnNavigate;
