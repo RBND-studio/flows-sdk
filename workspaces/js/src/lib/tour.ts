@@ -1,4 +1,4 @@
-import type { UserProperties } from "@flows/shared";
+import type { BlockTriggerContext, UserProperties } from "@flows/shared";
 import {
   elementContains,
   elementExists,
@@ -22,10 +22,7 @@ import {
 } from "../store";
 import { sendEvent } from "./api";
 
-const startToursIfNeeded = (
-  tourBlocksValue: Block[],
-  ctx: { pathname: string; event?: MouseEvent },
-): void => {
+const startToursIfNeeded = (tourBlocksValue: Block[], ctx: BlockTriggerContext): void => {
   const runningTourBlockIds = new Set(runningTours.peek().map((t) => t.blockId));
 
   tourBlocksValue.forEach((block) => {
@@ -132,6 +129,7 @@ export const handleTourDocumentClick = (event: MouseEvent): void => {
   startToursIfNeeded(tourBlocks.value, {
     pathname: getPathname(),
     event,
+    userProperties: config.peek()?.userProperties ?? {},
   });
 };
 
@@ -202,10 +200,14 @@ effect(() => {
 effect(() => {
   const tourBlocksValue = tourBlocks.value;
   const pathnameValue = pathname.value;
+  const configValue = config.value;
 
   if (!pathnameValue) return;
 
-  startToursIfNeeded(tourBlocksValue, { pathname: pathnameValue });
+  startToursIfNeeded(tourBlocksValue, {
+    pathname: pathnameValue,
+    userProperties: configValue?.userProperties ?? {},
+  });
 });
 
 const handleTourElementWaits = (tours: RunningTour[], userProperties: UserProperties): void => {
@@ -251,7 +253,10 @@ effect(() => {
   const configValue = config.value;
 
   const callback = (): void => {
-    startToursIfNeeded(tourBlocksValue, { pathname: getPathname() });
+    startToursIfNeeded(tourBlocksValue, {
+      pathname: getPathname(),
+      userProperties: configValue?.userProperties ?? {},
+    });
     handleTourElementWaits(runningToursValue, configValue?.userProperties ?? {});
   };
 

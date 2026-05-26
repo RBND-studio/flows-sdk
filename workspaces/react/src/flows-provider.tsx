@@ -175,8 +175,8 @@ const FlowsProviderInner: FC<Props> = ({
     customFetch,
   });
 
-  const runningTours = useRunningTours({ blocks, removeBlock });
-  const runningSurveyBlockStateIds = useRunningSurveys({ blocksState });
+  const runningTours = useRunningTours({ blocks, removeBlock, userProperties });
+  const runningSurveyBlockStateIds = useRunningSurveys({ blocksState, userProperties });
 
   useEffect(() => {
     window.__flows_LinkComponent = LinkComponent;
