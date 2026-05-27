@@ -46,7 +46,7 @@ const noCurrentBlocks =
   new URLSearchParams(window.location.search).get("noCurrentBlocks") === "true";
 const language = new URLSearchParams(window.location.search).get("language") as LanguageOption;
 const enableLinkComponent =
-  new URLSearchParams(window.location.search).get("LinkComponent") === "true";
+  new URLSearchParams(window.location.search).get("customNavigation") === "true";
 const slotLimit = new URLSearchParams(window.location.search).get("slotLimit");
 
 const Card: FC<ComponentProps<{ text: string }>> = (props) => (

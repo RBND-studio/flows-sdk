@@ -1,4 +1,4 @@
-import { type ButtonSize, type ButtonVariant } from "@flows/shared";
+import { isInternalLink, type ButtonSize, type ButtonVariant } from "@flows/shared";
 import { clsx } from "clsx";
 import { type TemplateResult } from "lit";
 import { html, literal } from "lit/static-html.js";
@@ -37,11 +37,26 @@ export const Button = ({
     classNameProp,
   );
 
+  const handleClick = (event: PointerEvent) => {
+    // The click is fired before the navigation, this is in line with how e.g. "next/link" works
+    onClick?.();
+
+    const navigationHandler = window.__flows_onNavigate;
+    if (
+      navigationHandler &&
+      typeof navigationHandler === "function" &&
+      href &&
+      isInternalLink(href, target)
+    ) {
+      navigationHandler(href, event);
+    }
+  };
+
   return html`
     <${tag}
       type=${tag === buttonLiteral ? "button" : undefined}
       class=${className}
-      @click=${onClick}
+      @click=${handleClick}
       target=${target}
       href=${href}
       ?disabled=${disabled}
