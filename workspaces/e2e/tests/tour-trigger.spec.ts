@@ -228,7 +228,7 @@ const run = (packageName: string) => {
       const consoleMessagePromise = page.waitForEvent("console", (msg) => {
         return msg
           .text()
-          .includes("Aborting tour start due to an unsupported tour trigger format.");
+          .includes("Aborting tour/survey start due to an unsupported trigger format.");
       });
       await expect(page.getByText("Hello", { exact: true })).toBeHidden();
       await consoleMessagePromise;
@@ -241,7 +241,7 @@ const run = (packageName: string) => {
       const consoleMessagePromise = page.waitForEvent("console", (msg) => {
         return msg
           .text()
-          .includes("Aborting tour start due to an unrecognized tour trigger type: unknown.");
+          .includes("Aborting tour/survey start due to an unrecognized trigger type: unknown.");
       });
       await expect(page.getByText("Hello", { exact: true })).toBeHidden();
       await consoleMessagePromise;
@@ -359,7 +359,7 @@ const run = (packageName: string) => {
       const consoleMessagePromise = page.waitForEvent("console", (msg) => {
         return msg
           .text()
-          .includes("Aborting tour start due to an unsupported tour trigger format.");
+          .includes("Aborting tour/survey start due to an unsupported trigger format.");
       });
       await expect(page.getByText("Hello", { exact: true })).toBeHidden();
       await consoleMessagePromise;
@@ -373,7 +373,7 @@ const run = (packageName: string) => {
       const consoleMessagePromise = page.waitForEvent("console", (msg) => {
         return msg
           .text()
-          .includes("Aborting tour start due to an unrecognized tour trigger type: unknown.");
+          .includes("Aborting tour/survey start due to an unrecognized trigger type: unknown.");
       });
       await expect(page.getByText("Hello", { exact: true })).toBeHidden();
       await consoleMessagePromise;

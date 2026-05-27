@@ -11,7 +11,6 @@ import {
   logSlottableBlocksError,
   parseWebsocketMessage,
   type BlockUpdatesMessage,
-  isUserPropertiesEqual,
 } from "@flows/shared";
 import { packageAndVersion } from "../lib/constants";
 import { type RemoveBlock, type UpdateBlock } from "../flows-context";
@@ -57,15 +56,8 @@ export const useBlocks = ({
     [environment, organizationId, userId],
   );
 
-  const [userPropertiesState, setUserPropertiesState] = useState(userProperties);
-  const userPropertiesStateRef = useRef(userPropertiesState);
-  userPropertiesStateRef.current = userPropertiesState;
-  useEffect(() => {
-    const stateValue = userPropertiesStateRef.current;
-    if (!isUserPropertiesEqual(stateValue, userProperties)) {
-      setUserPropertiesState(userProperties);
-    }
-  }, [userProperties]);
+  const userPropertiesStateRef = useRef(userProperties);
+  userPropertiesStateRef.current = userProperties;
 
   const activeFetchRef = useRef<Promise<void> | null>(null);
   const queuedFetchRef = useRef(false);
@@ -119,7 +111,7 @@ export const useBlocks = ({
       return;
     }
     fetchBlocksRef.current();
-  }, [userPropertiesState]);
+  }, [userProperties]);
 
   const websocketUrl = useMemo(() => {
     if (usageLimited) return;

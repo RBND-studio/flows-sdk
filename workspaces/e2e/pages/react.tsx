@@ -46,7 +46,7 @@ const noCurrentBlocks =
   new URLSearchParams(window.location.search).get("noCurrentBlocks") === "true";
 const language = new URLSearchParams(window.location.search).get("language") as LanguageOption;
 const enableLinkComponent =
-  new URLSearchParams(window.location.search).get("LinkComponent") === "true";
+  new URLSearchParams(window.location.search).get("customNavigation") === "true";
 const slotLimit = new URLSearchParams(window.location.search).get("slotLimit");
 
 const Card: FC<ComponentProps<{ text: string }>> = (props) => (
@@ -123,7 +123,7 @@ const Home: FC = () => {
   return (
     <>
       <h1>heading 1</h1>
-      <h2>Subtitle</h2>
+      <h2 className="age-10">Subtitle</h2>
 
       <FlowsSlot
         id="my-slot"

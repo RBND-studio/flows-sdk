@@ -7,3 +7,5 @@ export interface LinkComponentProps {
   onClick?: () => void;
 }
 export type LinkComponentType = FC<LinkComponentProps>;
+
+export type OnNavigate = (href: string, event: PointerEvent) => void;

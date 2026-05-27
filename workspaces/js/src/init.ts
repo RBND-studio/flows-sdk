@@ -17,6 +17,8 @@ export const init = ({ debug, onDebugShortcut, ...options }: FlowsOptions): void
   const apiUrl = options.apiUrl ?? "https://api.flows-cloud.com";
   config.value = { ...options, apiUrl };
 
+  window.__flows_onNavigate = options.onNavigate;
+
   connectToWebsocketAndFetchBlocks();
 
   if (locationChangeInterval !== null) clearInterval(locationChangeInterval);

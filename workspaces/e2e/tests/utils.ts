@@ -1,4 +1,4 @@
-import type { Block, TourStep } from "@flows/shared";
+import type { Block, TourStep, TourTriggerExpression } from "@flows/shared";
 import type { Page } from "@playwright/test";
 import { randomUUID } from "crypto";
 
@@ -8,7 +8,13 @@ export const mockBlocksEndpoint = async (page: Page, blocks: Block[]): Promise<v
   });
 };
 
-export const getTour = ({ tourBlocks }: { tourBlocks: TourStep[] }): Block => ({
+export const getTour = ({
+  tourBlocks,
+  tour_trigger,
+}: {
+  tourBlocks: TourStep[];
+  tour_trigger?: TourTriggerExpression[];
+}): Block => ({
   id: randomUUID(),
   workflowId: randomUUID(),
   type: "tour",
@@ -17,4 +23,5 @@ export const getTour = ({ tourBlocks }: { tourBlocks: TourStep[] }): Block => ({
   slottable: false,
   propertyMeta: [],
   tourBlocks,
+  tour_trigger: tour_trigger ? { $and: tour_trigger } : undefined,
 });

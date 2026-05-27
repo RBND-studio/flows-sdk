@@ -16,6 +16,8 @@ export type {
   WorkflowStatus,
   WorkflowFrequency,
   WorkflowUserState,
+  // Navigation
+  OnNavigate,
   // Components
   ComponentProps,
   TourComponentProps,
