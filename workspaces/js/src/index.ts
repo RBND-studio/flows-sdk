@@ -1,6 +1,9 @@
 export type {
   Action,
   ActiveBlock,
+  ComponentActiveBlock,
+  TourComponentActiveBlock,
+  SurveyActiveBlock,
   BlockState,
   FlowsProperties,
   StateMemory,
