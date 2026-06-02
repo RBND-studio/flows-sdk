@@ -9,8 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@flows/js": "^1.21.0",
-    "@flows/js-components": "^2.7.1",
+    "@flows/js": "^1.22.0",
+    "@flows/js-components": "^2.10.0",
     "lit": "^3.3.2"
   },
   "devDependencies": {
