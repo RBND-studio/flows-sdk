@@ -22,7 +22,7 @@
     "@commitlint/cli": "^21.0.1",
     "@commitlint/config-conventional": "^21.0.1",
     "@commitlint/types": "^21.0.1",
-    "concurrently": "^9.2.1",
+    "concurrently": "^10.0.3",
     "cspell": "^10.0.0",
     "husky": "^9.1.7",
     "minimist": "^1.2.8",
