@@ -20,7 +20,7 @@
 			organizationId: 'YOUR_ORGANIZATION_ID',
 			userId: 'YOUR_USER_ID',
 			environment: 'production',
-			onNavigate: (href , event) => {
+			onNavigate: (href, event) => {
 				event.preventDefault();
 
 				goto(href);
