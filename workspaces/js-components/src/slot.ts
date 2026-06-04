@@ -14,6 +14,16 @@ export class FlowsSlot extends LitElement {
   @property({ type: String, attribute: "data-slot-id" })
   slotId: string;
 
+  /**
+   * Limit of how many blocks to render in this slot. Defaults to no limit.
+   *
+   * Useful when multiple blocks match the same slot.
+   *
+   * @default undefined
+   */
+  @property({ type: Number })
+  limit?: number;
+
   connectedCallback(): void {
     super.connectedCallback();
 
@@ -46,7 +56,10 @@ export class FlowsSlot extends LitElement {
       else this.placeholderElement.hidden = false;
     }
 
-    return repeat(this._blocks, getBlockRenderKey, (block) => {
+    const blocksToRender =
+      this.limit === undefined ? this._blocks : this._blocks.slice(0, this.limit);
+
+    return repeat(blocksToRender, getBlockRenderKey, (block) => {
       return Block({ block });
     });
   }

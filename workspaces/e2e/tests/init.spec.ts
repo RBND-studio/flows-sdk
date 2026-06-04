@@ -87,5 +87,25 @@ const run = (packageName: string) => {
   });
 };
 
+test("react - should refetch blocks on userProperties change", async ({ page }) => {
+  await mockBlocksEndpoint(page, []);
+  const firstBlocksReq = page.waitForRequest((req) => {
+    const body = req.postDataJSON();
+    return (
+      req.url() === "https://api.flows-cloud.com/v2/sdk/blocks" && body.userProperties.count === 0
+    );
+  });
+  await page.goto(`/react.html`);
+  await firstBlocksReq;
+  const secondBlocksReq = page.waitForRequest((req) => {
+    const body = req.postDataJSON();
+    return (
+      req.url() === "https://api.flows-cloud.com/v2/sdk/blocks" && body.userProperties.count === 1
+    );
+  });
+  await page.getByText("Increment", { exact: true }).click();
+  await secondBlocksReq;
+});
+
 run("js");
 run("react");

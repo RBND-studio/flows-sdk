@@ -73,6 +73,22 @@ const run = (packageName: string) => {
       "block number two",
     );
   });
+  test(`${packageName} - should limit rendered blocks by slot limit`, async ({ page }) => {
+    await mockBlocksEndpoint(page, [
+      getCard({ text: "block number one" }),
+      getCard({ text: "block number two" }),
+    ]);
+    await page.goto(`/${packageName}.html?slotLimit=1`);
+    await expect(page.getByText("block number one", { exact: true })).toBeVisible();
+    await expect(page.getByText("block number two", { exact: true })).toBeHidden();
+    await mockBlocksEndpoint(page, [
+      getCard({ text: "block number one" }),
+      getCard({ text: "block number two" }),
+    ]);
+    await page.goto(`/${packageName}.html?slotLimit=2`);
+    await expect(page.getByText("block number one", { exact: true })).toBeVisible();
+    await expect(page.getByText("block number two", { exact: true })).toBeVisible();
+  });
 };
 
 run("js");

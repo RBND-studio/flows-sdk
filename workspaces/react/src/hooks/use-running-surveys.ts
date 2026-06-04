@@ -1,4 +1,4 @@
-import type { Block } from "@flows/shared";
+import type { Block, BlockTriggerContext, UserProperties } from "@flows/shared";
 import {
   getPathname,
   blockTriggerMatch,
@@ -11,20 +11,21 @@ import { debounce } from "es-toolkit";
 
 type Props = {
   blocksState: Block[] | null;
+  userProperties: UserProperties;
 };
 
-export const useRunningSurveys = ({ blocksState: blocks }: Props): string[] => {
-  const [runningSurveyIds, setRunningSurveyIds] = useState<string[]>(
+export const useRunningSurveys = ({ blocksState: blocks, userProperties }: Props): string[] => {
+  const [runningSurveyBlockStateIds, setRunningSurveyBlockStateIds] = useState<string[]>(
     getSessionStorageRunningSurveys(),
   );
 
   // Save surveys to sessionStorage
   useEffect(() => {
-    saveSessionStorageRunningSurveys(runningSurveyIds);
-  }, [runningSurveyIds]);
+    saveSessionStorageRunningSurveys(runningSurveyBlockStateIds);
+  }, [runningSurveyBlockStateIds]);
 
-  const runningSurveyIdsRef = useRef(runningSurveyIds);
-  runningSurveyIdsRef.current = runningSurveyIds;
+  const runningSurveyBlockStateIdsRef = useRef(runningSurveyBlockStateIds);
+  runningSurveyBlockStateIdsRef.current = runningSurveyBlockStateIds;
 
   const pathname = usePathname();
 
@@ -32,23 +33,30 @@ export const useRunningSurveys = ({ blocksState: blocks }: Props): string[] => {
   useEffect(() => {
     if (!blocks) return;
 
-    const surveyBlockIds = new Set(blocks.filter((b) => b.type === "survey").map((b) => b.id));
-    setRunningSurveyIds((prev) => prev.filter((id) => surveyBlockIds.has(id)));
+    const surveyBlockStateIds = new Set(
+      blocks
+        .filter((b) => b.type === "survey")
+        .map((b) => b.survey?.blockStateId)
+        .filter((id): id is string => !!id),
+    );
+    setRunningSurveyBlockStateIds((prev) => prev.filter((id) => surveyBlockStateIds.has(id)));
   }, [blocks]);
 
   const startSurveysIfNeeded = useCallback(
-    (ctx: { pathname: string; event?: MouseEvent }) => {
+    (ctx: BlockTriggerContext) => {
       if (!blocks) return;
 
       const surveyBlocks = blocks.filter((b) => b.type === "survey");
-      const runningSurveyIdsSet = new Set(runningSurveyIdsRef.current);
+      const runningSurveyBlockStateIdsSet = new Set(runningSurveyBlockStateIdsRef.current);
 
       surveyBlocks.forEach((block) => {
-        if (runningSurveyIdsSet.has(block.id)) return;
+        const blockStateId = block.survey?.blockStateId;
+        if (!blockStateId) return;
+        if (runningSurveyBlockStateIdsSet.has(blockStateId)) return;
         const triggerMatch = blockTriggerMatch(block.tour_trigger, ctx);
         if (!triggerMatch) return;
 
-        setRunningSurveyIds((prev) => [...prev, block.id]);
+        setRunningSurveyBlockStateIds((prev) => [...prev, blockStateId]);
       });
     },
     [blocks],
@@ -58,13 +66,13 @@ export const useRunningSurveys = ({ blocksState: blocks }: Props): string[] => {
   useEffect(() => {
     if (!pathname) return;
 
-    startSurveysIfNeeded({ pathname });
-  }, [pathname, startSurveysIfNeeded]);
+    startSurveysIfNeeded({ pathname, userProperties });
+  }, [pathname, startSurveysIfNeeded, userProperties]);
 
   // Handle trigger by DOM element
   useEffect(() => {
     const debouncedCallback = debounce(() => {
-      startSurveysIfNeeded({ pathname: getPathname() });
+      startSurveysIfNeeded({ pathname: getPathname(), userProperties });
     }, 32);
 
     const observer = new MutationObserver(debouncedCallback);
@@ -74,19 +82,19 @@ export const useRunningSurveys = ({ blocksState: blocks }: Props): string[] => {
     return () => {
       observer.disconnect();
     };
-  }, [startSurveysIfNeeded]);
+  }, [startSurveysIfNeeded, userProperties]);
 
   // Handle trigger by click
   useEffect(() => {
     const handleClick = (event: MouseEvent): void => {
-      startSurveysIfNeeded({ pathname: getPathname(), event });
+      startSurveysIfNeeded({ pathname: getPathname(), event, userProperties });
     };
 
     document.addEventListener("click", handleClick);
     return () => {
       document.removeEventListener("click", handleClick);
     };
-  }, [startSurveysIfNeeded]);
+  }, [startSurveysIfNeeded, userProperties]);
 
-  return runningSurveyIds;
+  return runningSurveyBlockStateIds;
 };

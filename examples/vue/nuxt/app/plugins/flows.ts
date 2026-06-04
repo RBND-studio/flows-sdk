@@ -25,6 +25,11 @@ export default defineNuxtPlugin({
         organizationId: "YOUR_ORGANIZATION_ID",
         userId: "YOUR_USER_ID",
         environment: "production",
+        onNavigate: (href, event) => {
+          event.preventDefault();
+
+          navigateTo(href);
+        },
       });
       setupJsComponents({
         components: {
@@ -38,8 +43,8 @@ export default defineNuxtPlugin({
           Banner: TourBanner,
         },
         surveyComponents: {
-          ...surveyComponents
-        }
+          ...surveyComponents,
+        },
       });
     },
   },

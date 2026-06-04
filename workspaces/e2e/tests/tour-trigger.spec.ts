@@ -1,4 +1,10 @@
-import type { Block, TourTrigger, TourTriggerExpression, TourTriggerType } from "@flows/shared";
+import type {
+  ApiSurvey,
+  Block,
+  TourTrigger,
+  TourTriggerExpression,
+  TourTriggerType,
+} from "@flows/shared";
 import test, { expect } from "@playwright/test";
 import { randomUUID } from "crypto";
 import { mockBlocksEndpoint } from "./utils";
@@ -222,7 +228,7 @@ const run = (packageName: string) => {
       const consoleMessagePromise = page.waitForEvent("console", (msg) => {
         return msg
           .text()
-          .includes("Aborting tour start due to an unsupported tour trigger format.");
+          .includes("Aborting tour/survey start due to an unsupported trigger format.");
       });
       await expect(page.getByText("Hello", { exact: true })).toBeHidden();
       await consoleMessagePromise;
@@ -235,7 +241,7 @@ const run = (packageName: string) => {
       const consoleMessagePromise = page.waitForEvent("console", (msg) => {
         return msg
           .text()
-          .includes("Aborting tour start due to an unrecognized tour trigger type: unknown.");
+          .includes("Aborting tour/survey start due to an unrecognized trigger type: unknown.");
       });
       await expect(page.getByText("Hello", { exact: true })).toBeHidden();
       await consoleMessagePromise;
@@ -270,9 +276,12 @@ const run = (packageName: string) => {
 
     test(`${packageName} - should ignore trigger with running survey`, async ({ page }) => {
       const block = getSurvey([{ type: "navigation", operator: "eq", values: ["/wrong"] }]);
-      await page.addInitScript((surveyId) => {
-        window.sessionStorage.setItem("flows-running-surveys", JSON.stringify([surveyId]));
-      }, block.id);
+      await page.addInitScript((surveyBlockStateId) => {
+        window.sessionStorage.setItem(
+          "flows-running-surveys",
+          JSON.stringify([surveyBlockStateId]),
+        );
+      }, block.survey?.blockStateId);
       await mockBlocksEndpoint(page, [block]);
       await page.goto(`/${packageName}.html`);
       await expect(page.getByText("Hello", { exact: true })).toBeVisible();
@@ -350,7 +359,7 @@ const run = (packageName: string) => {
       const consoleMessagePromise = page.waitForEvent("console", (msg) => {
         return msg
           .text()
-          .includes("Aborting tour start due to an unsupported tour trigger format.");
+          .includes("Aborting tour/survey start due to an unsupported trigger format.");
       });
       await expect(page.getByText("Hello", { exact: true })).toBeHidden();
       await consoleMessagePromise;
@@ -364,7 +373,7 @@ const run = (packageName: string) => {
       const consoleMessagePromise = page.waitForEvent("console", (msg) => {
         return msg
           .text()
-          .includes("Aborting tour start due to an unrecognized tour trigger type: unknown.");
+          .includes("Aborting tour/survey start due to an unrecognized trigger type: unknown.");
       });
       await expect(page.getByText("Hello", { exact: true })).toBeHidden();
       await consoleMessagePromise;
@@ -381,6 +390,21 @@ const run = (packageName: string) => {
       await expect(page.getByText("Hello", { exact: true })).toBeHidden();
       await page.reload();
       await expect(page.getByText("World", { exact: true })).toBeVisible();
+    });
+    test(`${packageName} - should be hidden with different block state ID`, async ({ page }) => {
+      const block = getSurvey([{ type: "click", value: "h1" }]);
+      await mockBlocksEndpoint(page, [block]);
+      await page.goto(`/${packageName}.html`);
+      await expect(page.getByText("Hello", { exact: true })).toBeHidden();
+      await page.locator("h1").click();
+      await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+      const surveyBlockWithDifferentBlockStateId: Block = {
+        ...block,
+        survey: { ...(block.survey as ApiSurvey), blockStateId: randomUUID() },
+      };
+      await mockBlocksEndpoint(page, [surveyBlockWithDifferentBlockStateId]);
+      await page.reload();
+      await expect(page.getByText("Hello", { exact: true })).toBeHidden();
     });
   });
 };

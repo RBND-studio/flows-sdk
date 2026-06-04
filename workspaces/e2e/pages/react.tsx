@@ -16,7 +16,7 @@ import {
   fetchWorkflows,
 } from "@flows/react";
 import type { FC } from "react";
-import { StrictMode } from "react";
+import { StrictMode, useState } from "react";
 import { createRoot } from "react-dom/client";
 
 import { HashRouter, Link, Route, Routes } from "react-router";
@@ -46,7 +46,8 @@ const noCurrentBlocks =
   new URLSearchParams(window.location.search).get("noCurrentBlocks") === "true";
 const language = new URLSearchParams(window.location.search).get("language") as LanguageOption;
 const enableLinkComponent =
-  new URLSearchParams(window.location.search).get("LinkComponent") === "true";
+  new URLSearchParams(window.location.search).get("customNavigation") === "true";
+const slotLimit = new URLSearchParams(window.location.search).get("slotLimit");
 
 const Card: FC<ComponentProps<{ text: string }>> = (props) => (
   <div
@@ -122,9 +123,13 @@ const Home: FC = () => {
   return (
     <>
       <h1>heading 1</h1>
-      <h2>Subtitle</h2>
+      <h2 className="age-10">Subtitle</h2>
 
-      <FlowsSlot id="my-slot" placeholder={<p>Slot placeholder</p>} />
+      <FlowsSlot
+        id="my-slot"
+        limit={slotLimit ? Number(slotLimit) : undefined}
+        placeholder={<p>Slot placeholder</p>}
+      />
 
       {!noCurrentBlocks && <p className="current-blocks">{JSON.stringify(floatingBlocks)}</p>}
 
@@ -151,8 +156,10 @@ const LinkComponent: LinkComponentType = ({ href, children, className, onClick }
   </Link>
 );
 
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
+const App: FC = () => {
+  const [count, setCount] = useState(0);
+
+  return (
     <HashRouter>
       <FlowsProvider
         organizationId="orgId"
@@ -162,6 +169,7 @@ createRoot(document.getElementById("root")!).render(
         userProperties={{
           email: "test@flows.sh",
           age: 10,
+          count,
         }}
         apiUrl={apiUrl}
         customFetch={customFetch}
@@ -174,7 +182,14 @@ createRoot(document.getElementById("root")!).render(
           <Route index element={<Home />} />
           <Route path="/another-page" element={<AnotherPage />} />
         </Routes>
+        <button onClick={() => setCount((p) => p + 1)}>Increment</button>
       </FlowsProvider>
     </HashRouter>
+  );
+};
+
+createRoot(document.getElementById("root")!).render(
+  <StrictMode>
+    <App />
   </StrictMode>,
 );

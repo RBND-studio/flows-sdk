@@ -10,6 +10,7 @@ import { globalConfig } from "./lib/store";
 import { TourController } from "./tour-controller";
 import { type SurveyComponents, type Components, type TourComponents } from "./types";
 import { useRunningSurveys } from "./hooks/use-running-surveys";
+import { useUserProperties } from "./hooks/use-user-properties";
 
 export interface FlowsProviderProps {
   /**
@@ -28,6 +29,8 @@ export interface FlowsProviderProps {
   userId: string | null;
   /**
    * Object with custom [user properties](https://flows.sh/docs/users/properties). Values can be string, number, boolean, or date.
+   *
+   * When any of the property changes, the SDK will automatically refetch blocks to reflect the updated user properties.
    */
   userProperties?: UserProperties;
   /**
@@ -148,7 +151,7 @@ const FlowsProviderInner: FC<Props> = ({
   components,
   tourComponents,
   surveyComponents,
-  userProperties = {},
+  userProperties: _userProperties = {},
   language,
   debug,
   onDebugShortcut,
@@ -160,6 +163,8 @@ const FlowsProviderInner: FC<Props> = ({
   globalConfig.userId = userId;
   globalConfig.customFetch = customFetch;
 
+  const userProperties = useUserProperties(_userProperties);
+
   const { blocksState, blocks, error, wsError, removeBlock, updateBlock } = useBlocks({
     apiUrl,
     environment,
@@ -170,8 +175,8 @@ const FlowsProviderInner: FC<Props> = ({
     customFetch,
   });
 
-  const runningTours = useRunningTours({ blocks, removeBlock });
-  const runningSurveyIds = useRunningSurveys({ blocksState });
+  const runningTours = useRunningTours({ blocks, removeBlock, userProperties });
+  const runningSurveyBlockStateIds = useRunningSurveys({ blocksState, userProperties });
 
   useEffect(() => {
     window.__flows_LinkComponent = LinkComponent;
@@ -184,7 +189,7 @@ const FlowsProviderInner: FC<Props> = ({
         blocks,
         components,
         runningTours,
-        runningSurveyIds,
+        runningSurveyBlockStateIds,
         tourComponents,
         surveyComponents,
         removeBlock,

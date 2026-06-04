@@ -1,4 +1,4 @@
-import type { CustomFetch, Action as IAction, LanguageOption } from "@flows/js";
+import type { CustomFetch, Action as IAction, LanguageOption, OnNavigate } from "@flows/js";
 import {
   init,
   resetAllWorkflowsProgress,
@@ -6,6 +6,7 @@ import {
   addFloatingBlocksChangeListener,
   fetchWorkflows,
 } from "@flows/js";
+import type { FlowsSlot } from "@flows/js-components";
 import { setupJsComponents } from "@flows/js-components";
 import * as _components from "@flows/js-components/components";
 import * as _tourComponents from "@flows/js-components/tour-components";
@@ -36,6 +37,9 @@ const customFetch =
 const noCurrentBlocks =
   new URLSearchParams(window.location.search).get("noCurrentBlocks") === "true";
 const language = new URLSearchParams(window.location.search).get("language") as LanguageOption;
+const slotLimit = new URLSearchParams(window.location.search).get("slotLimit");
+const enableOnNavigate =
+  new URLSearchParams(window.location.search).get("customNavigation") === "true";
 
 class Card extends LitElement {
   @property({ type: String })
@@ -124,6 +128,12 @@ class Action extends LitElement {
   }
 }
 
+const onNavigate: OnNavigate = (href, event) => {
+  event.preventDefault();
+  const to = href.startsWith("/") ? href : `/${href}`;
+  window.history.pushState({}, "", `#${to}`);
+};
+
 init({
   environment: "prod",
   organizationId: "orgId",
@@ -135,6 +145,7 @@ init({
     email: "test@flows.sh",
     age: 10,
   },
+  onNavigate: enableOnNavigate ? onNavigate : undefined,
 });
 
 const components = {
@@ -181,3 +192,6 @@ addFloatingBlocksChangeListener((blocks) => {
 document.querySelector("#fetchWorkflows")?.addEventListener("click", () => {
   void fetchWorkflows();
 });
+
+const flowsSlotElement = document.querySelector<FlowsSlot>("flows-slot");
+if (flowsSlotElement) flowsSlotElement.limit = slotLimit ? Number(slotLimit) : undefined;

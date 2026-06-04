@@ -5,6 +5,7 @@ import {
   elementNotExists,
   getPathname,
   pathnameMatch,
+  processTourWait,
 } from "@flows/shared";
 import { useState } from "react";
 import { debounce } from "es-toolkit";
@@ -12,7 +13,7 @@ import { useFlowsContext } from "./flows-context";
 import { usePathname } from "./contexts/pathname-context";
 
 export const TourController: FC = () => {
-  const { runningTours } = useFlowsContext();
+  const { runningTours, userProperties } = useFlowsContext();
   const pathname = usePathname();
   // eslint-disable-next-line react/hook-use-state -- we need only the value
   const [timeoutByTourId] = useState(new Map<string, { timeoutId: number; stepId: string }>());
@@ -26,7 +27,7 @@ export const TourController: FC = () => {
   // Handle navigation waits
   useEffect(() => {
     relevantTours.forEach((tour) => {
-      const tourWait = tour.activeStep?.tourWait;
+      const tourWait = processTourWait(tour.activeStep?.tourWait, userProperties);
       if (tourWait?.interaction === "navigation") {
         const match = pathnameMatch({
           pathname,
@@ -37,7 +38,7 @@ export const TourController: FC = () => {
         if (match) tour.continue();
       }
     });
-  }, [pathname, relevantTours]);
+  }, [pathname, relevantTours, userProperties]);
 
   // Handle interaction waits
   useEffect(() => {
@@ -48,7 +49,7 @@ export const TourController: FC = () => {
       const currentPathname = getPathname();
 
       relevantTours.forEach((tour) => {
-        const tourWait = tour.activeStep?.tourWait;
+        const tourWait = processTourWait(tour.activeStep?.tourWait, userProperties);
 
         if (tourWait?.interaction === "click") {
           const pageMatch = pathnameMatch({
@@ -69,7 +70,7 @@ export const TourController: FC = () => {
       removeEventListener("click", handleClick);
     };
     // Watch pathname to check on each pathname change
-  }, [pathname, relevantTours]);
+  }, [pathname, relevantTours, userProperties]);
 
   // Handle DOM element waits
   useEffect(() => {
@@ -77,7 +78,7 @@ export const TourController: FC = () => {
       const currentPathname = getPathname();
 
       relevantTours.forEach((tour) => {
-        const tourWait = tour.activeStep?.tourWait;
+        const tourWait = processTourWait(tour.activeStep?.tourWait, userProperties);
         const waitElement = tourWait?.element;
 
         if (tourWait?.interaction === "dom-element") {
@@ -113,7 +114,7 @@ export const TourController: FC = () => {
       debouncedCallback.cancel();
     };
     // Watch pathname to check on each pathname change
-  }, [pathname, relevantTours]);
+  }, [pathname, relevantTours, userProperties]);
 
   // Clear timeouts for tours that don't have active the wait step
   useEffect(() => {
@@ -132,7 +133,7 @@ export const TourController: FC = () => {
   useEffect(() => {
     relevantTours.forEach((tour) => {
       const activeStep = tour.activeStep;
-      const tourWait = activeStep?.tourWait;
+      const tourWait = processTourWait(activeStep?.tourWait, userProperties);
 
       if (
         activeStep &&
@@ -147,7 +148,7 @@ export const TourController: FC = () => {
         timeoutByTourId.set(tour.block.id, { timeoutId, stepId: activeStep.id });
       }
     });
-  }, [relevantTours, timeoutByTourId]);
+  }, [relevantTours, timeoutByTourId, userProperties]);
 
   return null;
 };

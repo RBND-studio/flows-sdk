@@ -55,18 +55,24 @@ export const useBlocks = ({
     () => ({ environment, organizationId, userId }),
     [environment, organizationId, userId],
   );
-  const userPropertiesRef = useRef(userProperties);
-  useEffect(() => {
-    userPropertiesRef.current = userProperties;
-  }, [userProperties]);
 
+  const userPropertiesStateRef = useRef(userProperties);
+  userPropertiesStateRef.current = userProperties;
+
+  const activeFetchRef = useRef<Promise<void> | null>(null);
+  const queuedFetchRef = useRef(false);
   const fetchBlocks = useCallback(() => {
+    if (activeFetchRef.current) {
+      queuedFetchRef.current = true;
+      return;
+    }
+
     setError(false);
-    void getApi({ apiUrl, version: packageAndVersion, customFetch })
+    activeFetchRef.current = getApi({ apiUrl, version: packageAndVersion, customFetch })
       .getBlocks({
         ...params,
         language: getUserLanguage(language),
-        userProperties: userPropertiesRef.current,
+        userProperties: userPropertiesStateRef.current,
       })
       .then((res) => {
         setBlocksState(pendingMessages.current.reduce(applyUpdateMessageToBlocksState, res.blocks));
@@ -86,8 +92,26 @@ export const useBlocks = ({
       .catch((err: unknown) => {
         setError(true);
         log.error("Failed to load blocks", err);
+      })
+      .finally(() => {
+        activeFetchRef.current = null;
+        if (!queuedFetchRef.current) return;
+        queuedFetchRef.current = false;
+        fetchBlocks();
       });
   }, [apiUrl, language, params, customFetch]);
+
+  // Refetch blocks when userProperties change
+  const fetchBlocksRef = useRef(fetchBlocks);
+  fetchBlocksRef.current = fetchBlocks;
+  const firstRenderRef = useRef(true);
+  useEffect(() => {
+    if (firstRenderRef.current) {
+      firstRenderRef.current = false;
+      return;
+    }
+    fetchBlocksRef.current();
+  }, [userProperties]);
 
   const websocketUrl = useMemo(() => {
     if (usageLimited) return;

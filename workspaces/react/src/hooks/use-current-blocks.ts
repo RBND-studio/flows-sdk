@@ -1,4 +1,4 @@
-import { type ActiveBlock, type Block, pathnameMatch } from "@flows/shared";
+import { type ActiveBlock, type Block, pathnameMatch, template } from "@flows/shared";
 import { useMemo } from "react";
 import { type RunningTour, useFlowsContext } from "../flows-context";
 import { usePathname } from "../contexts/pathname-context";
@@ -6,27 +6,30 @@ import { isBlock, itemToActiveBlock } from "../lib/active-block";
 import { getSlot } from "../lib/selectors";
 
 export const useVisibleBlocks = (): Block[] => {
-  const { blocks, runningSurveyIds } = useFlowsContext();
+  const { blocks, runningSurveyBlockStateIds, userProperties } = useFlowsContext();
   const pathname = usePathname();
   return useMemo(() => {
-    const runningSurveyIdsSet = new Set(runningSurveyIds);
+    const runningSurveyBlockStateIdsSet = new Set(runningSurveyBlockStateIds);
 
     return blocks.filter((b) => {
-      if (b.type === "survey" && !runningSurveyIdsSet.has(b.id)) return false;
+      if (b.type === "survey") {
+        const blockStateId = b.survey?.blockStateId;
+        if (!blockStateId || !runningSurveyBlockStateIdsSet.has(blockStateId)) return false;
+      }
 
       const pageTargetingMatch = pathnameMatch({
         pathname,
         operator: b.page_targeting_operator,
-        value: b.page_targeting_values,
+        value: b.page_targeting_values?.map((v) => template(v, userProperties)),
       });
 
       return pageTargetingMatch;
     });
-  }, [blocks, pathname, runningSurveyIds]);
+  }, [blocks, pathname, runningSurveyBlockStateIds, userProperties]);
 };
 
 const useVisibleTours = (): RunningTour[] => {
-  const { runningTours } = useFlowsContext();
+  const { runningTours, userProperties } = useFlowsContext();
   const pathname = usePathname();
   return useMemo(
     () =>
@@ -37,11 +40,11 @@ const useVisibleTours = (): RunningTour[] => {
           pathnameMatch({
             pathname,
             operator: activeStep.page_targeting_operator,
-            value: activeStep.page_targeting_values,
+            value: activeStep.page_targeting_values?.map((v) => template(v, userProperties)),
           })
         );
       }),
-    [pathname, runningTours],
+    [pathname, runningTours, userProperties],
   );
 };
 
