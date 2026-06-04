@@ -1,3 +1,5 @@
+import type ApplicationInstance from "@ember/application/instance";
+
 import { init } from "@flows/js";
 import { setupJsComponents } from "@flows/js-components";
 
@@ -11,11 +13,18 @@ import "@flows/js-components/index.css";
 // Helper empty custom component to get rid of console errors when @flows/js-components tries to render component that is not defined
 class NoopComponent extends HTMLElement {}
 
-export function initialize() {
+export function initialize(appInstance: ApplicationInstance) {
+  const router = appInstance.lookup("service:router");
+
   init({
-    organizationId: "2d646d66-2543-42a1-914d-69584e73ed42",
-    userId: "ember-user",
+    organizationId: "YOUR_ORGANIZATION_ID",
+    userId: "YOUR_USER_ID",
     environment: "production",
+    onNavigate: (href, event) => {
+      event.preventDefault();
+
+      router.transitionTo(href);
+    },
   });
   setupJsComponents({
     components: {

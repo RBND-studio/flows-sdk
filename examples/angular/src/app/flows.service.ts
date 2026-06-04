@@ -1,27 +1,35 @@
-import { Injectable, Injector } from '@angular/core';
-import { createCustomElement } from '@angular/elements';
+import { inject, Injectable, Injector } from "@angular/core";
+import { createCustomElement } from "@angular/elements";
+import { Router } from "@angular/router";
 
-import { init } from '@flows/js';
-import { setupJsComponents } from '@flows/js-components';
-import * as components from '@flows/js-components/components';
-import * as tourComponents from '@flows/js-components/tour-components';
-import * as surveyComponents from '@flows/js-components/survey-components';
+import { init } from "@flows/js";
+import { setupJsComponents } from "@flows/js-components";
+import * as components from "@flows/js-components/components";
+import * as tourComponents from "@flows/js-components/tour-components";
+import * as surveyComponents from "@flows/js-components/survey-components";
 
 // Don't forget to import the CSS styles for Flows components
-import '@flows/js-components/index.css';
+import "@flows/js-components/index.css";
 
-import { Banner as AngularBanner } from './banner/banner';
-import { TourBanner as AngularTourBanner } from './tour-banner/tour-banner';
+import { Banner as AngularBanner } from "./banner/banner";
+import { TourBanner as AngularTourBanner } from "./tour-banner/tour-banner";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class FlowsService {
+  private router = inject(Router);
+
   init(injector: Injector) {
     init({
-      organizationId: 'YOUR_ORGANIZATION_ID',
-      userId: 'YOUR_USER_ID',
-      environment: 'production',
+      organizationId: "YOUR_ORGANIZATION_ID",
+      userId: "YOUR_USER_ID",
+      environment: "production",
+      onNavigate: (href, event) => {
+        event.preventDefault();
+
+        this.router.navigateByUrl(href);
+      },
     });
 
     const Banner = createCustomElement(AngularBanner, { injector });
@@ -39,8 +47,8 @@ export class FlowsService {
         Banner: TourBanner,
       },
       surveyComponents: {
-        ...surveyComponents
-      }
+        ...surveyComponents,
+      },
     });
   }
 }

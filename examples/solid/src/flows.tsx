@@ -1,5 +1,6 @@
 import { onMount } from "solid-js";
 import { customElement } from "solid-element";
+import { useNavigate } from "@solidjs/router";
 
 import { init } from "@flows/js";
 import { setupJsComponents } from "@flows/js-components";
@@ -15,11 +16,18 @@ import { Banner as SolidBanner } from "~/components/banner";
 import { TourBanner as SolidTourBanner } from "~/components/tour-banner";
 
 export const Flows = () => {
+  const navigate = useNavigate();
+
   onMount(() => {
     init({
       organizationId: "YOUR_ORGANIZATION_ID",
       userId: "YOUR_USER_ID",
       environment: "production",
+      onNavigate: (href, event) => {
+        event.preventDefault();
+
+        navigate(href);
+      },
     });
 
     const Banner = customElement(
@@ -59,7 +67,7 @@ export const Flows = () => {
         Banner: TourBanner,
       },
       surveyComponents: {
-        ...surveyComponents
+        ...surveyComponents,
       },
     });
   });
