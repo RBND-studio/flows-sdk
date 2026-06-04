@@ -2,8 +2,7 @@
 
 An example project showcasing how to use Flows with Electron Forge with React to build native product growth experiences.
 
-<!-- TODO: -->
-<!-- ![Cover](./cover.png) -->
+![Cover](./cover.png)
 
 This example extends the Electron Forge Webpack + TypeScript starter project with React install with the [`@flows/react`](https://www.npmjs.com/package/@flows/react) and [`@flows/react-components`](https://www.npmjs.com/package/@flows/react-components) packages to demonstrate how to integrate Flows into your application.
 
