@@ -1,11 +1,11 @@
 import type { FC, ReactNode } from "react";
+import { Link } from "@tanstack/react-router";
 
 import { FlowsProvider, type LinkComponentType } from "@flows/react";
 import * as components from "@flows/react-components";
 import * as tourComponents from "@flows/react-components/tour";
 import * as surveyComponents from "@flows/react-components/survey";
 import "@flows/react-components/index.css";
-import { Link } from "@tanstack/react-router";
 
 import { Banner } from "~/components/banner";
 import { TourBanner } from "~/components/tour-banner";
