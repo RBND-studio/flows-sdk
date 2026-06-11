@@ -42,6 +42,7 @@ We provide a set of templates to help you get started with Flows.
 
 - [Next.js template](./examples/react/next)
 - [React Vite template](./examples/react/vite)
+- [Tanstack Start template](./examples/react/tanstack)
 - [Vue Nuxt template](./examples/vue/nuxt)
 - [Angular template](./examples/angular)
 - [Svelte template](./examples/svelte)
