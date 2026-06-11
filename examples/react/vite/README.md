@@ -1,6 +1,6 @@
 # Flows React Router Vite example
 
-An example project showcasing how to use Flows with React React and Vite to build native product growth experiences.
+An example project showcasing how to use Flows with React Router and Vite to build native product growth experiences.
 
 ![Cover](./cover.png)
 
