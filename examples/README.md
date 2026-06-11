@@ -11,6 +11,9 @@ This directory contains examples of flows that can be used as a starting point f
 - [SvelteKit](./svelte) - A simple example of how to use Flows with SvelteKit.
 - [Lit](./lit) - A simple example of how to use Flows with Lit.
 - [SolidJS](./solid) - A simple example of how to use Flows with SolidJS.
+- [Ember](./ember) - A simple example of how to use Flows with Ember.
+- [Astro](./astro) - A simple example of how to use Flows with Astro.
+- [Electron React](./electron//electron-forge-react) - A simple example of how to use Flows with Electron and React - based on Electron Forge with Webpack and React.
 - [JavaScript CDN](./js/cdn) - A simple example of how to use Flows with JavaScript without NPM by loading global script from CDN.
 
 ## Reporting Issues

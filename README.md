@@ -41,12 +41,15 @@ This repository contains the SDKs for Flows and accompanying built-in components
 We provide a set of templates to help you get started with Flows.
 
 - [Next.js template](./examples/react/next)
-- [Vite template](./examples/react/vite)
+- [React Vite template](./examples/react/vite)
 - [Vue Nuxt template](./examples/vue/nuxt)
 - [Angular template](./examples/angular)
 - [Svelte template](./examples/svelte)
 - [Lit template](./examples/lit)
 - [SolidJS template](./examples/solid)
+- [Ember template](./examples/ember)
+- [Astro template](./examples/astro)
+- [Electron React template](./examples/electron/electron-forge-react)
 
 ## Get started for free
 

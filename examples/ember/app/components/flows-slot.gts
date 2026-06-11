@@ -21,7 +21,7 @@ type Signature =  {
 export default class FlowsSlot extends Component<Signature> {
   @tracked blocks: ActiveBlock[] = [];
 
-  @computed("blocks")
+  @computed('blocks.length')
   get noBlocks() {
     return this.blocks.length === 0;
   }

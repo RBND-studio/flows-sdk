@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import './layout.css';
+	import { goto } from '$app/navigation';
 
 	import { init } from '@flows/js';
 	import { setupJsComponents } from '@flows/js-components';
@@ -19,6 +20,11 @@
 			organizationId: 'YOUR_ORGANIZATION_ID',
 			userId: 'YOUR_USER_ID',
 			environment: 'production',
+			onNavigate: (href, event) => {
+				event.preventDefault();
+
+				goto(href);
+			}
 		});
 		setupJsComponents({
 			components: {

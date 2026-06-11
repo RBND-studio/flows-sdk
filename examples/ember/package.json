@@ -100,7 +100,7 @@
     "edition": "octane"
   },
   "dependencies": {
-    "@flows/js": "^1.21.0",
-    "@flows/js-components": "^2.7.1"
+    "@flows/js": "^1.22.0",
+    "@flows/js-components": "^2.10.0"
   }
 }
