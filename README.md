@@ -41,7 +41,7 @@ This repository contains the SDKs for Flows and accompanying built-in components
 We provide a set of templates to help you get started with Flows.
 
 - [Next.js template](./examples/react/next)
-- [React Vite template](./examples/react/vite)
+- [React Router Vite template](./examples/react/vite)
 - [Vue Nuxt template](./examples/vue/nuxt)
 - [Angular template](./examples/angular)
 - [Svelte template](./examples/svelte)
