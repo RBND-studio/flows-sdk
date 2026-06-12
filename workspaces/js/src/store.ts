@@ -26,7 +26,7 @@ const addClosedBlockStateId = (blockStateId: string): void => {
   closedBlockStateIds.value = [...(closedBlockStateIds.peek() ?? []), blockStateId];
   updateClosedBlockStateIds(closedBlockStateIds.peek() ?? []);
 };
-// Initialize closedBlockStateIds in browser from localStorage value
+// Initialize closedBlockStateIds in browser from sessionStorage value
 effect(() => {
   if (typeof window === "undefined") return;
   if (closedBlockStateIds.peek()) return;

@@ -36,7 +36,6 @@ export const createSurveyComponentProps = (props: {
   const { block } = props;
 
   const { survey, blockStateId } = block;
-  // const survey = block.survey;
   if (!survey) return null;
 
   const baseProps = createComponentProps(props) as ComponentProps<{

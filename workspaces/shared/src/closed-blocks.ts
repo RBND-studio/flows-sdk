@@ -11,11 +11,11 @@ export const getClosedBlockStateIds = (): string[] => {
 
     const parsed = JSON.parse(data);
 
-    if (Array.isArray(parsed)) {
+    if (Array.isArray(parsed) && parsed.every((item) => typeof item === "string")) {
       return parsed;
     }
   } catch {
-    log.error("Error getting from localStorage");
+    log.error("Error getting from sessionStorage");
   }
   return [];
 };
@@ -24,6 +24,6 @@ export const updateClosedBlockStateIds = (blockStateIds: string[]): void => {
   try {
     sessionStorage.setItem(CLOSED_BLOCKS_STORAGE_KEY, JSON.stringify(blockStateIds));
   } catch {
-    log.error("Error saving to localStorage");
+    log.error("Error saving to sessionStorage");
   }
 };

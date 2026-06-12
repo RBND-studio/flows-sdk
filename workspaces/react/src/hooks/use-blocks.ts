@@ -58,6 +58,7 @@ export const useBlocks = ({
   }, []);
   const closedBlockStateIdsRef = useRef(closedBlockStateIds);
   closedBlockStateIdsRef.current = closedBlockStateIds;
+  // Initialize closedBlockStateIds in browser from sessionStorage value
   useEffect(() => {
     if (closedBlockStateIdsRef.current) return;
     setClosedBlockStateIds(getClosedBlockStateIds());
