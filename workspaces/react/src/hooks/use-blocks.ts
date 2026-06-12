@@ -11,6 +11,8 @@ import {
   logSlottableBlocksError,
   parseWebsocketMessage,
   type BlockUpdatesMessage,
+  getClosedBlockStateIds,
+  updateClosedBlockStateIds,
 } from "@flows/shared";
 import { packageAndVersion } from "../lib/constants";
 import { type RemoveBlock, type UpdateBlock } from "../flows-context";
@@ -27,8 +29,7 @@ interface Props {
 }
 
 interface Return {
-  blocksState: Block[] | null;
-  blocks: Block[];
+  blocks: Block[] | null;
   removeBlock: RemoveBlock;
   updateBlock: UpdateBlock;
   error: boolean;
@@ -46,7 +47,32 @@ export const useBlocks = ({
 }: Props): Return => {
   const [blocksState, setBlocksState] = useState<Block[] | null>(null);
   const [error, setError] = useState(false);
-  const blocks = useMemo(() => blocksState ?? [], [blocksState]);
+
+  const [closedBlockStateIds, setClosedBlockStateIds] = useState<string[] | null>(null);
+  const addClosedBlockStateId = useCallback((blockStateId: string): void => {
+    setClosedBlockStateIds((prev) => {
+      const newValue = [...(prev ?? []), blockStateId];
+      updateClosedBlockStateIds(newValue);
+      return newValue;
+    });
+  }, []);
+  const closedBlockStateIdsRef = useRef(closedBlockStateIds);
+  closedBlockStateIdsRef.current = closedBlockStateIds;
+  // Initialize closedBlockStateIds in browser from sessionStorage value
+  useEffect(() => {
+    if (closedBlockStateIdsRef.current) return;
+    setClosedBlockStateIds(getClosedBlockStateIds());
+  }, []);
+
+  const blocks = useMemo(() => {
+    const closedBlockStateIdsSet = new Set(closedBlockStateIds);
+
+    if (!blocksState) return blocksState;
+    return blocksState?.filter((b) => {
+      if (!b.blockStateId) return true;
+      return !closedBlockStateIdsSet.has(b.blockStateId);
+    });
+  }, [blocksState, closedBlockStateIds]);
 
   const [usageLimited, setUsageLimited] = useState(false);
   const pendingMessages = useRef<BlockUpdatesMessage[]>([]);
@@ -138,15 +164,24 @@ export const useBlocks = ({
 
   // Log error about slottable blocks without slotId
   useEffect(() => {
-    logSlottableBlocksError(blocks);
+    logSlottableBlocksError(blocks ?? []);
   }, [blocks]);
 
-  const removeBlock: RemoveBlock = useCallback((blockId) => {
-    setBlocksState((prev) => {
-      if (!prev) return prev;
-      return prev.filter((b) => b.id !== blockId);
-    });
-  }, []);
+  const removeBlock: RemoveBlock = useCallback(
+    (blockId) => {
+      let removedBlockStateId: string | undefined = undefined;
+      setBlocksState((prev) => {
+        if (!prev) return prev;
+        return prev.filter((b) => {
+          const shouldBeRemoved = b.id === blockId;
+          if (shouldBeRemoved) removedBlockStateId = b.blockStateId;
+          return !shouldBeRemoved;
+        });
+      });
+      if (removedBlockStateId) addClosedBlockStateId(removedBlockStateId);
+    },
+    [addClosedBlockStateId],
+  );
   const updateBlock: UpdateBlock = useCallback((blockId, updateFn) => {
     setBlocksState((prev) => {
       if (!prev) return prev;
@@ -154,5 +189,5 @@ export const useBlocks = ({
     });
   }, []);
 
-  return { blocksState, blocks, error, wsError, removeBlock, updateBlock };
+  return { blocks, error, wsError, removeBlock, updateBlock };
 };

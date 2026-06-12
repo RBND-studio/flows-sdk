@@ -67,7 +67,7 @@ export class DebugPanel extends SignalWatcher(LitElement) {
     const orgId = config.value?.organizationId;
     const userId = config.value?.userId;
     const environment = config.value?.environment;
-    const blocksValue = blocks.value;
+    const blocksValue = blocks.value ?? [];
     const pathnameValue = pathname.value;
 
     const statusItems = [

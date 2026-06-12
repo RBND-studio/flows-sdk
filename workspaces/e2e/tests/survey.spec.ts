@@ -28,6 +28,7 @@ const getBlock = ({
   submitButtonLabel?: string;
 }): Block => ({
   id: randomUUID(),
+  blockStateId: randomUUID(),
   workflowId: randomUUID(),
   type: "survey",
   componentType: "BasicsV2SurveyPopover",
@@ -40,7 +41,7 @@ const getBlock = ({
   },
   exitNodes: ["complete", "cancel"],
   slottable: false,
-  survey: { id: randomUUID(), blockStateId: randomUUID(), questions },
+  survey: { id: randomUUID(), questions },
 });
 
 const run = (packageName: string) => {
@@ -63,7 +64,7 @@ const run = (packageName: string) => {
         body.environment === "prod" &&
         body.organizationId === "orgId" &&
         body.surveyId === block.survey?.id &&
-        body.blockStateId === block.survey?.blockStateId &&
+        body.blockStateId === block.blockStateId &&
         urlMatcher(body.url) &&
         isDeepStrictEqual(body.questions, questions)
       );

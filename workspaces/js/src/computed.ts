@@ -4,7 +4,7 @@ import { blocks, config, pathname, runningSurveyBlockStateIds, runningTours } fr
 import { itemToActiveBlock } from "./lib/active-block";
 
 export const visibleBlocks = computed(() => {
-  const blocksValue = blocks.value;
+  const blocksValue = blocks.value ?? [];
   const runningSurveyBlockStateIdsValue = runningSurveyBlockStateIds.value;
   const pathnameValue = pathname.value;
   const configValue = config.value;
@@ -13,7 +13,7 @@ export const visibleBlocks = computed(() => {
 
   return blocksValue.filter((b) => {
     if (b.type === "survey") {
-      const blockStateId = b.survey?.blockStateId;
+      const blockStateId = b.blockStateId;
       if (!blockStateId || !runningSurveyBlockStateIdsSet.has(blockStateId)) return false;
     }
 
@@ -28,7 +28,7 @@ export const visibleBlocks = computed(() => {
 });
 
 export const visibleTours = computed(() => {
-  const blocksValue = blocks.value;
+  const blocksValue = blocks.value ?? [];
   const pathnameValue = pathname.value;
   const runningToursValue = runningTours.value;
   const configValue = config.value;

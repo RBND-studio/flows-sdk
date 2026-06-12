@@ -12,7 +12,6 @@ import {
 import { effect } from "@preact/signals-core";
 import { debounce } from "es-toolkit";
 import {
-  blocks,
   config,
   pathname,
   removeBlock,
@@ -93,7 +92,7 @@ export const cancelTour = (tourBlockId: string): void => {
 };
 
 const handleTourClickWaits = (eventTarget: Element): void => {
-  const blocksById = new Map(blocks.peek().map((block) => [block.id, block]));
+  const blocksById = new Map(tourBlocks.peek().map((block) => [block.id, block]));
 
   runningTours.value.forEach((tour) => {
     const tourBlock = blocksById.get(tour.blockId);
@@ -211,7 +210,7 @@ effect(() => {
 });
 
 const handleTourElementWaits = (tours: RunningTour[], userProperties: UserProperties): void => {
-  const blocksById = new Map(blocks.peek().map((block) => [block.id, block]));
+  const blocksById = new Map(tourBlocks.peek().map((block) => [block.id, block]));
 
   tours.forEach((tour) => {
     const tourBlock = blocksById.get(tour.blockId);

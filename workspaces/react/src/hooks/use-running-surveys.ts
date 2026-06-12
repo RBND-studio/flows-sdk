@@ -10,11 +10,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { debounce } from "es-toolkit";
 
 type Props = {
-  blocksState: Block[] | null;
+  blocks: Block[] | null;
   userProperties: UserProperties;
 };
 
-export const useRunningSurveys = ({ blocksState: blocks, userProperties }: Props): string[] => {
+export const useRunningSurveys = ({ blocks, userProperties }: Props): string[] => {
   const [runningSurveyBlockStateIds, setRunningSurveyBlockStateIds] = useState<string[]>(
     getSessionStorageRunningSurveys(),
   );
@@ -36,7 +36,7 @@ export const useRunningSurveys = ({ blocksState: blocks, userProperties }: Props
     const surveyBlockStateIds = new Set(
       blocks
         .filter((b) => b.type === "survey")
-        .map((b) => b.survey?.blockStateId)
+        .map((b) => b.blockStateId)
         .filter((id): id is string => !!id),
     );
     setRunningSurveyBlockStateIds((prev) => prev.filter((id) => surveyBlockStateIds.has(id)));
@@ -50,7 +50,7 @@ export const useRunningSurveys = ({ blocksState: blocks, userProperties }: Props
       const runningSurveyBlockStateIdsSet = new Set(runningSurveyBlockStateIdsRef.current);
 
       surveyBlocks.forEach((block) => {
-        const blockStateId = block.survey?.blockStateId;
+        const blockStateId = block.blockStateId;
         if (!blockStateId) return;
         if (runningSurveyBlockStateIdsSet.has(blockStateId)) return;
         const triggerMatch = blockTriggerMatch(block.tour_trigger, ctx);

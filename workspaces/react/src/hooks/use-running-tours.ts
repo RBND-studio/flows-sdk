@@ -11,7 +11,7 @@ type StateItem = Pick<RunningTour, "currentBlockIndex"> & {
 };
 
 interface Props {
-  blocks: Block[];
+  blocks: Block[] | null;
   removeBlock: (blockId: string) => void;
   userProperties: UserProperties;
 }
@@ -24,6 +24,7 @@ export const useRunningTours = ({ blocks, removeBlock, userProperties }: Props):
 
   // Stop tours that are no longer running
   useEffect(() => {
+    if (!blocks) return;
     setRunningTours((prev) => {
       const tourBlockIds = new Set(blocks.filter((b) => b.type === "tour").map((b) => b.id));
       // Filter out stopped tours
@@ -33,6 +34,7 @@ export const useRunningTours = ({ blocks, removeBlock, userProperties }: Props):
 
   const startToursIfNeeded = useCallback(
     (ctx: BlockTriggerContext): void => {
+      if (!blocks) return;
       const tourBlocks = blocks.filter((b) => b.type === "tour");
       const runningTourBlockIds = new Set(runningToursRef.current.map((t) => t.blockId));
       tourBlocks.forEach((block) => {
@@ -87,6 +89,7 @@ export const useRunningTours = ({ blocks, removeBlock, userProperties }: Props):
   }, [startToursIfNeeded, userProperties]);
 
   const runningToursWithActiveBlock = useMemo(() => {
+    if (!blocks) return [];
     const updateState = (blockId: string, updateFn: (tour: StateItem) => StateItem): void => {
       setRunningTours((prev) =>
         prev.map((tour) => (tour.blockId === blockId ? updateFn(tour) : tour)),

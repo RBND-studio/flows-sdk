@@ -165,7 +165,7 @@ const FlowsProviderInner: FC<Props> = ({
 
   const userProperties = useUserProperties(_userProperties);
 
-  const { blocksState, blocks, error, wsError, removeBlock, updateBlock } = useBlocks({
+  const { blocks, error, wsError, removeBlock, updateBlock } = useBlocks({
     apiUrl,
     environment,
     organizationId,
@@ -176,7 +176,7 @@ const FlowsProviderInner: FC<Props> = ({
   });
 
   const runningTours = useRunningTours({ blocks, removeBlock, userProperties });
-  const runningSurveyBlockStateIds = useRunningSurveys({ blocksState, userProperties });
+  const runningSurveyBlockStateIds = useRunningSurveys({ blocks, userProperties });
 
   useEffect(() => {
     window.__flows_LinkComponent = LinkComponent;

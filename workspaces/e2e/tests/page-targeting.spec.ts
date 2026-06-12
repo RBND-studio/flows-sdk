@@ -71,6 +71,7 @@ const getSurvey = ({
   page_targeting_values?: string[];
 }): Block => ({
   id: randomUUID(),
+  blockStateId: randomUUID(),
   workflowId: randomUUID(),
   type: "survey",
   componentType: "BasicsV2SurveyPopover",
@@ -79,7 +80,6 @@ const getSurvey = ({
   slottable: false,
   survey: {
     id: randomUUID(),
-    blockStateId: randomUUID(),
     questions: [
       {
         id: "question-1",

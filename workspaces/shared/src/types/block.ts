@@ -53,6 +53,10 @@ export type TourStepType = "tour-component" | "wait";
 
 export interface Block {
   id: string;
+  /**
+   * Will be undefined if the block doesn't have a state, e.g. when it's watched through block-state property
+   */
+  blockStateId?: string;
   workflowId: string;
   key?: string;
   type: BlockType;
