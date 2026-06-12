@@ -400,7 +400,7 @@ const run = (packageName: string) => {
       await expect(page.getByText("Hello", { exact: true })).toBeVisible();
       const surveyBlockWithDifferentBlockStateId: Block = {
         ...block,
-        survey: { ...(block.survey as ApiSurvey), blockStateId: randomUUID() },
+        blockStateId: randomUUID(),
       };
       await mockBlocksEndpoint(page, [surveyBlockWithDifferentBlockStateId]);
       await page.reload();
