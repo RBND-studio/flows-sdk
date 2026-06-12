@@ -11,9 +11,9 @@ export const useVisibleBlocks = (): Block[] => {
   return useMemo(() => {
     const runningSurveyBlockStateIdsSet = new Set(runningSurveyBlockStateIds);
 
-    return blocks.filter((b) => {
+    return (blocks ?? []).filter((b) => {
       if (b.type === "survey") {
-        const blockStateId = b.survey?.blockStateId;
+        const blockStateId = b.blockStateId;
         if (!blockStateId || !runningSurveyBlockStateIdsSet.has(blockStateId)) return false;
       }
 

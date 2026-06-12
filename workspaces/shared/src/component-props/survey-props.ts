@@ -35,7 +35,8 @@ export const createSurveyComponentProps = (props: {
 }): SurveyComponentProps<object> | null => {
   const { block } = props;
 
-  const survey = block.survey;
+  const { survey, blockStateId } = block;
+  // const survey = block.survey;
   if (!survey) return null;
 
   const baseProps = createComponentProps(props) as ComponentProps<{
@@ -44,20 +45,20 @@ export const createSurveyComponentProps = (props: {
   }>;
 
   const handleSubmit = async (): Promise<void> => {
-    if (!survey.blockStateId) {
+    if (!blockStateId) {
       log.error(
         "Cannot submit survey without block state, make sure the user is active in the survey block before submitting.",
       );
       return;
     }
 
-    const surveyState = SurveyState.getInstance(survey.blockStateId, {
+    const surveyState = SurveyState.getInstance(blockStateId, {
       questionsLength: survey.questions.length,
     });
 
     await props.submitSurvey({
       surveyId: survey.id,
-      blockStateId: survey.blockStateId,
+      blockStateId: blockStateId,
       questions: Object.entries(surveyState.questions)
         .map(([questionId, questionState]): ApiSurveyQuestionAnswer | null => {
           const question = survey.questions.find((q) => q.id === questionId);
@@ -104,8 +105,8 @@ export const createSurveyComponentProps = (props: {
 
   // When blockStateId is null, the survey block is part of block-state property and doesn't have a block state yet
   // As a result all of the survey methods will be no-ops
-  const surveyState = survey.blockStateId
-    ? SurveyState.getInstance(survey.blockStateId, {
+  const surveyState = blockStateId
+    ? SurveyState.getInstance(blockStateId, {
         questionsLength: survey.questions.length,
       })
     : null;

@@ -15,7 +15,7 @@ export type RemoveBlock = (blockId: string) => void;
 export type UpdateBlock = (blockId: string, updateFn: (block: Block) => Block) => void;
 
 export interface IFlowsContext {
-  blocks: Block[];
+  blocks: Block[] | null;
   userProperties: UserProperties;
   components: Components;
   tourComponents: TourComponents;

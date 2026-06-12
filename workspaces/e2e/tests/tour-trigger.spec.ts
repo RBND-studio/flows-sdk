@@ -86,6 +86,7 @@ const getTour = ({
 
 const getSurvey = (tour_trigger?: TourTriggerExpression[]): Block => ({
   id: randomUUID(),
+  blockStateId: randomUUID(),
   workflowId: randomUUID(),
   type: "survey",
   componentType: "BasicsV2SurveyPopover",
@@ -95,7 +96,6 @@ const getSurvey = (tour_trigger?: TourTriggerExpression[]): Block => ({
   tour_trigger: tour_trigger ? { $and: tour_trigger } : undefined,
   survey: {
     id: randomUUID(),
-    blockStateId: randomUUID(),
     questions: [
       {
         id: "question-1",
@@ -281,7 +281,7 @@ const run = (packageName: string) => {
           "flows-running-surveys",
           JSON.stringify([surveyBlockStateId]),
         );
-      }, block.survey?.blockStateId);
+      }, block.blockStateId);
       await mockBlocksEndpoint(page, [block]);
       await page.goto(`/${packageName}.html`);
       await expect(page.getByText("Hello", { exact: true })).toBeVisible();
