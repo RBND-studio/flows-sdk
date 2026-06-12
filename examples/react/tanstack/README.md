@@ -2,8 +2,7 @@
 
 An example project showcasing how to use Flows with React and TanStack Start to build native product growth experiences.
 
-<!-- TODO: add cover -->
-<!-- ![Cover](./cover.png) -->
+![Cover](./cover.png)
 
 This example extends the TanStack Start `start-basic` template with the [`@flows/react`](https://www.npmjs.com/package/@flows/react) and [`@flows/react-components`](https://www.npmjs.com/package/@flows/react-components) packages to demonstrate how to integrate Flows into your application.
 
