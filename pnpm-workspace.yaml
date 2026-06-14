@@ -6,6 +6,7 @@ engineStrict: true
 overrides:
   ajv@>=7.0.0-alpha.0 <8.18.0: ">=8.18.0"
   minimatch@<3.1.4: ">=3.1.4"
+  esbuild@<0.28.1: ">=0.28.1"
 allowBuilds:
   "@swc/core": true
   esbuild: true
