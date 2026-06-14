@@ -49,7 +49,7 @@
   "dependencies": {
     "@floating-ui/react-dom": "^2.1.8",
     "clsx": "^2.1.1",
-    "dompurify": "^3.4.9",
+    "dompurify": "^3.4.10",
     "es-toolkit": "^1.46.1"
   },
   "peerDependencies": {
