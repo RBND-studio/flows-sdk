@@ -127,11 +127,9 @@ export interface FlowsProviderProps {
 }
 
 export const FlowsProvider: FC<FlowsProviderProps> = (props) => {
-  if (!isProps(props)) return props.children;
-
   return (
     <PathnameProvider>
-      <FlowsProviderInner {...props} />
+      {isProps(props) ? <FlowsProviderInner {...props} /> : props.children}
     </PathnameProvider>
   );
 };

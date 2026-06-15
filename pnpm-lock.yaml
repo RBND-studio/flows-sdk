@@ -212,12 +212,18 @@ importers:
       '@types/react':
         specifier: ^19.2.14
         version: 19.2.14
+      '@types/react-dom':
+        specifier: ^19.2.3
+        version: 19.2.3(@types/react@19.2.14)
       jest:
         specifier: ^30.4.2
         version: 30.4.2(@types/node@24.12.0)
       jest-environment-jsdom:
         specifier: ^30.4.1
         version: 30.4.1
+      react-dom:
+        specifier: 19.2.6
+        version: 19.2.6(react@19.2.6)
       ts-jest:
         specifier: ^29.4.11
         version: 29.4.11(@babel/core@7.28.5)(@jest/transform@30.4.1)(@jest/types@30.4.1)(babel-jest@30.4.1(@babel/core@7.28.5))(esbuild@0.28.1)(jest-util@30.4.1)(jest@30.4.2(@types/node@24.12.0))(typescript@6.0.3)
