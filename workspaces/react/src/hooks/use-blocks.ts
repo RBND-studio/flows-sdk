@@ -46,6 +46,7 @@ export const useBlocks = ({
   language,
 }: Props): Return => {
   const [blocksState, setBlocksState] = useState<Block[] | null>(null);
+  const blocksStateRef = useRef(blocksState);
   const [error, setError] = useState(false);
 
   const [closedBlockStateIds, setClosedBlockStateIds] = useState<string[] | null>(null);
@@ -169,16 +170,12 @@ export const useBlocks = ({
 
   const removeBlock: RemoveBlock = useCallback(
     (blockId) => {
-      let removedBlockStateId: string | undefined = undefined;
+      const removedBlock = blocksStateRef.current?.find((b) => b.id === blockId);
       setBlocksState((prev) => {
         if (!prev) return prev;
-        return prev.filter((b) => {
-          const shouldBeRemoved = b.id === blockId;
-          if (shouldBeRemoved) removedBlockStateId = b.blockStateId;
-          return !shouldBeRemoved;
-        });
+        return prev.filter((b) => b.id !== blockId);
       });
-      if (removedBlockStateId) addClosedBlockStateId(removedBlockStateId);
+      if (removedBlock?.blockStateId) addClosedBlockStateId(removedBlock.blockStateId);
     },
     [addClosedBlockStateId],
   );

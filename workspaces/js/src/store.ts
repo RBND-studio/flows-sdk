@@ -23,8 +23,9 @@ export const updateBlocks = (value: Block[] | null): void => {
 
 const closedBlockStateIds = signal<string[] | null>(null);
 const addClosedBlockStateId = (blockStateId: string): void => {
-  closedBlockStateIds.value = [...(closedBlockStateIds.peek() ?? []), blockStateId];
-  updateClosedBlockStateIds(closedBlockStateIds.peek() ?? []);
+  const newValue = [...(closedBlockStateIds.peek() ?? []), blockStateId];
+  closedBlockStateIds.value = newValue;
+  updateClosedBlockStateIds(newValue);
 };
 // Initialize closedBlockStateIds in browser from sessionStorage value
 effect(() => {
@@ -57,15 +58,11 @@ export const wsError = signal(false);
 export type RemoveBlock = (blockId: string) => void;
 export type UpdateBlock = (blockId: string, updateFn: (block: Block) => Block) => void;
 export const removeBlock: RemoveBlock = (blockId) => {
-  const blocksValue = blocks.value;
-  if (!blocksValue) return;
-  let removedBlockStateId: string | undefined = undefined;
-  blocksState.value = blocksValue.filter((b) => {
-    const shouldBeRemoved = b.id === blockId;
-    if (shouldBeRemoved) removedBlockStateId = b.blockStateId;
-    return !shouldBeRemoved;
-  });
-  if (removedBlockStateId) addClosedBlockStateId(removedBlockStateId);
+  const blocksStateValue = blocksState.value;
+  if (!blocksStateValue) return;
+  const removedBlock = blocksStateValue.find((b) => b.id === blockId);
+  blocksState.value = blocksStateValue.filter((b) => b.id !== blockId);
+  if (removedBlock?.blockStateId) addClosedBlockStateId(removedBlock.blockStateId);
 };
 export const updateBlock: UpdateBlock = (blockId, updateFn) => {
   const blocksValue = blocks.value;
