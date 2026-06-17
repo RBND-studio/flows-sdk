@@ -47,6 +47,7 @@ export const useBlocks = ({
 }: Props): Return => {
   const [blocksState, setBlocksState] = useState<Block[] | null>(null);
   const blocksStateRef = useRef(blocksState);
+  blocksStateRef.current = blocksState;
   const [error, setError] = useState(false);
 
   const [closedBlockStateIds, setClosedBlockStateIds] = useState<string[] | null>(null);
