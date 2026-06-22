@@ -8,7 +8,7 @@ jobs:
   tsc:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: pnpm/action-setup@91ab88e2619ed1f46221f0ba42d1492c02baf788
       - uses: actions/setup-node@v6
         with:
@@ -20,7 +20,7 @@ jobs:
   jest:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: pnpm/action-setup@91ab88e2619ed1f46221f0ba42d1492c02baf788
       - uses: actions/setup-node@v6
         with:
@@ -32,7 +32,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: pnpm/action-setup@91ab88e2619ed1f46221f0ba42d1492c02baf788
       - uses: actions/setup-node@v6
         with:
@@ -45,7 +45,7 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: pnpm/action-setup@91ab88e2619ed1f46221f0ba42d1492c02baf788
       - uses: actions/setup-node@v6
         with:
