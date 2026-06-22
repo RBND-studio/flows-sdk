@@ -1,5 +1,5 @@
 import type { ApiSurveyAnswer, WorkflowsResponse } from "@flows/shared";
-import { type EventRequest, getApi, log } from "@flows/shared";
+import { enqueueEvent, type EventRequest, getApi, log } from "@flows/shared";
 import { config } from "../store";
 import { packageAndVersion } from "./constants";
 
@@ -12,11 +12,15 @@ export const sendEvent = async (props: SendEventProps): Promise<void> => {
   const configuration = config.value;
   if (!configuration) return;
   const { environment, organizationId, userId, apiUrl, customFetch } = configuration;
-  await getApi({ apiUrl, version: packageAndVersion, customFetch }).sendEvent({
-    ...props,
-    environment,
-    organizationId,
-    userId,
+
+  return enqueueEvent({
+    apiContext: { apiUrl, version: packageAndVersion, customFetch },
+    event: {
+      ...props,
+      environment,
+      organizationId,
+      userId,
+    },
   });
 };
 

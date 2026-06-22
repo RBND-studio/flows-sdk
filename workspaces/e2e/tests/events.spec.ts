@@ -78,6 +78,40 @@ const run = (packageName: string) => {
     await req;
     await expect(page.getByText("Workflow block", { exact: true })).toBeHidden({ timeout: 0 });
   });
+  test(`${packageName} - should retry sending events if the request fails`, async ({ page }) => {
+    let willFail = false;
+    await page.route("https://api.flows-cloud.com/v2/sdk/events", (route) => {
+      console.log("intercepted event request");
+      eventReqCount++;
+      if (willFail) {
+        route.abort("failed");
+      } else {
+        route.fulfill({
+          status: 200,
+        });
+      }
+    });
+    await mockBlocksEndpoint(page, [
+      getBlock({
+        propertyMeta: [
+          {
+            type: "action",
+            key: "primaryButton",
+            value: { label: "Continue", exitNode: "continue" },
+          },
+        ],
+      }),
+    ]);
+    await page.goto(`/${packageName}.html`);
+    let eventReqCount = 0;
+    await expect(page.getByText("Workflow block", { exact: true })).toBeVisible();
+    expect(eventReqCount).toEqual(1);
+    willFail = true;
+    await page.getByText("Continue", { exact: true }).click();
+    expect(eventReqCount).toEqual(2);
+    willFail = false;
+    await expect.poll(() => eventReqCount, { timeout: 11_000 }).toEqual(3);
+  });
 };
 
 run("js");

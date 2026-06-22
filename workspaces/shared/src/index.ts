@@ -4,6 +4,7 @@ export * from "./closed-blocks";
 export * from "./component-props";
 export * from "./components/tooltip";
 export * from "./debug";
+export * from "./event-queue";
 export * from "./language";
 export * from "./log";
 export * from "./matchers";
