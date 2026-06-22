@@ -1,6 +1,7 @@
 import type { ApiContext } from "./api";
 import { getApi, type EventRequest } from "./api";
 import { log } from "./log";
+import type { CustomFetch } from "./types";
 
 const LOCAL_STORAGE_KEY = "flows-events-queue";
 
@@ -18,7 +19,7 @@ export const enqueueEvent = (data: Omit<EventQueueItem, "id">): Promise<void> =>
 
   addToLocalStorageQueue(eventWithId);
 
-  return sendEvents();
+  return sendEvents(data.apiContext.customFetch);
 };
 
 let isSending = false;
@@ -27,7 +28,7 @@ let retryInterval: ReturnType<typeof setInterval> | undefined;
 
 const RETRY_INTERVAL_MS = 10_000;
 
-const sendEvents = async (): Promise<void> => {
+const sendEvents = async (customFetch?: CustomFetch): Promise<void> => {
   if (isSending) {
     hasPendingRun = true;
     return;
@@ -39,7 +40,7 @@ const sendEvents = async (): Promise<void> => {
     const queue = getLocalStorageQueue();
 
     for (const item of queue) {
-      await getApi(item.apiContext)
+      await getApi({ ...item.apiContext, customFetch })
         .sendEvent(item.event)
         .then(() => {
           removeFromLocalStorageQueue(item.id);
@@ -53,12 +54,12 @@ const sendEvents = async (): Promise<void> => {
 
     if (hasPendingRun) {
       hasPendingRun = false;
-      void sendEvents();
+      void sendEvents(customFetch);
     } else {
       if (getLocalStorageQueue().length > 0) {
         if (retryInterval === undefined) {
           retryInterval = setInterval(() => {
-            void sendEvents();
+            void sendEvents(customFetch);
           }, RETRY_INTERVAL_MS);
         }
       } else {
