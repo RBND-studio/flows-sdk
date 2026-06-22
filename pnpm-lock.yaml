@@ -66,7 +66,7 @@ importers:
         version: 3.3.3
       react-router:
         specifier: ^7.17.0
-        version: 7.17.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        version: 7.17.0(react-dom@19.2.6(react@19.2.7))(react@19.2.7)
     devDependencies:
       '@playwright/test':
         specifier: ^1.60.0
@@ -75,20 +75,20 @@ importers:
         specifier: ^24.12.0
         version: 24.12.0
       '@types/react':
-        specifier: ^19.2.14
-        version: 19.2.14
+        specifier: ^19.2.17
+        version: 19.2.17
       '@types/react-dom':
         specifier: ^19.2.3
-        version: 19.2.3(@types/react@19.2.14)
+        version: 19.2.3(@types/react@19.2.17)
       '@vitejs/plugin-react':
         specifier: ^6.0.2
         version: 6.0.2(vite@8.0.16(@types/node@24.12.0)(esbuild@0.28.1)(jiti@2.6.1)(yaml@2.8.3))
       react:
-        specifier: 19.2.6
-        version: 19.2.6
+        specifier: 19.2.7
+        version: 19.2.7
       react-dom:
         specifier: 19.2.6
-        version: 19.2.6(react@19.2.6)
+        version: 19.2.6(react@19.2.7)
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
@@ -210,8 +210,8 @@ importers:
         specifier: ^24.12.0
         version: 24.12.0
       '@types/react':
-        specifier: ^19.2.14
-        version: 19.2.14
+        specifier: ^19.2.17
+        version: 19.2.17
       jest:
         specifier: ^30.4.2
         version: 30.4.2(@types/node@24.12.0)
@@ -232,10 +232,10 @@ importers:
     dependencies:
       '@floating-ui/react-dom':
         specifier: ^2.1.8
-        version: 2.1.8(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        version: 2.1.8(react-dom@19.2.6(react@19.2.7))(react@19.2.7)
       '@flows/react':
         specifier: '>=1.18.0'
-        version: 1.18.0(react@19.2.6)
+        version: 1.18.0(react@19.2.7)
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -247,7 +247,7 @@ importers:
         version: 1.46.1
       react:
         specifier: '>=17.0.2'
-        version: 19.2.6
+        version: 19.2.7
     devDependencies:
       '@flows/shared':
         specifier: workspace:*
@@ -262,8 +262,8 @@ importers:
         specifier: ^24.12.0
         version: 24.12.0
       '@types/react':
-        specifier: ^19.2.14
-        version: 19.2.14
+        specifier: ^19.2.17
+        version: 19.2.17
       jest:
         specifier: ^30.4.2
         version: 30.4.2(@types/node@24.12.0)
@@ -293,8 +293,8 @@ importers:
         specifier: ^24.12.0
         version: 24.12.0
       '@types/react':
-        specifier: ^19.2.14
-        version: 19.2.14
+        specifier: ^19.2.17
+        version: 19.2.17
       jest:
         specifier: ^30.4.2
         version: 30.4.2(@types/node@24.12.0)
@@ -1778,8 +1778,8 @@ packages:
     peerDependencies:
       '@types/react': ^19.2.0
 
-  '@types/react@19.2.14':
-    resolution: {integrity: sha512-ilcTH/UniCkMdtexkoCN0bI7pMcJDvmQFPvuPvmEaYA/NSfFTAgdUSLAoVjaRJm7+6PvcM+q1zYOwS4wTYMF9w==}
+  '@types/react@19.2.17':
+    resolution: {integrity: sha512-MXfmqaVPEVgkBT/aY0aGCkRWWtByiYQXo3xdQ8r5RzuFrPiRn8Gar2tQdXSUQ2GKV3bkXckek89V8wQBY2Q/Aw==}
 
   '@types/stack-utils@2.0.3':
     resolution: {integrity: sha512-9aEbYZ3TbYMznPdcdr3SmIrLXwC/AKZXQeCf9Pgao5CKb8CyHuEX5jzWPTkvregvhRJHcpRO6BFoGW9ycaOkYw==}
@@ -3145,6 +3145,10 @@ packages:
     resolution: {integrity: sha512-sfWGGfavi0xr8Pg0sVsyHMAOziVYKgPLNrS7ig+ivMNb3wbCBw3KxtflsGBAwD3gYQlE/AEZsTLgToRrSCjb0Q==}
     engines: {node: '>=0.10.0'}
 
+  react@19.2.7:
+    resolution: {integrity: sha512-HNe9WslTbXmFK8o8cmwgAeJFSBvt1bPdHCVKtaaV+WlAN36mpT4hcRpwbf3fY56ar2oIXzsBpOAiIRHAdY0OlQ==}
+    engines: {node: '>=0.10.0'}
+
   readdirp@4.1.2:
     resolution: {integrity: sha512-GDhwkLfywWL2s6vEjyhri+eXmfH6j1L7JE27WhqLeYzoh/A3DBaYGEj2H/HFZCn/kMfim73FXxEJTw06WtxQwg==}
     engines: {node: '>= 14.18.0'}
@@ -4315,19 +4319,19 @@ snapshots:
       '@floating-ui/core': 1.7.5
       '@floating-ui/utils': 0.2.11
 
-  '@floating-ui/react-dom@2.1.8(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
+  '@floating-ui/react-dom@2.1.8(react-dom@19.2.6(react@19.2.7))(react@19.2.7)':
     dependencies:
       '@floating-ui/dom': 1.7.6
-      react: 19.2.6
-      react-dom: 19.2.6(react@19.2.6)
+      react: 19.2.7
+      react-dom: 19.2.6(react@19.2.7)
 
   '@floating-ui/utils@0.2.11': {}
 
-  '@flows/react@1.18.0(react@19.2.6)':
+  '@flows/react@1.18.0(react@19.2.7)':
     dependencies:
       clsx: 2.1.1
       es-toolkit: 1.46.1
-      react: 19.2.6
+      react: 19.2.7
 
   '@isaacs/cliui@8.0.2':
     dependencies:
@@ -4950,11 +4954,11 @@ snapshots:
     dependencies:
       undici-types: 7.18.2
 
-  '@types/react-dom@19.2.3(@types/react@19.2.14)':
+  '@types/react-dom@19.2.3(@types/react@19.2.17)':
     dependencies:
-      '@types/react': 19.2.14
+      '@types/react': 19.2.17
 
-  '@types/react@19.2.14':
+  '@types/react@19.2.17':
     dependencies:
       csstype: 3.2.3
 
@@ -6450,24 +6454,26 @@ snapshots:
 
   pure-rand@7.0.1: {}
 
-  react-dom@19.2.6(react@19.2.6):
+  react-dom@19.2.6(react@19.2.7):
     dependencies:
-      react: 19.2.6
+      react: 19.2.7
       scheduler: 0.27.0
 
   react-is@18.3.1: {}
 
   react-is@19.2.7: {}
 
-  react-router@7.17.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
+  react-router@7.17.0(react-dom@19.2.6(react@19.2.7))(react@19.2.7):
     dependencies:
       cookie: 1.1.1
-      react: 19.2.6
+      react: 19.2.7
       set-cookie-parser: 2.7.2
     optionalDependencies:
-      react-dom: 19.2.6(react@19.2.6)
+      react-dom: 19.2.6(react@19.2.7)
 
   react@19.2.6: {}
+
+  react@19.2.7: {}
 
   readdirp@4.1.2: {}
 
