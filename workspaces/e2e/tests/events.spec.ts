@@ -80,16 +80,14 @@ const run = (packageName: string) => {
   });
   test(`${packageName} - should retry sending events if the request fails`, async ({ page }) => {
     let willFail = false;
+    let eventReqCount = 0;
     await page.route("https://api.flows-cloud.com/v2/sdk/events", (route) => {
       console.log("intercepted event request");
       eventReqCount++;
       if (willFail) {
-        route.abort("failed");
-      } else {
-        route.fulfill({
-          status: 200,
-        });
+        return route.abort("failed");
       }
+      return route.fulfill({ status: 200 });
     });
     await mockBlocksEndpoint(page, [
       getBlock({
@@ -103,7 +101,6 @@ const run = (packageName: string) => {
       }),
     ]);
     await page.goto(`/${packageName}.html`);
-    let eventReqCount = 0;
     await expect(page.getByText("Workflow block", { exact: true })).toBeVisible();
     expect(eventReqCount).toEqual(1);
     willFail = true;

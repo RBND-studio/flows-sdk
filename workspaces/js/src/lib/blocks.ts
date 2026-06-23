@@ -11,7 +11,11 @@ import { packageAndVersion } from "./constants";
 
 let disconnect: Disconnect | null = null;
 
-export const connectToWebsocketAndFetchBlocks = (): void => {
+type Props = {
+  onAfterLoad: () => void;
+};
+
+export const connectToWebsocketAndFetchBlocks = ({ onAfterLoad }: Props): void => {
   const configuration = config.value;
   if (!configuration) return;
 
@@ -40,6 +44,7 @@ export const connectToWebsocketAndFetchBlocks = (): void => {
 
         // Disconnect if the user is usage limited
         if (res.meta?.usage_limited) disconnect?.();
+        onAfterLoad();
       })
       .catch((err: unknown) => {
         blocksError.value = true;

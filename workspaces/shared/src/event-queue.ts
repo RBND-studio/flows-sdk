@@ -8,18 +8,25 @@ const LOCAL_STORAGE_KEY = "flows-events-queue";
 type EventQueueItem = {
   id: string;
   event: EventRequest;
-  apiContext: ApiContext;
+  apiContext: Omit<ApiContext, "customFetch">;
 };
 
-export const enqueueEvent = (data: Omit<EventQueueItem, "id">): Promise<void> => {
+type EnqueueEventProps = Omit<EventQueueItem, "id"> & {
+  customFetch?: CustomFetch;
+};
+
+export const enqueueEvent = ({
+  customFetch,
+  ...serializableData
+}: EnqueueEventProps): Promise<void> => {
   const eventWithId: EventQueueItem = {
     id: crypto.randomUUID(),
-    ...data,
+    ...serializableData,
   };
 
   addToLocalStorageQueue(eventWithId);
 
-  return sendEvents(data.apiContext.customFetch);
+  return sendEvents(customFetch);
 };
 
 let isSending = false;
@@ -28,7 +35,11 @@ let retryInterval: ReturnType<typeof setInterval> | undefined;
 
 const RETRY_INTERVAL_MS = 10_000;
 
-const sendEvents = async (customFetch?: CustomFetch): Promise<void> => {
+/**
+ * This function is called automatically when sendEvent is called
+ * It is also called on init after the blocks are fetched to send pending messages from previous page load
+ */
+export const sendEvents = async (customFetch?: CustomFetch): Promise<void> => {
   if (isSending) {
     hasPendingRun = true;
     return;

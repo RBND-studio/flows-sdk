@@ -1,5 +1,11 @@
-import type { CustomFetch, LanguageOption, LinkComponentType, UserProperties } from "@flows/shared";
-import { useEffect, type FC, type ReactNode } from "react";
+import {
+  sendEvents,
+  type CustomFetch,
+  type LanguageOption,
+  type LinkComponentType,
+  type UserProperties,
+} from "@flows/shared";
+import { useCallback, useEffect, type FC, type ReactNode } from "react";
 import { Debug } from "./components/debug";
 import { FloatingBlocks } from "./components/floating-blocks";
 import { PathnameProvider } from "./contexts/pathname-context";
@@ -165,6 +171,9 @@ const FlowsProviderInner: FC<Props> = ({
 
   const userProperties = useUserProperties(_userProperties);
 
+  const onAfterLoad = useCallback(() => {
+    void sendEvents(globalConfig.customFetch);
+  }, []);
   const { blocks, error, wsError, removeBlock, updateBlock } = useBlocks({
     apiUrl,
     environment,
@@ -173,6 +182,7 @@ const FlowsProviderInner: FC<Props> = ({
     userProperties,
     language,
     customFetch,
+    onAfterLoad,
   });
 
   const runningTours = useRunningTours({ blocks, removeBlock, userProperties });

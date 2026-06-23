@@ -26,6 +26,7 @@ interface Props {
   userId: string;
   userProperties?: UserProperties;
   language?: LanguageOption;
+  onAfterLoad: () => void;
 }
 
 interface Return {
@@ -44,6 +45,7 @@ export const useBlocks = ({
   userId,
   userProperties,
   language,
+  onAfterLoad,
 }: Props): Return => {
   const [blocksState, setBlocksState] = useState<Block[] | null>(null);
   const blocksStateRef = useRef(blocksState);
@@ -116,6 +118,7 @@ export const useBlocks = ({
         }, 0);
 
         if (res.meta?.usage_limited) setUsageLimited(true);
+        onAfterLoad();
       })
       .catch((err: unknown) => {
         setError(true);
@@ -127,7 +130,7 @@ export const useBlocks = ({
         queuedFetchRef.current = false;
         fetchBlocks();
       });
-  }, [apiUrl, language, params, customFetch]);
+  }, [apiUrl, language, params, customFetch, onAfterLoad]);
 
   // Refetch blocks when userProperties change
   const fetchBlocksRef = useRef(fetchBlocks);

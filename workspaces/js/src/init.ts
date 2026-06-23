@@ -1,4 +1,4 @@
-import { getPathname } from "@flows/shared";
+import { getPathname, sendEvents } from "@flows/shared";
 import { handleDocumentClick } from "./lib/click";
 import { connectToWebsocketAndFetchBlocks } from "./lib/blocks";
 import { addHandlers } from "./lib/handler";
@@ -19,7 +19,11 @@ export const init = ({ debug, onDebugShortcut, ...options }: FlowsOptions): void
 
   window.__flows_onNavigate = options.onNavigate;
 
-  connectToWebsocketAndFetchBlocks();
+  connectToWebsocketAndFetchBlocks({
+    onAfterLoad: () => {
+      void sendEvents(options.customFetch);
+    },
+  });
 
   if (locationChangeInterval !== null) clearInterval(locationChangeInterval);
   locationChangeInterval = window.setInterval(() => {

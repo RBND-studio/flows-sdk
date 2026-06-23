@@ -14,7 +14,8 @@ export const sendEvent = async (props: SendEventProps): Promise<void> => {
   const { environment, organizationId, userId, apiUrl, customFetch } = configuration;
 
   return enqueueEvent({
-    apiContext: { apiUrl, version: packageAndVersion, customFetch },
+    apiContext: { apiUrl, version: packageAndVersion },
+    customFetch,
     event: {
       ...props,
       environment,
