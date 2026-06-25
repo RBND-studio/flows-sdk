@@ -2,7 +2,8 @@
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "ignorePatterns": ["examples", "dist", "node_modules", "coverage"],
   "rules": {
-    "typescript/consistent-type-imports": "error"
+    "typescript/consistent-type-imports": "error",
+    "typescript/no-deprecated": "error"
   },
   "options": {
     "typeAware": true

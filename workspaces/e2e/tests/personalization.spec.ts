@@ -39,6 +39,7 @@ const getBlock = ({
   questions?: ApiSurveyQuestion[];
 }): Block => ({
   id: randomUUID(),
+  blockStateId: randomUUID(),
   workflowId: randomUUID(),
   type,
   componentType,
@@ -48,7 +49,7 @@ const getBlock = ({
   page_targeting_operator,
   page_targeting_values,
   tour_trigger: tour_trigger ? { $and: tour_trigger } : undefined,
-  survey: questions ? { id: randomUUID(), blockStateId: randomUUID(), questions } : undefined,
+  survey: questions ? { id: randomUUID(), questions } : undefined,
   propertyMeta: [
     {
       key: "primaryButton",

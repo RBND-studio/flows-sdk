@@ -1,4 +1,10 @@
-import { getApi, log, type WorkflowsResponse, type EventRequest } from "@flows/shared";
+import {
+  getApi,
+  log,
+  type WorkflowsResponse,
+  type EventRequest,
+  enqueueEvent,
+} from "@flows/shared";
 import { globalConfig } from "./store";
 import { packageAndVersion } from "./constants";
 import type { ApiSurveyAnswer } from "@flows/shared";
@@ -9,11 +15,15 @@ export const sendEvent = async (props: SendEventProps): Promise<void> => {
   const { apiUrl, environment, organizationId, userId, customFetch } = globalConfig;
   if (!apiUrl || !environment || !organizationId || !userId) return;
 
-  await getApi({ apiUrl, version: packageAndVersion, customFetch }).sendEvent({
-    ...props,
-    environment,
-    organizationId,
-    userId,
+  return enqueueEvent({
+    apiContext: { apiUrl, version: packageAndVersion },
+    customFetch,
+    event: {
+      ...props,
+      environment,
+      organizationId,
+      userId,
+    },
   });
 };
 

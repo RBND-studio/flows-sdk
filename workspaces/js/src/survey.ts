@@ -1,5 +1,5 @@
 import { effect } from "@preact/signals-core";
-import { blocks, blocksState, config, pathname, runningSurveyBlockStateIds } from "./store";
+import { blocks, config, pathname, runningSurveyBlockStateIds } from "./store";
 import type { Block, BlockTriggerContext } from "@flows/shared";
 import { blockTriggerMatch, getPathname, saveSessionStorageRunningSurveys } from "@flows/shared";
 import { debounce } from "es-toolkit";
@@ -14,7 +14,7 @@ const startSurveysIfNeeded = (blocks: Block[], ctx: BlockTriggerContext): void =
   const runningSurveyBlockStateIdsSet = new Set(runningSurveyBlockStateIds.peek());
 
   surveyBlocks.forEach((block) => {
-    const blockStateId = block.survey?.blockStateId;
+    const blockStateId = block.blockStateId;
     if (!blockStateId) return;
     if (runningSurveyBlockStateIdsSet.has(blockStateId)) return;
     const triggerMatch = blockTriggerMatch(block.tour_trigger, ctx);
@@ -26,13 +26,14 @@ const startSurveysIfNeeded = (blocks: Block[], ctx: BlockTriggerContext): void =
 
 // Remove surveys that are no longer running
 effect(() => {
-  const blocks = blocksState.value;
-  if (!blocks) return;
+  const blocksValue = blocks.value;
+  // If the blocksValue is null, the blocks didn't load yet and we won't be stopping any
+  if (!blocksValue) return;
 
   const surveyBlockStateIds = new Set(
-    blocks
+    blocksValue
       .filter((b) => b.type === "survey")
-      .map((b) => b.survey?.blockStateId)
+      .map((b) => b.blockStateId)
       .filter((id): id is string => !!id),
   );
   runningSurveyBlockStateIds.value = runningSurveyBlockStateIds
@@ -42,7 +43,7 @@ effect(() => {
 
 // Handle trigger by navigation
 effect(() => {
-  const blocksValue = blocks.value;
+  const blocksValue = blocks.value ?? [];
   const pathnameValue = pathname.value;
   const configValue = config.value;
 
@@ -59,7 +60,7 @@ effect(() => {
   // Ensure this effect runs only in the browser environment because of the MutationObserver
   if (typeof window === "undefined") return;
 
-  const blocksValue = blocks.value;
+  const blocksValue = blocks.value ?? [];
   const configValue = config.value;
 
   const debouncedCallback = debounce(() => {
@@ -80,7 +81,7 @@ effect(() => {
 
 // Handle trigger by click
 export const handleSurveyDocumentClick = (event: MouseEvent): void => {
-  startSurveysIfNeeded(blocks.value, {
+  startSurveysIfNeeded(blocks.value ?? [], {
     pathname: getPathname(),
     event,
     userProperties: config.peek()?.userProperties ?? {},

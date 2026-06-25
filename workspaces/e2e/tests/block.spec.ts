@@ -3,19 +3,42 @@ import { expect, test } from "@playwright/test";
 import { randomUUID } from "crypto";
 import { mockBlocksEndpoint } from "./utils";
 
+const getWorkflowBlock = (blockStateId = randomUUID()): Block => ({
+  id: randomUUID(),
+  blockStateId,
+  workflowId: randomUUID(),
+  key: "my-key",
+  type: "component",
+  componentType: "BasicsV2Modal",
+  data: {
+    title: "Hello World!",
+  },
+  exitNodes: ["continue"],
+  slottable: false,
+  propertyMeta: [
+    {
+      type: "action",
+      key: "primaryButton",
+      value: { label: "Continue", exitNode: "continue" },
+    },
+  ],
+});
+
+const getUnknownComponentBlock = (): Block => ({
+  id: randomUUID(),
+  blockStateId: randomUUID(),
+  workflowId: randomUUID(),
+  type: "component",
+  componentType: "UnknownComponent",
+  data: {},
+  exitNodes: [],
+  slottable: false,
+  propertyMeta: [],
+});
+
 const getBlocks = (): Block[] =>
   [
-    {
-      id: randomUUID(),
-      workflowId: randomUUID(),
-      key: "my-key",
-      type: "component",
-      componentType: "BasicsV2Modal",
-      data: {},
-      exitNodes: [],
-      slottable: false,
-      propertyMeta: [],
-    },
+    getWorkflowBlock(),
     {
       id: randomUUID(),
       workflowId: randomUUID(),
@@ -68,6 +91,10 @@ const run = (packageName: string) => {
               key: "my-key",
               workflowId: blocks[0]?.workflowId,
             },
+            title: blocks[0]?.data?.title,
+            primaryButton: {
+              label: "Continue",
+            },
           },
         },
         {
@@ -87,6 +114,16 @@ const run = (packageName: string) => {
         },
       ]),
     );
+  });
+  test(`${packageName} - shouldn't show blocks that have been dismissed`, async ({ page }) => {
+    await mockBlocksEndpoint(page, [getWorkflowBlock(), getUnknownComponentBlock()]);
+    await page.goto(`/${packageName}.html`);
+    await expect(page.getByText("Hello World!", { exact: true })).toBeVisible();
+    await page.getByText("Continue", { exact: true }).click();
+    await expect(page.getByText("Hello World!", { exact: true })).not.toBeVisible();
+    await page.goto(`/${packageName}.html`);
+    await expect(page.locator(".current-blocks")).toContainText("UnknownComponent");
+    await expect(page.getByText("Hello World!", { exact: true })).toBeHidden();
   });
 };
 

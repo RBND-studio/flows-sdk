@@ -5,13 +5,17 @@ import {
   log,
   parseWebsocketMessage,
 } from "@flows/shared";
-import { blocks, blocksError, blocksState, config, pendingMessages } from "../store";
+import { blocks, blocksError, config, pendingMessages, updateBlocks } from "../store";
 import { type Disconnect, websocket } from "./websocket";
 import { packageAndVersion } from "./constants";
 
 let disconnect: Disconnect | null = null;
 
-export const connectToWebsocketAndFetchBlocks = (): void => {
+type Props = {
+  onAfterLoad: () => void;
+};
+
+export const connectToWebsocketAndFetchBlocks = ({ onAfterLoad }: Props): void => {
   const configuration = config.value;
   if (!configuration) return;
 
@@ -35,11 +39,12 @@ export const connectToWebsocketAndFetchBlocks = (): void => {
           applyUpdateMessageToBlocksState,
           res.blocks,
         );
-        blocksState.value = blocksWithUpdates;
+        updateBlocks(blocksWithUpdates);
         pendingMessages.value = [];
 
         // Disconnect if the user is usage limited
         if (res.meta?.usage_limited) disconnect?.();
+        onAfterLoad();
       })
       .catch((err: unknown) => {
         blocksError.value = true;
@@ -52,8 +57,8 @@ export const connectToWebsocketAndFetchBlocks = (): void => {
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- there will be more message types in the future
     if (data.type === "block-updates") {
-      if (!blocksState.value) pendingMessages.value = [...pendingMessages.value, data];
-      else blocksState.value = applyUpdateMessageToBlocksState(blocks.value, data);
+      if (!blocks.value) pendingMessages.value = [...pendingMessages.value, data];
+      else updateBlocks(applyUpdateMessageToBlocksState(blocks.value ?? [], data));
     }
   };
 
