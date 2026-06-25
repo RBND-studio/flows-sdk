@@ -16,6 +16,7 @@ export const Progress: FC<Props> = ({ max, value, className }) => {
       aria-valuemin={0}
       aria-valuemax={max}
       aria-valuenow={value}
+      // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role
       role="progressbar"
     >
       <div className="flows_basicsV2_progress_indicator" style={{ width: `${width}%` }} />

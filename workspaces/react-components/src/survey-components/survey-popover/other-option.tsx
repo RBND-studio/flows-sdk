@@ -56,6 +56,7 @@ export const OtherOption: FC<Props> = ({ question }) => {
         onPointerDown={handlePointerDown}
         type="button"
         className="flows_basicsV2_survey_popover_other_option_button"
+        aria-label={otherLabel}
       >
         <span
           className={

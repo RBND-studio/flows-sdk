@@ -1,10 +1,4 @@
-import type {
-  ApiSurvey,
-  Block,
-  TourTrigger,
-  TourTriggerExpression,
-  TourTriggerType,
-} from "@flows/shared";
+import type { Block, TourTrigger, TourTriggerExpression, TourTriggerType } from "@flows/shared";
 import test, { expect } from "@playwright/test";
 import { randomUUID } from "crypto";
 import { mockBlocksEndpoint } from "./utils";

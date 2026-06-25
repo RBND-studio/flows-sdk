@@ -82,7 +82,6 @@ const run = (packageName: string) => {
     let willFail = false;
     let eventReqCount = 0;
     await page.route("https://api.flows-cloud.com/v2/sdk/events", (route) => {
-      console.log("intercepted event request");
       eventReqCount++;
       if (willFail) {
         return route.abort("failed");
@@ -108,6 +107,23 @@ const run = (packageName: string) => {
     expect(eventReqCount).toEqual(2);
     willFail = false;
     await expect.poll(() => eventReqCount, { timeout: 11_000 }).toEqual(3);
+  });
+  test(`${packageName} - should retry sending events on load`, async ({ page }) => {
+    await page.route("https://api.flows-cloud.com/v2/sdk/events", (route) => {
+      return route.abort("failed");
+    });
+    await mockBlocksEndpoint(page, [getBlock({ propertyMeta: [] })]);
+    await page.goto(`/${packageName}.html`);
+    await expect(page.getByText("Workflow block", { exact: true })).toBeVisible();
+    await mockBlocksEndpoint(page, []);
+    const retryReq = page.waitForRequest((req) => {
+      const body = req.postDataJSON();
+      return (
+        req.url() === "https://api.flows-cloud.com/v2/sdk/events" && body.name === "block-activated"
+      );
+    });
+    await page.goto(`/${packageName}.html`);
+    await retryReq;
   });
 };
 
