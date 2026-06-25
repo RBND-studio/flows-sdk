@@ -57,9 +57,9 @@
   },
   "dependencies": {
     "@lit-labs/preact-signals": "^1.0.3",
-    "@preact/signals-core": "^1.14.2",
+    "@preact/signals-core": "^1.14.3",
     "clsx": "^2.1.1",
-    "es-toolkit": "^1.46.1",
+    "es-toolkit": "^1.48.1",
     "lit": "^3.3.3"
   }
 }

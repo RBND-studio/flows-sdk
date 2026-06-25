@@ -12,12 +12,12 @@
   "devDependencies": {
     "@types/jest": "^30.0.0",
     "@types/node": "^24.12.0",
-    "@types/react": "^19.2.14",
+    "@types/react": "^19.2.17",
     "jest": "^30.4.2",
     "ts-jest": "^29.4.11",
     "typescript": "^6.0.3"
   },
   "dependencies": {
-    "es-toolkit": "^1.46.1"
+    "es-toolkit": "^1.48.1"
   }
 }
