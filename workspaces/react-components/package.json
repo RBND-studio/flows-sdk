@@ -50,7 +50,7 @@
     "@floating-ui/react-dom": "^2.1.8",
     "clsx": "^2.1.1",
     "dompurify": "^3.4.11",
-    "es-toolkit": "^1.48.1"
+    "es-toolkit": "^1.49.0"
   },
   "peerDependencies": {
     "@flows/react": ">=1.18.0",
