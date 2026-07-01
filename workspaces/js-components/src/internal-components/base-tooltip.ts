@@ -27,6 +27,7 @@ import { observeQuerySelector } from "../lib/query-selector";
 import { ActionButton } from "./action-button";
 import { IconButton } from "./icon-button";
 import { Text } from "./text";
+import { Branding } from "./branding";
 
 const TARGET_ELEMENT_DATA_ATTRIBUTE = "data-flows-tooltip-target";
 
@@ -52,6 +53,9 @@ class BaseTooltip extends LitElement {
   secondaryButton?: Action;
   @property({ attribute: false })
   onClose?: () => void;
+
+  @property({ type: Boolean })
+  showBranding: boolean;
 
   get blockScrollPosition(): ScrollLogicalPosition | undefined {
     return tooltipScrollPositionToScrollLogicalPosition(this.scrollPosition);
@@ -191,6 +195,7 @@ class BaseTooltip extends LitElement {
                 onClick: this.onClose,
               })
             : null}
+          ${this.showBranding ? Branding() : null}
 
           <div
             class=${clsx("flows_basicsV2_tooltip_arrow", "flows_basicsV2_tooltip_arrow-bottom")}

@@ -20,6 +20,7 @@ import { RatingInput } from "./rating-input";
 import { SingleChoiceInput } from "./single-choice-input";
 import { SurveyNextButton } from "./survey-next-button";
 import { useSurveyPopover } from "./use-survey-popover";
+import { Branding } from "../../internal-components/branding";
 
 export type SurveyPopoverProps = SurveyComponentProps<LibrarySurveyPopoverProps>;
 
@@ -178,6 +179,8 @@ const SurveyPopover: FC<SurveyPopoverProps> = (props) => {
               <Close16 />
             </IconButton>
           )}
+
+          {props.__flows.freeOrg ? <Branding /> : null}
         </fieldset>
       </div>
     </div>

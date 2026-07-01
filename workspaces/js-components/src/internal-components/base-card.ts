@@ -7,6 +7,7 @@ import { Close16 } from "../icons/close-16";
 import { ActionButton } from "./action-button";
 import { IconButton } from "./icon-button";
 import { Text } from "./text";
+import { Branding } from "./branding";
 
 interface Props {
   title: string;
@@ -19,6 +20,8 @@ interface Props {
   tour: boolean;
 
   onClose?: () => void;
+
+  showBranding: boolean;
 }
 
 export const BaseCard = (props: Props): TemplateResult => {
@@ -71,6 +74,7 @@ export const BaseCard = (props: Props): TemplateResult => {
             onClick: props.onClose,
           })
         : null}
+      ${props.showBranding ? Branding() : null}
     </div>
   `;
 };

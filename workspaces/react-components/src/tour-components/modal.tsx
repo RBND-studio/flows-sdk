@@ -24,6 +24,7 @@ const Modal: FC<ModalProps> = (props) => {
       position={props.position}
       size={props.size}
       dots={dots}
+      showBranding={props.__flows.freeOrg}
     />
   );
 };

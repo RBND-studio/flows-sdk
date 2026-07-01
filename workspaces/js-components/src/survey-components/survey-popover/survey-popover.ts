@@ -31,6 +31,7 @@ import { getDefaultQuestionState, questionToContextValue } from "./question-cont
 import { defineRatingInput } from "./rating-input";
 import { SingleChoiceInput } from "./single-choice-input";
 import { SurveyNextButton } from "./survey-next-button";
+import { Branding } from "../../internal-components/branding";
 
 export type SurveyPopoverProps = SurveyComponentProps<LibrarySurveyPopoverProps>;
 
@@ -330,6 +331,7 @@ class SurveyPopover extends LitElement implements SurveyPopoverProps {
                   children: Close16(),
                 })
               : null}
+            ${this.__flows.freeOrg ? Branding() : null}
           </fieldset>
         </div>
       </div>

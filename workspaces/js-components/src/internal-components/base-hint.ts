@@ -10,6 +10,7 @@ import { observeQuerySelector } from "../lib/query-selector";
 import { ActionButton } from "./action-button";
 import { IconButton } from "./icon-button";
 import { Text } from "./text";
+import { Branding } from "./branding";
 
 const CLOSE_TIMEOUT = 300;
 const BOUNDARY_PADDING = 8;
@@ -39,6 +40,9 @@ class BaseHint extends LitElement {
   secondaryButton?: Action;
   @property({ attribute: false })
   onClose?: () => void;
+
+  @property({ type: Boolean })
+  showBranding: boolean;
 
   @state()
   private accessor _open = false;
@@ -203,6 +207,7 @@ class BaseHint extends LitElement {
                     onClick: this.onClose,
                   })
                 : null}
+              ${this.showBranding ? Branding() : null}
             </div>
           `
         : null}

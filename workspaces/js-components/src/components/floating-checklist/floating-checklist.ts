@@ -18,6 +18,7 @@ import { Text } from "../../internal-components/text";
 import { ActionButton } from "../../internal-components/action-button";
 import { ChecklistProgress } from "./checklist-progress";
 import { ChecklistItem } from "./checklist-item";
+import { Branding } from "../../internal-components/branding";
 
 export type FloatingChecklistProps = ComponentProps<LibraryFloatingChecklistProps>;
 
@@ -276,6 +277,7 @@ class FloatingChecklist extends LitElement implements FloatingChecklistProps {
                           : null}
                       </div>
                     </div>`}
+                ${this.__flows.freeOrg ? Branding() : null}
               </div>
             `
           : null}
