@@ -174,7 +174,7 @@ const FlowsProviderInner: FC<Props> = ({
   const onAfterLoad = useCallback(() => {
     void sendEvents(globalConfig.customFetch);
   }, []);
-  const { blocks, error, wsError, removeBlock, updateBlock } = useBlocks({
+  const { blocks, freeOrg, error, wsError, removeBlock, updateBlock } = useBlocks({
     apiUrl,
     environment,
     organizationId,
@@ -197,6 +197,7 @@ const FlowsProviderInner: FC<Props> = ({
       value={{
         userProperties,
         blocks,
+        freeOrg,
         components,
         runningTours,
         runningSurveyBlockStateIds,

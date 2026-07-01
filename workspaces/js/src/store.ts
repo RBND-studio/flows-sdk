@@ -20,6 +20,7 @@ const blocksState = signal<Block[] | null>(null);
 export const updateBlocks = (value: Block[] | null): void => {
   blocksState.value = value;
 };
+export const freeOrg = signal<boolean>(false);
 
 const closedBlockStateIds = signal<string[] | null>(null);
 const addClosedBlockStateId = (blockStateId: string): void => {

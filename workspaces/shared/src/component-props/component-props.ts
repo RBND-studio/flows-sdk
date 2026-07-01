@@ -11,6 +11,7 @@ export const createComponentProps = (props: {
   exitNodeCb: ExitNodeCb;
   setStateMemory: SetStateMemory;
   userProperties: UserProperties;
+  freeOrg: boolean;
 }): ComponentProps<object> => {
   const { block, exitNodeCb, removeBlock, setStateMemory } = props;
 
@@ -131,6 +132,7 @@ export const createComponentProps = (props: {
       id: block.id,
       key: block.key,
       workflowId: block.workflowId,
+      freeOrg: props.freeOrg,
     },
     ...data,
     ...methods,

@@ -55,7 +55,7 @@ const useVisibleTours = (): RunningTour[] => {
 export const useCurrentFloatingBlocks = (): ActiveBlock[] => {
   const visibleBlocks = useVisibleBlocks();
   const visibleTours = useVisibleTours();
-  const { removeBlock, updateBlock, userProperties } = useFlowsContext();
+  const { removeBlock, updateBlock, userProperties, freeOrg } = useFlowsContext();
 
   return useMemo(() => {
     const items = [
@@ -67,9 +67,9 @@ export const useCurrentFloatingBlocks = (): ActiveBlock[] => {
     ];
 
     return items.flatMap((item) =>
-      itemToActiveBlock(item, { removeBlock, updateBlock, userProperties }),
+      itemToActiveBlock(item, { removeBlock, updateBlock, userProperties, freeOrg }),
     );
-  }, [removeBlock, updateBlock, userProperties, visibleBlocks, visibleTours]);
+  }, [removeBlock, updateBlock, userProperties, visibleBlocks, visibleTours, freeOrg]);
 };
 
 const getSlotIndex = (item: Block | RunningTour): number => {
@@ -85,7 +85,7 @@ const getSlotIndex = (item: Block | RunningTour): number => {
 export const useCurrentSlotBlocks = (slotId: string): ActiveBlock[] => {
   const visibleBlocks = useVisibleBlocks();
   const visibleTours = useVisibleTours();
-  const { removeBlock, updateBlock, userProperties } = useFlowsContext();
+  const { removeBlock, updateBlock, userProperties, freeOrg } = useFlowsContext();
 
   const sortedActiveBlocks = useMemo(() => {
     const slotBlocks = visibleBlocks.filter((b) => b.slottable && getSlot(b) === slotId);
@@ -94,8 +94,10 @@ export const useCurrentSlotBlocks = (slotId: string): ActiveBlock[] => {
     );
     return [...slotBlocks, ...slotTourBlocks]
       .sort((a, b) => getSlotIndex(a) - getSlotIndex(b))
-      .flatMap((item) => itemToActiveBlock(item, { removeBlock, updateBlock, userProperties }));
-  }, [removeBlock, slotId, userProperties, updateBlock, visibleBlocks, visibleTours]);
+      .flatMap((item) =>
+        itemToActiveBlock(item, { removeBlock, updateBlock, userProperties, freeOrg }),
+      );
+  }, [removeBlock, slotId, userProperties, updateBlock, visibleBlocks, visibleTours, freeOrg]);
 
   return sortedActiveBlocks;
 };
