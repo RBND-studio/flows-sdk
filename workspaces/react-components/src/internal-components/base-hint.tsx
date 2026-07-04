@@ -145,6 +145,7 @@ export const BaseHint: FC<Props> = (props) => {
         <div
           className="flows_basicsV2_tooltip_tooltip flows_basicsV2_hint_tooltip"
           data-open={!tooltipClosing ? "true" : "false"}
+          data-placement={tooltipFloating.placement}
           ref={tooltipFloating.refs.setFloating}
           style={{ left: tooltipFloating.x, top: tooltipFloating.y }}
         >
@@ -182,7 +183,9 @@ export const BaseHint: FC<Props> = (props) => {
             </IconButton>
           ) : null}
 
-          {props.showBranding ? <Branding /> : null}
+          {props.showBranding ? (
+            <Branding className="flows_basicsV2_tooltip_branding" component="basicsV2-hint" />
+          ) : null}
         </div>
       ) : null}
     </>

@@ -180,7 +180,12 @@ const SurveyPopover: FC<SurveyPopoverProps> = (props) => {
             </IconButton>
           )}
 
-          {props.__flows.freeOrg ? <Branding /> : null}
+          {props.__flows.freeOrg ? (
+            <Branding
+              className="flows_basicsV2_survey_popover_branding"
+              component="basicsV2-survey-popover"
+            />
+          ) : null}
         </fieldset>
       </div>
     </div>

@@ -203,7 +203,9 @@ export const BaseTooltip: FC<Props> = (props) => {
           </IconButton>
         ) : null}
 
-        {props.showBranding ? <Branding /> : null}
+        {props.showBranding ? (
+          <Branding className="flows_basicsV2_tooltip_branding" component="basicsV2-tooltip" />
+        ) : null}
 
         <div
           className={clsx("flows_basicsV2_tooltip_arrow", "flows_basicsV2_tooltip_arrow-bottom")}

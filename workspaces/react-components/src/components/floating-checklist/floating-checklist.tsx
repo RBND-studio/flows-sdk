@@ -219,7 +219,12 @@ const FloatingChecklist: FC<FloatingChecklistProps> = (props) => {
             </div>
           ) : null}
 
-          {props.__flows.freeOrg ? <Branding /> : null}
+          {props.__flows.freeOrg ? (
+            <Branding
+              className="flows_basicsV2_floating_checklist_branding"
+              component="basicsV2-floating-checklist"
+            />
+          ) : null}
         </div>
       ) : null}
     </div>

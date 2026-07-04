@@ -1,3 +1,68 @@
+.flows-branding-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.flows-branding {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  line-height: 12px;
+  font-weight: 500;
+  color: var(--flows-basicsV2-fg-muted);
+  text-decoration: none;
+  padding: 4px 6px;
+  border-radius: var(--flows-basicsV2-borderRadius-s);
+  opacity: 1; 
+  transition: background-color 0.2s ease-in-out;
+}
+
 .flows-branding:hover {
-  opacity: 0.6;
+  color: var(--flows-basicsV2-fg-muted);
+  background-color: var(--flows-basicsV2-bg-hover);
+  opacity: 1;
+}
+
+
+/* Component specific edits */
+
+.flows_basicsV2_floating_checklist_branding {
+  margin-top: var(--flows-basicsV2-size-s);
+  margin-bottom: var(--flows-basicsV2-size-m);
+}
+
+.flows_basicsV2_modal_branding {
+  margin-top: var(--flows-basicsV2-size-m);
+  height: var(--flows-basicsV2-size-s);
+  align-items: flex-start;
+}
+
+.flows_basicsV2_tooltip_branding {
+  width: fit-content;
+  position: absolute;
+  bottom: calc(((var(--flows-basicsV2-tooltip-padding)) + var(--flows-basicsV2-size-s)) * -1 );
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.flows_basicsV2_tooltip_tooltip[data-placement='top'] .flows_basicsV2_tooltip_branding {
+  bottom: unset;
+  top: calc(((var(--flows-basicsV2-tooltip-padding)) + var(--flows-basicsV2-size-s)) * -1 );
+}
+
+.flows_basicsV2_survey_popover_branding {
+  margin-top: var(--flows-basicsV2-size-m);
+  height: var(--flows-basicsV2-size-s);
+  align-items: flex-start;
+}
+
+.flows_basicsV2_card_branding {
+  width: fit-content;
+}
+.flows_basicsV2_card_branding_no_buttons {
+  margin-top: var(--flows-basicsV2-size-m);
+  height: var(--flows-basicsV2-size-m);
+  align-items: flex-start;
 }

@@ -64,18 +64,28 @@ export const BaseCard: FC<Props> = (props) => {
       {!props.tour && buttons.length ? (
         <div className="flows_basicsV2_card_footer">
           <div className="flows_basicsV2_card_buttons">{buttons}</div>
+          {props.showBranding ? (
+            <Branding className="flows_basicsV2_card_branding" component="basicsV2-card" />
+          ) : null}
         </div>
       ) : null}
 
       {props.tour && (props.dots ?? buttons.length) ? (
         <div className="flows_basicsV2_card_footer">
           {props.dots}
+          {props.showBranding ? (
+            <Branding className="flows_basicsV2_card_branding" component="basicsV2-card" />
+          ) : null}
           {buttons.length ? (
             <div className="flows_basicsV2_card_buttons_wrapper">
               <div className="flows_basicsV2_card_buttons">{buttons}</div>
             </div>
           ) : null}
         </div>
+      ) : null}
+
+      {!buttons.length && !props.dots && props.showBranding ? (
+        <Branding className="flows_basicsV2_card_branding_no_buttons" component="basicsV2-card" />
       ) : null}
 
       {props.onClose ? (
@@ -87,8 +97,6 @@ export const BaseCard: FC<Props> = (props) => {
           <Close16 />
         </IconButton>
       ) : null}
-
-      {props.showBranding ? <Branding /> : null}
     </div>
   );
 };
