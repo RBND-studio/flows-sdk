@@ -165,6 +165,7 @@ export const BaseTooltip: FC<Props> = (props) => {
         className="flows_basicsV2_tooltip_tooltip"
         ref={refs.setFloating}
         data-open={enterAnimationEnded ? "true" : "false"}
+        data-placement={placement}
         onAnimationEnd={handleAnimationEnd}
       >
         <Text className="flows_basicsV2_tooltip_title" variant="title">

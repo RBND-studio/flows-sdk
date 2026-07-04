@@ -253,6 +253,8 @@ export const updateTooltip = ({
     tooltip.style.left = `${x}px`;
     tooltip.style.top = `${y}px`;
 
+    tooltip.setAttribute("data-placement", finalPlacement);
+
     if (middlewareData.arrow) {
       const staticSide = ((): Side => {
         if (finalPlacement.includes("top")) return "bottom";
