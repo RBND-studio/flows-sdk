@@ -69,6 +69,7 @@ export const createTourComponentProps = ({
       id: tourStep.id,
       key: tourStep.key,
       workflowId: tourStep.workflowId,
+      componentLibraryName: tourStep.componentLibraryName,
       tourVisibleStepCount: visibleTourSteps.length,
       tourVisibleStepIndex,
       freeOrg,

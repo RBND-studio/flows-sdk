@@ -19,6 +19,10 @@ export interface FlowsProperties {
    */
   workflowId: string;
   /**
+   * Name of the component library this component block was created from.
+   */
+  componentLibraryName?: string;
+  /**
    * Total number of visible tour steps (components) in the current tour. Logic steps (e.g. wait) are not counted.
    */
   tourVisibleStepCount?: number;

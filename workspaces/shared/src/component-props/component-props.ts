@@ -132,6 +132,7 @@ export const createComponentProps = (props: {
       id: block.id,
       key: block.key,
       workflowId: block.workflowId,
+      componentLibraryName: block.componentLibraryName,
       freeOrg: props.freeOrg,
     },
     ...data,

@@ -5,6 +5,7 @@ import {
   getSessionStorageRunningSurveys,
   updateClosedBlockStateIds,
   getClosedBlockStateIds,
+  filterVisibleBlocks,
 } from "@flows/shared";
 import { computed, effect, signal } from "@preact/signals-core";
 import { type FlowsOptions } from "./types/configuration";
@@ -37,12 +38,15 @@ effect(() => {
 
 export const blocks = computed(() => {
   const blocksStateValue = blocksState.value;
-  const closedBlockStateIdsSet = new Set(closedBlockStateIds.value);
+  const freeOrgValue = freeOrg.value;
+  const closedBlockStateIdsValue = closedBlockStateIds.value ?? [];
 
   if (!blocksStateValue) return blocksStateValue;
-  return blocksStateValue.filter((b) => {
-    if (!b.blockStateId) return true;
-    return !closedBlockStateIdsSet.has(b.blockStateId);
+
+  return filterVisibleBlocks(blocksStateValue, {
+    closedBlockStateIds: closedBlockStateIdsValue,
+    freeOrg: freeOrgValue,
+    hostname: window.location.hostname,
   });
 });
 export const pendingMessages = signal<BlockUpdatesMessage[]>([]);

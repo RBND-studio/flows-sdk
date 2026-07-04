@@ -1,7 +1,7 @@
-import { log } from "./log";
-import type { BlockType, TourStepType } from "./types";
-import { type Block, type TourStep, type ActiveBlock } from "./types";
-import { type BlockUpdatesMessage } from "./websocket-message";
+import { log } from "../log";
+import type { BlockType, TourStepType } from "../types";
+import { type Block, type TourStep, type ActiveBlock } from "../types";
+import { type BlockUpdatesMessage } from "../websocket-message";
 
 export const applyUpdateMessageToBlocksState = (
   blocks: Block[],
@@ -12,6 +12,33 @@ export const applyUpdateMessageToBlocksState = (
     ...message.updatedBlocks.map((b) => b.id),
   ]);
   return [...blocks.filter((b) => !exitedOrUpdatedBlockIdsSet.has(b.id)), ...message.updatedBlocks];
+};
+
+export const filterVisibleBlocks = (
+  blocks: Block[],
+  ctx: { closedBlockStateIds: string[]; freeOrg: boolean; hostname: string },
+): Block[] => {
+  const closedBlockStateIdsSet = new Set(ctx.closedBlockStateIds);
+  const removeCustomComponents = ctx.freeOrg && ctx.hostname !== "localhost";
+
+  return blocks
+    .filter((b) => {
+      const isClosed = b.blockStateId ? closedBlockStateIdsSet.has(b.blockStateId) : false;
+
+      const isCustomComponent = b.componentType && !b.componentLibraryName;
+      const customComponentBlocked = removeCustomComponents && isCustomComponent;
+
+      return !isClosed && !customComponentBlocked;
+    })
+    .map((b) => {
+      const tourBlocks = b.tourBlocks?.filter((tb) => {
+        const isCustomComponent = tb.componentType && !tb.componentLibraryName;
+        const customComponentBlocked = removeCustomComponents && isCustomComponent;
+        return !customComponentBlocked;
+      });
+
+      return { ...b, tourBlocks };
+    });
 };
 
 const logSlottableError = (b: Block | TourStep, type: BlockType | TourStepType): void => {

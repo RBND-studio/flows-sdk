@@ -1,5 +1,5 @@
 export * from "./api";
-export * from "./blocks";
+export * from "./blocks/blocks";
 export * from "./closed-blocks";
 export * from "./component-props";
 export * from "./components/tooltip";

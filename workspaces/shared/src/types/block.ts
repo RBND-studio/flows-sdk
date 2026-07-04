@@ -58,6 +58,7 @@ export interface Block {
    */
   blockStateId?: string;
   workflowId: string;
+  componentLibraryName?: string;
   key?: string;
   type: BlockType;
   componentType?: string;
@@ -82,6 +83,7 @@ export interface Block {
 export interface TourStep {
   id: string;
   workflowId: string;
+  componentLibraryName?: string;
   key?: string;
   type: TourStepType;
   componentType?: string;
