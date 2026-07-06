@@ -26,9 +26,9 @@
     "cspell": "^10.0.1",
     "husky": "^9.1.7",
     "minimist": "^1.2.8",
-    "oxfmt": "^0.56.0",
-    "oxlint": "^1.71.0",
-    "oxlint-tsgolint": "^0.23.0"
+    "oxfmt": "^0.57.0",
+    "oxlint": "^1.72.0",
+    "oxlint-tsgolint": "^0.24.0"
   },
   "packageManager": "pnpm@11.10.0",
   "engines": {

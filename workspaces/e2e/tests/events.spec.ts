@@ -38,7 +38,8 @@ const run = (packageName: string) => {
     await expect(page.getByText("Workflow block", { exact: true })).toBeVisible();
     let reqWasSent = false;
     page.on("request", (req) => {
-      if (req.url() === "https://api.flows-cloud.com/v2/sdk/events") {
+      const body = req.postDataJSON();
+      if (req.url() === "https://api.flows-cloud.com/v2/sdk/events" && body.name === "transition") {
         reqWasSent = true;
       }
     });
