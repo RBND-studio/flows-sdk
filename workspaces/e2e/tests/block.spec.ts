@@ -90,6 +90,7 @@ const run = (packageName: string) => {
               id: blocks[0]?.id,
               key: "my-key",
               workflowId: blocks[0]?.workflowId,
+              freeOrg: false,
             },
             title: blocks[0]?.data?.title,
             primaryButton: {
@@ -109,6 +110,7 @@ const run = (packageName: string) => {
               workflowId: blocks[1]?.tourBlocks?.[0]?.workflowId,
               tourVisibleStepCount: 1,
               tourVisibleStepIndex: 0,
+              freeOrg: false,
             },
           },
         },

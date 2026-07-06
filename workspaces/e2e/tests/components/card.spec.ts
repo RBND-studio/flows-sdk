@@ -109,6 +109,14 @@ const run = (packageName: string) => {
       await expect(page.locator(".flows_basicsV2_card_footer")).toBeHidden();
       await expect(page.locator(".flows_basicsV2_card_close")).toBeHidden();
     });
+    test(`${packageName} - should show branding with free org`, async ({ page }) => {
+      await mockBlocksEndpoint(page, [getBlock({})], true);
+      await page.goto(`/${packageName}.html`);
+      await expect(page.locator(".flows_basicsV2_card_branding_no_buttons")).toBeVisible();
+      await mockBlocksEndpoint(page, [getBlock({})]);
+      await page.goto(`/${packageName}.html`);
+      await expect(page.locator(".flows_basicsV2_card_branding_no_buttons")).toBeHidden();
+    });
   });
   test.describe("tour", () => {
     test(`${packageName} - should render tour card`, async ({ page }) => {
@@ -172,6 +180,18 @@ const run = (packageName: string) => {
       await expect(page.locator(".flows_basicsV2_dots")).toBeHidden();
       await expect(page.locator(".flows_basicsV2_card_footer")).toBeHidden();
       await expect(page.locator(".flows_basicsV2_card_close")).toBeHidden();
+    });
+    test(`${packageName} - should show branding with free org`, async ({ page }) => {
+      await mockBlocksEndpoint(page, [getTour({ tourBlocks: [getTourStep({ title: "" })] })], true);
+      await page.goto(`/${packageName}.html`);
+      await expect(page.locator(".flows_basicsV2_card_branding")).toBeVisible();
+      await mockBlocksEndpoint(
+        page,
+        [getTour({ tourBlocks: [getTourStep({ title: "" })] })],
+        false,
+      );
+      await page.goto(`/${packageName}.html`);
+      await expect(page.locator(".flows_basicsV2_card_branding")).toBeHidden();
     });
   });
 };

@@ -2,9 +2,13 @@ import type { Block, TourStep, TourTriggerExpression } from "@flows/shared";
 import type { Page } from "@playwright/test";
 import { randomUUID } from "crypto";
 
-export const mockBlocksEndpoint = async (page: Page, blocks: Block[]): Promise<void> => {
+export const mockBlocksEndpoint = async (
+  page: Page,
+  blocks: Block[],
+  free_org: boolean = false,
+): Promise<void> => {
   await page.route("**/v2/sdk/blocks", async (route) => {
-    await route.fulfill({ json: { blocks } });
+    await route.fulfill({ json: { blocks, meta: { free_org } } });
   });
 };
 

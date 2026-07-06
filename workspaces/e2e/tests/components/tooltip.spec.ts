@@ -174,6 +174,14 @@ const run = (packageName: string) => {
       await expect(page.getByText("Tooltip title", { exact: true })).toBeHidden();
       await expect(page.locator("h1")).not.toHaveAttribute("data-flows-tooltip-target");
     });
+    test(`${packageName} - should show branding with free org`, async ({ page }) => {
+      await mockBlocksEndpoint(page, [getBlock({ targetElement: "h1" })], true);
+      await page.goto(`/${packageName}.html`);
+      await expect(page.locator(".flows_basicsV2_tooltip_branding")).toBeVisible();
+      await mockBlocksEndpoint(page, [getBlock({ targetElement: "h1" })], false);
+      await page.goto(`/${packageName}.html`);
+      await expect(page.locator(".flows_basicsV2_tooltip_branding")).toBeHidden();
+    });
   });
 
   test.describe("tour", () => {
@@ -233,6 +241,18 @@ const run = (packageName: string) => {
       await page.goto(`/${packageName}.html`);
       await expect(page.getByText("Tooltip title", { exact: true })).toBeVisible();
       await expect(page.locator(".flows_basicsV2_tooltip_footer")).toHaveCount(0);
+    });
+    test(`${packageName} - should show branding with free org`, async ({ page }) => {
+      await mockBlocksEndpoint(page, [getTour({ tourBlocks: [getTourStep({ title: "" })] })], true);
+      await page.goto(`/${packageName}.html`);
+      await expect(page.locator(".flows_basicsV2_tooltip_branding")).toBeVisible();
+      await mockBlocksEndpoint(
+        page,
+        [getTour({ tourBlocks: [getTourStep({ title: "" })] })],
+        false,
+      );
+      await page.goto(`/${packageName}.html`);
+      await expect(page.locator(".flows_basicsV2_tooltip_branding")).toBeHidden();
     });
   });
 };

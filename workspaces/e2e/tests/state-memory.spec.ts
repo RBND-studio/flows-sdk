@@ -52,6 +52,7 @@ const run = (packageName: string) => {
             __flows: {
               id: blocks[0]?.id,
               workflowId: blocks[0]?.workflowId,
+              freeOrg: false,
             },
             title: "State Memory Title",
             checked: {

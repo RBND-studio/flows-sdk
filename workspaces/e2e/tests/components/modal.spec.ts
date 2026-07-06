@@ -123,6 +123,14 @@ const run = (packageName: string) => {
       await expect(page.locator(".flows_basicsV2_modal_modal")).toBeVisible();
       await expect(page.locator(".flows_basicsV2_modal_footer")).toBeHidden();
     });
+    test(`${packageName} - should show branding with free org`, async ({ page }) => {
+      await mockBlocksEndpoint(page, [getBlock({})], true);
+      await page.goto(`/${packageName}.html`);
+      await expect(page.locator(".flows_basicsV2_modal_branding")).toBeVisible();
+      await mockBlocksEndpoint(page, [getBlock({})]);
+      await page.goto(`/${packageName}.html`);
+      await expect(page.locator(".flows_basicsV2_modal_branding")).toBeHidden();
+    });
   });
 
   test.describe("tour", () => {
@@ -175,6 +183,18 @@ const run = (packageName: string) => {
       await page.goto(`/${packageName}.html`);
       await expect(page.locator(".flows_basicsV2_modal_modal")).toBeVisible();
       await expect(page.locator(".flows_basicsV2_modal_footer")).toHaveCount(0);
+    });
+    test(`${packageName} - should show branding with free org`, async ({ page }) => {
+      await mockBlocksEndpoint(page, [getTour({ tourBlocks: [getTourStep({ title: "" })] })], true);
+      await page.goto(`/${packageName}.html`);
+      await expect(page.locator(".flows_basicsV2_modal_branding")).toBeVisible();
+      await mockBlocksEndpoint(
+        page,
+        [getTour({ tourBlocks: [getTourStep({ title: "" })] })],
+        false,
+      );
+      await page.goto(`/${packageName}.html`);
+      await expect(page.locator(".flows_basicsV2_modal_branding")).toBeHidden();
     });
   });
 };
