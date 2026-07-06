@@ -195,7 +195,12 @@ class BaseTooltip extends LitElement {
                 onClick: this.onClose,
               })
             : null}
-          ${this.showBranding ? Branding() : null}
+          ${this.showBranding
+            ? Branding({
+                className: "flows_basicsV2_tooltip_branding",
+                component: "basicsV2-tooltip",
+              })
+            : null}
 
           <div
             class=${clsx("flows_basicsV2_tooltip_arrow", "flows_basicsV2_tooltip_arrow-bottom")}

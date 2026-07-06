@@ -207,7 +207,12 @@ class BaseHint extends LitElement {
                     onClick: this.onClose,
                   })
                 : null}
-              ${this.showBranding ? Branding() : null}
+              ${this.showBranding
+                ? Branding({
+                    className: "flows_basicsV2_tooltip_branding",
+                    component: "basicsV2-hint",
+                  })
+                : null}
             </div>
           `
         : null}

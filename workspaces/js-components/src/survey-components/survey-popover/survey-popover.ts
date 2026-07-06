@@ -331,7 +331,12 @@ class SurveyPopover extends LitElement implements SurveyPopoverProps {
                   children: Close16(),
                 })
               : null}
-            ${this.__flows.freeOrg ? Branding() : null}
+            ${this.__flows.freeOrg
+              ? Branding({
+                  className: "flows_basicsV2_survey_popover_branding",
+                  component: "basicsV2-survey-popover",
+                })
+              : null}
           </fieldset>
         </div>
       </div>

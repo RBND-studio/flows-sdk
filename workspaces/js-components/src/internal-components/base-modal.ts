@@ -82,7 +82,9 @@ export const BaseModal = (props: Props): TemplateResult => {
               onClick: props.onClose,
             })
           : null}
-        ${props.showBranding ? Branding() : null}
+        ${props.showBranding
+          ? Branding({ className: "flows_basicsV2_modal_branding", component: "basicsV2-modal" })
+          : null}
       </div>
     </div>
   `;

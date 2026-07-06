@@ -41,13 +41,7 @@ export const BaseCard: FC<Props> = (props) => {
   })();
 
   return (
-    <div
-      className="flows_basicsV2_card"
-      style={{
-        width: "100%",
-        maxWidth: cardWidth,
-      }}
-    >
+    <div className="flows_basicsV2_card" style={{ maxWidth: cardWidth }}>
       <Text variant="title" className="flows_basicsV2_card_title">
         {props.title}
       </Text>

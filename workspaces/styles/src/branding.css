@@ -8,14 +8,17 @@
   display: flex;
   align-items: center;
   gap: 5px;
+  font-family: var(--flows-basicsV2-font-family);
+  -webkit-font-smoothing: antialiased;
   font-size: 12px;
   line-height: 12px;
   font-weight: 500;
   color: var(--flows-basicsV2-fg-muted);
   text-decoration: none;
   padding: 4px 6px;
+  margin: 0;
   border-radius: var(--flows-basicsV2-borderRadius-s);
-  opacity: 1; 
+  opacity: 1;
   transition: background-color 0.2s ease-in-out;
 }
 
@@ -24,7 +27,6 @@
   background-color: var(--flows-basicsV2-bg-hover);
   opacity: 1;
 }
-
 
 /* Component specific edits */
 
@@ -42,14 +44,15 @@
 .flows_basicsV2_tooltip_branding {
   width: fit-content;
   position: absolute;
-  bottom: calc(((var(--flows-basicsV2-tooltip-padding)) + var(--flows-basicsV2-size-s)) * -1 );
+  bottom: calc(((var(--flows-basicsV2-tooltip-padding)) + var(--flows-basicsV2-size-s)) * -1);
   left: 50%;
   transform: translateX(-50%);
+  width: 100%;
 }
 
-.flows_basicsV2_tooltip_tooltip[data-placement='top'] .flows_basicsV2_tooltip_branding {
+.flows_basicsV2_tooltip_tooltip[data-placement="top"] .flows_basicsV2_tooltip_branding {
   bottom: unset;
-  top: calc(((var(--flows-basicsV2-tooltip-padding)) + var(--flows-basicsV2-size-s)) * -1 );
+  top: calc(((var(--flows-basicsV2-tooltip-padding)) + var(--flows-basicsV2-size-s)) * -1);
 }
 
 .flows_basicsV2_survey_popover_branding {

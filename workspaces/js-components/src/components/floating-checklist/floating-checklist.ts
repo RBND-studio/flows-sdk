@@ -277,7 +277,12 @@ class FloatingChecklist extends LitElement implements FloatingChecklistProps {
                           : null}
                       </div>
                     </div>`}
-                ${this.__flows.freeOrg ? Branding() : null}
+                ${this.__flows.freeOrg
+                  ? Branding({
+                      className: "flows_basicsV2_floating_checklist_branding",
+                      component: "basicsV2-floating-checklist",
+                    })
+                  : null}
               </div>
             `
           : null}

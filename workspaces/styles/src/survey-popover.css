@@ -10,6 +10,7 @@
   padding: var(--flows-basicsV2-survey-popover-padding);
 
   font-family: var(--flows-basicsV2-font-family);
+  -webkit-font-smoothing: antialiased;
   font-size: var(--flows-basicsV2-base-font-size);
   line-height: var(--flows-basicsV2-base-line-height);
 
@@ -143,6 +144,7 @@
   padding: 5px 5px;
   width: 100%;
   font-family: var(--flows-basicsV2-font-family);
+  -webkit-font-smoothing: antialiased;
   font-size: var(--flows-basicsV2-button-font-size);
   line-height: var(--flows-basicsV2-button-line-height);
   font-weight: 600;
@@ -221,6 +223,7 @@
     border-color 120ms ease-in-out;
   padding: 5px 9px;
   font-family: var(--flows-basicsV2-font-family);
+  -webkit-font-smoothing: antialiased;
   font-size: var(--flows-basicsV2-button-font-size);
   line-height: var(--flows-basicsV2-button-line-height);
   font-weight: 600;

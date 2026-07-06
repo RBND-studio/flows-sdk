@@ -40,7 +40,7 @@ export const BaseCard = (props: Props): TemplateResult => {
   })();
 
   return html`
-    <div class="flows_basicsV2_card" style="width: 100%; max-width: ${cardWidth}">
+    <div class="flows_basicsV2_card" style="max-width: ${cardWidth}">
       ${Text({ variant: "title", className: "flows_basicsV2_card_title", children: props.title })}
       ${Text({
         variant: "body",
@@ -54,17 +54,29 @@ export const BaseCard = (props: Props): TemplateResult => {
       ${!props.tour && buttons.length
         ? html`<div class="flows_basicsV2_card_footer">
             <div class="flows_basicsV2_card_buttons">${buttons}</div>
+            ${props.showBranding
+              ? Branding({ className: "flows_basicsV2_card_branding", component: "basicsV2-card" })
+              : null}
           </div>`
         : null}
       ${props.tour && (props.dots ?? buttons.length)
         ? html`<div className="flows_basicsV2_card_footer">
             ${props.dots}
+            ${props.showBranding
+              ? Branding({ className: "flows_basicsV2_card_branding", component: "basicsV2-card" })
+              : null}
             ${buttons.length
               ? html`<div className="flows_basicsV2_card_buttons_wrapper">
                   <div className="flows_basicsV2_card_buttons">${buttons}</div>
                 </div>`
               : null}
           </div>`
+        : null}
+      ${!buttons.length && !props.dots && props.showBranding
+        ? Branding({
+            className: "flows_basicsV2_card_branding_no_buttons",
+            component: "basicsV2-card",
+          })
         : null}
       ${props.onClose
         ? IconButton({
@@ -74,7 +86,6 @@ export const BaseCard = (props: Props): TemplateResult => {
             onClick: props.onClose,
           })
         : null}
-      ${props.showBranding ? Branding() : null}
     </div>
   `;
 };
