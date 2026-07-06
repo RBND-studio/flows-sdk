@@ -28,7 +28,7 @@
     "minimist": "^1.2.8",
     "oxfmt": "^0.56.0",
     "oxlint": "^1.71.0",
-    "oxlint-tsgolint": "^0.23.0"
+    "oxlint-tsgolint": "^0.24.0"
   },
   "packageManager": "pnpm@11.9.0",
   "engines": {
