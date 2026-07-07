@@ -1,10 +1,11 @@
-.flows-branding-container {
+.flows_basicsV2_branding_container {
   width: 100%;
   display: flex;
   justify-content: center;
+  overflow: hidden;
 }
 
-.flows-branding {
+.flows_basicsV2_branding_button {
   display: flex;
   align-items: center;
   gap: 5px;
@@ -13,25 +14,37 @@
   font-size: 12px;
   line-height: 12px;
   font-weight: 500;
-  color: var(--flows-basicsV2-fg-muted);
+  color: color-mix(in srgb, var(--flows-basicsV2-fg-default) 70%, transparent);
   text-decoration: none;
+  opacity: 1;
   padding: 4px 6px;
   margin: 0;
   border-radius: var(--flows-basicsV2-borderRadius-s);
-  opacity: 1;
   transition: background-color 0.2s ease-in-out;
+  overflow: hidden;
 }
 
-.flows-branding:hover {
-  color: var(--flows-basicsV2-fg-muted);
-  background-color: var(--flows-basicsV2-bg-hover);
+.flows_basicsV2_branding_button > span {
+  text-wrap: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.flows_basicsV2_branding_button > svg {
+  flex-shrink: 0;
+}
+
+.flows_basicsV2_branding_button:hover {
+  color: var(--flows-basicsV2-fg-default);
+  background-color: color-mix(in srgb, var(--flows-basicsV2-fg-default) 8%, transparent);
   opacity: 1;
 }
 
 /* Component specific edits */
 
 .flows_basicsV2_floating_checklist_branding {
-  margin-top: var(--flows-basicsV2-size-s);
+  margin-top: var(--flows-basicsV2-size-xs);
   margin-bottom: var(--flows-basicsV2-size-m);
 }
 
@@ -39,6 +52,7 @@
   margin-top: var(--flows-basicsV2-size-m);
   height: var(--flows-basicsV2-size-s);
   align-items: flex-start;
+  overflow: visible;
 }
 
 .flows_basicsV2_tooltip_branding {
@@ -48,6 +62,22 @@
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
+}
+
+.flows_basicsV2_tooltip_branding .flows_basicsV2_branding_button {
+  background-color: color-mix(in srgb, var(--flows-basicsV2-fg-default) 6%, transparent);
+}
+.flows_basicsV2_tooltip_branding .flows_basicsV2_branding_button:hover {
+  background-color: color-mix(in srgb, var(--flows-basicsV2-fg-default) 15%, transparent);
+}
+
+.flows_basicsV2_tooltip_tooltip[data-overlay="true"] .flows_basicsV2_branding_button {
+  color: color-mix(in srgb, var(--flows-basicsV2-fg-default) 90%, transparent);
+  background-color: transparent;
+}
+
+.flows_basicsV2_tooltip_tooltip[data-overlay="true"] .flows_basicsV2_branding_button:hover {
+  background-color: color-mix(in srgb, var(--flows-basicsV2-fg-default) 10%, transparent);
 }
 
 .flows_basicsV2_tooltip_tooltip[data-placement="top"] .flows_basicsV2_tooltip_branding {
@@ -68,4 +98,11 @@
   margin-top: var(--flows-basicsV2-size-m);
   height: var(--flows-basicsV2-size-m);
   align-items: flex-start;
+}
+
+.flows_basicsV2_card_branding_tour {
+  margin-top: var(--flows-basicsV2-size-s);
+  height: var(--flows-basicsV2-size-s);
+  align-items: flex-start;
+  overflow: visible;
 }

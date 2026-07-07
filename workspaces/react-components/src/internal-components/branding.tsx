@@ -7,15 +7,15 @@ type Props = {
 
 export const Branding: FC<Props> = ({ className, component }) => {
   return (
-    <div className={`flows-branding-container ${className}`}>
+    <div className={`flows_basicsV2_branding_container ${className}`}>
       <a
-        className="flows-branding"
+        className="flows_basicsV2_branding_button"
         href={`https://flows.sh?utm_campaign=powered-by&utm_medium=${component}`}
         target="_blank"
         rel="noopener noreferrer"
       >
         <Logo />
-        Powered by Flows
+        <span>Powered by Flows</span>
       </a>
     </div>
   );

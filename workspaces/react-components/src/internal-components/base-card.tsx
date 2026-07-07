@@ -65,17 +65,19 @@ export const BaseCard: FC<Props> = (props) => {
       ) : null}
 
       {props.tour && (props.dots ?? buttons.length) ? (
-        <div className="flows_basicsV2_card_footer">
-          {props.dots}
+        <>
+          <div className="flows_basicsV2_card_footer">
+            {props.dots}
+            {buttons.length ? (
+              <div className="flows_basicsV2_card_buttons_wrapper">
+                <div className="flows_basicsV2_card_buttons">{buttons}</div>
+              </div>
+            ) : null}
+          </div>
           {props.showBranding ? (
-            <Branding className="flows_basicsV2_card_branding" component="basicsV2-card" />
+            <Branding className="flows_basicsV2_card_branding_tour" component="basicsV2-card" />
           ) : null}
-          {buttons.length ? (
-            <div className="flows_basicsV2_card_buttons_wrapper">
-              <div className="flows_basicsV2_card_buttons">{buttons}</div>
-            </div>
-          ) : null}
-        </div>
+        </>
       ) : null}
 
       {!buttons.length && !props.dots && props.showBranding ? (

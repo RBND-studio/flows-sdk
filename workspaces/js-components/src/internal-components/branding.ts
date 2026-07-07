@@ -7,10 +7,10 @@ type Props = {
 };
 
 export const Branding = ({ className, component }: Props): TemplateResult => {
-  return html`<div class=${`flows-branding-container ${className}`}>
+  return html`<div class=${`flows_basicsV2_branding_container ${className}`}>
     <a
       href=${`https://flows.sh?utm_campaign=powered-by&utm_medium=${component}`}
-      class="flows-branding"
+      class="flows_basicsV2_branding_button"
       target="_blank"
       rel="noopener noreferrer"
     >
