@@ -161,7 +161,7 @@ class BaseTooltip extends LitElement {
     return html`
       <div class="flows_basicsV2_tooltip_root">
         ${this.overlay ? html` <div class="flows_basicsV2_tooltip_overlay"></div> ` : null}
-        <div class="flows_basicsV2_tooltip_tooltip">
+        <div class="flows_basicsV2_tooltip_tooltip" data-overlay=${this.overlay ? "true" : "false"}>
           ${Text({
             variant: "title",
             className: "flows_basicsV2_tooltip_title",

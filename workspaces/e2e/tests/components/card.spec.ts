@@ -184,14 +184,14 @@ const run = (packageName: string) => {
     test(`${packageName} - should show branding with free org`, async ({ page }) => {
       await mockBlocksEndpoint(page, [getTour({ tourBlocks: [getTourStep({ title: "" })] })], true);
       await page.goto(`/${packageName}.html`);
-      await expect(page.locator(".flows_basicsV2_card_branding")).toBeVisible();
+      await expect(page.locator(".flows_basicsV2_card_branding_tour")).toBeVisible();
       await mockBlocksEndpoint(
         page,
         [getTour({ tourBlocks: [getTourStep({ title: "" })] })],
         false,
       );
       await page.goto(`/${packageName}.html`);
-      await expect(page.locator(".flows_basicsV2_card_branding")).toBeHidden();
+      await expect(page.locator(".flows_basicsV2_card_branding_tour")).toBeHidden();
     });
   });
 };

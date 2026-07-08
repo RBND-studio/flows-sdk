@@ -103,6 +103,14 @@ const run = (packageName: string) => {
       ]);
       await page.goto(`/${packageName}.html`);
       await expect(page.getByText("Tooltip title", { exact: true })).toBeVisible();
+      await expect(page.locator(".flows_basicsV2_tooltip_tooltip")).toHaveAttribute(
+        "data-overlay",
+        "true",
+      );
+      await expect(page.locator(".flows_basicsV2_tooltip_tooltip")).toHaveAttribute(
+        "data-placement",
+        "bottom",
+      );
       const overlayEl = page.locator(".flows_basicsV2_tooltip_overlay");
       await expect(overlayEl).toBeVisible();
       await expect(overlayEl).not.toHaveCSS("width", "0px");
@@ -194,6 +202,14 @@ const run = (packageName: string) => {
       await page.goto(`/${packageName}.html`);
 
       await expect(page.locator(".flows_basicsV2_tooltip_tooltip")).toBeVisible();
+      await expect(page.locator(".flows_basicsV2_tooltip_tooltip")).toHaveAttribute(
+        "data-overlay",
+        "true",
+      );
+      await expect(page.locator(".flows_basicsV2_tooltip_tooltip")).toHaveAttribute(
+        "data-placement",
+        "bottom",
+      );
       await expect(page.getByText("Step 1", { exact: true })).toBeVisible();
       await expect(page.getByText("Step 2", { exact: true })).toBeHidden();
       await expect(page.locator(".flows_basicsV2_dots")).toBeVisible();

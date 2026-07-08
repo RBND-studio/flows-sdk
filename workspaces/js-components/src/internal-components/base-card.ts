@@ -61,16 +61,19 @@ export const BaseCard = (props: Props): TemplateResult => {
         : null}
       ${props.tour && (props.dots ?? buttons.length)
         ? html`<div className="flows_basicsV2_card_footer">
-            ${props.dots}
+              ${props.dots}
+              ${buttons.length
+                ? html`<div className="flows_basicsV2_card_buttons_wrapper">
+                    <div className="flows_basicsV2_card_buttons">${buttons}</div>
+                  </div>`
+                : null}
+            </div>
             ${props.showBranding
-              ? Branding({ className: "flows_basicsV2_card_branding", component: "basicsV2-card" })
-              : null}
-            ${buttons.length
-              ? html`<div className="flows_basicsV2_card_buttons_wrapper">
-                  <div className="flows_basicsV2_card_buttons">${buttons}</div>
-                </div>`
-              : null}
-          </div>`
+              ? Branding({
+                  className: "flows_basicsV2_card_branding_tour",
+                  component: "basicsV2-card",
+                })
+              : null}`
         : null}
       ${!buttons.length && !props.dots && props.showBranding
         ? Branding({

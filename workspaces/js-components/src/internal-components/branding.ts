@@ -9,12 +9,13 @@ type Props = {
 export const Branding = ({ className, component }: Props): TemplateResult => {
   return html`<div class=${`flows_basicsV2_branding_container ${className}`}>
     <a
-      href=${`https://flows.sh?utm_campaign=powered-by&utm_medium=${component}`}
       class="flows_basicsV2_branding_button"
+      href=${`https://flows.sh?utm_campaign=powered-by&utm_medium=${component}`}
       target="_blank"
       rel="noopener noreferrer"
     >
-      ${Logo()} Powered by Flows
+      ${Logo()}
+      <span>Powered by Flows</span>
     </a>
   </div>`;
 };
