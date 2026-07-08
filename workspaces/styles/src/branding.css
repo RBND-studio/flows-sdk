@@ -56,7 +56,6 @@
 }
 
 .flows_basicsV2_tooltip_branding {
-  width: fit-content;
   position: absolute;
   bottom: calc(((var(--flows-basicsV2-tooltip-padding)) + var(--flows-basicsV2-size-s)) * -1);
   left: 50%;
@@ -89,6 +88,7 @@
   margin-top: var(--flows-basicsV2-size-m);
   height: var(--flows-basicsV2-size-s);
   align-items: flex-start;
+  overflow: visible;
 }
 
 .flows_basicsV2_card_branding {
@@ -98,6 +98,7 @@
   margin-top: var(--flows-basicsV2-size-m);
   height: var(--flows-basicsV2-size-m);
   align-items: flex-start;
+  overflow: visible;
 }
 
 .flows_basicsV2_card_branding_tour {
