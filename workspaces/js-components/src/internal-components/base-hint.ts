@@ -261,7 +261,9 @@ export const updateTooltip = ({
       shift({ crossAxis: true, padding: BOUNDARY_PADDING }),
       offset(DISTANCE),
     ],
-  }).then(({ x, y }) => {
+  }).then(({ x, y, placement: finalPlacement }) => {
+    el.setAttribute("data-placement", finalPlacement);
+
     el.style.left = `${x}px`;
     el.style.top = `${y}px`;
   });

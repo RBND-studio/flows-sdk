@@ -6,9 +6,6 @@
 }
 
 .flows_basicsV2_branding_button {
-  display: flex;
-  align-items: center;
-  gap: 5px;
   font-family: var(--flows-basicsV2-font-family);
   -webkit-font-smoothing: antialiased;
   font-size: 12px;
@@ -22,17 +19,15 @@
   border-radius: var(--flows-basicsV2-borderRadius-s);
   transition: background-color 0.2s ease-in-out;
   overflow: hidden;
-}
-
-.flows_basicsV2_branding_button > span {
   text-wrap: nowrap;
-  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .flows_basicsV2_branding_button > svg {
-  flex-shrink: 0;
+  display: inline-block;
+  margin-right: 5px;
+  float: left;
 }
 
 .flows_basicsV2_branding_button:hover {

@@ -14,8 +14,7 @@ export const Branding = ({ className, component }: Props): TemplateResult => {
       target="_blank"
       rel="noopener noreferrer"
     >
-      ${Logo()}
-      <span>Powered by Flows</span>
+      ${Logo()}Powered by Flows
     </a>
   </div>`;
 };

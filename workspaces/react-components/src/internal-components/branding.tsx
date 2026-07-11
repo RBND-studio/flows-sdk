@@ -15,7 +15,7 @@ export const Branding: FC<Props> = ({ className, component }) => {
         rel="noopener noreferrer"
       >
         <Logo />
-        <span>Powered by Flows</span>
+        Powered by Flows
       </a>
     </div>
   );
