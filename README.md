@@ -1,5 +1,6 @@
 <p align="center">
   <a href="https://flows.sh">
+    <!-- TODO: maybe we should replace this avatar with updated background? -->
     <img src="https://raw.githubusercontent.com/RBND-studio/flows-sdk/refs/heads/main/docs/avatar.png" height="96">
     <h3 align="center">Flows SDKs</h3>
   </a>
@@ -54,7 +55,7 @@ We provide a set of templates to help you get started with Flows.
 
 ## Get started for free
 
-The fastest and most reliable way to get started with Flows is [signing up for free](https://app.flows.sh/signup). Your first 250 MTUs (monthly tracked users) are free every month, after which you pay based on usage. See our [pricing](https://flows.sh/pricing) for more details.
+The fastest and most reliable way to get started with Flows is [signing up for free](https://app.flows.sh/signup). Your first 100 MTUs (monthly tracked users) are free every month, after which it starts at $30 per month for up to 600 MTUs. See our [pricing](https://flows.sh/pricing) for more details.
 
 ## Contributing
 
