@@ -15,6 +15,7 @@ export const DebugSection = ({ label, children, onClose }: Props): ReactNode => 
           className="flows-debug-btn flows-debug-section-close"
           onClick={onClose}
           type="button"
+          aria-label="Go back"
         >
           <ArrowLeft />
         </button>
