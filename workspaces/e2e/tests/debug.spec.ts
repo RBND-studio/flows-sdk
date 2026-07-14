@@ -78,10 +78,10 @@ const run = (packageName: string) => {
     await expect(page.locator(".flows-debug-bottom-right")).toBeHidden();
     const shortcutList = page.locator(".flows-debug-shortcut-list");
 
-    expect(shortcutList).toContainText(/(Ctrl|Cmd)/);
-    expect(shortcutList).toContainText(/(Alt|Option)/);
-    expect(shortcutList).toContainText("Shift");
-    expect(shortcutList).toContainText("F");
+    await expect(shortcutList).toContainText(/(Ctrl|Cmd)/);
+    await expect(shortcutList).toContainText(/(Alt|Option)/);
+    await expect(shortcutList).toContainText("Shift");
+    await expect(shortcutList).toContainText("F");
     await expect(page.getByText("Open docs")).toHaveAttribute(
       "href",
       "https://flows.sh/docs/sdk-overview#debug-mode",
