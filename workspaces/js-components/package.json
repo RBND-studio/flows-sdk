@@ -25,6 +25,7 @@
     "type": "git",
     "url": "git+https://github.com/RBND-studio/flows-sdk.git"
   },
+  "homepage": "https://flows.sh",
   "license": "MIT",
   "sideEffects": false,
   "scripts": {
