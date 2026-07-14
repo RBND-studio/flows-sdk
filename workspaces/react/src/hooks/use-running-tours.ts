@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { BlockTriggerContext, UserProperties } from "@flows/shared";
 import { getPathname, tourTriggerMatch, type Block } from "@flows/shared";
 import { debounce } from "es-toolkit";
 import { type RunningTour } from "../flows-context";
@@ -10,11 +11,12 @@ type StateItem = Pick<RunningTour, "currentBlockIndex"> & {
 };
 
 interface Props {
-  blocks: Block[];
+  blocks: Block[] | null;
   removeBlock: (blockId: string) => void;
+  userProperties: UserProperties;
 }
 
-export const useRunningTours = ({ blocks, removeBlock }: Props): RunningTour[] => {
+export const useRunningTours = ({ blocks, removeBlock, userProperties }: Props): RunningTour[] => {
   const [runningTours, setRunningTours] = useState<StateItem[]>([]);
   const runningToursRef = useRef<StateItem[]>(runningTours);
   runningToursRef.current = runningTours;
@@ -22,6 +24,7 @@ export const useRunningTours = ({ blocks, removeBlock }: Props): RunningTour[] =
 
   // Stop tours that are no longer running
   useEffect(() => {
+    if (!blocks) return;
     setRunningTours((prev) => {
       const tourBlockIds = new Set(blocks.filter((b) => b.type === "tour").map((b) => b.id));
       // Filter out stopped tours
@@ -30,7 +33,8 @@ export const useRunningTours = ({ blocks, removeBlock }: Props): RunningTour[] =
   }, [blocks]);
 
   const startToursIfNeeded = useCallback(
-    (ctx: { pathname: string; event?: MouseEvent }): void => {
+    (ctx: BlockTriggerContext): void => {
+      if (!blocks) return;
       const tourBlocks = blocks.filter((b) => b.type === "tour");
       const runningTourBlockIds = new Set(runningToursRef.current.map((t) => t.blockId));
       tourBlocks.forEach((block) => {
@@ -54,13 +58,13 @@ export const useRunningTours = ({ blocks, removeBlock }: Props): RunningTour[] =
   useEffect(() => {
     if (!pathname) return;
 
-    startToursIfNeeded({ pathname });
-  }, [pathname, startToursIfNeeded]);
+    startToursIfNeeded({ pathname, userProperties });
+  }, [pathname, startToursIfNeeded, userProperties]);
 
   // Handle trigger by DOM element
   useEffect(() => {
     const debouncedCallback = debounce(() => {
-      startToursIfNeeded({ pathname: getPathname() });
+      startToursIfNeeded({ pathname: getPathname(), userProperties });
     }, 32);
 
     const observer = new MutationObserver(debouncedCallback);
@@ -70,21 +74,22 @@ export const useRunningTours = ({ blocks, removeBlock }: Props): RunningTour[] =
     return () => {
       observer.disconnect();
     };
-  }, [startToursIfNeeded]);
+  }, [startToursIfNeeded, userProperties]);
 
   // Handle trigger by click
   useEffect(() => {
     const handleClick = (event: MouseEvent): void => {
-      startToursIfNeeded({ pathname: getPathname(), event });
+      startToursIfNeeded({ pathname: getPathname(), event, userProperties });
     };
 
     document.addEventListener("click", handleClick);
     return () => {
       document.removeEventListener("click", handleClick);
     };
-  }, [startToursIfNeeded]);
+  }, [startToursIfNeeded, userProperties]);
 
   const runningToursWithActiveBlock = useMemo(() => {
+    if (!blocks) return [];
     const updateState = (blockId: string, updateFn: (tour: StateItem) => StateItem): void => {
       setRunningTours((prev) =>
         prev.map((tour) => (tour.blockId === blockId ? updateFn(tour) : tour)),

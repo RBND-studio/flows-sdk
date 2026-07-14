@@ -1,6 +1,9 @@
 export type {
   Action,
   ActiveBlock,
+  ComponentActiveBlock,
+  TourComponentActiveBlock,
+  SurveyActiveBlock,
   BlockState,
   FlowsProperties,
   StateMemory,
@@ -13,6 +16,8 @@ export type {
   WorkflowStatus,
   WorkflowFrequency,
   WorkflowUserState,
+  // Navigation
+  OnNavigate,
   // Components
   ComponentProps,
   TourComponentProps,

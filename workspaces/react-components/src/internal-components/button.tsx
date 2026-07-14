@@ -1,4 +1,4 @@
-import { type ButtonSize, type ButtonVariant } from "@flows/shared";
+import { isInternalLink, type ButtonSize, type ButtonVariant } from "@flows/shared";
 import { clsx } from "clsx";
 import { type FC, type ReactNode } from "react";
 
@@ -12,16 +12,6 @@ interface Props {
   target?: "_blank";
   disabled?: boolean;
 }
-
-const isInternalLink = (href: string, target?: Props["target"]): boolean => {
-  if (target === "_blank") return false;
-  try {
-    const _url = new URL(href);
-    return false;
-  } catch {
-    return true;
-  }
-};
 
 export const Button: FC<Props> = ({
   className: classNameProp,

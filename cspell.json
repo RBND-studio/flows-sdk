@@ -26,14 +26,16 @@
     "xlink"
   ],
   "ignorePaths": [
-    "node_modules",
-    "tsconfig.*",
+    "*.gen.ts",
+    "*.svg",
     "coverage",
     "dist",
-    "*.svg",
     "jest.config.js",
+    "node_modules",
+    "out",
     "package.json",
     "pnpm-*.yaml",
-    "test-results"
+    "test-results",
+    "tsconfig.*"
   ]
 }

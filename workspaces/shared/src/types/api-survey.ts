@@ -37,9 +37,9 @@ export type ApiSurveyQuestion = {
 export type ApiSurvey = {
   id: string;
   /**
-   * blockStateId is null if the block state doesn't exist, for example when the survey block is part of block-state property
+   * @deprecated Use blockStateId on Block instead, this will be removed in the future
    */
-  blockStateId: string | null;
+  blockStateId?: string | null;
   questions: ApiSurveyQuestion[];
 };
 

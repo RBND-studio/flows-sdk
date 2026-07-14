@@ -11,7 +11,8 @@ import {
   logSlottableBlocksError,
   parseWebsocketMessage,
   type BlockUpdatesMessage,
-  isUserPropertiesEqual,
+  getClosedBlockStateIds,
+  updateClosedBlockStateIds,
 } from "@flows/shared";
 import { packageAndVersion } from "../lib/constants";
 import { type RemoveBlock, type UpdateBlock } from "../flows-context";
@@ -25,11 +26,11 @@ interface Props {
   userId: string;
   userProperties?: UserProperties;
   language?: LanguageOption;
+  onAfterLoad: () => void;
 }
 
 interface Return {
-  blocksState: Block[] | null;
-  blocks: Block[];
+  blocks: Block[] | null;
   removeBlock: RemoveBlock;
   updateBlock: UpdateBlock;
   error: boolean;
@@ -44,10 +45,38 @@ export const useBlocks = ({
   userId,
   userProperties,
   language,
+  onAfterLoad,
 }: Props): Return => {
   const [blocksState, setBlocksState] = useState<Block[] | null>(null);
+  const blocksStateRef = useRef(blocksState);
+  blocksStateRef.current = blocksState;
   const [error, setError] = useState(false);
-  const blocks = useMemo(() => blocksState ?? [], [blocksState]);
+
+  const [closedBlockStateIds, setClosedBlockStateIds] = useState<string[] | null>(null);
+  const addClosedBlockStateId = useCallback((blockStateId: string): void => {
+    setClosedBlockStateIds((prev) => {
+      const newValue = [...(prev ?? []), blockStateId];
+      updateClosedBlockStateIds(newValue);
+      return newValue;
+    });
+  }, []);
+  const closedBlockStateIdsRef = useRef(closedBlockStateIds);
+  closedBlockStateIdsRef.current = closedBlockStateIds;
+  // Initialize closedBlockStateIds in browser from sessionStorage value
+  useEffect(() => {
+    if (closedBlockStateIdsRef.current) return;
+    setClosedBlockStateIds(getClosedBlockStateIds());
+  }, []);
+
+  const blocks = useMemo(() => {
+    const closedBlockStateIdsSet = new Set(closedBlockStateIds);
+
+    if (!blocksState) return blocksState;
+    return blocksState?.filter((b) => {
+      if (!b.blockStateId) return true;
+      return !closedBlockStateIdsSet.has(b.blockStateId);
+    });
+  }, [blocksState, closedBlockStateIds]);
 
   const [usageLimited, setUsageLimited] = useState(false);
   const pendingMessages = useRef<BlockUpdatesMessage[]>([]);
@@ -57,15 +86,8 @@ export const useBlocks = ({
     [environment, organizationId, userId],
   );
 
-  const [userPropertiesState, setUserPropertiesState] = useState(userProperties);
-  const userPropertiesStateRef = useRef(userPropertiesState);
-  userPropertiesStateRef.current = userPropertiesState;
-  useEffect(() => {
-    const stateValue = userPropertiesStateRef.current;
-    if (!isUserPropertiesEqual(stateValue, userProperties)) {
-      setUserPropertiesState(userProperties);
-    }
-  }, [userProperties]);
+  const userPropertiesStateRef = useRef(userProperties);
+  userPropertiesStateRef.current = userProperties;
 
   const activeFetchRef = useRef<Promise<void> | null>(null);
   const queuedFetchRef = useRef(false);
@@ -96,6 +118,7 @@ export const useBlocks = ({
         }, 0);
 
         if (res.meta?.usage_limited) setUsageLimited(true);
+        onAfterLoad();
       })
       .catch((err: unknown) => {
         setError(true);
@@ -107,7 +130,7 @@ export const useBlocks = ({
         queuedFetchRef.current = false;
         fetchBlocks();
       });
-  }, [apiUrl, language, params, customFetch]);
+  }, [apiUrl, language, params, customFetch, onAfterLoad]);
 
   // Refetch blocks when userProperties change
   const fetchBlocksRef = useRef(fetchBlocks);
@@ -119,7 +142,7 @@ export const useBlocks = ({
       return;
     }
     fetchBlocksRef.current();
-  }, [userPropertiesState]);
+  }, [userProperties]);
 
   const websocketUrl = useMemo(() => {
     if (usageLimited) return;
@@ -146,15 +169,20 @@ export const useBlocks = ({
 
   // Log error about slottable blocks without slotId
   useEffect(() => {
-    logSlottableBlocksError(blocks);
+    logSlottableBlocksError(blocks ?? []);
   }, [blocks]);
 
-  const removeBlock: RemoveBlock = useCallback((blockId) => {
-    setBlocksState((prev) => {
-      if (!prev) return prev;
-      return prev.filter((b) => b.id !== blockId);
-    });
-  }, []);
+  const removeBlock: RemoveBlock = useCallback(
+    (blockId) => {
+      const removedBlock = blocksStateRef.current?.find((b) => b.id === blockId);
+      setBlocksState((prev) => {
+        if (!prev) return prev;
+        return prev.filter((b) => b.id !== blockId);
+      });
+      if (removedBlock?.blockStateId) addClosedBlockStateId(removedBlock.blockStateId);
+    },
+    [addClosedBlockStateId],
+  );
   const updateBlock: UpdateBlock = useCallback((blockId, updateFn) => {
     setBlocksState((prev) => {
       if (!prev) return prev;
@@ -162,5 +190,5 @@ export const useBlocks = ({
     });
   }, []);
 
-  return { blocksState, blocks, error, wsError, removeBlock, updateBlock };
+  return { blocks, error, wsError, removeBlock, updateBlock };
 };

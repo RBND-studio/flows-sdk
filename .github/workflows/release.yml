@@ -37,12 +37,12 @@ jobs:
         with:
           app-id: 906021
           private-key: ${{ secrets.FLOWS_BOT_PRIVATE_KEY }}
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           token: ${{ steps.app-token.outputs.token }}
           # Make sure the value of GITHUB_TOKEN will not be persisted in repo's config
           persist-credentials: false
-      - uses: pnpm/action-setup@91ab88e2619ed1f46221f0ba42d1492c02baf788
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271
       - uses: actions/setup-node@v6
         with:
           node-version: 24

@@ -97,7 +97,7 @@ const DebugPanel: FC<DebugPanelProps> = ({
           })}
         />
       );
-    if (panelPage === "blocks") return <BlocksPanel blocks={blocks} />;
+    if (panelPage === "blocks") return <BlocksPanel blocks={blocks ?? []} />;
     if (panelPage === "pathname") return <PathnamePanel pathname={pathname} />;
     if (panelPage === "settings")
       return <SettingsPanel position={position} onPositionChange={handleChangePosition} />;
@@ -108,7 +108,7 @@ const DebugPanel: FC<DebugPanelProps> = ({
         userId={userId}
         setPanelPage={setPanelPage}
         sdkSetupValid={sdkSetupValid}
-        blocks={blocks}
+        blocks={blocks ?? []}
         organizationId={organizationId}
       />
     );

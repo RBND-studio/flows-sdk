@@ -119,16 +119,14 @@ export interface EventRequest {
   properties?: Record<string, unknown>;
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- ignore
-export const getApi = ({
-  apiUrl,
-  version,
-  customFetch,
-}: {
+export type ApiContext = {
   apiUrl: string;
   version: string;
   customFetch?: CustomFetch;
-}) => {
+};
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- ignore
+export const getApi = ({ apiUrl, version, customFetch }: ApiContext) => {
   const f = getFetch({ customFetch, baseUrl: apiUrl });
   return {
     getBlocks: (body: GetBlocksRequest) =>

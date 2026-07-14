@@ -1,16 +1,18 @@
+import type { BlockTriggerContext, UserProperties } from "@flows/shared";
 import {
   elementContains,
   elementExists,
   elementNotExists,
   getPathname,
   pathnameMatch,
+  processTourWait,
   tourTriggerMatch,
   type Block,
 } from "@flows/shared";
 import { effect } from "@preact/signals-core";
 import { debounce } from "es-toolkit";
 import {
-  blocks,
+  config,
   pathname,
   removeBlock,
   type RunningTour,
@@ -19,10 +21,7 @@ import {
 } from "../store";
 import { sendEvent } from "./api";
 
-const startToursIfNeeded = (
-  tourBlocksValue: Block[],
-  ctx: { pathname: string; event?: MouseEvent },
-): void => {
+const startToursIfNeeded = (tourBlocksValue: Block[], ctx: BlockTriggerContext): void => {
   const runningTourBlockIds = new Set(runningTours.peek().map((t) => t.blockId));
 
   tourBlocksValue.forEach((block) => {
@@ -93,14 +92,14 @@ export const cancelTour = (tourBlockId: string): void => {
 };
 
 const handleTourClickWaits = (eventTarget: Element): void => {
-  const blocksById = new Map(blocks.peek().map((block) => [block.id, block]));
+  const blocksById = new Map(tourBlocks.peek().map((block) => [block.id, block]));
 
   runningTours.value.forEach((tour) => {
     const tourBlock = blocksById.get(tour.blockId);
     if (!tourBlock) return;
     const activeStep = tourBlock.tourBlocks?.at(tour.currentBlockIndex);
     if (!activeStep) return;
-    const tourWait = activeStep.tourWait;
+    const tourWait = processTourWait(activeStep.tourWait, config.peek()?.userProperties ?? {});
     if (!tourWait) return;
 
     if (tourWait.interaction === "click") {
@@ -129,6 +128,7 @@ export const handleTourDocumentClick = (event: MouseEvent): void => {
   startToursIfNeeded(tourBlocks.value, {
     pathname: getPathname(),
     event,
+    userProperties: config.peek()?.userProperties ?? {},
   });
 };
 
@@ -138,6 +138,7 @@ effect(() => {
   const pathnameValue = pathname.value;
   const runningToursValue = runningTours.value;
   const tourBlocksValue = tourBlocks.value;
+  const configValue = config.value;
 
   const tourBlockIds = new Map(tourBlocksValue.map((block) => [block.id, block]));
 
@@ -154,7 +155,7 @@ effect(() => {
       timeoutByTourId.delete(tour.blockId);
     }
 
-    const tourWait = activeStep.tourWait;
+    const tourWait = processTourWait(activeStep.tourWait, configValue?.userProperties ?? {});
     if (!tourWait) return;
 
     // Handle navigation waits
@@ -198,21 +199,25 @@ effect(() => {
 effect(() => {
   const tourBlocksValue = tourBlocks.value;
   const pathnameValue = pathname.value;
+  const configValue = config.value;
 
   if (!pathnameValue) return;
 
-  startToursIfNeeded(tourBlocksValue, { pathname: pathnameValue });
+  startToursIfNeeded(tourBlocksValue, {
+    pathname: pathnameValue,
+    userProperties: configValue?.userProperties ?? {},
+  });
 });
 
-const handleTourElementWaits = (tours: RunningTour[]): void => {
-  const blocksById = new Map(blocks.peek().map((block) => [block.id, block]));
+const handleTourElementWaits = (tours: RunningTour[], userProperties: UserProperties): void => {
+  const blocksById = new Map(tourBlocks.peek().map((block) => [block.id, block]));
 
   tours.forEach((tour) => {
     const tourBlock = blocksById.get(tour.blockId);
     if (!tourBlock) return;
     const activeStep = tourBlock.tourBlocks?.at(tour.currentBlockIndex);
     if (!activeStep) return;
-    const tourWait = activeStep.tourWait;
+    const tourWait = processTourWait(activeStep.tourWait, userProperties);
     if (!tourWait) return;
     const waitElement = tourWait.element;
 
@@ -244,10 +249,14 @@ effect(() => {
 
   const tourBlocksValue = tourBlocks.value;
   const runningToursValue = runningTours.value;
+  const configValue = config.value;
 
   const callback = (): void => {
-    startToursIfNeeded(tourBlocksValue, { pathname: getPathname() });
-    handleTourElementWaits(runningToursValue);
+    startToursIfNeeded(tourBlocksValue, {
+      pathname: getPathname(),
+      userProperties: configValue?.userProperties ?? {},
+    });
+    handleTourElementWaits(runningToursValue, configValue?.userProperties ?? {});
   };
 
   const debouncedCallback = debounce(callback, 32);

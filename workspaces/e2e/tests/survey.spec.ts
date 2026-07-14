@@ -28,6 +28,7 @@ const getBlock = ({
   submitButtonLabel?: string;
 }): Block => ({
   id: randomUUID(),
+  blockStateId: randomUUID(),
   workflowId: randomUUID(),
   type: "survey",
   componentType: "BasicsV2SurveyPopover",
@@ -40,7 +41,7 @@ const getBlock = ({
   },
   exitNodes: ["complete", "cancel"],
   slottable: false,
-  survey: { id: randomUUID(), blockStateId: randomUUID(), questions },
+  survey: { id: randomUUID(), questions },
 });
 
 const run = (packageName: string) => {
@@ -63,7 +64,7 @@ const run = (packageName: string) => {
         body.environment === "prod" &&
         body.organizationId === "orgId" &&
         body.surveyId === block.survey?.id &&
-        body.blockStateId === block.survey?.blockStateId &&
+        body.blockStateId === block.blockStateId &&
         urlMatcher(body.url) &&
         isDeepStrictEqual(body.questions, questions)
       );
@@ -402,19 +403,18 @@ const run = (packageName: string) => {
         ],
       });
       await mockBlocksEndpoint(page, [block]);
-      await page.goto(`/${packageName}.html?LinkComponent=true`);
+      await page.goto(`/${packageName}.html?customNavigation=true`);
       await expect(page.locator(".flows_basicsV2_survey_popover_submit")).toHaveCount(0);
       const submitReq = waitForSurveySubmit({
         page,
         block,
         questions: [{ questionId: "question-1", clickedLink: true }],
-        urlMatcher: (url) => url === `http://localhost:3000/${packageName}.html?LinkComponent=true`,
+        urlMatcher: (url) =>
+          url === `http://localhost:3000/${packageName}.html?customNavigation=true`,
       });
       await page.getByRole("link", { name: "Go to another page" }).click();
       await submitReq;
-      if (packageName === "react")
-        await expect(page).toHaveURL(`/${packageName}.html?LinkComponent=true#/another-page`);
-      if (packageName === "js") await expect(page).toHaveURL(`/another-page`);
+      await expect(page).toHaveURL(`/${packageName}.html?customNavigation=true#/another-page`);
     });
     test(`${packageName} - shouldn't send unanswered optional link`, async ({ page }) => {
       const block = getBlock({
@@ -439,7 +439,7 @@ const run = (packageName: string) => {
         }
       });
       await mockBlocksEndpoint(page, [block]);
-      await page.goto(`/${packageName}.html?LinkComponent=true`);
+      await page.goto(`/${packageName}.html?customNavigation=true`);
       await expect(page.locator(".flows_basicsV2_survey_popover_submit")).toHaveCount(0);
       await page.locator(".flows_basicsV2_survey_popover_close").click();
       await page.waitForTimeout(300);
@@ -474,14 +474,14 @@ const run = (packageName: string) => {
         ],
       });
       await mockBlocksEndpoint(page, [block]);
-      await page.goto(`/${packageName}.html?LinkComponent=true`);
+      await page.goto(`/${packageName}.html?customNavigation=true`);
       await page.locator(".flows_basicsV2_survey_popover_freeform_textarea").fill("Answer");
       const submitReq = waitForSurveySubmit({
         page,
         block,
         questions: [{ questionId: "question-1", textResponse: "Answer" }],
         urlMatcher: (url) =>
-          url.startsWith(`http://localhost:3000/${packageName}.html?LinkComponent=true`),
+          url.startsWith(`http://localhost:3000/${packageName}.html?customNavigation=true`),
       });
       await page.locator(".flows_basicsV2_survey_popover_submit").click();
       await submitReq;
@@ -489,9 +489,7 @@ const run = (packageName: string) => {
       await expect(page.getByText("Thanks for your feedback", { exact: true })).toBeVisible();
       await expect(page.locator(".flows_basicsV2_survey_popover_close")).toHaveCount(0);
       await page.getByRole("link", { name: "Back to app" }).click();
-      if (packageName === "react")
-        await expect(page).toHaveURL(`/${packageName}.html?LinkComponent=true#/another-page`);
-      if (packageName === "js") await expect(page).toHaveURL(`/another-page`);
+      await expect(page).toHaveURL(`/${packageName}.html?customNavigation=true#/another-page`);
     });
   });
 

@@ -5,12 +5,16 @@ This directory contains examples of flows that can be used as a starting point f
 ## Examples
 
 - [React Next.js](./react/next) - A simple example of how to use Flows with React and Next.js.
-- [React Vite](./react/vite) - A simple example of how to use Flows with React and Vite.
+- [React Router](./react/vite) - A simple example of how to use Flows with React Router and Vite.
+- [TanStack Start](./react/tanstack) - A simple example of how to use Flows with React and TanStack Start
 - [Vue Nuxt](./vue/nuxt) - A simple example of how to use Flows with Vue and Nuxt.
 - [Angular](./angular) - A simple example of how to use Flows with Angular.
 - [SvelteKit](./svelte) - A simple example of how to use Flows with SvelteKit.
 - [Lit](./lit) - A simple example of how to use Flows with Lit.
 - [SolidJS](./solid) - A simple example of how to use Flows with SolidJS.
+- [Ember](./ember) - A simple example of how to use Flows with Ember.
+- [Astro](./astro) - A simple example of how to use Flows with Astro.
+- [Electron React](./electron//electron-forge-react) - A simple example of how to use Flows with Electron and React - based on Electron Forge with Webpack and React.
 - [JavaScript CDN](./js/cdn) - A simple example of how to use Flows with JavaScript without NPM by loading global script from CDN.
 
 ## Reporting Issues

@@ -78,6 +78,53 @@ const run = (packageName: string) => {
     await req;
     await expect(page.getByText("Workflow block", { exact: true })).toBeHidden({ timeout: 0 });
   });
+  test(`${packageName} - should retry sending events if the request fails`, async ({ page }) => {
+    let willFail = false;
+    let eventReqCount = 0;
+    await page.route("https://api.flows-cloud.com/v2/sdk/events", (route) => {
+      eventReqCount++;
+      if (willFail) {
+        return route.abort("failed");
+      }
+      return route.fulfill({ status: 200 });
+    });
+    await mockBlocksEndpoint(page, [
+      getBlock({
+        propertyMeta: [
+          {
+            type: "action",
+            key: "primaryButton",
+            value: { label: "Continue", exitNode: "continue" },
+          },
+        ],
+      }),
+    ]);
+    await page.goto(`/${packageName}.html`);
+    await expect(page.getByText("Workflow block", { exact: true })).toBeVisible();
+    expect(eventReqCount).toEqual(1);
+    willFail = true;
+    await page.getByText("Continue", { exact: true }).click();
+    expect(eventReqCount).toEqual(2);
+    willFail = false;
+    await expect.poll(() => eventReqCount, { timeout: 11_000 }).toEqual(3);
+  });
+  test(`${packageName} - should retry sending events on load`, async ({ page }) => {
+    await page.route("https://api.flows-cloud.com/v2/sdk/events", (route) => {
+      return route.abort("failed");
+    });
+    await mockBlocksEndpoint(page, [getBlock({ propertyMeta: [] })]);
+    await page.goto(`/${packageName}.html`);
+    await expect(page.getByText("Workflow block", { exact: true })).toBeVisible();
+    await mockBlocksEndpoint(page, []);
+    const retryReq = page.waitForRequest((req) => {
+      const body = req.postDataJSON();
+      return (
+        req.url() === "https://api.flows-cloud.com/v2/sdk/events" && body.name === "block-activated"
+      );
+    });
+    await page.goto(`/${packageName}.html`);
+    await retryReq;
+  });
 };
 
 run("js");
