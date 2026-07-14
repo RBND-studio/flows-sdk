@@ -37,6 +37,7 @@ const customFetch =
 const noCurrentBlocks =
   new URLSearchParams(window.location.search).get("noCurrentBlocks") === "true";
 const language = new URLSearchParams(window.location.search).get("language") as LanguageOption;
+const organizationId = new URLSearchParams(window.location.search).get("organizationId");
 const slotLimit = new URLSearchParams(window.location.search).get("slotLimit");
 const enableOnNavigate =
   new URLSearchParams(window.location.search).get("customNavigation") === "true";
@@ -136,7 +137,7 @@ const onNavigate: OnNavigate = (href, event) => {
 
 init({
   environment: "prod",
-  organizationId: "orgId",
+  organizationId: organizationId ?? "orgId",
   userId: "testUserId",
   language,
   apiUrl,
