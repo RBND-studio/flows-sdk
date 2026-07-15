@@ -45,6 +45,7 @@ const noUserId = new URLSearchParams(window.location.search).get("noUserId") ===
 const noCurrentBlocks =
   new URLSearchParams(window.location.search).get("noCurrentBlocks") === "true";
 const language = new URLSearchParams(window.location.search).get("language") as LanguageOption;
+const organizationId = new URLSearchParams(window.location.search).get("organizationId");
 const enableLinkComponent =
   new URLSearchParams(window.location.search).get("customNavigation") === "true";
 const slotLimit = new URLSearchParams(window.location.search).get("slotLimit");
@@ -162,7 +163,7 @@ const App: FC = () => {
   return (
     <HashRouter>
       <FlowsProvider
-        organizationId="orgId"
+        organizationId={organizationId ?? "orgId"}
         environment="prod"
         userId={noUserId ? null : "testUserId"}
         language={language}
