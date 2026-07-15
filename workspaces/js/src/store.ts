@@ -6,6 +6,7 @@ import {
   updateClosedBlockStateIds,
   getClosedBlockStateIds,
   filterVisibleBlocks,
+  logBranding,
 } from "@flows/shared";
 import { computed, effect, signal } from "@preact/signals-core";
 import { type FlowsOptions } from "./types/configuration";
@@ -22,6 +23,12 @@ export const updateBlocks = (value: Block[] | null): void => {
   blocksState.value = value;
 };
 export const freeOrg = signal<boolean>(false);
+
+// Log a "Powered by Flows" message in the console for free orgs
+effect(() => {
+  if (!freeOrg.value) return;
+  logBranding();
+});
 
 const closedBlockStateIds = signal<string[] | null>(null);
 const addClosedBlockStateId = (blockStateId: string): void => {

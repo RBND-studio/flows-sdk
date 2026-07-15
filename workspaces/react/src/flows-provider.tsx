@@ -1,5 +1,5 @@
 import {
-  log,
+  logBranding,
   sendEvents,
   type CustomFetch,
   type LanguageOption,
@@ -196,7 +196,7 @@ const FlowsProviderInner: FC<Props> = ({
   // Log a "Powered by Flows" message in the console for free orgs
   useEffect(() => {
     if (!freeOrg) return;
-    log.info(`Product adoption powered by https://flows.sh`);
+    logBranding();
   }, [freeOrg]);
 
   return (
