@@ -1,4 +1,5 @@
 import {
+  log,
   sendEvents,
   type CustomFetch,
   type LanguageOption,
@@ -191,6 +192,12 @@ const FlowsProviderInner: FC<Props> = ({
   useEffect(() => {
     window.__flows_LinkComponent = LinkComponent;
   }, [LinkComponent]);
+
+  // Log a "Powered by Flows" message in the console for free orgs
+  useEffect(() => {
+    if (!freeOrg) return;
+    log.info(`Product adoption powered by https://flows.sh`);
+  }, [freeOrg]);
 
   return (
     <FlowsContext.Provider

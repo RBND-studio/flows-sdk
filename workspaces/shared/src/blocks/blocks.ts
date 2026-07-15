@@ -21,12 +21,16 @@ export const filterVisibleBlocks = (
   const closedBlockStateIdsSet = new Set(ctx.closedBlockStateIds);
   const removeCustomComponents = ctx.freeOrg && ctx.hostname !== "localhost";
 
-  return blocks
+  let blockedCustomComponentCount = 0;
+
+  const filteredBlocks = blocks
     .filter((b) => {
       const isClosed = b.blockStateId ? closedBlockStateIdsSet.has(b.blockStateId) : false;
 
       const isCustomComponent = b.componentType && !b.componentLibraryName;
       const customComponentBlocked = removeCustomComponents && isCustomComponent;
+
+      if (customComponentBlocked) blockedCustomComponentCount++;
 
       return !isClosed && !customComponentBlocked;
     })
@@ -34,11 +38,24 @@ export const filterVisibleBlocks = (
       const tourBlocks = b.tourBlocks?.filter((tb) => {
         const isCustomComponent = tb.componentType && !tb.componentLibraryName;
         const customComponentBlocked = removeCustomComponents && isCustomComponent;
+
+        if (customComponentBlocked) blockedCustomComponentCount++;
+
         return !customComponentBlocked;
       });
 
       return { ...b, tourBlocks };
     });
+
+  if (blockedCustomComponentCount > 0) {
+    log.warn(
+      `Blocked ${blockedCustomComponentCount} custom component${
+        blockedCustomComponentCount > 1 ? "s" : ""
+      } from rendering - custom components are restricted to localhost on the free plan. Upgrade to render them in production.`,
+    );
+  }
+
+  return filteredBlocks;
 };
 
 const logSlottableError = (b: Block | TourStep, type: BlockType | TourStepType): void => {
