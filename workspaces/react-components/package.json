@@ -40,18 +40,18 @@
     "@types/jest": "^30.0.0",
     "@types/node": "^24.12.0",
     "@types/react": "^19.2.17",
+    "@typescript/native": "npm:typescript@^7.0.2",
     "jest": "^30.4.2",
     "jest-environment-jsdom": "^30.4.1",
     "ts-jest": "^29.4.11",
     "tsup": "^8.5.1",
-    "@typescript/native": "npm:typescript@^7.0.2",
     "typescript": "npm:@typescript/typescript6@^6.0.2"
   },
   "dependencies": {
-    "@floating-ui/react-dom": "^2.1.8",
+    "@floating-ui/react-dom": "^2.1.9",
     "clsx": "^2.1.1",
-    "dompurify": "^3.4.11",
-    "es-toolkit": "^1.48.1"
+    "dompurify": "^3.4.12",
+    "es-toolkit": "^1.49.0"
   },
   "peerDependencies": {
     "@flows/react": ">=1.18.0",

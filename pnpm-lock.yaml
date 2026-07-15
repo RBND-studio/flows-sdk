@@ -102,14 +102,14 @@ importers:
         specifier: ^1.0.3
         version: 1.0.3
       '@preact/signals-core':
-        specifier: ^1.14.3
-        version: 1.14.3
+        specifier: ^1.14.4
+        version: 1.14.4
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
       es-toolkit:
-        specifier: ^1.48.1
-        version: 1.48.1
+        specifier: ^1.49.0
+        version: 1.49.0
       lit:
         specifier: ^3.3.3
         version: 3.3.3
@@ -145,17 +145,17 @@ importers:
   workspaces/js-components:
     dependencies:
       '@floating-ui/dom':
-        specifier: ^1.7.6
-        version: 1.7.6
+        specifier: ^1.8.0
+        version: 1.8.0
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
       dompurify:
-        specifier: ^3.4.11
-        version: 3.4.11
+        specifier: ^3.4.12
+        version: 3.4.12
       es-toolkit:
-        specifier: ^1.48.1
-        version: 1.48.1
+        specifier: ^1.49.0
+        version: 1.49.0
       lit:
         specifier: ^3.3.3
         version: 3.3.3
@@ -197,8 +197,8 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       es-toolkit:
-        specifier: ^1.48.1
-        version: 1.48.1
+        specifier: ^1.49.0
+        version: 1.49.0
       react:
         specifier: '>=17.0.2'
         version: 19.2.7
@@ -240,8 +240,8 @@ importers:
   workspaces/react-components:
     dependencies:
       '@floating-ui/react-dom':
-        specifier: ^2.1.8
-        version: 2.1.8(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        specifier: ^2.1.9
+        version: 2.1.9(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@flows/react':
         specifier: '>=1.18.0'
         version: 1.18.0(react@19.2.7)
@@ -249,11 +249,11 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       dompurify:
-        specifier: ^3.4.11
-        version: 3.4.11
+        specifier: ^3.4.12
+        version: 3.4.12
       es-toolkit:
-        specifier: ^1.48.1
-        version: 1.48.1
+        specifier: ^1.49.0
+        version: 1.49.0
       react:
         specifier: '>=17.0.2'
         version: 19.2.7
@@ -295,8 +295,8 @@ importers:
   workspaces/shared:
     dependencies:
       es-toolkit:
-        specifier: ^1.48.1
-        version: 1.48.1
+        specifier: ^1.49.0
+        version: 1.49.0
     devDependencies:
       '@types/jest':
         specifier: ^30.0.0
@@ -1008,20 +1008,20 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@floating-ui/core@1.7.5':
-    resolution: {integrity: sha512-1Ih4WTWyw0+lKyFMcBHGbb5U5FtuHJuujoyyr5zTaWS5EYMeT6Jb2AuDeftsCsEuchO+mM2ij5+q9crhydzLhQ==}
+  '@floating-ui/core@1.8.0':
+    resolution: {integrity: sha512-0CIZ5itps/8x7BG8dEIhs53BvCUH2PCoogtakwRTut+Arm58sJooJ0AuZhLw2HJYIR5cMLNPBSS728sPho2khQ==}
 
-  '@floating-ui/dom@1.7.6':
-    resolution: {integrity: sha512-9gZSAI5XM36880PPMm//9dfiEngYoC6Am2izES1FF406YFsjvyBMmeJ2g4SAju3xWwtuynNRFL2s9hgxpLI5SQ==}
+  '@floating-ui/dom@1.8.0':
+    resolution: {integrity: sha512-yXSrzeHZBTZadLOlfyhCkJHNeLJnHRnRInwdZ40L7ZiaAtrBwoYlsDrX3v5zB1Utk7CLfzcOVnVVWoXEky7Ceg==}
 
-  '@floating-ui/react-dom@2.1.8':
-    resolution: {integrity: sha512-cC52bHwM/n/CxS87FH0yWdngEZrjdtLW/qVruo68qg+prK7ZQ4YGdut2GyDVpoGeAYe/h899rVeOVm6Oi40k2A==}
+  '@floating-ui/react-dom@2.1.9':
+    resolution: {integrity: sha512-JDjEFGCpImxDCA7JJKviA0M9+RtmJdj0m/NVU5IMgBK+AmZouAQQ7/+2GLH0GXXY0YMw9oXPB8hKdbPYg5QLYg==}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
 
-  '@floating-ui/utils@0.2.11':
-    resolution: {integrity: sha512-RiB/yIh78pcIxl6lLMG0CgBXAZ2Y0eVHqMPYugu+9U0AeT6YBeiJpf7lbdJNIugFP5SIjwNRgo4DhR1Qxi26Gg==}
+  '@floating-ui/utils@0.2.12':
+    resolution: {integrity: sha512-HpCo8tmWzLVad5s2d19EhAz5zqrrQ6s69qd6moPMQvkOuSwDT1YgRfWSVuc4ennqrgv3OHppiOGMQ7oC13yIww==}
 
   '@flows/react@1.18.0':
     resolution: {integrity: sha512-wiqTzaExWrafjXsn8SPeaveubXB0mrMKFf2ENKMQnl0m3O4D3MhLvp5VRrv3pG8WDMFDa0YwbJ4GaYR9swsdyg==}
@@ -1456,8 +1456,8 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  '@preact/signals-core@1.14.3':
-    resolution: {integrity: sha512-m0K3vnbSLC5rHs2ZVfeAMvBtT1zIyq4mxx5OlNncSgMj5Iz6W5Rn3kPrDxAC+iIKmiVe0lSl6U37t5ZkEWoVAw==}
+  '@preact/signals-core@1.14.4':
+    resolution: {integrity: sha512-HNB6HYeYKhQbJ1aKl+YRjrS4+QWHLKX6qKoUsfS/m0vqzsVaEBiZiaKbG/e+NKk2ch5ALQr/ihWaMHxiCuuWHA==}
 
   '@rolldown/binding-android-arm64@1.1.5':
     resolution: {integrity: sha512-lZg8fqIv2v7FF237bwMgzGZEJvGL79/s5knJ/i6FmsGF4XXlzccZ4jb+TrFIxtSSxFtIpdsgrPZeMk1I9AFcyQ==}
@@ -2368,8 +2368,8 @@ packages:
     resolution: {integrity: sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==}
     engines: {node: '>=8'}
 
-  dompurify@3.4.11:
-    resolution: {integrity: sha512-zhlUV12GsaRzMsf9q5M254YhA4+VuF0fG+QFqu6aYpoGlKtz+w8//jBcGVYBgQkR5GHjUomejY84AV+/uPbWdw==}
+  dompurify@3.4.12:
+    resolution: {integrity: sha512-zQvGet8Z2sWbQhCmfFz/T5QWH2oBmjnqK3qvOjaqaNLrLEF912WamU+ohnTp0TCep/MFVHpdJuCZEdFOdTnEFg==}
 
   eastasianwidth@0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
@@ -2407,6 +2407,9 @@ packages:
 
   es-toolkit@1.48.1:
     resolution: {integrity: sha512-wfnXlwd5I75eXRtdD2vuEs50xHHESECDsGD7yiQnfFVNoa5522NwXEbmgo98LfiukSQHs+mBM7/YG3qKJB9/mQ==}
+
+  es-toolkit@1.49.0:
+    resolution: {integrity: sha512-G5iZ6Pc/FNRY/soKZHC+TxGDD83rHUDXxzaWhGCX44vAv/tMs56WMusnm/KMNK+luUPsgA9U28cGr4RDlSzL2g==}
 
   esbuild@0.28.1:
     resolution: {integrity: sha512-HrJrvZv5ayxBzPfwphOoNzkzOIIlifzk0KJrGK2c8R4+LKpMtpYLQeUdjnwjWv/LZlkH2laZk+4w78pi99D4Vw==}
@@ -4337,22 +4340,22 @@ snapshots:
   '@esbuild/win32-x64@0.28.1':
     optional: true
 
-  '@floating-ui/core@1.7.5':
+  '@floating-ui/core@1.8.0':
     dependencies:
-      '@floating-ui/utils': 0.2.11
+      '@floating-ui/utils': 0.2.12
 
-  '@floating-ui/dom@1.7.6':
+  '@floating-ui/dom@1.8.0':
     dependencies:
-      '@floating-ui/core': 1.7.5
-      '@floating-ui/utils': 0.2.11
+      '@floating-ui/core': 1.8.0
+      '@floating-ui/utils': 0.2.12
 
-  '@floating-ui/react-dom@2.1.8(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@floating-ui/react-dom@2.1.9(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
-      '@floating-ui/dom': 1.7.6
+      '@floating-ui/dom': 1.8.0
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
 
-  '@floating-ui/utils@0.2.11': {}
+  '@floating-ui/utils@0.2.12': {}
 
   '@flows/react@1.18.0(react@19.2.7)':
     dependencies:
@@ -4589,7 +4592,7 @@ snapshots:
 
   '@lit-labs/preact-signals@1.0.3':
     dependencies:
-      '@preact/signals-core': 1.14.3
+      '@preact/signals-core': 1.14.4
       lit: 3.3.3
 
   '@lit-labs/ssr-dom-shim@1.6.0': {}
@@ -4755,7 +4758,7 @@ snapshots:
     dependencies:
       playwright: 1.61.1
 
-  '@preact/signals-core@1.14.3': {}
+  '@preact/signals-core@1.14.4': {}
 
   '@rolldown/binding-android-arm64@1.1.5':
     optional: true
@@ -5482,7 +5485,7 @@ snapshots:
 
   detect-newline@3.1.0: {}
 
-  dompurify@3.4.11:
+  dompurify@3.4.12:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
 
@@ -5511,6 +5514,8 @@ snapshots:
       is-arrayish: 0.2.1
 
   es-toolkit@1.48.1: {}
+
+  es-toolkit@1.49.0: {}
 
   esbuild@0.28.1:
     optionalDependencies:
