@@ -10,6 +10,7 @@ import { observeQuerySelector } from "../lib/query-selector";
 import { ActionButton } from "./action-button";
 import { IconButton } from "./icon-button";
 import { Text } from "./text";
+import { Branding } from "./branding";
 
 const CLOSE_TIMEOUT = 300;
 const BOUNDARY_PADDING = 8;
@@ -39,6 +40,9 @@ class BaseHint extends LitElement {
   secondaryButton?: Action;
   @property({ attribute: false })
   onClose?: () => void;
+
+  @property({ type: Boolean })
+  showBranding: boolean;
 
   @state()
   private accessor _open = false;
@@ -203,6 +207,12 @@ class BaseHint extends LitElement {
                     onClick: this.onClose,
                   })
                 : null}
+              ${this.showBranding
+                ? Branding({
+                    className: "flows_basicsV2_tooltip_branding",
+                    component: "basicsV2-hint",
+                  })
+                : null}
             </div>
           `
         : null}
@@ -251,7 +261,9 @@ export const updateTooltip = ({
       shift({ crossAxis: true, padding: BOUNDARY_PADDING }),
       offset(DISTANCE),
     ],
-  }).then(({ x, y }) => {
+  }).then(({ x, y, placement: finalPlacement }) => {
+    el.setAttribute("data-placement", finalPlacement);
+
     el.style.left = `${x}px`;
     el.style.top = `${y}px`;
   });

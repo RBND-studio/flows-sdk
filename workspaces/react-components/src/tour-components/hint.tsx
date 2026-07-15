@@ -25,6 +25,7 @@ const Hint: FC<HintProps> = (props) => {
       primaryButton={props.primaryButton}
       secondaryButton={props.secondaryButton}
       dots={dots}
+      showBranding={props.__flows.freeOrg}
       // Needed to avoid reusing html elements between tour steps. Otherwise the tooltip exit animation is triggered.
       key={props.__flows.id}
     />

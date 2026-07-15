@@ -34,6 +34,7 @@
   padding: var(--flows-basicsV2-tooltip-padding);
 
   font-family: var(--flows-basicsV2-font-family);
+  -webkit-font-smoothing: antialiased;
   font-size: var(--flows-basicsV2-base-font-size);
   line-height: var(--flows-basicsV2-base-line-height);
 

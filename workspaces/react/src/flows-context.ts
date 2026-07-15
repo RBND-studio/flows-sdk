@@ -16,6 +16,7 @@ export type UpdateBlock = (blockId: string, updateFn: (block: Block) => Block) =
 
 export interface IFlowsContext {
   blocks: Block[] | null;
+  freeOrg: boolean;
   userProperties: UserProperties;
   components: Components;
   tourComponents: TourComponents;
@@ -31,6 +32,7 @@ const noop = () => {};
 
 export const FlowsContext = createContext<IFlowsContext>({
   blocks: [],
+  freeOrg: false,
   components: {},
   tourComponents: {},
   surveyComponents: {},

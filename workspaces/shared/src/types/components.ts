@@ -19,6 +19,10 @@ export interface FlowsProperties {
    */
   workflowId: string;
   /**
+   * Name of the component library this component block was created from.
+   */
+  componentLibraryName?: string;
+  /**
    * Total number of visible tour steps (components) in the current tour. Logic steps (e.g. wait) are not counted.
    */
   tourVisibleStepCount?: number;
@@ -26,6 +30,10 @@ export interface FlowsProperties {
    * 0-based index of the currently visible tour step (component) in the current tour. Logic steps (e.g. wait) are not counted.
    */
   tourVisibleStepIndex?: number;
+  /**
+   * Indicates whether the organization is a free organization.
+   */
+  freeOrg: boolean;
 }
 
 export type ComponentProps<T extends Record<string, any> = any> = {

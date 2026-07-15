@@ -59,6 +59,7 @@ class Modal extends LitElement implements ModalProps {
       position: this.position,
       size: this.size,
       onClose: this.dismissible ? this.close : undefined,
+      showBranding: this.__flows.freeOrg,
     });
   }
 }

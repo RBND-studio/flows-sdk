@@ -1,0 +1,104 @@
+.flows_basicsV2_branding_container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.flows_basicsV2_branding_button {
+  font-family: var(--flows-basicsV2-font-family);
+  -webkit-font-smoothing: antialiased;
+  font-size: 12px;
+  line-height: 12px;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--flows-basicsV2-fg-default) 70%, transparent);
+  text-decoration: none;
+  opacity: 1;
+  padding: 4px 6px;
+  margin: 0;
+  border-radius: var(--flows-basicsV2-borderRadius-s);
+  transition: background-color 0.2s ease-in-out;
+  overflow: hidden;
+  text-wrap: nowrap;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.flows_basicsV2_branding_button > svg {
+  display: inline-block;
+  margin-right: 5px;
+  float: left;
+}
+
+.flows_basicsV2_branding_button:hover {
+  color: var(--flows-basicsV2-fg-default);
+  background-color: color-mix(in srgb, var(--flows-basicsV2-fg-default) 8%, transparent);
+  opacity: 1;
+}
+
+/* Component specific edits */
+
+.flows_basicsV2_floating_checklist_branding {
+  margin-top: var(--flows-basicsV2-size-xs);
+  margin-bottom: var(--flows-basicsV2-size-m);
+}
+
+.flows_basicsV2_modal_branding {
+  margin-top: var(--flows-basicsV2-size-m);
+  height: var(--flows-basicsV2-size-s);
+  align-items: flex-start;
+  overflow: visible;
+}
+
+.flows_basicsV2_tooltip_branding {
+  position: absolute;
+  bottom: calc(((var(--flows-basicsV2-tooltip-padding)) + var(--flows-basicsV2-size-s)) * -1);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+}
+
+.flows_basicsV2_tooltip_branding .flows_basicsV2_branding_button {
+  background-color: color-mix(in srgb, var(--flows-basicsV2-fg-default) 6%, transparent);
+}
+.flows_basicsV2_tooltip_branding .flows_basicsV2_branding_button:hover {
+  background-color: color-mix(in srgb, var(--flows-basicsV2-fg-default) 15%, transparent);
+}
+
+.flows_basicsV2_tooltip_tooltip[data-overlay="true"] .flows_basicsV2_branding_button {
+  color: color-mix(in srgb, var(--flows-basicsV2-fg-default) 90%, transparent);
+  background-color: transparent;
+}
+
+.flows_basicsV2_tooltip_tooltip[data-overlay="true"] .flows_basicsV2_branding_button:hover {
+  background-color: color-mix(in srgb, var(--flows-basicsV2-fg-default) 10%, transparent);
+}
+
+.flows_basicsV2_tooltip_tooltip[data-placement="top"] .flows_basicsV2_tooltip_branding {
+  bottom: unset;
+  top: calc(((var(--flows-basicsV2-tooltip-padding)) + var(--flows-basicsV2-size-s)) * -1);
+}
+
+.flows_basicsV2_survey_popover_branding {
+  margin-top: var(--flows-basicsV2-size-m);
+  height: var(--flows-basicsV2-size-s);
+  align-items: flex-start;
+  overflow: visible;
+}
+
+.flows_basicsV2_card_branding {
+  width: fit-content;
+}
+.flows_basicsV2_card_branding_no_buttons {
+  margin-top: var(--flows-basicsV2-size-m);
+  height: var(--flows-basicsV2-size-m);
+  align-items: flex-start;
+  overflow: visible;
+}
+
+.flows_basicsV2_card_branding_tour {
+  margin-top: var(--flows-basicsV2-size-s);
+  height: var(--flows-basicsV2-size-s);
+  align-items: flex-start;
+  overflow: visible;
+}

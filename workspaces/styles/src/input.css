@@ -4,6 +4,7 @@
   background-color: unset;
   box-sizing: border-box;
   font-family: var(--flows-basicsV2-font-family);
+  -webkit-font-smoothing: antialiased;
   font-size: var(--flows-basicsV2-button-font-size);
   line-height: var(--flows-basicsV2-button-line-height);
 }

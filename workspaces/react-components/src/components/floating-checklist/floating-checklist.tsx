@@ -12,6 +12,7 @@ import { Rocket16 } from "../../icons/rocket16";
 import { usePrevious } from "../../hooks/use-previous";
 import { ChecklistItem } from "./checklist-item";
 import { ChecklistProgress } from "./checklist-progress";
+import { Branding } from "../../internal-components/branding";
 
 export type FloatingChecklistProps = ComponentProps<LibraryFloatingChecklistProps>;
 
@@ -216,6 +217,13 @@ const FloatingChecklist: FC<FloatingChecklistProps> = (props) => {
                 ) : null}
               </div>
             </div>
+          ) : null}
+
+          {props.__flows.freeOrg ? (
+            <Branding
+              className="flows_basicsV2_floating_checklist_branding"
+              component="basicsV2-floating-checklist"
+            />
           ) : null}
         </div>
       ) : null}

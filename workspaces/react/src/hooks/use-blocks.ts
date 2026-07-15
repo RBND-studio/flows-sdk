@@ -13,6 +13,7 @@ import {
   type BlockUpdatesMessage,
   getClosedBlockStateIds,
   updateClosedBlockStateIds,
+  filterVisibleBlocks,
 } from "@flows/shared";
 import { packageAndVersion } from "../lib/constants";
 import { type RemoveBlock, type UpdateBlock } from "../flows-context";
@@ -31,6 +32,7 @@ interface Props {
 
 interface Return {
   blocks: Block[] | null;
+  freeOrg: boolean;
   removeBlock: RemoveBlock;
   updateBlock: UpdateBlock;
   error: boolean;
@@ -68,18 +70,19 @@ export const useBlocks = ({
     setClosedBlockStateIds(getClosedBlockStateIds());
   }, []);
 
-  const blocks = useMemo(() => {
-    const closedBlockStateIdsSet = new Set(closedBlockStateIds);
-
-    if (!blocksState) return blocksState;
-    return blocksState?.filter((b) => {
-      if (!b.blockStateId) return true;
-      return !closedBlockStateIdsSet.has(b.blockStateId);
-    });
-  }, [blocksState, closedBlockStateIds]);
-
   const [usageLimited, setUsageLimited] = useState(false);
+  const [freeOrg, setFreeOrg] = useState(false);
   const pendingMessages = useRef<BlockUpdatesMessage[]>([]);
+
+  const blocks = useMemo(() => {
+    if (!blocksState) return blocksState;
+
+    return filterVisibleBlocks(blocksState, {
+      closedBlockStateIds: closedBlockStateIds ?? [],
+      freeOrg,
+      hostname: window.location.hostname,
+    });
+  }, [blocksState, closedBlockStateIds, freeOrg]);
 
   const params = useMemo(
     () => ({ environment, organizationId, userId }),
@@ -118,6 +121,7 @@ export const useBlocks = ({
         }, 0);
 
         if (res.meta?.usage_limited) setUsageLimited(true);
+        if (res.meta?.free_org) setFreeOrg(true);
         onAfterLoad();
       })
       .catch((err: unknown) => {
@@ -190,5 +194,5 @@ export const useBlocks = ({
     });
   }, []);
 
-  return { blocks, error, wsError, removeBlock, updateBlock };
+  return { blocks, freeOrg, error, wsError, removeBlock, updateBlock };
 };

@@ -16,6 +16,7 @@ const Tooltip: FC<TooltipProps> = (props) => {
       onClose={props.dismissible ? props.close : undefined}
       primaryButton={props.primaryButton}
       secondaryButton={props.secondaryButton}
+      showBranding={props.__flows.freeOrg}
     />
   );
 };

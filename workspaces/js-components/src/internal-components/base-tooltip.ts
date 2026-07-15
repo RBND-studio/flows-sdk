@@ -27,6 +27,7 @@ import { observeQuerySelector } from "../lib/query-selector";
 import { ActionButton } from "./action-button";
 import { IconButton } from "./icon-button";
 import { Text } from "./text";
+import { Branding } from "./branding";
 
 const TARGET_ELEMENT_DATA_ATTRIBUTE = "data-flows-tooltip-target";
 
@@ -52,6 +53,9 @@ class BaseTooltip extends LitElement {
   secondaryButton?: Action;
   @property({ attribute: false })
   onClose?: () => void;
+
+  @property({ type: Boolean })
+  showBranding: boolean;
 
   get blockScrollPosition(): ScrollLogicalPosition | undefined {
     return tooltipScrollPositionToScrollLogicalPosition(this.scrollPosition);
@@ -157,7 +161,7 @@ class BaseTooltip extends LitElement {
     return html`
       <div class="flows_basicsV2_tooltip_root">
         ${this.overlay ? html` <div class="flows_basicsV2_tooltip_overlay"></div> ` : null}
-        <div class="flows_basicsV2_tooltip_tooltip">
+        <div class="flows_basicsV2_tooltip_tooltip" data-overlay=${this.overlay ? "true" : "false"}>
           ${Text({
             variant: "title",
             className: "flows_basicsV2_tooltip_title",
@@ -189,6 +193,12 @@ class BaseTooltip extends LitElement {
                 className: "flows_basicsV2_tooltip_close",
                 children: Close16(),
                 onClick: this.onClose,
+              })
+            : null}
+          ${this.showBranding
+            ? Branding({
+                className: "flows_basicsV2_tooltip_branding",
+                component: "basicsV2-tooltip",
               })
             : null}
 
@@ -247,6 +257,8 @@ export const updateTooltip = ({
   }).then(({ x, y, middlewareData, placement: finalPlacement }) => {
     tooltip.style.left = `${x}px`;
     tooltip.style.top = `${y}px`;
+
+    tooltip.setAttribute("data-placement", finalPlacement);
 
     if (middlewareData.arrow) {
       const staticSide = ((): Side => {

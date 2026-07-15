@@ -8,6 +8,7 @@ export const createTourComponentProps = ({
   tourSteps,
   tourStep,
   currentIndex,
+  freeOrg,
   userProperties,
   handleCancel,
   handleContinue,
@@ -16,6 +17,7 @@ export const createTourComponentProps = ({
   tourSteps: TourStep[];
   tourStep: TourStep;
   currentIndex: number;
+  freeOrg: boolean;
   userProperties: UserProperties;
   handleContinue: () => void;
   handlePrevious: () => void;
@@ -67,8 +69,10 @@ export const createTourComponentProps = ({
       id: tourStep.id,
       key: tourStep.key,
       workflowId: tourStep.workflowId,
+      componentLibraryName: tourStep.componentLibraryName,
       tourVisibleStepCount: visibleTourSteps.length,
       tourVisibleStepIndex,
+      freeOrg,
     },
     ...data,
     continue: handleContinue,

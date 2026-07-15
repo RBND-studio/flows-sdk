@@ -331,6 +331,20 @@ const run = (packageName: string) => {
     await page.reload();
     await expect(checklistPopover).toBeVisible();
   });
+  test(`${packageName} - should show branding with free org`, async ({ page }) => {
+    await mockBlocksEndpoint(page, [getBlock({})], true);
+    await page.goto(`/${packageName}.html`);
+    const checklistWidget = page.getByRole("button", { name: "Widget title" });
+    const checklistPopover = page.locator(".flows_basicsV2_floating_checklist_popover");
+    await checklistWidget.click();
+    await expect(checklistPopover).toBeVisible();
+    await expect(page.locator(".flows_basicsV2_floating_checklist_branding")).toBeVisible();
+    await mockBlocksEndpoint(page, [getBlock({})]);
+    await page.goto(`/${packageName}.html`);
+    await checklistWidget.click();
+    await expect(checklistPopover).toBeVisible();
+    await expect(page.locator(".flows_basicsV2_floating_checklist_branding")).toBeHidden();
+  });
 };
 
 run("react");

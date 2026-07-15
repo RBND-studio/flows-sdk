@@ -80,6 +80,7 @@ class Tooltip extends LitElement implements TooltipProps {
       .primaryButton=${this.primaryButton}
       .secondaryButton=${this.secondaryButton}
       .dots=${dots}
+      .showBranding=${this.__flows.freeOrg}
     ></flows-base-tooltip>`;
   }
 }

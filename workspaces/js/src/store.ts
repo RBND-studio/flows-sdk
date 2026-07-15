@@ -5,6 +5,8 @@ import {
   getSessionStorageRunningSurveys,
   updateClosedBlockStateIds,
   getClosedBlockStateIds,
+  filterVisibleBlocks,
+  logBranding,
 } from "@flows/shared";
 import { computed, effect, signal } from "@preact/signals-core";
 import { type FlowsOptions } from "./types/configuration";
@@ -20,6 +22,13 @@ const blocksState = signal<Block[] | null>(null);
 export const updateBlocks = (value: Block[] | null): void => {
   blocksState.value = value;
 };
+export const freeOrg = signal<boolean>(false);
+
+// Log a "Powered by Flows" message in the console for free orgs
+effect(() => {
+  if (!freeOrg.value) return;
+  logBranding();
+});
 
 const closedBlockStateIds = signal<string[] | null>(null);
 const addClosedBlockStateId = (blockStateId: string): void => {
@@ -36,12 +45,15 @@ effect(() => {
 
 export const blocks = computed(() => {
   const blocksStateValue = blocksState.value;
-  const closedBlockStateIdsSet = new Set(closedBlockStateIds.value);
+  const freeOrgValue = freeOrg.value;
+  const closedBlockStateIdsValue = closedBlockStateIds.value ?? [];
 
   if (!blocksStateValue) return blocksStateValue;
-  return blocksStateValue.filter((b) => {
-    if (!b.blockStateId) return true;
-    return !closedBlockStateIdsSet.has(b.blockStateId);
+
+  return filterVisibleBlocks(blocksStateValue, {
+    closedBlockStateIds: closedBlockStateIdsValue,
+    freeOrg: freeOrgValue,
+    hostname: window.location.hostname,
   });
 });
 export const pendingMessages = signal<BlockUpdatesMessage[]>([]);

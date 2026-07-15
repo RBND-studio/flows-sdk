@@ -31,6 +31,7 @@ import { getDefaultQuestionState, questionToContextValue } from "./question-cont
 import { defineRatingInput } from "./rating-input";
 import { SingleChoiceInput } from "./single-choice-input";
 import { SurveyNextButton } from "./survey-next-button";
+import { Branding } from "../../internal-components/branding";
 
 export type SurveyPopoverProps = SurveyComponentProps<LibrarySurveyPopoverProps>;
 
@@ -328,6 +329,12 @@ class SurveyPopover extends LitElement implements SurveyPopoverProps {
                   className: "flows_basicsV2_survey_popover_close",
                   onClick: () => this.handleClose(this.cancel),
                   children: Close16(),
+                })
+              : null}
+            ${this.__flows.freeOrg
+              ? Branding({
+                  className: "flows_basicsV2_survey_popover_branding",
+                  component: "basicsV2-survey-popover",
                 })
               : null}
           </fieldset>

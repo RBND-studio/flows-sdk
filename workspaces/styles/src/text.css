@@ -1,5 +1,6 @@
 .flows_basicsV2_text {
   font-family: var(--flows-basicsV2-font-family);
+  -webkit-font-smoothing: antialiased;
   margin: 0;
 }
 

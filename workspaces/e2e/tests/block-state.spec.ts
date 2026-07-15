@@ -62,12 +62,14 @@ const run = (packageName: string) => {
             __flows: {
               id: blocks[0]?.id,
               workflowId: blocks[0]?.workflowId,
+              freeOrg: false,
             },
             title: "Modal Title",
             blockState: {
               __flows: {
                 id: (blocks[0]?.propertyMeta?.[0]?.value as any)?.id,
                 workflowId: blocks[0]?.workflowId,
+                freeOrg: false,
               },
               title: "Block State Title",
               checked2: {

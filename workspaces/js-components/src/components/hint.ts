@@ -64,6 +64,7 @@ class Hint extends LitElement implements HintProps {
       .onClose=${this.dismissible ? this.close : undefined}
       .primaryButton=${this.primaryButton}
       .secondaryButton=${this.secondaryButton}
+      .showBranding=${this.__flows.freeOrg}
     ></flows-base-hint>`;
   }
 }
