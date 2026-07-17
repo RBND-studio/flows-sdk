@@ -38,7 +38,13 @@ export const itemToActiveBlock = (
     removeBlock,
     updateBlock,
     userProperties,
-  }: { removeBlock: RemoveBlock; updateBlock: UpdateBlock; userProperties: UserProperties },
+    freeOrg,
+  }: {
+    removeBlock: RemoveBlock;
+    updateBlock: UpdateBlock;
+    userProperties: UserProperties;
+    freeOrg: boolean;
+  },
 ): ActiveBlock | [] => {
   if (isBlock(item) && item.type === "component")
     return blockToActiveBlock({
@@ -46,6 +52,7 @@ export const itemToActiveBlock = (
       removeBlock,
       updateBlock,
       userProperties,
+      freeOrg,
     });
   if (isBlock(item) && item.type === "survey")
     return surveyBlockToActiveBlock({
@@ -53,8 +60,9 @@ export const itemToActiveBlock = (
       removeBlock,
       updateBlock,
       userProperties,
+      freeOrg,
     });
-  if (!isBlock(item)) return tourBlockToActiveBlock({ tour: item, userProperties });
+  if (!isBlock(item)) return tourBlockToActiveBlock({ tour: item, userProperties, freeOrg });
   return [];
 };
 
@@ -63,11 +71,13 @@ export const blockToActiveBlock = ({
   removeBlock,
   updateBlock,
   userProperties,
+  freeOrg,
 }: {
   block: Block;
   removeBlock: RemoveBlock;
   updateBlock: UpdateBlock;
   userProperties: UserProperties;
+  freeOrg: boolean;
 }): ActiveBlock | [] => {
   if (block.type !== "component") return [];
   if (!block.componentType) return [];
@@ -80,6 +90,7 @@ export const blockToActiveBlock = ({
     removeBlock,
     exitNodeCb: ({ key, blockId }) => sendEvent({ name: "transition", blockId, propertyKey: key }),
     setStateMemory,
+    freeOrg,
   });
 
   const activeBlock: ActiveBlock = {
@@ -95,9 +106,11 @@ export const blockToActiveBlock = ({
 export const tourBlockToActiveBlock = ({
   tour,
   userProperties,
+  freeOrg,
 }: {
   tour: RunningTour;
   userProperties: UserProperties;
+  freeOrg: boolean;
 }): ActiveBlock | [] => {
   const activeStep = tour.activeStep;
   if (!activeStep?.componentType) return [];
@@ -106,6 +119,7 @@ export const tourBlockToActiveBlock = ({
     tourSteps: tour.block.tourBlocks ?? [],
     tourStep: activeStep,
     currentIndex: tour.currentBlockIndex,
+    freeOrg,
     userProperties,
     handleCancel: tour.cancel,
     handleContinue: tour.continue,
@@ -126,11 +140,13 @@ export const tourBlockToActiveBlock = ({
 export const surveyBlockToActiveBlock = ({
   block,
   userProperties,
+  freeOrg,
   removeBlock,
   updateBlock,
 }: {
   block: Block;
   userProperties: UserProperties;
+  freeOrg: boolean;
   updateBlock: UpdateBlock;
   removeBlock: RemoveBlock;
 }): ActiveBlock | [] => {
@@ -142,6 +158,7 @@ export const surveyBlockToActiveBlock = ({
   const props = createSurveyComponentProps({
     block,
     userProperties,
+    freeOrg,
     removeBlock,
     exitNodeCb: ({ key, blockId }) => sendEvent({ name: "transition", blockId, propertyKey: key }),
     setStateMemory,

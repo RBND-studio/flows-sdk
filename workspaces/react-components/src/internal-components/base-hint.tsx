@@ -15,6 +15,7 @@ import { Close16 } from "../icons/close16";
 import { ActionButton } from "./action-button";
 import { IconButton } from "./icon-button";
 import { Text } from "./text";
+import { Branding } from "./branding";
 
 interface Props {
   title: string;
@@ -29,6 +30,8 @@ interface Props {
   primaryButton?: Action;
   secondaryButton?: Action;
   onClose?: () => void;
+
+  showBranding: boolean;
 }
 
 const CLOSE_TIMEOUT = 300;
@@ -142,6 +145,7 @@ export const BaseHint: FC<Props> = (props) => {
         <div
           className="flows_basicsV2_tooltip_tooltip flows_basicsV2_hint_tooltip"
           data-open={!tooltipClosing ? "true" : "false"}
+          data-placement={tooltipFloating.placement}
           ref={tooltipFloating.refs.setFloating}
           style={{ left: tooltipFloating.x, top: tooltipFloating.y }}
         >
@@ -177,6 +181,10 @@ export const BaseHint: FC<Props> = (props) => {
             >
               <Close16 />
             </IconButton>
+          ) : null}
+
+          {props.showBranding ? (
+            <Branding className="flows_basicsV2_tooltip_branding" component="basicsV2-hint" />
           ) : null}
         </div>
       ) : null}

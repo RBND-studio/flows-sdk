@@ -48,6 +48,7 @@
     background-color 120ms ease-in-out,
     border-color 120ms ease-in-out;
   font-family: var(--flows-basicsV2-font-family);
+  -webkit-font-smoothing: antialiased;
   font-size: var(--flows-basicsV2-button-font-size);
   line-height: var(--flows-basicsV2-button-line-height);
   font-weight: 600;
@@ -222,6 +223,7 @@
   font-size: var(--flows-basicsV2-base-font-size);
   line-height: var(--flows-basicsV2-base-line-height);
   font-family: var(--flows-basicsV2-font-family);
+  -webkit-font-smoothing: antialiased;
   flex-shrink: 0;
   margin: 0;
 }

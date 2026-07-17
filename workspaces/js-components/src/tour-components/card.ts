@@ -65,6 +65,7 @@ class Card extends LitElement implements CardProps {
       onClose: this.dismissible ? this.cancel : undefined,
       dots,
       tour: true,
+      showBranding: this.__flows.freeOrg,
     });
   }
 }

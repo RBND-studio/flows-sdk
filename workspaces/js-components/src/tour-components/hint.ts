@@ -83,6 +83,7 @@ class Hint extends LitElement implements HintProps {
         .primaryButton=${this.primaryButton}
         .secondaryButton=${this.secondaryButton}
         .dots=${dots}
+        .showBranding=${this.__flows.freeOrg}
       ></flows-base-hint>`,
     );
   }

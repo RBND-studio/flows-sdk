@@ -40,6 +40,7 @@ interface GetBlocksRequest {
 
 interface BlockResponseMeta {
   usage_limited?: boolean;
+  free_org?: boolean;
 }
 
 interface BlocksResponse {

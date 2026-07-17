@@ -9,6 +9,7 @@
     border-color 120ms ease-in-out;
   padding: 5px 15px;
   font-family: var(--flows-basicsV2-font-family);
+  -webkit-font-smoothing: antialiased;
   font-size: var(--flows-basicsV2-button-font-size);
   line-height: var(--flows-basicsV2-button-line-height);
   font-weight: 600;

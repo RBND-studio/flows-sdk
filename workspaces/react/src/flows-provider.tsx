@@ -1,4 +1,5 @@
 import {
+  logBranding,
   sendEvents,
   type CustomFetch,
   type LanguageOption,
@@ -174,7 +175,7 @@ const FlowsProviderInner: FC<Props> = ({
   const onAfterLoad = useCallback(() => {
     void sendEvents(globalConfig.customFetch);
   }, []);
-  const { blocks, error, wsError, removeBlock, updateBlock } = useBlocks({
+  const { blocks, freeOrg, error, wsError, removeBlock, updateBlock } = useBlocks({
     apiUrl,
     environment,
     organizationId,
@@ -192,11 +193,18 @@ const FlowsProviderInner: FC<Props> = ({
     window.__flows_LinkComponent = LinkComponent;
   }, [LinkComponent]);
 
+  // Log a "Powered by Flows" message in the console for free orgs
+  useEffect(() => {
+    if (!freeOrg) return;
+    logBranding();
+  }, [freeOrg]);
+
   return (
     <FlowsContext.Provider
       value={{
         userProperties,
         blocks,
+        freeOrg,
         components,
         runningTours,
         runningSurveyBlockStateIds,

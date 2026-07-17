@@ -8,6 +8,7 @@ import { Close16 } from "../icons/close-16";
 import { ActionButton } from "./action-button";
 import { IconButton } from "./icon-button";
 import { Text } from "./text";
+import { Branding } from "./branding";
 
 interface Props {
   title: string;
@@ -20,6 +21,8 @@ interface Props {
   primaryButton?: Action;
   secondaryButton?: Action;
   onClose?: () => void;
+
+  showBranding: boolean;
 }
 
 export const BaseModal = (props: Props): TemplateResult => {
@@ -78,6 +81,9 @@ export const BaseModal = (props: Props): TemplateResult => {
               className: "flows_basicsV2_modal_close",
               onClick: props.onClose,
             })
+          : null}
+        ${props.showBranding
+          ? Branding({ className: "flows_basicsV2_modal_branding", component: "basicsV2-modal" })
           : null}
       </div>
     </div>

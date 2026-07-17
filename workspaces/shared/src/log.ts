@@ -17,3 +17,7 @@ export const log = {
     console.info(`${badge} ${message}`, badgeCss, "", ...args);
   },
 };
+
+export const logBranding = () => {
+  log.info(`Product adoption powered by https://flows.sh`);
+};

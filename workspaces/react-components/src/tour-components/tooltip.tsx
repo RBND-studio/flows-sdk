@@ -25,6 +25,7 @@ const Tooltip: FC<TooltipProps> = (props) => {
       primaryButton={props.primaryButton}
       secondaryButton={props.secondaryButton}
       dots={dots}
+      showBranding={props.__flows.freeOrg}
     />
   );
 };

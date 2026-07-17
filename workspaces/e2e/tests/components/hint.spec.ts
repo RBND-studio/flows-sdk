@@ -132,6 +132,20 @@ const run = (packageName: string) => {
       await expect(page.locator(".flows_basicsV2_hint_hotspot")).toBeHidden();
       await expect(page.locator("h1")).not.toHaveAttribute("data-flows-hint-target");
     });
+    test(`${packageName} - should show branding with free org`, async ({ page }) => {
+      await mockBlocksEndpoint(page, [getBlock({})], true);
+      await page.goto(`/${packageName}.html`);
+      const hotspotButton = page.locator(".flows_basicsV2_hint_hotspot");
+      const tooltip = page.locator(".flows_basicsV2_hint_tooltip");
+      await hotspotButton.click();
+      await expect(tooltip).toBeVisible();
+      await expect(page.locator(".flows_basicsV2_tooltip_branding")).toBeVisible();
+      await mockBlocksEndpoint(page, [getBlock({})]);
+      await page.goto(`/${packageName}.html`);
+      await hotspotButton.click();
+      await expect(tooltip).toBeVisible();
+      await expect(page.locator(".flows_basicsV2_tooltip_branding")).toBeHidden();
+    });
   });
 
   test.describe("tour", () => {
@@ -185,6 +199,24 @@ const run = (packageName: string) => {
       await expect(page.locator(".flows_basicsV2_hint_tooltip")).toBeHidden();
       await page.locator(".flows_basicsV2_hint_hotspot").click();
       await expect(page.locator(".flows_basicsV2_tooltip_footer")).toBeHidden();
+    });
+    test(`${packageName} - should show branding with free org`, async ({ page }) => {
+      await mockBlocksEndpoint(page, [getTour({ tourBlocks: [getTourStep({ title: "" })] })], true);
+      await page.goto(`/${packageName}.html`);
+      const hotspotButton = page.locator(".flows_basicsV2_hint_hotspot");
+      const tooltip = page.locator(".flows_basicsV2_hint_tooltip");
+      await hotspotButton.click();
+      await expect(tooltip).toBeVisible();
+      await expect(page.locator(".flows_basicsV2_tooltip_branding")).toBeVisible();
+      await mockBlocksEndpoint(
+        page,
+        [getTour({ tourBlocks: [getTourStep({ title: "" })] })],
+        false,
+      );
+      await page.goto(`/${packageName}.html`);
+      await hotspotButton.click();
+      await expect(tooltip).toBeVisible();
+      await expect(page.locator(".flows_basicsV2_tooltip_branding")).toBeHidden();
     });
   });
 };

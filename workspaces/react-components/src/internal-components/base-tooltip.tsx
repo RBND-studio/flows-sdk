@@ -29,6 +29,7 @@ import { Close16 } from "../icons/close16";
 import { ActionButton } from "./action-button";
 import { IconButton } from "./icon-button";
 import { Text } from "./text";
+import { Branding } from "./branding";
 
 const DISTANCE = 4;
 const ARROW_SIZE = 6;
@@ -49,6 +50,8 @@ interface Props {
   primaryButton?: Action;
   secondaryButton?: Action;
   onClose?: () => void;
+
+  showBranding: boolean;
 }
 
 export const BaseTooltip: FC<Props> = (props) => {
@@ -162,6 +165,8 @@ export const BaseTooltip: FC<Props> = (props) => {
         className="flows_basicsV2_tooltip_tooltip"
         ref={refs.setFloating}
         data-open={enterAnimationEnded ? "true" : "false"}
+        data-placement={placement}
+        data-overlay={props.overlay ? "true" : "false"}
         onAnimationEnd={handleAnimationEnd}
       >
         <Text className="flows_basicsV2_tooltip_title" variant="title">
@@ -197,6 +202,10 @@ export const BaseTooltip: FC<Props> = (props) => {
           >
             <Close16 />
           </IconButton>
+        ) : null}
+
+        {props.showBranding ? (
+          <Branding className="flows_basicsV2_tooltip_branding" component="basicsV2-tooltip" />
         ) : null}
 
         <div

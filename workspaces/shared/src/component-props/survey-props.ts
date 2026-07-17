@@ -31,6 +31,7 @@ export const createSurveyComponentProps = (props: {
   exitNodeCb: ExitNodeCb;
   setStateMemory: SetStateMemory;
   userProperties: UserProperties;
+  freeOrg: boolean;
   submitSurvey: SubmitSurvey;
 }): SurveyComponentProps<object> | null => {
   const { block } = props;

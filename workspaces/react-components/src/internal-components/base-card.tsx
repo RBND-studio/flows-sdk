@@ -6,6 +6,7 @@ import { Close16 } from "../icons/close16";
 import { ActionButton } from "./action-button";
 import { IconButton } from "./icon-button";
 import { Text } from "./text";
+import { Branding } from "./branding";
 
 interface Props {
   title: string;
@@ -18,6 +19,8 @@ interface Props {
   tour: boolean;
 
   onClose?: () => void;
+
+  showBranding: boolean;
 }
 
 export const BaseCard: FC<Props> = (props) => {
@@ -38,13 +41,7 @@ export const BaseCard: FC<Props> = (props) => {
   })();
 
   return (
-    <div
-      className="flows_basicsV2_card"
-      style={{
-        width: "100%",
-        maxWidth: cardWidth,
-      }}
-    >
+    <div className="flows_basicsV2_card" style={{ maxWidth: cardWidth }}>
       <Text variant="title" className="flows_basicsV2_card_title">
         {props.title}
       </Text>
@@ -61,18 +58,30 @@ export const BaseCard: FC<Props> = (props) => {
       {!props.tour && buttons.length ? (
         <div className="flows_basicsV2_card_footer">
           <div className="flows_basicsV2_card_buttons">{buttons}</div>
+          {props.showBranding ? (
+            <Branding className="flows_basicsV2_card_branding" component="basicsV2-card" />
+          ) : null}
         </div>
       ) : null}
 
       {props.tour && (props.dots ?? buttons.length) ? (
-        <div className="flows_basicsV2_card_footer">
-          {props.dots}
-          {buttons.length ? (
-            <div className="flows_basicsV2_card_buttons_wrapper">
-              <div className="flows_basicsV2_card_buttons">{buttons}</div>
-            </div>
+        <>
+          <div className="flows_basicsV2_card_footer">
+            {props.dots}
+            {buttons.length ? (
+              <div className="flows_basicsV2_card_buttons_wrapper">
+                <div className="flows_basicsV2_card_buttons">{buttons}</div>
+              </div>
+            ) : null}
+          </div>
+          {props.showBranding ? (
+            <Branding className="flows_basicsV2_card_branding_tour" component="basicsV2-card" />
           ) : null}
-        </div>
+        </>
+      ) : null}
+
+      {!buttons.length && !props.dots && props.showBranding ? (
+        <Branding className="flows_basicsV2_card_branding_no_buttons" component="basicsV2-card" />
       ) : null}
 
       {props.onClose ? (
