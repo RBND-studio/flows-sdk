@@ -54,6 +54,7 @@ const App = () => {
 Meet Flows, the flexible platform for building in-app experiences. Focus on your product, not creating one-off logic.
 
 - Build powerful in-app experiences to drive product growth
+- Create surveys and collect feedback
 - Embed components directly into your app
 - Create onboarding, product adoption, in-app messaging, growth experiments, and more
 - Bring your own UI components or use Flows' built-in components
@@ -62,7 +63,7 @@ Visit our [website](https://flows.sh) to learn more about Flows
 
 ## Get started for free
 
-The fastest and most reliable way to get started with Flows is [signing up for free](https://app.flows.sh/signup). Your first 100 MTUs (monthly tracked users) are free every month, after which it starts at $30 per month for up to 600 MTUs. See our [pricing](https://flows.sh/pricing) for more details.
+The fastest and most reliable way to get started with Flows is [signing up for free](https://app.flows.sh/signup). Your first 100 MTUs (monthly tracked users) are free every month. See our [pricing](https://flows.sh/pricing) for more details.
 
 ## Contributing
 
