@@ -109,6 +109,8 @@ export interface EventRequest {
   name:
     | "transition"
     | "tour-update"
+    | "tour-session-heartbeat"
+    | "tour-session-hint"
     | "reset-progress"
     | "workflow-start"
     | "set-state-memory"
@@ -119,6 +121,8 @@ export interface EventRequest {
   propertyKey?: string;
   properties?: Record<string, unknown>;
 }
+
+// API
 
 export type ApiContext = {
   apiUrl: string;
@@ -135,6 +139,8 @@ export const getApi = ({ apiUrl, version, customFetch }: ApiContext) => {
     getWorkflows: (body: WorkflowsRequest) =>
       f<WorkflowsResponse>("/v2/sdk/workflows", { method: "POST", body, version }),
     sendEvent: (body: EventRequest) => f("/v2/sdk/events", { method: "POST", body, version }),
+    sendEventBeacon: (body: EventRequest) =>
+      navigator.sendBeacon(`${apiUrl}/v2/sdk/events/text`, JSON.stringify(body)),
     postSurvey: (body: ApiSurveyAnswer) => f("/v2/sdk/survey", { method: "POST", body, version }),
   };
 };

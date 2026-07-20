@@ -27,6 +27,33 @@ export const sendEvent = async (props: SendEventProps): Promise<void> => {
   });
 };
 
+/**
+ * @deprecated Use `sendEvent` instead, which will queue the event and retry sending it if it fails. This method can be used only with time sensitive events that don't need to be retried, e.g. tour session update.
+ */
+export const sendEventImmediately = async (props: SendEventProps): Promise<void> => {
+  const { apiUrl, environment, organizationId, userId, customFetch } = globalConfig;
+  if (!apiUrl || !environment || !organizationId || !userId) return;
+
+  await getApi({ apiUrl, version: packageAndVersion, customFetch }).sendEvent({
+    ...props,
+    environment,
+    organizationId,
+    userId,
+  });
+};
+
+export const sendEventBeacon = (props: SendEventProps): void => {
+  const { apiUrl, environment, organizationId, userId } = globalConfig;
+  if (!apiUrl || !environment || !organizationId || !userId) return;
+
+  getApi({ apiUrl, version: packageAndVersion }).sendEventBeacon({
+    ...props,
+    environment,
+    organizationId,
+    userId,
+  });
+};
+
 export const postSurvey = async (
   props: Omit<ApiSurveyAnswer, "userId" | "environment" | "organizationId" | "url">,
 ) => {
