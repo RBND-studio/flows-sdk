@@ -34,13 +34,18 @@ export const useRunningTours = ({ blocks, removeBlock, userProperties }: Props):
 
   useEffect(() => {
     const heartbeatInterval = setInterval(() => {
-      if (!runningToursRef.current.length) return;
+      const someTourOutsideOfFirstStep = runningToursRef.current.some(
+        (t) => t.currentBlockIndex > 0,
+      );
+      if (!someTourOutsideOfFirstStep) return;
       // oxlint-disable-next-line typescript/no-deprecated - we're intentionally using send event without event queue to avoid resuming a tour on retry
       void sendEventImmediately({ name: "tour-session-heartbeat" });
     }, 60_000);
 
     const pageHideHandler = () => {
       for (const tour of runningToursRef.current) {
+        const isOutsideOfFirstStep = tour.currentBlockIndex > 0;
+        if (!isOutsideOfFirstStep) continue;
         sendEventBeacon({
           name: "tour-session-hint",
           properties: { ending: true },
