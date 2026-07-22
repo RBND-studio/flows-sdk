@@ -3,7 +3,7 @@ import type { BlockTriggerContext, UserProperties } from "@flows/shared";
 import { getPathname, tourTriggerMatch, type Block } from "@flows/shared";
 import { debounce } from "es-toolkit";
 import { type RunningTour } from "../flows-context";
-import { sendEvent } from "../lib/api";
+import { sendEvent, sendEventImmediately, sendEventBeacon } from "../lib/api";
 import { usePathname } from "../contexts/pathname-context";
 
 type StateItem = Pick<RunningTour, "currentBlockIndex"> & {
@@ -31,6 +31,35 @@ export const useRunningTours = ({ blocks, removeBlock, userProperties }: Props):
       return prev.filter((tour) => tourBlockIds.has(tour.blockId));
     });
   }, [blocks]);
+
+  useEffect(() => {
+    const heartbeatInterval = setInterval(() => {
+      const someTourOutsideOfFirstStep = runningToursRef.current.some(
+        (t) => t.currentBlockIndex > 0,
+      );
+      if (!someTourOutsideOfFirstStep) return;
+      // oxlint-disable-next-line typescript/no-deprecated - we're intentionally using send event without event queue to avoid resuming a tour on retry
+      void sendEventImmediately({ name: "tour-session-heartbeat" });
+    }, 60_000);
+
+    const pageHideHandler = () => {
+      for (const tour of runningToursRef.current) {
+        const isOutsideOfFirstStep = tour.currentBlockIndex > 0;
+        if (!isOutsideOfFirstStep) continue;
+        sendEventBeacon({
+          name: "tour-session-hint",
+          properties: { ending: true },
+          blockId: tour.blockId,
+        });
+      }
+    };
+    addEventListener("pagehide", pageHideHandler);
+
+    return () => {
+      clearInterval(heartbeatInterval);
+      removeEventListener("pagehide", pageHideHandler);
+    };
+  }, []);
 
   const startToursIfNeeded = useCallback(
     (ctx: BlockTriggerContext): void => {
