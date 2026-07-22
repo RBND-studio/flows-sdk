@@ -1,5 +1,6 @@
 const util = require("util");
 const exec = util.promisify(require("child_process").exec);
+const { execSync } = require("child_process");
 
 const argv = require("minimist")(process.argv.slice(2));
 const { release, package } = argv;
@@ -17,7 +18,8 @@ const main = async () => {
   if (release === "canary") await exec(`pnpm ${package} version prerelease --preid=canary`);
   else await exec(`pnpm ${package} version ${release}`);
 
-  await exec(`pnpm ${package} build`);
+  execSync(`rm -rf workspaces/${package}/dist`, { stdio: "inherit" });
+  execSync(`pnpm ${package} build`, { stdio: "inherit" });
 
   const currentVersion = require(`../workspaces/${package}/package.json`).version;
   const packageAndVersion = `@flows/${package}@${currentVersion}`;
@@ -26,8 +28,9 @@ const main = async () => {
   await exec("git push --no-verify");
   await exec(`git push --no-verify --tags`);
 
-  await exec(
+  execSync(
     `pnpm ${package} publish --access=public --provenance --no-git-checks ${release === "canary" ? "--tag=canary" : ""}`,
+    { stdio: "inherit" },
   );
 };
 
