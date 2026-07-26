@@ -9,7 +9,7 @@ export default defineConfig({
   plugins: [react()],
   root: "./pages",
   build: {
-    rollupOptions: {
+    rolldownOptions: {
       input: {
         main: resolve(__dirname, "pages/index.html"),
         js: resolve(__dirname, "pages/js.html"),

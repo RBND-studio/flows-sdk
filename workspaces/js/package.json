@@ -61,7 +61,7 @@
     "@lit-labs/preact-signals": "^1.0.3",
     "@preact/signals-core": "^1.14.4",
     "clsx": "^2.1.1",
-    "es-toolkit": "^1.49.0",
+    "es-toolkit": "^1.50.0",
     "lit": "^3.3.3"
   }
 }
