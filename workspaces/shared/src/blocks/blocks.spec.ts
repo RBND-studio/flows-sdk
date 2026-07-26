@@ -39,6 +39,12 @@ const getBlock = ({
   tourBlocks,
 });
 
+const consoleWarnMock = jest.spyOn(console, "warn").mockImplementation(() => {});
+
+afterEach(() => {
+  consoleWarnMock.mockClear();
+});
+
 describe("filterVisibleBlocks", () => {
   it("should filter out closed blocks", () => {
     const closedBlockStateIds = ["closed-block-1", "closed-block-2"];
@@ -90,12 +96,14 @@ describe("filterVisibleBlocks", () => {
     });
     expect(visibleBlocks).toHaveLength(3);
     expect(visibleBlocks[2]?.tourBlocks).toHaveLength(3);
+    expect(consoleWarnMock).not.toHaveBeenCalled();
 
     const localhostVisibleBlocks = filterVisibleBlocks(blocks, {
       closedBlockStateIds: [],
       freeOrg: true,
       hostname: "localhost",
     });
+    expect(consoleWarnMock).not.toHaveBeenCalled();
     expect(localhostVisibleBlocks).toHaveLength(3);
     expect(localhostVisibleBlocks[2]?.tourBlocks).toHaveLength(3);
   });
@@ -117,6 +125,11 @@ describe("filterVisibleBlocks", () => {
       freeOrg: true,
       hostname: "example.com",
     });
+    expect(consoleWarnMock).toHaveBeenCalledWith(
+      expect.stringContaining("Blocked 2 custom components"),
+      expect.anything(),
+      expect.anything(),
+    );
     expect(visibleBlocks).toHaveLength(2);
     expect(visibleBlocks[0]?.blockStateId).toBe("block-1");
     expect(visibleBlocks[1]?.tourBlocks).toHaveLength(2);
@@ -139,6 +152,11 @@ describe("filterVisibleBlocks", () => {
       freeOrg: true,
       hostname: "example.com",
     });
+    expect(consoleWarnMock).toHaveBeenCalledWith(
+      expect.stringContaining("Blocked 3 custom component"),
+      expect.anything(),
+      expect.anything(),
+    );
     expect(visibleBlocks).toHaveLength(2);
     expect(visibleBlocks[0]?.blockStateId).toBe("block-1");
     expect(visibleBlocks[1]?.blockStateId).toBe("tour-block");
