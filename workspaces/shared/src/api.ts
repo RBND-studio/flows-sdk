@@ -45,7 +45,7 @@ interface BlockResponseMeta {
   free_org?: boolean;
 }
 
-interface BlocksResponse {
+export interface BlocksResponse {
   blocks: Block[];
   meta?: BlockResponseMeta;
 }
@@ -181,7 +181,7 @@ export const createBoundApi = (
         userId: ctx.userId,
       }).toString()}`;
     },
-    getBlocks: (props: GetBlocksProps) => {
+    getBlocks: (props: GetBlocksProps): Promise<BlocksResponse> => {
       const ctx = getContext();
       if (!ctx) throw new Error("Invalid getBlocks() call");
       return getApi(ctx).getBlocks({ ...props, ...ctx });

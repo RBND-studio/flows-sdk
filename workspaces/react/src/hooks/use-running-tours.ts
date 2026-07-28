@@ -34,13 +34,21 @@ export const useRunningTours = ({ blocks, removeBlock, userProperties }: Props):
 
   // Send heartbeat for running tours outside of first step and send tour session hint on pagehide
   useEffect(() => {
-    const heartbeatInterval = setInterval(() => {
+    const sendTourSessionHeartbeat = (): void => {
       const someTourOutsideOfFirstStep = runningToursRef.current.some(
         (t) => t.currentBlockIndex > 0,
       );
       if (!someTourOutsideOfFirstStep) return;
       // oxlint-disable-next-line typescript/no-deprecated - we're intentionally using send event without event queue to avoid resuming a tour on retry
       void api.sendEventImmediately({ name: "tour-session-heartbeat" });
+    };
+
+    // Send first heartbeat 1 second after the page load
+    const initialHeartbeatTimeout = setTimeout(() => {
+      sendTourSessionHeartbeat();
+    }, 1_000);
+    const heartbeatInterval = setInterval(() => {
+      sendTourSessionHeartbeat();
     }, 60_000);
 
     const pageHideHandler = () => {
@@ -57,6 +65,7 @@ export const useRunningTours = ({ blocks, removeBlock, userProperties }: Props):
     addEventListener("pagehide", pageHideHandler);
 
     return () => {
+      clearTimeout(initialHeartbeatTimeout);
       clearInterval(heartbeatInterval);
       removeEventListener("pagehide", pageHideHandler);
     };
