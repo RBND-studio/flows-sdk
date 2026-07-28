@@ -1,13 +1,12 @@
 import {
   applyUpdateMessageToBlocksState,
-  getApi,
   getUserLanguage,
   log,
   parseWebsocketMessage,
 } from "@flows/shared";
 import { blocks, blocksError, config, freeOrg, pendingMessages, updateBlocks } from "../store";
 import { type Disconnect, websocket } from "./websocket";
-import { packageAndVersion } from "./constants";
+import { api } from "./api";
 
 let disconnect: Disconnect | null = null;
 
@@ -19,18 +18,12 @@ export const connectToWebsocketAndFetchBlocks = ({ onAfterLoad }: Props): void =
   const configuration = config.value;
   if (!configuration) return;
 
-  const { environment, organizationId, userId, apiUrl, customFetch } = configuration;
-  const params = { environment, organizationId, userId };
-  const wsUrl = (() => {
-    const wsBase = apiUrl.replace("https://", "wss://").replace("http://", "ws://");
-    return `${wsBase}/ws/sdk/block-updates?${new URLSearchParams(params).toString()}`;
-  })();
+  const wsUrl = api.blockUpdatesWebsocketUrl();
 
   const fetchBlocks = (): void => {
     blocksError.value = false;
-    void getApi({ apiUrl, version: packageAndVersion, customFetch })
+    void api
       .getBlocks({
-        ...params,
         language: getUserLanguage(configuration.language),
         userProperties: configuration.userProperties,
       })

@@ -19,7 +19,35 @@ import {
   runningTours,
   tourBlocks,
 } from "../store";
-import { sendEvent } from "./api";
+import { api } from "./api";
+
+// Send heartbeat for running tours outside of first step and send tour session hint on pagehide
+effect(() => {
+  const heartbeatInterval = setInterval(() => {
+    const someTourOutsideOfFirstStep = runningTours.peek().some((t) => t.currentBlockIndex > 0);
+    if (!someTourOutsideOfFirstStep) return;
+    // oxlint-disable-next-line typescript/no-deprecated - we're intentionally using send event without event queue to avoid resuming a tour on retry
+    void api.sendEventImmediately({ name: "tour-session-heartbeat" });
+  }, 60_000);
+
+  const pageHideHandler = () => {
+    for (const tour of runningTours.peek()) {
+      const isOutsideOfFirstStep = tour.currentBlockIndex > 0;
+      if (!isOutsideOfFirstStep) continue;
+      api.sendEventBeacon({
+        name: "tour-session-hint",
+        properties: { ending: true },
+        blockId: tour.blockId,
+      });
+    }
+  };
+  addEventListener("pagehide", pageHideHandler);
+
+  return () => {
+    clearInterval(heartbeatInterval);
+    removeEventListener("pagehide", pageHideHandler);
+  };
+});
 
 const startToursIfNeeded = (tourBlocksValue: Block[], ctx: BlockTriggerContext): void => {
   const runningTourBlockIds = new Set(runningTours.peek().map((t) => t.blockId));
@@ -53,7 +81,7 @@ export const previousTourStep = (tourBlock: Block, currentIndex: number): void =
 
   if (isFirstStep) return;
   const newIndex = currentIndex - 1;
-  void sendEvent({
+  void api.sendEvent({
     name: "tour-update",
     blockId: tourBlock.id,
     properties: { currentTourIndex: newIndex },
@@ -70,10 +98,10 @@ export const nextTourStep = (tourBlock: Block, currentIndex: number): void => {
 
   if (isLastStep) {
     removeBlock(tourBlock.id);
-    void sendEvent({ name: "transition", blockId: tourBlock.id, propertyKey: "complete" });
+    void api.sendEvent({ name: "transition", blockId: tourBlock.id, propertyKey: "complete" });
   } else {
     const newIndex = currentIndex + 1;
-    void sendEvent({
+    void api.sendEvent({
       name: "tour-update",
       blockId: tourBlock.id,
       properties: { currentTourIndex: newIndex },
@@ -88,7 +116,7 @@ export const nextTourStep = (tourBlock: Block, currentIndex: number): void => {
 
 export const cancelTour = (tourBlockId: string): void => {
   removeBlock(tourBlockId);
-  void sendEvent({ name: "transition", blockId: tourBlockId, propertyKey: "cancel" });
+  void api.sendEvent({ name: "transition", blockId: tourBlockId, propertyKey: "cancel" });
 };
 
 const handleTourClickWaits = (eventTarget: Element): void => {

@@ -3,8 +3,8 @@ import type { BlockTriggerContext, UserProperties } from "@flows/shared";
 import { getPathname, tourTriggerMatch, type Block } from "@flows/shared";
 import { debounce } from "es-toolkit";
 import { type RunningTour } from "../flows-context";
-import { sendEvent, sendEventImmediately, sendEventBeacon } from "../lib/api";
 import { usePathname } from "../contexts/pathname-context";
+import { api } from "../lib/api";
 
 type StateItem = Pick<RunningTour, "currentBlockIndex"> & {
   blockId: string;
@@ -32,6 +32,7 @@ export const useRunningTours = ({ blocks, removeBlock, userProperties }: Props):
     });
   }, [blocks]);
 
+  // Send heartbeat for running tours outside of first step and send tour session hint on pagehide
   useEffect(() => {
     const heartbeatInterval = setInterval(() => {
       const someTourOutsideOfFirstStep = runningToursRef.current.some(
@@ -39,14 +40,14 @@ export const useRunningTours = ({ blocks, removeBlock, userProperties }: Props):
       );
       if (!someTourOutsideOfFirstStep) return;
       // oxlint-disable-next-line typescript/no-deprecated - we're intentionally using send event without event queue to avoid resuming a tour on retry
-      void sendEventImmediately({ name: "tour-session-heartbeat" });
+      void api.sendEventImmediately({ name: "tour-session-heartbeat" });
     }, 60_000);
 
     const pageHideHandler = () => {
       for (const tour of runningToursRef.current) {
         const isOutsideOfFirstStep = tour.currentBlockIndex > 0;
         if (!isOutsideOfFirstStep) continue;
-        sendEventBeacon({
+        api.sendEventBeacon({
           name: "tour-session-hint",
           properties: { ending: true },
           blockId: tour.blockId,
@@ -136,12 +137,12 @@ export const useRunningTours = ({ blocks, removeBlock, userProperties }: Props):
         const activeStep = block.tourBlocks?.[currentBlockIndex];
         const isLastStep = currentBlockIndex === (block.tourBlocks?.length ?? 0) - 1;
         const sendTourUpdate = (currentTourIndex: number): void => {
-          void sendEvent({ name: "tour-update", blockId, properties: { currentTourIndex } });
+          void api.sendEvent({ name: "tour-update", blockId, properties: { currentTourIndex } });
         };
         const handleContinue = (): void => {
           if (isLastStep) {
             removeBlock(blockId);
-            void sendEvent({ name: "transition", propertyKey: "complete", blockId });
+            void api.sendEvent({ name: "transition", propertyKey: "complete", blockId });
           } else {
             const newIndex = currentBlockIndex + 1;
             sendTourUpdate(newIndex);
@@ -165,7 +166,7 @@ export const useRunningTours = ({ blocks, removeBlock, userProperties }: Props):
         };
         const handleCancel = (): void => {
           removeBlock(blockId);
-          void sendEvent({ name: "transition", blockId, propertyKey: "cancel" });
+          void api.sendEvent({ name: "transition", blockId, propertyKey: "cancel" });
         };
 
         return {

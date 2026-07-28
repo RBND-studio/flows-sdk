@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { CustomFetch } from "@flows/shared";
 import {
-  getApi,
   log,
   type UserProperties,
   type Block,
@@ -15,16 +13,11 @@ import {
   updateClosedBlockStateIds,
   filterVisibleBlocks,
 } from "@flows/shared";
-import { packageAndVersion } from "../lib/constants";
 import { type RemoveBlock, type UpdateBlock } from "../flows-context";
 import { useWebsocket } from "./use-websocket";
+import { api } from "../lib/api";
 
 interface Props {
-  apiUrl: string;
-  customFetch?: CustomFetch;
-  environment: string;
-  organizationId: string;
-  userId: string;
   userProperties?: UserProperties;
   language?: LanguageOption;
   onAfterLoad: () => void;
@@ -39,16 +32,7 @@ interface Return {
   wsError: boolean;
 }
 
-export const useBlocks = ({
-  apiUrl,
-  customFetch,
-  environment,
-  organizationId,
-  userId,
-  userProperties,
-  language,
-  onAfterLoad,
-}: Props): Return => {
+export const useBlocks = ({ userProperties, language, onAfterLoad }: Props): Return => {
   const [blocksState, setBlocksState] = useState<Block[] | null>(null);
   const blocksStateRef = useRef(blocksState);
   blocksStateRef.current = blocksState;
@@ -84,11 +68,6 @@ export const useBlocks = ({
     });
   }, [blocksState, closedBlockStateIds, freeOrg]);
 
-  const params = useMemo(
-    () => ({ environment, organizationId, userId }),
-    [environment, organizationId, userId],
-  );
-
   const userPropertiesStateRef = useRef(userProperties);
   userPropertiesStateRef.current = userProperties;
 
@@ -101,9 +80,8 @@ export const useBlocks = ({
     }
 
     setError(false);
-    activeFetchRef.current = getApi({ apiUrl, version: packageAndVersion, customFetch })
+    activeFetchRef.current = api
       .getBlocks({
-        ...params,
         language: getUserLanguage(language),
         userProperties: userPropertiesStateRef.current,
       })
@@ -134,7 +112,7 @@ export const useBlocks = ({
         queuedFetchRef.current = false;
         fetchBlocks();
       });
-  }, [apiUrl, language, params, customFetch, onAfterLoad]);
+  }, [language, onAfterLoad]);
 
   // Refetch blocks when userProperties change
   const fetchBlocksRef = useRef(fetchBlocks);
@@ -150,9 +128,8 @@ export const useBlocks = ({
 
   const websocketUrl = useMemo(() => {
     if (usageLimited) return;
-    const baseUrl = apiUrl.replace("https://", "wss://").replace("http://", "ws://");
-    return `${baseUrl}/ws/sdk/block-updates?${new URLSearchParams(params).toString()}`;
-  }, [apiUrl, params, usageLimited]);
+    return api.blockUpdatesWebsocketUrl();
+  }, [usageLimited]);
 
   const onMessage = useCallback((event: MessageEvent<unknown>) => {
     const data = parseWebsocketMessage(event);
