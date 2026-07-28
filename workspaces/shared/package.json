@@ -19,6 +19,6 @@
     "typescript": "npm:@typescript/typescript6@^6.0.2"
   },
   "dependencies": {
-    "es-toolkit": "^1.49.0"
+    "es-toolkit": "^1.50.0"
   }
 }

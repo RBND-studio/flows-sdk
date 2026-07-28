@@ -4,3 +4,4 @@ tsup.config.ts
 jest.config.js
 .oxlintrc.json
 tsconfig.tsbuildinfo
+scripts
