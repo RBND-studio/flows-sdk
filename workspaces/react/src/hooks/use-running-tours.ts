@@ -1,14 +1,19 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { BlockTriggerContext, UserProperties } from "@flows/shared";
-import { getPathname, tourTriggerMatch, type Block } from "@flows/shared";
+import type { BlockTriggerContext, IRunningTour, UserProperties } from "@flows/shared";
+import {
+  getHighestPriorityRunningTour,
+  getPathname,
+  getRunningToursFromSessionStorage,
+  setRunningToursToSessionStorage,
+  shouldTourOverrideOnlyRunning,
+  sortToursByPriority,
+  tourTriggerMatch,
+  type Block,
+} from "@flows/shared";
 import { debounce } from "es-toolkit";
 import { type RunningTour } from "../flows-context";
 import { sendEvent, sendEventImmediately, sendEventBeacon } from "../lib/api";
 import { usePathname } from "../contexts/pathname-context";
-
-type StateItem = Pick<RunningTour, "currentBlockIndex"> & {
-  blockId: string;
-};
 
 interface Props {
   blocks: Block[] | null;
@@ -17,10 +22,25 @@ interface Props {
 }
 
 export const useRunningTours = ({ blocks, removeBlock, userProperties }: Props): RunningTour[] => {
-  const [runningTours, setRunningTours] = useState<StateItem[]>([]);
-  const runningToursRef = useRef<StateItem[]>(runningTours);
+  const [runningTours, setRunningTours] = useState<IRunningTour[]>(
+    getRunningToursFromSessionStorage().runningTours,
+  );
+  const [onlyRunningTourBlockId, setOnlyRunningTourBlockId] = useState<string | undefined>(
+    getRunningToursFromSessionStorage().onlyRunningTourBlockId,
+  );
+  const runningToursRef = useRef<IRunningTour[]>(runningTours);
   runningToursRef.current = runningTours;
   const pathname = usePathname();
+  const blocksRef = useRef<Block[] | null>(blocks);
+  blocksRef.current = blocks;
+
+  // Update running tours in sessionStorage
+  useEffect(() => {
+    setRunningToursToSessionStorage({
+      onlyRunningTourBlockId,
+      runningTours,
+    });
+  }, [onlyRunningTourBlockId, runningTours]);
 
   // Stop tours that are no longer running
   useEffect(() => {
@@ -61,26 +81,52 @@ export const useRunningTours = ({ blocks, removeBlock, userProperties }: Props):
     };
   }, []);
 
+  const startTour = useCallback(
+    (blockId: string, options: { overrideOnlyRunning?: boolean } = {}) => {
+      const blocksCurrent = blocksRef.current;
+      if (!blocksCurrent) return;
+      const block = blocksCurrent.find((b) => b.id === blockId);
+      if (!block) return;
+      setRunningTours((prev) => {
+        const runningTour: IRunningTour = {
+          blockId: block.id,
+          currentBlockIndex: block.currentTourIndex ?? 0,
+        };
+        return [...prev, runningTour];
+      });
+
+      if (options.overrideOnlyRunning) {
+        setOnlyRunningTourBlockId(blockId);
+      }
+    },
+    [],
+  );
+
   const startToursIfNeeded = useCallback(
     (ctx: BlockTriggerContext): void => {
       if (!blocks) return;
       const tourBlocks = blocks.filter((b) => b.type === "tour");
       const runningTourBlockIds = new Set(runningToursRef.current.map((t) => t.blockId));
-      tourBlocks.forEach((block) => {
-        if (runningTourBlockIds.has(block.id)) return;
+      const matchingTours = tourBlocks.filter((block) => {
+        if (runningTourBlockIds.has(block.id)) return false;
         const triggerMatch = tourTriggerMatch(block, ctx);
-        if (!triggerMatch) return;
+        if (!triggerMatch) return false;
 
-        setRunningTours((prev) => {
-          const runningTour: StateItem = {
-            blockId: block.id,
-            currentBlockIndex: block.currentTourIndex ?? 0,
-          };
-          return [...prev, runningTour];
-        });
+        return true;
+      });
+
+      const sortedTours = sortToursByPriority(matchingTours);
+      sortedTours.forEach((block, index) => {
+        let overrideOnlyRunning = false;
+        // Only highest priority tours is eligible for overrideOnlyRunning
+        if (index === 0 && shouldTourOverrideOnlyRunning(block)) {
+          overrideOnlyRunning = true;
+        }
+
+        startTour(block.id, { overrideOnlyRunning: overrideOnlyRunning });
       });
     },
-    [blocks],
+    [blocks, startTour],
   );
 
   // Handle trigger by navigation
@@ -119,7 +165,7 @@ export const useRunningTours = ({ blocks, removeBlock, userProperties }: Props):
 
   const runningToursWithActiveBlock = useMemo(() => {
     if (!blocks) return [];
-    const updateState = (blockId: string, updateFn: (tour: StateItem) => StateItem): void => {
+    const updateState = (blockId: string, updateFn: (tour: IRunningTour) => IRunningTour): void => {
       setRunningTours((prev) =>
         prev.map((tour) => (tour.blockId === blockId ? updateFn(tour) : tour)),
       );
@@ -180,5 +226,19 @@ export const useRunningTours = ({ blocks, removeBlock, userProperties }: Props):
       .filter((x): x is RunningTour => Boolean(x));
   }, [blocks, removeBlock, runningTours]);
 
-  return runningToursWithActiveBlock;
+  useEffect(() => {
+    if (onlyRunningTourBlockId) return;
+
+    const highestPriorityTour = getHighestPriorityRunningTour(runningToursWithActiveBlock);
+    if (highestPriorityTour) {
+      setOnlyRunningTourBlockId(highestPriorityTour.id);
+    }
+  }, [runningToursWithActiveBlock, onlyRunningTourBlockId]);
+
+  const onlyRunningTours = useMemo(() => {
+    if (!onlyRunningTourBlockId) return runningToursWithActiveBlock;
+    return runningToursWithActiveBlock.filter((tour) => tour.block.id === onlyRunningTourBlockId);
+  }, [onlyRunningTourBlockId, runningToursWithActiveBlock]);
+
+  return onlyRunningTours;
 };
