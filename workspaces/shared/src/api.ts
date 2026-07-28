@@ -167,7 +167,11 @@ export const createBoundApi = (
       log.error("One of the methods was called before SDK initialization.");
       return Promise.resolve();
     }
-    return enqueueEvent({ apiContext: ctx, event: { ...props, ...ctx } });
+    return enqueueEvent({
+      apiContext: ctx,
+      customFetch: ctx.customFetch,
+      event: { ...props, ...ctx },
+    });
   };
 
   return {
@@ -184,7 +188,12 @@ export const createBoundApi = (
     getBlocks: (props: GetBlocksProps): Promise<BlocksResponse> => {
       const ctx = getContext();
       if (!ctx) throw new Error("Invalid getBlocks() call");
-      return getApi(ctx).getBlocks({ ...props, ...ctx });
+      return getApi(ctx).getBlocks({
+        ...props,
+        environment: ctx.environment,
+        organizationId: ctx.organizationId,
+        userId: ctx.userId,
+      });
     },
     sendEvent,
     /**
@@ -193,17 +202,33 @@ export const createBoundApi = (
     sendEventImmediately: async (props: SendEventProps): Promise<void> => {
       const ctx = getContext();
       if (!ctx) return Promise.resolve();
-      await getApi(ctx).sendEvent({ ...props, ...ctx });
+      await getApi(ctx).sendEvent({
+        ...props,
+        environment: ctx.environment,
+        organizationId: ctx.organizationId,
+        userId: ctx.userId,
+      });
     },
     sendEventBeacon: (props: SendEventProps): void => {
       const ctx = getContext();
       if (!ctx) return;
-      getApi(ctx).sendEventBeacon({ ...props, ...ctx });
+      getApi(ctx).sendEventBeacon({
+        ...props,
+        environment: ctx.environment,
+        organizationId: ctx.organizationId,
+        userId: ctx.userId,
+      });
     },
     postSurvey: async (props: PostSurveyProps): Promise<void> => {
       const ctx = getContext();
       if (!ctx) return Promise.resolve();
-      await getApi(ctx).postSurvey({ ...props, ...ctx, url: window.location.href });
+      await getApi(ctx).postSurvey({
+        ...props,
+        environment: ctx.environment,
+        organizationId: ctx.organizationId,
+        userId: ctx.userId,
+        url: window.location.href,
+      });
     },
     sendActivate: (blockId: string): Promise<void> => {
       if (activatedBlockIds.has(blockId)) return Promise.resolve();
@@ -216,7 +241,11 @@ export const createBoundApi = (
         log.error("fetchWorkflows() called before SDK initialization");
         return { workflows: [] };
       }
-      return getApi(ctx).getWorkflows(ctx);
+      return getApi(ctx).getWorkflows({
+        environment: ctx.environment,
+        organizationId: ctx.organizationId,
+        userId: ctx.userId,
+      });
     },
   };
 };
