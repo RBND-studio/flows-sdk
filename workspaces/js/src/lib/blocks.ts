@@ -1,5 +1,6 @@
 import {
   applyUpdateMessageToBlocksState,
+  getBlockUpdatesWebsocketUrl,
   getUserLanguage,
   log,
   parseWebsocketMessage,
@@ -18,7 +19,13 @@ export const connectToWebsocketAndFetchBlocks = ({ onAfterLoad }: Props): void =
   const configuration = config.value;
   if (!configuration) return;
 
-  const wsUrl = api.blockUpdatesWebsocketUrl();
+  const { apiUrl, environment, organizationId, userId } = configuration;
+  const wsUrl = getBlockUpdatesWebsocketUrl({
+    apiUrl,
+    environment,
+    organizationId,
+    userId,
+  });
 
   const fetchBlocks = (): void => {
     blocksError.value = false;

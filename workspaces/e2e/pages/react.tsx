@@ -159,13 +159,14 @@ const LinkComponent: LinkComponentType = ({ href, children, className, onClick }
 
 const App: FC = () => {
   const [count, setCount] = useState(0);
+  const [userIdCount, setUserIdCount] = useState(0);
 
   return (
     <HashRouter>
       <FlowsProvider
         organizationId={organizationId ?? "orgId"}
         environment="prod"
-        userId={noUserId ? null : "testUserId"}
+        userId={noUserId ? null : `testUserId${userIdCount ? `-${userIdCount}` : ""}`}
         language={language}
         userProperties={{
           email: "test@flows.sh",
@@ -184,6 +185,7 @@ const App: FC = () => {
           <Route path="/another-page" element={<AnotherPage />} />
         </Routes>
         <button onClick={() => setCount((p) => p + 1)}>Increment</button>
+        <button onClick={() => setUserIdCount((p) => p + 1)}>Increment user id</button>
       </FlowsProvider>
     </HashRouter>
   );

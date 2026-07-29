@@ -147,6 +147,25 @@ export const getApi = ({ apiUrl, version, customFetch }: ApiContext) => {
   };
 };
 
+export const getBlockUpdatesWebsocketUrl = ({
+  apiUrl,
+  environment,
+  organizationId,
+  userId,
+}: {
+  apiUrl: string;
+  environment: string;
+  organizationId: string;
+  userId: string;
+}) => {
+  const baseUrl = apiUrl.replace(/^http(s?):\/\//, "ws$1://");
+  return `${baseUrl}/ws/sdk/block-updates?${new URLSearchParams({
+    environment: environment,
+    organizationId: organizationId,
+    userId: userId,
+  }).toString()}`;
+};
+
 export type GetBlocksProps = Omit<GetBlocksRequest, "userId" | "environment" | "organizationId">;
 export type SendEventProps = Omit<EventRequest, "userId" | "environment" | "organizationId">;
 export type PostSurveyProps = Omit<
@@ -175,16 +194,6 @@ export const createBoundApi = (
   };
 
   return {
-    blockUpdatesWebsocketUrl: (): string => {
-      const ctx = getContext();
-      if (!ctx) throw new Error("Invalid blockUpdatesWebsocketUrl() call");
-      const baseUrl = ctx.apiUrl.replace(/^http(s?):\/\//, "ws$1://");
-      return `${baseUrl}/ws/sdk/block-updates?${new URLSearchParams({
-        environment: ctx.environment,
-        organizationId: ctx.organizationId,
-        userId: ctx.userId,
-      }).toString()}`;
-    },
     getBlocks: (props: GetBlocksProps): Promise<BlocksResponse> => {
       const ctx = getContext();
       if (!ctx) throw new Error("Invalid getBlocks() call");

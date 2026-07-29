@@ -106,6 +106,28 @@ test("react - should refetch blocks on userProperties change", async ({ page }) 
   await page.getByText("Increment", { exact: true }).click();
   await secondBlocksReq;
 });
+test("react - should reconnect ws and refetch blocks on userId change", async ({ page }) => {
+  await mockBlocksEndpoint(page, []);
+  const firstBlocksReq = page.waitForRequest((req) => {
+    const body = req.postDataJSON();
+    return (
+      req.url() === "https://api.flows-cloud.com/v2/sdk/blocks" && body.userId === "testUserId"
+    );
+  });
+  await page.goto(`/react.html`);
+  await firstBlocksReq;
+  const initialWs = ws;
+  const secondBlocksReq = page.waitForRequest((req) => {
+    const body = req.postDataJSON();
+    return (
+      req.url() === "https://api.flows-cloud.com/v2/sdk/blocks" && body.userId === "testUserId-1"
+    );
+  });
+  await page.getByText("Increment user id", { exact: true }).click();
+  await secondBlocksReq;
+  expect(ws).toBeDefined();
+  expect(ws).not.toEqual(initialWs);
+});
 
 run("js");
 run("react");

@@ -176,6 +176,10 @@ const FlowsProviderInner: FC<Props> = ({
     void sendEvents(globalConfig.customFetch);
   }, []);
   const { blocks, freeOrg, error, wsError, removeBlock, updateBlock } = useBlocks({
+    apiUrl,
+    environment,
+    organizationId,
+    userId,
     userProperties,
     language,
     onAfterLoad,

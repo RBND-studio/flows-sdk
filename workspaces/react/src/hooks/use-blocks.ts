@@ -12,12 +12,17 @@ import {
   getClosedBlockStateIds,
   updateClosedBlockStateIds,
   filterVisibleBlocks,
+  getBlockUpdatesWebsocketUrl,
 } from "@flows/shared";
 import { type RemoveBlock, type UpdateBlock } from "../flows-context";
 import { useWebsocket } from "./use-websocket";
 import { api } from "../lib/api";
 
 interface Props {
+  apiUrl: string;
+  environment: string;
+  organizationId: string;
+  userId: string;
   userProperties?: UserProperties;
   language?: LanguageOption;
   onAfterLoad: () => void;
@@ -32,7 +37,15 @@ interface Return {
   wsError: boolean;
 }
 
-export const useBlocks = ({ userProperties, language, onAfterLoad }: Props): Return => {
+export const useBlocks = ({
+  apiUrl,
+  environment,
+  organizationId,
+  userId,
+  userProperties,
+  language,
+  onAfterLoad,
+}: Props): Return => {
   const [blocksState, setBlocksState] = useState<Block[] | null>(null);
   const blocksStateRef = useRef(blocksState);
   blocksStateRef.current = blocksState;
@@ -128,8 +141,14 @@ export const useBlocks = ({ userProperties, language, onAfterLoad }: Props): Ret
 
   const websocketUrl = useMemo(() => {
     if (usageLimited) return;
-    return api.blockUpdatesWebsocketUrl();
-  }, [usageLimited]);
+    // Pass the parameters directly, to reactively reconnect and refetch blocks when any of them change
+    return getBlockUpdatesWebsocketUrl({
+      apiUrl,
+      environment,
+      organizationId,
+      userId,
+    });
+  }, [usageLimited, apiUrl, environment, organizationId, userId]);
 
   const onMessage = useCallback((event: MessageEvent<unknown>) => {
     const data = parseWebsocketMessage(event);
