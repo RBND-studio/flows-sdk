@@ -134,8 +134,6 @@ export interface FlowsProviderProps {
 }
 
 export const FlowsProvider: FC<FlowsProviderProps> = (props) => {
-  if (!isProps(props)) return props.children;
-
   return (
     <PathnameProvider>
       <FlowsProviderInner {...props} />
@@ -143,12 +141,7 @@ export const FlowsProvider: FC<FlowsProviderProps> = (props) => {
   );
 };
 
-type Props = Omit<FlowsProviderProps, "userId"> & { userId: string };
-const isProps = (props: FlowsProviderProps): props is Props => {
-  return typeof props.userId === "string";
-};
-
-const FlowsProviderInner: FC<Props> = ({
+const FlowsProviderInner: FC<FlowsProviderProps> = ({
   children,
   apiUrl = "https://api.flows-cloud.com",
   customFetch,
@@ -182,7 +175,6 @@ const FlowsProviderInner: FC<Props> = ({
     userId,
     userProperties,
     language,
-    customFetch,
     onAfterLoad,
   });
 
@@ -218,16 +210,18 @@ const FlowsProviderInner: FC<Props> = ({
       <FloatingBlocks />
       <TourController />
 
-      <Debug
-        enabled={debug}
-        blocksError={error}
-        wsError={wsError}
-        environment={environment}
-        organizationId={organizationId}
-        userId={userId}
-        userProperties={userProperties}
-        onDebugKeydown={onDebugShortcut}
-      />
+      {userId !== null && (
+        <Debug
+          enabled={debug}
+          blocksError={error}
+          wsError={wsError}
+          environment={environment}
+          organizationId={organizationId}
+          userId={userId}
+          userProperties={userProperties}
+          onDebugKeydown={onDebugShortcut}
+        />
+      )}
     </FlowsContext.Provider>
   );
 };

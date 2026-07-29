@@ -1,13 +1,13 @@
 import {
   applyUpdateMessageToBlocksState,
-  getApi,
+  getBlockUpdatesWebsocketUrl,
   getUserLanguage,
   log,
   parseWebsocketMessage,
 } from "@flows/shared";
 import { blocks, blocksError, config, freeOrg, pendingMessages, updateBlocks } from "../store";
 import { type Disconnect, websocket } from "./websocket";
-import { packageAndVersion } from "./constants";
+import { api } from "./api";
 
 let disconnect: Disconnect | null = null;
 
@@ -19,18 +19,22 @@ export const connectToWebsocketAndFetchBlocks = ({ onAfterLoad }: Props): void =
   const configuration = config.value;
   if (!configuration) return;
 
-  const { environment, organizationId, userId, apiUrl, customFetch } = configuration;
-  const params = { environment, organizationId, userId };
-  const wsUrl = (() => {
-    const wsBase = apiUrl.replace("https://", "wss://").replace("http://", "ws://");
-    return `${wsBase}/ws/sdk/block-updates?${new URLSearchParams(params).toString()}`;
-  })();
+  const { apiUrl, environment, organizationId, userId } = configuration;
+  const wsUrl = getBlockUpdatesWebsocketUrl({
+    apiUrl,
+    environment,
+    organizationId,
+    userId,
+  });
+  if (!wsUrl) {
+    // This should never happen, the url will be undefined only if userId is missing, which is a required parameter for the init function
+    throw new Error("Couldn't connect to Flows: Missing userId");
+  }
 
   const fetchBlocks = (): void => {
     blocksError.value = false;
-    void getApi({ apiUrl, version: packageAndVersion, customFetch })
+    void api
       .getBlocks({
-        ...params,
         language: getUserLanguage(configuration.language),
         userProperties: configuration.userProperties,
       })

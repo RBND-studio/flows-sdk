@@ -11,7 +11,7 @@ import {
 import type { RunningTour } from "../store";
 import { removeBlock, updateBlock } from "../store";
 import { nextTourStep, previousTourStep, cancelTour } from "./tour";
-import { postSurvey, sendActivate, sendEvent } from "./api";
+import { api } from "./api";
 
 const setStateMemory: SetStateMemory = async ({ blockId, key, value }) => {
   updateBlock(blockId, (b) => ({
@@ -22,7 +22,7 @@ const setStateMemory: SetStateMemory = async ({ blockId, key, value }) => {
     }),
   }));
 
-  await sendEvent({
+  await api.sendEvent({
     name: "set-state-memory",
     blockId,
     propertyKey: key,
@@ -80,7 +80,8 @@ export const blockToActiveBlock = ({
     userProperties,
     freeOrg,
     removeBlock,
-    exitNodeCb: ({ key, blockId }) => sendEvent({ name: "transition", blockId, propertyKey: key }),
+    exitNodeCb: ({ key, blockId }) =>
+      api.sendEvent({ name: "transition", blockId, propertyKey: key }),
     setStateMemory,
   });
 
@@ -91,7 +92,7 @@ export const blockToActiveBlock = ({
     props,
   };
 
-  return createActiveBlockProxy(activeBlock, sendActivate);
+  return createActiveBlockProxy(activeBlock, api.sendActivate);
 };
 
 export const tourToActiveBlock = ({
@@ -135,7 +136,7 @@ export const tourToActiveBlock = ({
     props,
   };
 
-  return createActiveBlockProxy(activeBlock, sendActivate);
+  return createActiveBlockProxy(activeBlock, api.sendActivate);
 };
 
 export const surveyBlockToActiveBlock = ({
@@ -156,8 +157,9 @@ export const surveyBlockToActiveBlock = ({
     freeOrg,
     setStateMemory,
     removeBlock,
-    exitNodeCb: ({ key, blockId }) => sendEvent({ name: "transition", blockId, propertyKey: key }),
-    submitSurvey: postSurvey,
+    exitNodeCb: ({ key, blockId }) =>
+      api.sendEvent({ name: "transition", blockId, propertyKey: key }),
+    submitSurvey: api.postSurvey,
   });
 
   if (!props) return [];
@@ -169,5 +171,5 @@ export const surveyBlockToActiveBlock = ({
     props,
   };
 
-  return createActiveBlockProxy(activeBlock, sendActivate);
+  return createActiveBlockProxy(activeBlock, api.sendActivate);
 };

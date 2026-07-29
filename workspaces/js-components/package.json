@@ -20,7 +20,7 @@
     "product-adoption",
     "product-tours"
   ],
-  "version": "2.10.3",
+  "version": "2.10.4",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/RBND-studio/flows-sdk.git"
@@ -40,7 +40,7 @@
     "@floating-ui/dom": "^1.8.0",
     "clsx": "^2.1.1",
     "dompurify": "^3.4.12",
-    "es-toolkit": "^1.49.0",
+    "es-toolkit": "^1.50.0",
     "lit": "^3.3.3"
   },
   "devDependencies": {

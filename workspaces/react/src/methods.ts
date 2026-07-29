@@ -1,16 +1,17 @@
-import { sendEvent } from "./lib/api";
+import { api } from "./lib/api";
 
 /**
  * Reset progress for all workflows for the current user in the current environment.
  */
-export const resetAllWorkflowsProgress = (): Promise<void> => sendEvent({ name: "reset-progress" });
+export const resetAllWorkflowsProgress = (): Promise<void> =>
+  api.sendEvent({ name: "reset-progress" });
 
 /**
  * Reset progress of one workflow for the current user in the current environment.
  * @param workflowId - UUID of the workflow to reset. You can find it in the Flows app in the workflow detail by opening the three dot menu in the top right corner.
  */
 export const resetWorkflowProgress = (workflowId: string): Promise<void> =>
-  sendEvent({ name: "reset-progress", workflowId });
+  api.sendEvent({ name: "reset-progress", workflowId });
 
 /**
  * Start a workflow from a manual start block. The workflow will only start if:
@@ -21,7 +22,12 @@ export const resetWorkflowProgress = (workflowId: string): Promise<void> =>
  * @param blockKey - block key of the manual start block
  */
 export const startWorkflow = (blockKey: string): Promise<void> =>
-  sendEvent({ name: "workflow-start", blockKey });
+  api.sendEvent({ name: "workflow-start", blockKey });
 
 export { useCurrentFloatingBlocks, useCurrentSlotBlocks } from "./hooks/use-current-blocks";
-export { fetchWorkflows } from "./lib/api";
+
+/**
+ * Returns all available workflows for the current user. Before calling this method, the `<FlowsProvider>` component must be rendered.
+ * @returns A promise resolving to a {@link WorkflowsResponse} object containing an array of enabled workflows.
+ */
+export const fetchWorkflows = api.fetchWorkflows;

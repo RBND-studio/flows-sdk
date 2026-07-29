@@ -1,3 +1,5 @@
+import { enqueueEvent } from "./event-queue";
+import { log } from "./log";
 import type { CustomFetch } from "./types";
 import { type Block } from "./types";
 import type { ApiSurveyAnswer } from "./types/api-survey";
@@ -43,7 +45,7 @@ interface BlockResponseMeta {
   free_org?: boolean;
 }
 
-interface BlocksResponse {
+export interface BlocksResponse {
   blocks: Block[];
   meta?: BlockResponseMeta;
 }
@@ -142,5 +144,118 @@ export const getApi = ({ apiUrl, version, customFetch }: ApiContext) => {
     sendEventBeacon: (body: EventRequest) =>
       navigator.sendBeacon(`${apiUrl}/v2/sdk/events/text`, JSON.stringify(body)),
     postSurvey: (body: ApiSurveyAnswer) => f("/v2/sdk/survey", { method: "POST", body, version }),
+  };
+};
+
+export const getBlockUpdatesWebsocketUrl = ({
+  apiUrl,
+  environment,
+  organizationId,
+  userId,
+}: {
+  apiUrl: string;
+  environment: string;
+  organizationId: string;
+  userId: string | null;
+}): string | undefined => {
+  if (!userId) return;
+  const baseUrl = apiUrl.replace(/^http(s?):\/\//, "ws$1://");
+  return `${baseUrl}/ws/sdk/block-updates?${new URLSearchParams({
+    environment: environment,
+    organizationId: organizationId,
+    userId: userId,
+  }).toString()}`;
+};
+
+export type GetBlocksProps = Omit<GetBlocksRequest, "userId" | "environment" | "organizationId">;
+export type SendEventProps = Omit<EventRequest, "userId" | "environment" | "organizationId">;
+export type PostSurveyProps = Omit<
+  ApiSurveyAnswer,
+  "userId" | "environment" | "organizationId" | "url"
+>;
+
+export const createBoundApi = (
+  getContext: () =>
+    | (ApiContext & { environment: string; organizationId: string; userId: string })
+    | null,
+) => {
+  const activatedBlockIds = new Set<string>();
+
+  const sendEvent = (props: SendEventProps): Promise<void> => {
+    const ctx = getContext();
+    if (!ctx) {
+      log.error("One of the methods was called before SDK initialization.");
+      return Promise.resolve();
+    }
+    return enqueueEvent({
+      apiContext: ctx,
+      customFetch: ctx.customFetch,
+      event: { ...props, ...ctx },
+    });
+  };
+
+  return {
+    getBlocks: (props: GetBlocksProps): Promise<BlocksResponse> => {
+      const ctx = getContext();
+      if (!ctx) throw new Error("Invalid getBlocks() call");
+      return getApi(ctx).getBlocks({
+        ...props,
+        environment: ctx.environment,
+        organizationId: ctx.organizationId,
+        userId: ctx.userId,
+      });
+    },
+    sendEvent,
+    /**
+     * @deprecated Use `sendEvent` instead, which will queue the event and retry sending it if it fails. This method can be used only with time sensitive events that don't need to be retried, e.g. tour session update.
+     */
+    sendEventImmediately: async (props: SendEventProps): Promise<void> => {
+      const ctx = getContext();
+      if (!ctx) return Promise.resolve();
+      await getApi(ctx).sendEvent({
+        ...props,
+        environment: ctx.environment,
+        organizationId: ctx.organizationId,
+        userId: ctx.userId,
+      });
+    },
+    sendEventBeacon: (props: SendEventProps): void => {
+      const ctx = getContext();
+      if (!ctx) return;
+      getApi(ctx).sendEventBeacon({
+        ...props,
+        environment: ctx.environment,
+        organizationId: ctx.organizationId,
+        userId: ctx.userId,
+      });
+    },
+    postSurvey: async (props: PostSurveyProps): Promise<void> => {
+      const ctx = getContext();
+      if (!ctx) return Promise.resolve();
+      await getApi(ctx).postSurvey({
+        ...props,
+        environment: ctx.environment,
+        organizationId: ctx.organizationId,
+        userId: ctx.userId,
+        url: window.location.href,
+      });
+    },
+    sendActivate: (blockId: string): Promise<void> => {
+      if (activatedBlockIds.has(blockId)) return Promise.resolve();
+      activatedBlockIds.add(blockId);
+      return sendEvent({ name: "block-activated", blockId });
+    },
+    fetchWorkflows: async (): Promise<WorkflowsResponse> => {
+      const ctx = getContext();
+      if (!ctx) {
+        log.error("fetchWorkflows() called before SDK initialization");
+        return { workflows: [] };
+      }
+      return getApi(ctx).getWorkflows({
+        environment: ctx.environment,
+        organizationId: ctx.organizationId,
+        userId: ctx.userId,
+      });
+    },
   };
 };

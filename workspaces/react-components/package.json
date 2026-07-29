@@ -1,6 +1,6 @@
 {
   "name": "@flows/react-components",
-  "version": "2.9.3",
+  "version": "2.9.4",
   "description": "Built-in components for Flows React SDK",
   "keywords": [
     "react",
@@ -52,7 +52,7 @@
     "@floating-ui/react-dom": "^2.1.9",
     "clsx": "^2.1.1",
     "dompurify": "^3.4.12",
-    "es-toolkit": "^1.49.0"
+    "es-toolkit": "^1.50.0"
   },
   "peerDependencies": {
     "@flows/react": ">=1.18.0",
