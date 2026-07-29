@@ -26,6 +26,10 @@ export const connectToWebsocketAndFetchBlocks = ({ onAfterLoad }: Props): void =
     organizationId,
     userId,
   });
+  if (!wsUrl) {
+    // This should never happen, the url will be undefined only if userId is missing, which is a required parameter for the init function
+    throw new Error("Couldn't connect to Flows: Missing userId");
+  }
 
   const fetchBlocks = (): void => {
     blocksError.value = false;

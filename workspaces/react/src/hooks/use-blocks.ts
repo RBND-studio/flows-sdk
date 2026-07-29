@@ -22,7 +22,7 @@ interface Props {
   apiUrl: string;
   environment: string;
   organizationId: string;
-  userId: string;
+  userId: string | null;
   userProperties?: UserProperties;
   language?: LanguageOption;
   onAfterLoad: () => void;

@@ -156,8 +156,9 @@ export const getBlockUpdatesWebsocketUrl = ({
   apiUrl: string;
   environment: string;
   organizationId: string;
-  userId: string;
-}) => {
+  userId: string | null;
+}): string | undefined => {
+  if (!userId) return;
   const baseUrl = apiUrl.replace(/^http(s?):\/\//, "ws$1://");
   return `${baseUrl}/ws/sdk/block-updates?${new URLSearchParams({
     environment: environment,
