@@ -43,6 +43,7 @@ interface GetBlocksRequest {
 interface BlockResponseMeta {
   usage_limited?: boolean;
   free_org?: boolean;
+  tour_concurrency?: boolean;
 }
 
 export interface BlocksResponse {

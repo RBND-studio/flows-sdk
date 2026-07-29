@@ -31,6 +31,7 @@ interface Props {
 interface Return {
   blocks: Block[] | null;
   freeOrg: boolean;
+  tourConcurrency: boolean;
   removeBlock: RemoveBlock;
   updateBlock: UpdateBlock;
   error: boolean;
@@ -69,6 +70,7 @@ export const useBlocks = ({
 
   const [usageLimited, setUsageLimited] = useState(false);
   const [freeOrg, setFreeOrg] = useState(false);
+  const [tourConcurrency, setTourConcurrency] = useState(false);
   const pendingMessages = useRef<BlockUpdatesMessage[]>([]);
 
   const blocks = useMemo(() => {
@@ -113,6 +115,7 @@ export const useBlocks = ({
 
         if (res.meta?.usage_limited) setUsageLimited(true);
         if (res.meta?.free_org) setFreeOrg(true);
+        if (res.meta?.tour_concurrency) setTourConcurrency(true);
         onAfterLoad();
       })
       .catch((err: unknown) => {
@@ -190,5 +193,5 @@ export const useBlocks = ({
     });
   }, []);
 
-  return { blocks, freeOrg, error, wsError, removeBlock, updateBlock };
+  return { blocks, tourConcurrency, freeOrg, error, wsError, removeBlock, updateBlock };
 };

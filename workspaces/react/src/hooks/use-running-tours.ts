@@ -17,11 +17,17 @@ import { api } from "../lib/api";
 
 interface Props {
   blocks: Block[] | null;
+  tourConcurrency: boolean;
   removeBlock: (blockId: string) => void;
   userProperties: UserProperties;
 }
 
-export const useRunningTours = ({ blocks, removeBlock, userProperties }: Props): RunningTour[] => {
+export const useRunningTours = ({
+  blocks,
+  tourConcurrency,
+  removeBlock,
+  userProperties,
+}: Props): RunningTour[] => {
   const [runningTours, setRunningTours] = useState<IRunningTour[]>(
     getRunningToursFromSessionStorage().runningTours,
   );
@@ -127,13 +133,12 @@ export const useRunningTours = ({ blocks, removeBlock, userProperties }: Props):
 
       const sortedTours = sortToursByPriority(matchingTours);
       sortedTours.forEach((block, index) => {
-        let overrideOnlyRunning = false;
         // Only highest priority tours is eligible for overrideOnlyRunning
         if (index === 0 && shouldTourOverrideOnlyRunning(block)) {
-          overrideOnlyRunning = true;
+          startTour(block.id, { overrideOnlyRunning: true });
         }
 
-        startTour(block.id, { overrideOnlyRunning: overrideOnlyRunning });
+        startTour(block.id);
       });
     },
     [blocks, startTour],
@@ -237,18 +242,18 @@ export const useRunningTours = ({ blocks, removeBlock, userProperties }: Props):
   }, [blocks, removeBlock, runningTours]);
 
   useEffect(() => {
-    if (onlyRunningTourBlockId) return;
+    if (tourConcurrency || onlyRunningTourBlockId) return;
 
     const highestPriorityTour = getHighestPriorityRunningTour(runningToursWithActiveBlock);
     if (highestPriorityTour) {
       setOnlyRunningTourBlockId(highestPriorityTour.id);
     }
-  }, [runningToursWithActiveBlock, onlyRunningTourBlockId]);
+  }, [runningToursWithActiveBlock, onlyRunningTourBlockId, tourConcurrency]);
 
   const onlyRunningTours = useMemo(() => {
-    if (!onlyRunningTourBlockId) return runningToursWithActiveBlock;
+    if (tourConcurrency || !onlyRunningTourBlockId) return runningToursWithActiveBlock;
     return runningToursWithActiveBlock.filter((tour) => tour.block.id === onlyRunningTourBlockId);
-  }, [onlyRunningTourBlockId, runningToursWithActiveBlock]);
+  }, [onlyRunningTourBlockId, runningToursWithActiveBlock, tourConcurrency]);
 
   return onlyRunningTours;
 };
