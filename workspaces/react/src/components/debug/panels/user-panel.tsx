@@ -3,7 +3,7 @@ import { type ReactNode } from "react";
 
 interface Props {
   userProperties?: UserProperties;
-  userId: string;
+  userId: string | null;
 }
 
 export const UserPanel = ({ userProperties, userId }: Props): ReactNode => {

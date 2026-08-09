@@ -4,7 +4,7 @@ import { DebugItem } from "../debug-item";
 import { packageAndVersion } from "../../../lib/constants";
 
 interface Props {
-  userId: string;
+  userId: string | null;
   setPanelPage: (page: PanelPage) => void;
   sdkSetupValid: boolean;
   blocks: Block[];

@@ -50,6 +50,7 @@ export const useBlocks = ({
   const blocksStateRef = useRef(blocksState);
   blocksStateRef.current = blocksState;
   const [error, setError] = useState(false);
+  const wsRef = useRef<WebSocket | undefined>(undefined);
 
   const [closedBlockStateIds, setClosedBlockStateIds] = useState<string[] | null>(null);
   const addClosedBlockStateId = useCallback((blockStateId: string): void => {
@@ -87,6 +88,9 @@ export const useBlocks = ({
   const activeFetchRef = useRef<Promise<void> | null>(null);
   const queuedFetchRef = useRef(false);
   const fetchBlocks = useCallback(() => {
+    const hasOpenConnection = !!wsRef.current;
+    if (!hasOpenConnection) return;
+
     if (activeFetchRef.current) {
       queuedFetchRef.current = true;
       return;
@@ -165,7 +169,12 @@ export const useBlocks = ({
       });
     }
   }, []);
-  const { error: wsError } = useWebsocket({ url: websocketUrl, onMessage, onOpen: fetchBlocks });
+  const { ws, error: wsError } = useWebsocket({
+    url: websocketUrl,
+    onMessage,
+    onOpen: fetchBlocks,
+  });
+  wsRef.current = ws;
 
   // Log error about slottable blocks without slotId
   useEffect(() => {

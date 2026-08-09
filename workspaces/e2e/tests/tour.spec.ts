@@ -127,14 +127,18 @@ const run = (packageName: string) => {
     await eventReq2;
   });
   test(`${packageName} - should send tour heartbeat event`, async ({ page }) => {
-    await mockBlocksEndpoint(page, [getTour({})]);
+    const block = getTour({});
+    await mockBlocksEndpoint(page, [block]);
     await page.goto(`/${packageName}.html`);
-    const eventReq = page.waitForRequest(
-      (req) =>
+    const eventReq = page.waitForRequest((req) => {
+      const body = req.postDataJSON();
+      return (
         req.method() === "POST" &&
         req.url().includes("/v2/sdk/events") &&
-        req.postDataJSON().name === "tour-session-heartbeat",
-    );
+        body.name === "tour-session-heartbeat" &&
+        body.blockIds.includes(block.id)
+      );
+    });
     await page.getByText("Continue", { exact: true }).click();
     await expect(page.getByText("World", { exact: true })).toBeVisible();
     await eventReq;
