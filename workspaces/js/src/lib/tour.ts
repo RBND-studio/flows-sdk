@@ -4,6 +4,7 @@ import {
   elementExists,
   elementNotExists,
   getPathname,
+  hasActiveTourSession,
   pathnameMatch,
   processTourWait,
   tourTriggerMatch,
@@ -24,10 +25,22 @@ import { api } from "./api";
 // Send heartbeat for running tours outside of first step and send tour session hint on pagehide
 effect(() => {
   const sendTourSessionHeartbeat = (): void => {
-    const someTourOutsideOfFirstStep = runningTours.peek().some((t) => t.currentBlockIndex > 0);
+    const someTourOutsideOfFirstStep = runningTours.peek().some((t) => {
+      const block = tourBlocks.peek().find((b) => b.id === t.blockId);
+      return block && hasActiveTourSession({ block, currentTourIndex: t.currentBlockIndex });
+    });
     if (!someTourOutsideOfFirstStep) return;
     // oxlint-disable-next-line typescript/no-deprecated - we're intentionally using send event without event queue to avoid resuming a tour on retry
-    void api.sendEventImmediately({ name: "tour-session-heartbeat" });
+    void api.sendEventImmediately({
+      name: "tour-session-heartbeat",
+      blockIds: runningTours
+        .peek()
+        .filter((t) => {
+          const block = tourBlocks.peek().find((b) => b.id === t.blockId);
+          return block && hasActiveTourSession({ block, currentTourIndex: t.currentBlockIndex });
+        })
+        .map((t) => t.blockId),
+    });
   };
 
   // Send first heartbeat 1 second after the page load
@@ -42,7 +55,8 @@ effect(() => {
     for (const tour of runningTours.peek()) {
       const isOutsideOfFirstStep = tour.currentBlockIndex > 0;
       if (!isOutsideOfFirstStep) continue;
-      api.sendEventBeacon({
+      // oxlint-disable-next-line typescript/no-deprecated - we're intentionally using send event without event queue to use keepalive request
+      void api.sendEventImmediately({
         name: "tour-session-hint",
         properties: { ending: true },
         blockId: tour.blockId,

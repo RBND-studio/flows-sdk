@@ -5,7 +5,7 @@ import { type Block } from "./types";
 import type { ApiSurveyAnswer } from "./types/api-survey";
 
 const getFetch =
-  (ctx: { customFetch?: CustomFetch; baseUrl: string }) =>
+  (ctx: { customFetch?: CustomFetch; baseUrl: string; keepalive?: boolean }) =>
   <T>(
     url: string,
     { body, method, version }: { method?: string; body?: unknown; version: string },
@@ -19,6 +19,7 @@ const getFetch =
         "x-flows-version": version,
       },
       body: body ? JSON.stringify(body) : undefined,
+      keepalive: ctx.keepalive,
     }).then(async (res) => {
       const text = await res.text();
       const resBody = (text ? JSON.parse(text) : undefined) as T;
@@ -120,6 +121,7 @@ export interface EventRequest {
     | "block-activated";
   workflowId?: string;
   blockId?: string;
+  blockIds?: string[];
   blockKey?: string;
   propertyKey?: string;
   properties?: Record<string, unknown>;
@@ -131,19 +133,18 @@ export type ApiContext = {
   apiUrl: string;
   version: string;
   customFetch?: CustomFetch;
+  keepalive?: boolean;
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- ignore
-export const getApi = ({ apiUrl, version, customFetch }: ApiContext) => {
-  const f = getFetch({ customFetch, baseUrl: apiUrl });
+export const getApi = ({ apiUrl, version, customFetch, keepalive }: ApiContext) => {
+  const f = getFetch({ customFetch, baseUrl: apiUrl, keepalive });
   return {
     getBlocks: (body: GetBlocksRequest) =>
       f<BlocksResponse>("/v2/sdk/blocks", { method: "POST", body, version }),
     getWorkflows: (body: WorkflowsRequest) =>
       f<WorkflowsResponse>("/v2/sdk/workflows", { method: "POST", body, version }),
     sendEvent: (body: EventRequest) => f("/v2/sdk/events", { method: "POST", body, version }),
-    sendEventBeacon: (body: EventRequest) =>
-      navigator.sendBeacon(`${apiUrl}/v2/sdk/events/text`, JSON.stringify(body)),
     postSurvey: (body: ApiSurveyAnswer) => f("/v2/sdk/survey", { method: "POST", body, version }),
   };
 };
@@ -191,7 +192,12 @@ export const createBoundApi = (
     return enqueueEvent({
       apiContext: ctx,
       customFetch: ctx.customFetch,
-      event: { ...props, ...ctx },
+      event: {
+        ...props,
+        environment: ctx.environment,
+        organizationId: ctx.organizationId,
+        userId: ctx.userId,
+      },
     });
   };
 
@@ -209,21 +215,16 @@ export const createBoundApi = (
     sendEvent,
     /**
      * @deprecated Use `sendEvent` instead, which will queue the event and retry sending it if it fails. This method can be used only with time sensitive events that don't need to be retried, e.g. tour session update.
+     *
+     * It's also using keepalive: true to send the request even after the page is closed
      */
     sendEventImmediately: async (props: SendEventProps): Promise<void> => {
       const ctx = getContext();
       if (!ctx) return Promise.resolve();
-      await getApi(ctx).sendEvent({
-        ...props,
-        environment: ctx.environment,
-        organizationId: ctx.organizationId,
-        userId: ctx.userId,
-      });
-    },
-    sendEventBeacon: (props: SendEventProps): void => {
-      const ctx = getContext();
-      if (!ctx) return;
-      getApi(ctx).sendEventBeacon({
+      await getApi({
+        ...ctx,
+        keepalive: true,
+      }).sendEvent({
         ...props,
         environment: ctx.environment,
         organizationId: ctx.organizationId,

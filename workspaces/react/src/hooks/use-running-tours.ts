@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { BlockTriggerContext, IRunningTour, UserProperties } from "@flows/shared";
 import {
   getHighestPriorityRunningTour,
   getPathname,
   getRunningToursFromSessionStorage,
+  hasActiveTourSession,
   setRunningToursToSessionStorage,
   shouldTourOverrideOnlyRunning,
   sortToursByPriority,
@@ -11,8 +11,9 @@ import {
   type Block,
 } from "@flows/shared";
 import { debounce } from "es-toolkit";
-import { type RunningTour } from "../flows-context";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { usePathname } from "../contexts/pathname-context";
+import { type RunningTour } from "../flows-context";
 import { api } from "../lib/api";
 
 interface Props {
@@ -61,12 +62,22 @@ export const useRunningTours = ({
   // Send heartbeat for running tours outside of first step and send tour session hint on pagehide
   useEffect(() => {
     const sendTourSessionHeartbeat = (): void => {
-      const someTourOutsideOfFirstStep = runningToursRef.current.some(
-        (t) => t.currentBlockIndex > 0,
-      );
+      const someTourOutsideOfFirstStep = runningToursRef.current.some((t) => {
+        const block = blocksRef.current?.find((b) => b.id === t.blockId);
+        return block && hasActiveTourSession({ block, currentTourIndex: t.currentBlockIndex });
+      });
+
       if (!someTourOutsideOfFirstStep) return;
       // oxlint-disable-next-line typescript/no-deprecated - we're intentionally using send event without event queue to avoid resuming a tour on retry
-      void api.sendEventImmediately({ name: "tour-session-heartbeat" });
+      void api.sendEventImmediately({
+        name: "tour-session-heartbeat",
+        blockIds: runningToursRef.current
+          .filter((t) => {
+            const block = blocksRef.current?.find((b) => b.id === t.blockId);
+            return block && hasActiveTourSession({ block, currentTourIndex: t.currentBlockIndex });
+          })
+          .map((t) => t.blockId),
+      });
     };
 
     // Send first heartbeat 1 second after the page load
@@ -81,7 +92,8 @@ export const useRunningTours = ({
       for (const tour of runningToursRef.current) {
         const isOutsideOfFirstStep = tour.currentBlockIndex > 0;
         if (!isOutsideOfFirstStep) continue;
-        api.sendEventBeacon({
+        // oxlint-disable-next-line typescript/no-deprecated - we're intentionally using send event without event queue to use keepalive request
+        void api.sendEventImmediately({
           name: "tour-session-hint",
           properties: { ending: true },
           blockId: tour.blockId,

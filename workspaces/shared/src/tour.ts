@@ -74,3 +74,11 @@ export const shouldTourOverrideOnlyRunning = (block: Block): boolean => {
   const hasClickTrigger = block.tour_trigger?.$and?.some((expr) => expr.type === "click");
   return !!hasClickTrigger;
 };
+
+export const hasActiveTourSession = (props: {
+  block: Block;
+  currentTourIndex: number;
+}): boolean => {
+  const { block, currentTourIndex } = props;
+  return !!block.tourSessionEndAction && currentTourIndex > 0;
+};

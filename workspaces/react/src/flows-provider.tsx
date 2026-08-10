@@ -210,18 +210,16 @@ const FlowsProviderInner: FC<FlowsProviderProps> = ({
       <FloatingBlocks />
       <TourController />
 
-      {userId !== null && (
-        <Debug
-          enabled={debug}
-          blocksError={error}
-          wsError={wsError}
-          environment={environment}
-          organizationId={organizationId}
-          userId={userId}
-          userProperties={userProperties}
-          onDebugKeydown={onDebugShortcut}
-        />
-      )}
+      <Debug
+        enabled={debug}
+        blocksError={error}
+        wsError={wsError}
+        environment={environment}
+        organizationId={organizationId}
+        userId={userId}
+        userProperties={userProperties}
+        onDebugKeydown={onDebugShortcut}
+      />
     </FlowsContext.Provider>
   );
 };

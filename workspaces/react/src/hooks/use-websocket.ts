@@ -8,6 +8,7 @@ interface Props {
 
 interface Return {
   error: boolean;
+  ws: WebSocket | undefined;
 }
 
 export const useWebsocket = ({ url, onMessage, onOpen }: Props): Return => {
@@ -106,5 +107,5 @@ export const useWebsocket = ({ url, onMessage, onOpen }: Props): Return => {
     };
   }, []);
 
-  return { error };
+  return { ws, error };
 };

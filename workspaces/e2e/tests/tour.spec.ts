@@ -10,7 +10,13 @@ test.beforeEach(async ({ page }) => {
   );
 });
 
-const getTour = ({ currentTourIndex }: { currentTourIndex?: number }): Block => ({
+const getTour = ({
+  currentTourIndex,
+  tourSessionEndAction,
+}: {
+  currentTourIndex?: number;
+  tourSessionEndAction?: string;
+}): Block => ({
   id: randomUUID(),
   workflowId: randomUUID(),
   type: "tour",
@@ -19,6 +25,7 @@ const getTour = ({ currentTourIndex }: { currentTourIndex?: number }): Block => 
   slottable: false,
   propertyMeta: [],
   currentTourIndex,
+  tourSessionEndAction,
   tourBlocks: [
     {
       id: randomUUID(),
@@ -127,14 +134,18 @@ const run = (packageName: string) => {
     await eventReq2;
   });
   test(`${packageName} - should send tour heartbeat event`, async ({ page }) => {
-    await mockBlocksEndpoint(page, [getTour({})]);
+    const block = getTour({ tourSessionEndAction: "cancel" });
+    await mockBlocksEndpoint(page, [block]);
     await page.goto(`/${packageName}.html`);
-    const eventReq = page.waitForRequest(
-      (req) =>
+    const eventReq = page.waitForRequest((req) => {
+      const body = req.postDataJSON();
+      return (
         req.method() === "POST" &&
         req.url().includes("/v2/sdk/events") &&
-        req.postDataJSON().name === "tour-session-heartbeat",
-    );
+        body.name === "tour-session-heartbeat" &&
+        body.blockIds.includes(block.id)
+      );
+    });
     await page.getByText("Continue", { exact: true }).click();
     await expect(page.getByText("World", { exact: true })).toBeVisible();
     await eventReq;
@@ -149,18 +160,13 @@ const run = (packageName: string) => {
     // In firefox the request isn't sent and the test is failing
     if (browserName !== "firefox") {
       eventReq = page.waitForRequest((req) => {
-        try {
-          const body = req.postData();
-          if (!body) return false;
-          const bodyParsed = JSON.parse(body);
-          return (
-            req.method() === "POST" &&
-            req.url().includes("/v2/sdk/events/text") &&
-            bodyParsed.name === "tour-session-hint"
-          );
-        } catch {
-          return false;
-        }
+        const body = req.postDataJSON();
+        return (
+          req.method() === "POST" &&
+          req.url().includes("/v2/sdk/events") &&
+          body.name === "tour-session-hint" &&
+          body.properties.ending === true
+        );
       });
     }
 
