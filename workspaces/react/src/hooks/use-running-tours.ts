@@ -146,6 +146,18 @@ export const useRunningTours = ({
     };
   }, []);
 
+  const sendTourInterruptedEvent = useCallback((blockId: string): void => {
+    const block = blocksRef.current?.find((b) => b.id === blockId);
+    // If tour doesn't have a tourSessionEndAction, we don't need to send the event
+    if (!block?.tourSessionEndAction) return;
+    // oxlint-disable-next-line typescript/no-deprecated - we're intentionally using send event without event queue
+    void api.sendEventImmediately({
+      name: "tour-session-hint",
+      properties: { interrupted: true },
+      blockId,
+    });
+  }, []);
+
   const startTour = useCallback(
     (blockId: string, options: { overrideOnlyRunning?: boolean } = {}) => {
       setRunningTourBlockIds((prev) => {
@@ -157,17 +169,14 @@ export const useRunningTours = ({
         const currentOnlyRunningTourBlockId = onlyRunningTourBlockIdRef.current;
         setOnlyRunningTourBlockId(blockId);
 
-        if (currentOnlyRunningTourBlockId && currentOnlyRunningTourBlockId !== blockId) {
-          // oxlint-disable-next-line typescript/no-deprecated - we're intentionally using send event without event queue
-          void api.sendEventImmediately({
-            name: "tour-session-hint",
-            properties: { interrupted: true },
-            blockId: currentOnlyRunningTourBlockId,
-          });
+        const tourWasInterrupted =
+          currentOnlyRunningTourBlockId && currentOnlyRunningTourBlockId !== blockId;
+        if (tourWasInterrupted) {
+          sendTourInterruptedEvent(currentOnlyRunningTourBlockId);
         }
       }
     },
-    [],
+    [sendTourInterruptedEvent],
   );
 
   const startToursIfNeeded = useCallback(
