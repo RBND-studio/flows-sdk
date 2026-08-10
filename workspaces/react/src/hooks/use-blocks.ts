@@ -117,9 +117,9 @@ export const useBlocks = ({
           }
         }, 0);
 
-        if (res.meta?.usage_limited) setUsageLimited(true);
-        if (res.meta?.free_org) setFreeOrg(true);
-        if (res.meta?.tour_concurrency) setTourConcurrency(true);
+        setUsageLimited(!!res.meta?.usage_limited);
+        setFreeOrg(!!res.meta?.free_org);
+        setTourConcurrency(!!res.meta?.tour_concurrency);
         onAfterLoad();
       })
       .catch((err: unknown) => {

@@ -2,14 +2,9 @@ import { log } from "./log";
 import type { Block, TourStep } from "./types";
 import { sum } from "es-toolkit";
 
-export type IRunningTour = {
-  blockId: string;
-  currentBlockIndex: number;
-};
-
 export type TourSessionData = {
   onlyRunningTourBlockId?: string;
-  runningTours: IRunningTour[];
+  runningTourBlockIds: string[];
 };
 
 const SESSION_STORAGE_KEY = "flows-running-tours";
@@ -23,13 +18,12 @@ export const getRunningToursFromSessionStorage = (): TourSessionData => {
 
     return {
       onlyRunningTourBlockId: parsedValue.onlyRunningTourBlockId,
-      runningTours: parsedValue.runningTours.map((tour: IRunningTour) => ({
-        blockId: String(tour.blockId),
-        currentBlockIndex: Number(tour.currentBlockIndex),
-      })),
+      runningTourBlockIds: parsedValue.runningTourBlockIds.map((blockId: unknown) =>
+        String(blockId),
+      ),
     };
   } catch {
-    return { runningTours: [] };
+    return { runningTourBlockIds: [] };
   }
 };
 
