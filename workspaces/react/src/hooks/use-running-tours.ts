@@ -154,7 +154,17 @@ export const useRunningTours = ({
       });
 
       if (options.overrideOnlyRunning) {
+        const currentOnlyRunningTourBlockId = onlyRunningTourBlockIdRef.current;
         setOnlyRunningTourBlockId(blockId);
+
+        if (currentOnlyRunningTourBlockId && currentOnlyRunningTourBlockId !== blockId) {
+          // oxlint-disable-next-line typescript/no-deprecated - we're intentionally using send event without event queue
+          void api.sendEventImmediately({
+            name: "tour-session-hint",
+            properties: { interrupted: true },
+            blockId: currentOnlyRunningTourBlockId,
+          });
+        }
       }
     },
     [],
