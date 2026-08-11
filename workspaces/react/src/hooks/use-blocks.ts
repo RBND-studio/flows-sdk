@@ -17,6 +17,7 @@ import {
 import { type RemoveBlock, type UpdateBlock } from "../flows-context";
 import { useWebsocket } from "./use-websocket";
 import { api } from "../lib/api";
+import { isValidConfig } from "../lib/store";
 
 interface Props {
   apiUrl: string;
@@ -51,7 +52,6 @@ export const useBlocks = ({
   const blocksStateRef = useRef(blocksState);
   blocksStateRef.current = blocksState;
   const [error, setError] = useState(false);
-  const wsRef = useRef<WebSocket | undefined>(undefined);
 
   const [closedBlockStateIds, setClosedBlockStateIds] = useState<string[] | null>(null);
   const addClosedBlockStateId = useCallback((blockStateId: string): void => {
@@ -90,8 +90,7 @@ export const useBlocks = ({
   const activeFetchRef = useRef<Promise<void> | null>(null);
   const queuedFetchRef = useRef(false);
   const fetchBlocks = useCallback(() => {
-    const hasOpenConnection = !!wsRef.current;
-    if (!hasOpenConnection) return;
+    if (!isValidConfig()) return;
 
     if (activeFetchRef.current) {
       queuedFetchRef.current = true;
@@ -172,12 +171,7 @@ export const useBlocks = ({
       });
     }
   }, []);
-  const { ws, error: wsError } = useWebsocket({
-    url: websocketUrl,
-    onMessage,
-    onOpen: fetchBlocks,
-  });
-  wsRef.current = ws;
+  const { error: wsError } = useWebsocket({ url: websocketUrl, onMessage, onOpen: fetchBlocks });
 
   // Log error about slottable blocks without slotId
   useEffect(() => {
