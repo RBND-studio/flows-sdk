@@ -17,7 +17,7 @@ import { type RunningTour } from "../flows-context";
 import { api } from "../lib/api";
 
 type IRunningTour = {
-  blockId: string;
+  blockStateId: string;
   currentBlockIndex: number;
 };
 
@@ -35,43 +35,44 @@ export const useRunningTours = ({
   userProperties,
 }: Props): RunningTour[] => {
   // This is the source of truth for running tours
-  const [runningTourBlockIds, setRunningTourBlockIds] = useState<string[]>(
-    getRunningToursFromSessionStorage().runningTourBlockIds,
+  const [runningTourBlockStateIds, setRunningTourBlockStateIds] = useState<string[]>(
+    getRunningToursFromSessionStorage().runningTourBlockStateIds,
   );
-  const [onlyRunningTourBlockId, setOnlyRunningTourBlockId] = useState<string | undefined>(
-    getRunningToursFromSessionStorage().onlyRunningTourBlockId,
-  );
+  const [onlyRunningTourBlockStateId, setOnlyRunningTourBlockStateId] = useState<
+    string | undefined
+  >(getRunningToursFromSessionStorage().onlyRunningTourBlockStateId);
   // Update running tours in sessionStorage
   useEffect(() => {
     setRunningToursToSessionStorage({
-      onlyRunningTourBlockId,
-      runningTourBlockIds,
+      onlyRunningTourBlockStateId,
+      runningTourBlockStateIds,
     });
-  }, [onlyRunningTourBlockId, runningTourBlockIds]);
+  }, [onlyRunningTourBlockStateId, runningTourBlockStateIds]);
 
   // This is only "proxy" state with current tour index
   const [runningTours, setRunningTours] = useState<IRunningTour[]>([]);
+  console.log(runningTours);
   useEffect(() => {
     if (!blocks) return setRunningTours([]);
 
-    const blocksById = new Map(blocks.map((b) => [b.id, b]));
+    const blocksByStateId = new Map(blocks.map((b) => [b.blockStateId, b]));
     setRunningTours((prev) => {
-      const prevById = new Map(prev.map((t) => [t.blockId, t]));
+      const prevById = new Map(prev.map((t) => [t.blockStateId, t]));
 
-      return runningTourBlockIds.map((blockId): IRunningTour => {
-        const prevState = prevById.get(blockId);
+      return runningTourBlockStateIds.map((blockStateId): IRunningTour => {
+        const prevState = prevById.get(blockStateId);
+        if (prevState) return prevState;
         return {
-          blockId,
-          currentBlockIndex:
-            prevState?.currentBlockIndex ?? blocksById.get(blockId)?.currentTourIndex ?? 0,
+          blockStateId,
+          currentBlockIndex: blocksByStateId.get(blockStateId)?.currentTourIndex ?? 0,
         };
       });
     });
-  }, [runningTourBlockIds, blocks]);
+  }, [runningTourBlockStateIds, blocks]);
   const runningToursRef = useRef<IRunningTour[]>(runningTours);
   runningToursRef.current = runningTours;
-  const onlyRunningTourBlockIdRef = useRef<string | undefined>(onlyRunningTourBlockId);
-  onlyRunningTourBlockIdRef.current = onlyRunningTourBlockId;
+  const onlyRunningTourBlockStateIdRef = useRef<string | undefined>(onlyRunningTourBlockStateId);
+  onlyRunningTourBlockStateIdRef.current = onlyRunningTourBlockStateId;
   const pathname = usePathname();
   const blocksRef = useRef<Block[] | null>(blocks);
   blocksRef.current = blocks;
@@ -79,19 +80,21 @@ export const useRunningTours = ({
   // Stop tours that are no longer running
   useEffect(() => {
     if (!blocks) return;
-    setRunningTourBlockIds((prev) => {
-      const tourBlockIds = new Set(blocks.filter((b) => b.type === "tour").map((b) => b.id));
+    setRunningTourBlockStateIds((prev) => {
+      const tourBlockStateIds = new Set(
+        blocks.filter((b) => b.type === "tour").map((b) => b.blockStateId),
+      );
       // Filter out stopped tours
-      return prev.filter((blockId) => tourBlockIds.has(blockId));
+      return prev.filter((blockStateId) => tourBlockStateIds.has(blockStateId));
     });
   }, [blocks]);
 
   // Send heartbeat for running tours outside of first step and send tour session hint on pagehide
   useEffect(() => {
     const getRunningTours = () => {
-      if (onlyRunningTourBlockIdRef.current) {
+      if (onlyRunningTourBlockStateIdRef.current) {
         const onlyRunningTourDef = runningToursRef.current.find(
-          (t) => t.blockId === onlyRunningTourBlockIdRef.current,
+          (t) => t.blockStateId === onlyRunningTourBlockStateIdRef.current,
         );
         if (onlyRunningTourDef) return [onlyRunningTourDef];
       }
@@ -100,7 +103,7 @@ export const useRunningTours = ({
 
     const sendTourSessionHeartbeat = (): void => {
       const someTourOutsideOfFirstStep = getRunningTours().some((t) => {
-        const block = blocksRef.current?.find((b) => b.id === t.blockId);
+        const block = blocksRef.current?.find((b) => b.blockStateId === t.blockStateId);
         return block && hasActiveTourSession({ block, currentTourIndex: t.currentBlockIndex });
       });
 
@@ -108,12 +111,12 @@ export const useRunningTours = ({
       // oxlint-disable-next-line typescript/no-deprecated - we're intentionally using send event without event queue to avoid resuming a tour on retry
       void api.sendEventImmediately({
         name: "tour-session-heartbeat",
-        blockIds: getRunningTours()
-          .filter((t) => {
-            const block = blocksRef.current?.find((b) => b.id === t.blockId);
-            return block && hasActiveTourSession({ block, currentTourIndex: t.currentBlockIndex });
-          })
-          .map((t) => t.blockId),
+        blockIds: getRunningTours().flatMap((t) => {
+          const block = blocksRef.current?.find((b) => b.blockStateId === t.blockStateId);
+          if (!(block && hasActiveTourSession({ block, currentTourIndex: t.currentBlockIndex })))
+            return [];
+          return block.id;
+        }),
       });
     };
 
@@ -129,11 +132,13 @@ export const useRunningTours = ({
       for (const tour of getRunningTours()) {
         const isOutsideOfFirstStep = tour.currentBlockIndex > 0;
         if (!isOutsideOfFirstStep) continue;
+        const block = blocksRef.current?.find((b) => b.blockStateId === tour.blockStateId);
+        if (!block) return;
         // oxlint-disable-next-line typescript/no-deprecated - we're intentionally using send event without event queue to use keepalive request
         void api.sendEventImmediately({
           name: "tour-session-hint",
           properties: { ending: true },
-          blockId: tour.blockId,
+          blockId: block.id,
         });
       }
     };
@@ -146,31 +151,31 @@ export const useRunningTours = ({
     };
   }, []);
 
-  const sendTourInterruptedEvent = useCallback((blockId: string): void => {
-    const block = blocksRef.current?.find((b) => b.id === blockId);
+  const sendTourInterruptedEvent = useCallback((blockStateId: string): void => {
+    const block = blocksRef.current?.find((b) => b.blockStateId === blockStateId);
     // If tour doesn't have a tourSessionEndAction, we don't need to send the event
     if (!block?.tourSessionEndAction) return;
     // oxlint-disable-next-line typescript/no-deprecated - we're intentionally using send event without event queue
     void api.sendEventImmediately({
       name: "tour-session-hint",
       properties: { interrupted: true },
-      blockId,
+      blockId: block.id,
     });
   }, []);
 
   const startTour = useCallback(
-    (blockId: string, options: { overrideOnlyRunning?: boolean } = {}) => {
-      setRunningTourBlockIds((prev) => {
-        if (prev.includes(blockId)) return prev;
-        return [...prev, blockId];
+    (blockStateIds: string, options: { overrideOnlyRunning?: boolean } = {}) => {
+      setRunningTourBlockStateIds((prev) => {
+        if (prev.includes(blockStateIds)) return prev;
+        return [...prev, blockStateIds];
       });
 
       if (options.overrideOnlyRunning) {
-        const currentOnlyRunningTourBlockId = onlyRunningTourBlockIdRef.current;
-        setOnlyRunningTourBlockId(blockId);
+        const currentOnlyRunningTourBlockId = onlyRunningTourBlockStateIdRef.current;
+        setOnlyRunningTourBlockStateId(blockStateIds);
 
         const tourWasInterrupted =
-          currentOnlyRunningTourBlockId && currentOnlyRunningTourBlockId !== blockId;
+          currentOnlyRunningTourBlockId && currentOnlyRunningTourBlockId !== blockStateIds;
         if (tourWasInterrupted) {
           sendTourInterruptedEvent(currentOnlyRunningTourBlockId);
         }
@@ -183,9 +188,10 @@ export const useRunningTours = ({
     (ctx: BlockTriggerContext): void => {
       if (!blocks) return;
       const tourBlocks = blocks.filter((b) => b.type === "tour");
-      const runningTourBlockIds = new Set(runningToursRef.current.map((t) => t.blockId));
+      const runningTourBlockStateIds = new Set(runningToursRef.current.map((t) => t.blockStateId));
       const matchingTours = tourBlocks.filter((block) => {
-        if (runningTourBlockIds.has(block.id)) return false;
+        if (!block.blockStateId) return false;
+        if (runningTourBlockStateIds.has(block.blockStateId)) return false;
         const triggerMatch = tourTriggerMatch(block, ctx);
         if (!triggerMatch) return false;
 
@@ -194,11 +200,12 @@ export const useRunningTours = ({
 
       const sortedTours = sortToursByPriority(matchingTours);
       sortedTours.forEach((block, index) => {
+        if (!block.blockStateId) return;
         // Only highest priority tours is eligible for overrideOnlyRunning
         if (index === 0 && shouldTourOverrideOnlyRunning(block)) {
-          startTour(block.id, { overrideOnlyRunning: true });
+          startTour(block.blockStateId, { overrideOnlyRunning: true });
         } else {
-          startTour(block.id);
+          startTour(block.blockStateId);
         }
       });
     },
@@ -241,19 +248,20 @@ export const useRunningTours = ({
 
   const runningToursWithActiveBlock = useMemo(() => {
     if (!blocks) return [];
-    const setCurrentBlockIndex = (blockId: string, value: number): void => {
+    const setCurrentBlockIndex = (blockStateId: string, value: number): void => {
       setRunningTours((prev) =>
         prev.map((tour) => {
-          if (tour.blockId !== blockId) return tour;
+          if (tour.blockStateId !== blockStateId) return tour;
           return { ...tour, currentBlockIndex: value };
         }),
       );
     };
 
     return runningTours
-      .map(({ blockId, currentBlockIndex }): RunningTour | undefined => {
-        const block = blocks.find((b) => b.id === blockId);
+      .map(({ blockStateId, currentBlockIndex }): RunningTour | undefined => {
+        const block = blocks.find((b) => b.blockStateId === blockStateId);
         if (!block) return;
+        const blockId = block.id;
 
         const activeStep = block.tourBlocks?.[currentBlockIndex];
         const isLastStep = currentBlockIndex === (block.tourBlocks?.length ?? 0) - 1;
@@ -270,7 +278,7 @@ export const useRunningTours = ({
 
             // Update the step with a timeout to avoid navigation with href from the next step
             setTimeout(() => {
-              setCurrentBlockIndex(blockId, newIndex);
+              setCurrentBlockIndex(blockStateId, newIndex);
             }, 0);
           }
         };
@@ -282,7 +290,7 @@ export const useRunningTours = ({
 
           // Update the step with a timeout to avoid navigation with href from the previous step
           setTimeout(() => {
-            setCurrentBlockIndex(blockId, newIndex);
+            setCurrentBlockIndex(blockStateId, newIndex);
           }, 0);
         };
         const handleCancel = (): void => {
@@ -304,24 +312,28 @@ export const useRunningTours = ({
 
   // Set onlyRunningTourBlockId to the highest priority running tour
   useEffect(() => {
-    if (tourConcurrency || onlyRunningTourBlockId) return;
+    if (tourConcurrency || onlyRunningTourBlockStateId) return;
 
     const highestPriorityTour = getHighestPriorityRunningTour(runningToursWithActiveBlock);
     if (highestPriorityTour) {
-      setOnlyRunningTourBlockId(highestPriorityTour.id);
+      setOnlyRunningTourBlockStateId(highestPriorityTour.blockStateId);
     }
-  }, [runningToursWithActiveBlock, onlyRunningTourBlockId, tourConcurrency]);
+  }, [runningToursWithActiveBlock, tourConcurrency, onlyRunningTourBlockStateId]);
   // Clear onlyRunningTourBlockId if the tour is no longer running
   useEffect(() => {
-    if (!onlyRunningTourBlockId) return;
-    const isRunning = runningTours.some((tour) => tour.blockId === onlyRunningTourBlockId);
-    if (!isRunning) setOnlyRunningTourBlockId(undefined);
-  }, [onlyRunningTourBlockId, runningTours]);
+    if (!onlyRunningTourBlockStateId) return;
+    const isRunning = runningTours.some(
+      (tour) => tour.blockStateId === onlyRunningTourBlockStateId,
+    );
+    if (!isRunning) setOnlyRunningTourBlockStateId(undefined);
+  }, [runningTours, onlyRunningTourBlockStateId]);
 
   const onlyRunningTours = useMemo(() => {
-    if (tourConcurrency || !onlyRunningTourBlockId) return runningToursWithActiveBlock;
-    return runningToursWithActiveBlock.filter((tour) => tour.block.id === onlyRunningTourBlockId);
-  }, [onlyRunningTourBlockId, runningToursWithActiveBlock, tourConcurrency]);
+    if (tourConcurrency || !onlyRunningTourBlockStateId) return runningToursWithActiveBlock;
+    return runningToursWithActiveBlock.filter(
+      (tour) => tour.block.blockStateId === onlyRunningTourBlockStateId,
+    );
+  }, [runningToursWithActiveBlock, tourConcurrency, onlyRunningTourBlockStateId]);
 
   return onlyRunningTours;
 };
