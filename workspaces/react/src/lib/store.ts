@@ -1,7 +1,8 @@
 import type { CustomFetch } from "@flows/shared";
 
 interface GlobalConfig {
-  userId: string;
+  userId: string | null;
+  signature?: string;
   organizationId: string;
   environment: string;
   apiUrl: string;

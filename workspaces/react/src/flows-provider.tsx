@@ -35,6 +35,11 @@ export interface FlowsProviderProps {
    */
   userId: string | null;
   /**
+   * TODO: update the docs url
+   * Signature used to verify the user's identity. Learn more about [SDK secure mode](https://flows.sh/docs/sdk/secure-mode)
+   */
+  signature?: string;
+  /**
    * Object with custom [user properties](https://flows.sh/docs/users/properties). Values can be string, number, boolean, or date.
    *
    * When any of the property changes, the SDK will automatically refetch blocks to reflect the updated user properties.
@@ -155,6 +160,7 @@ const FlowsProviderInner: FC<Props> = ({
   environment,
   organizationId,
   userId,
+  signature,
   components,
   tourComponents,
   surveyComponents,
@@ -168,6 +174,7 @@ const FlowsProviderInner: FC<Props> = ({
   globalConfig.environment = environment;
   globalConfig.organizationId = organizationId;
   globalConfig.userId = userId;
+  globalConfig.signature = signature;
   globalConfig.customFetch = customFetch;
 
   const userProperties = useUserProperties(_userProperties);
@@ -180,6 +187,7 @@ const FlowsProviderInner: FC<Props> = ({
     environment,
     organizationId,
     userId,
+    signature,
     userProperties,
     language,
     customFetch,

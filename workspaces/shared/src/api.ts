@@ -36,11 +36,13 @@ interface GetBlocksRequest {
   organizationId: string;
   userProperties?: Record<string, unknown>;
   language?: string;
+  signature?: string;
 }
 
 interface BlockResponseMeta {
   usage_limited?: boolean;
   free_org?: boolean;
+  signature_error_message?: string;
 }
 
 interface BlocksResponse {

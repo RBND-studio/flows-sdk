@@ -14,6 +14,7 @@ import {
   getClosedBlockStateIds,
   updateClosedBlockStateIds,
   filterVisibleBlocks,
+  logSignatureError,
 } from "@flows/shared";
 import { packageAndVersion } from "../lib/constants";
 import { type RemoveBlock, type UpdateBlock } from "../flows-context";
@@ -25,6 +26,7 @@ interface Props {
   environment: string;
   organizationId: string;
   userId: string;
+  signature?: string;
   userProperties?: UserProperties;
   language?: LanguageOption;
   onAfterLoad: () => void;
@@ -45,6 +47,7 @@ export const useBlocks = ({
   environment,
   organizationId,
   userId,
+  signature,
   userProperties,
   language,
   onAfterLoad,
@@ -106,6 +109,7 @@ export const useBlocks = ({
         ...params,
         language: getUserLanguage(language),
         userProperties: userPropertiesStateRef.current,
+        signature,
       })
       .then((res) => {
         setBlocksState(pendingMessages.current.reduce(applyUpdateMessageToBlocksState, res.blocks));
@@ -122,6 +126,7 @@ export const useBlocks = ({
 
         if (res.meta?.usage_limited) setUsageLimited(true);
         if (res.meta?.free_org) setFreeOrg(true);
+        if (res.meta?.signature_error_message) logSignatureError(res.meta.signature_error_message);
         onAfterLoad();
       })
       .catch((err: unknown) => {
@@ -134,7 +139,7 @@ export const useBlocks = ({
         queuedFetchRef.current = false;
         fetchBlocks();
       });
-  }, [apiUrl, language, params, customFetch, onAfterLoad]);
+  }, [apiUrl, language, params, customFetch, onAfterLoad, signature]);
 
   // Refetch blocks when userProperties change
   const fetchBlocksRef = useRef(fetchBlocks);
