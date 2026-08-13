@@ -116,7 +116,7 @@ test("react - should refetch blocks on language change", async ({ page }) => {
   await firstBlocksReq;
   const secondBlocksReq = page.waitForRequest((req) => {
     const body = req.postDataJSON();
-    return req.url() === "https://api.flows-cloud.com/v2/sdk/blocks" && body.language === "fr";
+    return req.url() === "https://api.flows-cloud.com/v2/sdk/blocks" && body.language === "en";
   });
   await page.getByText("Change language", { exact: true }).click();
   await secondBlocksReq;
