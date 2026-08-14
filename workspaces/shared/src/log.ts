@@ -22,6 +22,6 @@ export const logBranding = () => {
   log.info(`Product adoption powered by https://flows.sh`);
 };
 
-export const logSignatureError = (message: string) => {
-  log.error("User identity verification issue:", message);
+export const logSignatureWarning = (message: string) => {
+  log.warn("User identity verification issue:", message);
 };

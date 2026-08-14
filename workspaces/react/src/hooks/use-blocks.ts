@@ -14,7 +14,7 @@ import {
   getClosedBlockStateIds,
   updateClosedBlockStateIds,
   filterVisibleBlocks,
-  logSignatureError,
+  logSignatureWarning,
 } from "@flows/shared";
 import { packageAndVersion } from "../lib/constants";
 import { type RemoveBlock, type UpdateBlock } from "../flows-context";
@@ -126,7 +126,8 @@ export const useBlocks = ({
 
         if (res.meta?.usage_limited) setUsageLimited(true);
         if (res.meta?.free_org) setFreeOrg(true);
-        if (res.meta?.signature_error_message) logSignatureError(res.meta.signature_error_message);
+        if (res.meta?.signature_error_message)
+          logSignatureWarning(res.meta.signature_error_message);
         onAfterLoad();
       })
       .catch((err: unknown) => {
