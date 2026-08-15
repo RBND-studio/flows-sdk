@@ -87,10 +87,16 @@ export const useBlocks = ({
     });
   }, [blocksState, closedBlockStateIds, freeOrg]);
 
-  const params = useMemo(
-    () => ({ environment, organizationId, userId }),
-    [environment, organizationId, userId],
-  );
+  const params = useMemo(() => {
+    const _params: {
+      environment: string;
+      organizationId: string;
+      userId: string;
+      signature?: string;
+    } = { environment, organizationId, userId };
+    if (signature) _params.signature = signature;
+    return _params;
+  }, [environment, organizationId, userId, signature]);
 
   const userPropertiesStateRef = useRef(userProperties);
   userPropertiesStateRef.current = userProperties;
@@ -107,9 +113,9 @@ export const useBlocks = ({
     activeFetchRef.current = getApi({ apiUrl, version: packageAndVersion, customFetch })
       .getBlocks({
         ...params,
+        signature: params.signature,
         language: getUserLanguage(language),
         userProperties: userPropertiesStateRef.current,
-        signature,
       })
       .then((res) => {
         setBlocksState(pendingMessages.current.reduce(applyUpdateMessageToBlocksState, res.blocks));
@@ -140,7 +146,7 @@ export const useBlocks = ({
         queuedFetchRef.current = false;
         fetchBlocks();
       });
-  }, [apiUrl, language, params, customFetch, onAfterLoad, signature]);
+  }, [apiUrl, language, params, customFetch, onAfterLoad]);
 
   // Refetch blocks when userProperties or language change
   const fetchBlocksRef = useRef(fetchBlocks);

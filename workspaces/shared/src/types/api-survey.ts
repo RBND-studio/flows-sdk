@@ -57,6 +57,7 @@ export type ApiSurveyAnswer = {
   userId: string;
   environment: string;
   organizationId: string;
+  signature: string | undefined;
   surveyId: string;
   blockStateId: string;
   questions: ApiSurveyQuestionAnswer[];

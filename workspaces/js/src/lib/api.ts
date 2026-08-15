@@ -11,7 +11,7 @@ type SendEventProps = Pick<
 export const sendEvent = async (props: SendEventProps): Promise<void> => {
   const configuration = config.value;
   if (!configuration) return;
-  const { environment, organizationId, userId, apiUrl, customFetch } = configuration;
+  const { environment, organizationId, userId, signature, apiUrl, customFetch } = configuration;
 
   return enqueueEvent({
     apiContext: { apiUrl, version: packageAndVersion },
@@ -20,22 +20,24 @@ export const sendEvent = async (props: SendEventProps): Promise<void> => {
       ...props,
       environment,
       organizationId,
+      signature,
       userId,
     },
   });
 };
 
 export const postSurvey = async (
-  props: Omit<ApiSurveyAnswer, "userId" | "environment" | "organizationId" | "url">,
+  props: Omit<ApiSurveyAnswer, "userId" | "environment" | "organizationId" | "signature" | "url">,
 ) => {
   const configuration = config.value;
   if (!configuration) return;
-  const { apiUrl, environment, organizationId, userId, customFetch } = configuration;
+  const { apiUrl, environment, organizationId, userId, signature, customFetch } = configuration;
   await getApi({ apiUrl, version: packageAndVersion, customFetch }).postSurvey({
     ...props,
     environment,
     organizationId,
     userId,
+    signature,
     url: window.location.href,
   });
 };
@@ -59,10 +61,11 @@ export const fetchWorkflows = async (): Promise<WorkflowsResponse> => {
     return { workflows: [] };
   }
 
-  const { environment, organizationId, userId, apiUrl, customFetch } = configuration;
+  const { environment, organizationId, userId, signature, apiUrl, customFetch } = configuration;
   return getApi({ apiUrl, version: packageAndVersion, customFetch }).getWorkflows({
     environment,
     organizationId,
     userId,
+    signature,
   });
 };

@@ -34,9 +34,9 @@ interface GetBlocksRequest {
   userId: string;
   environment: string;
   organizationId: string;
+  signature: string | undefined;
   userProperties?: Record<string, unknown>;
   language?: string;
-  signature?: string;
 }
 
 interface BlockResponseMeta {
@@ -56,6 +56,7 @@ export interface WorkflowsRequest {
   userId: string;
   environment: string;
   organizationId: string;
+  signature: string | undefined;
 }
 
 export type WorkflowStatus = "enabled" | "launchpad-enabled";
@@ -108,6 +109,7 @@ export interface EventRequest {
   userId: string;
   environment: string;
   organizationId: string;
+  signature: string | undefined;
   name:
     | "transition"
     | "tour-update"

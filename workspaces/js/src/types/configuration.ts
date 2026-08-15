@@ -14,6 +14,11 @@ export interface FlowsOptions {
    */
   userId: string;
   /**
+   * TODO: update the docs url
+   * Signature used to verify the user's identity. Learn more about [SDK secure mode](https://flows.sh/docs/sdk/secure-mode)
+   */
+  signature?: string;
+  /**
    * Object with custom [user properties](https://flows.sh/docs/users/properties). Values can be string, number, boolean, or date.
    */
   userProperties?: UserProperties;

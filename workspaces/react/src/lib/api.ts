@@ -9,10 +9,10 @@ import { globalConfig } from "./store";
 import { packageAndVersion } from "./constants";
 import type { ApiSurveyAnswer } from "@flows/shared";
 
-type SendEventProps = Omit<EventRequest, "userId" | "environment" | "organizationId">;
+type SendEventProps = Omit<EventRequest, "userId" | "environment" | "organizationId" | "signature">;
 
 export const sendEvent = async (props: SendEventProps): Promise<void> => {
-  const { apiUrl, environment, organizationId, userId, customFetch } = globalConfig;
+  const { apiUrl, environment, organizationId, userId, signature, customFetch } = globalConfig;
   if (!apiUrl || !environment || !organizationId || !userId) return;
 
   return enqueueEvent({
@@ -23,14 +23,15 @@ export const sendEvent = async (props: SendEventProps): Promise<void> => {
       environment,
       organizationId,
       userId,
+      signature,
     },
   });
 };
 
 export const postSurvey = async (
-  props: Omit<ApiSurveyAnswer, "userId" | "environment" | "organizationId" | "url">,
+  props: Omit<ApiSurveyAnswer, "userId" | "environment" | "organizationId" | "signature" | "url">,
 ) => {
-  const { apiUrl, environment, organizationId, userId, customFetch } = globalConfig;
+  const { apiUrl, environment, organizationId, userId, signature, customFetch } = globalConfig;
   if (!apiUrl || !environment || !organizationId || !userId) return;
 
   await getApi({ apiUrl, version: packageAndVersion, customFetch }).postSurvey({
@@ -38,6 +39,7 @@ export const postSurvey = async (
     environment,
     organizationId,
     userId,
+    signature,
     url: window.location.href,
   });
 };
@@ -55,7 +57,7 @@ export const sendActivate = async (blockId: string): Promise<void> => {
  * @returns A promise resolving to a {@link WorkflowsResponse} object containing an array of enabled workflows.
  */
 export const fetchWorkflows = async (): Promise<WorkflowsResponse> => {
-  const { apiUrl, environment, organizationId, userId, customFetch } = globalConfig;
+  const { apiUrl, environment, organizationId, userId, signature, customFetch } = globalConfig;
   if (!apiUrl || !environment || !organizationId || !userId) {
     log.error("fetchWorkflows() called before rendering <FlowsProvider>");
     return { workflows: [] };
@@ -65,5 +67,6 @@ export const fetchWorkflows = async (): Promise<WorkflowsResponse> => {
     environment,
     organizationId,
     userId,
+    signature,
   });
 };

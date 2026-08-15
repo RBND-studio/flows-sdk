@@ -19,8 +19,14 @@ export const connectToWebsocketAndFetchBlocks = ({ onAfterLoad }: Props): void =
   const configuration = config.value;
   if (!configuration) return;
 
-  const { environment, organizationId, userId, apiUrl, customFetch } = configuration;
-  const params = { environment, organizationId, userId };
+  const { environment, organizationId, userId, signature, apiUrl, customFetch } = configuration;
+  const params: {
+    environment: string;
+    organizationId: string;
+    userId: string;
+    signature?: string;
+  } = { environment, organizationId, userId };
+  if (signature) params.signature = signature;
   const wsUrl = (() => {
     const wsBase = apiUrl.replace("https://", "wss://").replace("http://", "ws://");
     return `${wsBase}/ws/sdk/block-updates?${new URLSearchParams(params).toString()}`;
@@ -31,6 +37,7 @@ export const connectToWebsocketAndFetchBlocks = ({ onAfterLoad }: Props): void =
     void getApi({ apiUrl, version: packageAndVersion, customFetch })
       .getBlocks({
         ...params,
+        signature: params.signature,
         language: getUserLanguage(configuration.language),
         userProperties: configuration.userProperties,
       })
