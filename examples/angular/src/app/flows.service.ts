@@ -9,6 +9,7 @@ import * as tourComponents from "@flows/js-components/tour-components";
 import * as surveyComponents from "@flows/js-components/survey-components";
 
 // Don't forget to import the CSS styles for Flows components
+// You might need to define .css files as modules, see `css.d.ts` in angular/src directory for an example.
 import "@flows/js-components/index.css";
 
 import { Banner as AngularBanner } from "./banner/banner";
