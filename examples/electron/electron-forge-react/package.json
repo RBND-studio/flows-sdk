@@ -34,10 +34,10 @@
     "typescript": "^6.0.3"
   },
   "dependencies": {
-    "@flows/react": "^1.22.2",
-    "@flows/react-components": "^2.9.0",
+    "@flows/react": "^1.27.0",
+    "@flows/react-components": "^2.9.4",
     "electron-squirrel-startup": "^1.0.1",
-    "react": "^19.2.5",
-    "react-dom": "^19.2.5"
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
   }
 }
