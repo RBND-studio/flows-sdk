@@ -142,7 +142,7 @@ export const useBlocks = ({
       });
   }, [apiUrl, language, params, customFetch, onAfterLoad, signature]);
 
-  // Refetch blocks when userProperties change
+  // Refetch blocks when userProperties or language change
   const fetchBlocksRef = useRef(fetchBlocks);
   fetchBlocksRef.current = fetchBlocks;
   const firstRenderRef = useRef(true);
@@ -152,7 +152,7 @@ export const useBlocks = ({
       return;
     }
     fetchBlocksRef.current();
-  }, [userProperties]);
+  }, [userProperties, language]);
 
   const websocketUrl = useMemo(() => {
     if (usageLimited) return;

@@ -70,6 +70,8 @@ export interface FlowsProviderProps {
    * - `disabled` (default) - The user will be served content in the default language group of your organization.
    * - `automatic` - Automatically detect the user's language and use the matching language group. The language is determined by the `Navigator.language` property in the browser.
    * - Manual - A specific language string, e.g. `en-US`, `fr-FR`, etc. This will use the matching language group for the specified language. See [https://www.localeplanet.com/icu/](https://www.localeplanet.com/icu/) for a full list of supported languages.
+   *
+   * When the language changes, the SDK will automatically refetch blocks to reflect the updated language.
    * @default "disabled"
    */
   language?: LanguageOption;
@@ -235,6 +237,7 @@ const FlowsProviderInner: FC<Props> = ({
         userId={userId}
         userProperties={userProperties}
         onDebugKeydown={onDebugShortcut}
+        language={language}
       />
     </FlowsContext.Provider>
   );
