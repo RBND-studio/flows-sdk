@@ -1,8 +1,9 @@
 "use strict";
 
+// cspell:words hidepassed
+
 if (typeof module !== "undefined") {
   module.exports = {
-    // cspell:disable-next-line
     test_page: "tests/index.html?hidepassed",
     disable_watching: true,
     launch_in_ci: ["Chrome"],

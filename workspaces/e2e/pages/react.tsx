@@ -160,6 +160,7 @@ const LinkComponent: LinkComponentType = ({ href, children, className, onClick }
 const App: FC = () => {
   const [count, setCount] = useState(0);
   const [userIdCount, setUserIdCount] = useState(0);
+  const [languageState, setLanguage] = useState<LanguageOption | undefined>(language);
 
   return (
     <HashRouter>
@@ -167,7 +168,7 @@ const App: FC = () => {
         organizationId={organizationId ?? "orgId"}
         environment="prod"
         userId={noUserId ? null : `testUserId${userIdCount ? `-${userIdCount}` : ""}`}
-        language={language}
+        language={languageState}
         userProperties={{
           email: "test@flows.sh",
           age: 10,
@@ -186,6 +187,9 @@ const App: FC = () => {
         </Routes>
         <button onClick={() => setCount((p) => p + 1)}>Increment</button>
         <button onClick={() => setUserIdCount((p) => p + 1)}>Increment user id</button>
+        <button onClick={() => setLanguage((prev) => (prev === "en" ? "fr" : "en"))}>
+          Change language
+        </button>
       </FlowsProvider>
     </HashRouter>
   );
