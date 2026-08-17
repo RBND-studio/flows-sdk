@@ -51,7 +51,6 @@ export const useRunningTours = ({
 
   // This is only "proxy" state with current tour index
   const [runningTours, setRunningTours] = useState<IRunningTour[]>([]);
-  console.log(runningTours);
   useEffect(() => {
     if (!blocks) return setRunningTours([]);
 

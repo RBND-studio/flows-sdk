@@ -35,6 +35,7 @@ const slotBlock: Block = {
 
 const getTour = (steps: TourStep[]): Block => ({
   id: randomUUID(),
+  blockStateId: randomUUID(),
   workflowId: randomUUID(),
   type: "tour",
   data: {},
