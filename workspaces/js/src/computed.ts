@@ -40,10 +40,10 @@ export const visibleTours = computed(() => {
   const runningToursValue = runningTours.value;
   const configValue = config.value;
 
-  const blocksById = new Map(blocksValue.map((b) => [b.id, b]));
+  const blocksByStateId = new Map(blocksValue.map((b) => [b.blockStateId, b]));
   return runningToursValue
     .filter((t) => {
-      const block = blocksById.get(t.blockId);
+      const block = blocksByStateId.get(t.blockStateId);
       const activeStep = block?.tourBlocks?.at(t.currentBlockIndex);
       return pathnameMatch({
         pathname: pathnameValue,
@@ -54,7 +54,7 @@ export const visibleTours = computed(() => {
       });
     })
     .flatMap((t) => {
-      const block = blocksById.get(t.blockId);
+      const block = blocksByStateId.get(t.blockStateId);
       if (!block) return [];
       return { ...t, block };
     });

@@ -163,18 +163,18 @@ export const useRunningTours = ({
   }, []);
 
   const startTour = useCallback(
-    (blockStateIds: string, options: { overrideOnlyRunning?: boolean } = {}) => {
+    (blockStateId: string, options: { overrideOnlyRunning?: boolean } = {}) => {
       setRunningTourBlockStateIds((prev) => {
-        if (prev.includes(blockStateIds)) return prev;
-        return [...prev, blockStateIds];
+        if (prev.includes(blockStateId)) return prev;
+        return [...prev, blockStateId];
       });
 
       if (options.overrideOnlyRunning) {
         const currentOnlyRunningTourBlockId = onlyRunningTourBlockStateIdRef.current;
-        setOnlyRunningTourBlockStateId(blockStateIds);
+        setOnlyRunningTourBlockStateId(blockStateId);
 
         const tourWasInterrupted =
-          currentOnlyRunningTourBlockId && currentOnlyRunningTourBlockId !== blockStateIds;
+          currentOnlyRunningTourBlockId && currentOnlyRunningTourBlockId !== blockStateId;
         if (tourWasInterrupted) {
           sendTourInterruptedEvent(currentOnlyRunningTourBlockId);
         }
