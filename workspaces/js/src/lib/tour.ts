@@ -149,7 +149,7 @@ const startTour = (blockStateId: string, options: { overrideOnlyRunning?: boolea
     runningTourBlockStateIds.value = [...prevRunningIds, blockStateId];
   }
 
-  if (options.overrideOnlyRunning) {
+  if (options.overrideOnlyRunning && !tourConcurrency.peek()) {
     const currentOnlyRunningTourBlockId = onlyRunningTourBlockStateId.peek();
     onlyRunningTourBlockStateId.value = blockStateId;
 
@@ -449,6 +449,8 @@ effect(() => {
   const runningToursValue = runningTours.value;
 
   if (!onlyRunningTourBlockStateIdValue) return;
-  const isRunning = runningToursValue.some((tour) => tour.blockStateId);
+  const isRunning = runningToursValue.some(
+    (tour) => tour.blockStateId === onlyRunningTourBlockStateIdValue,
+  );
   if (!isRunning) onlyRunningTourBlockStateId.value = undefined;
 });

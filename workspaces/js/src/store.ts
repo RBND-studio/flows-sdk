@@ -102,7 +102,7 @@ export const onlyRunningTours = computed(() => {
   const tourConcurrencyValue = tourConcurrency.value;
   const onlyRunningTourBlockStateIdValue = onlyRunningTourBlockStateId.value;
 
-  if (tourConcurrencyValue || !onlyRunningTourBlockStateId) return runningToursValue;
+  if (tourConcurrencyValue || !onlyRunningTourBlockStateIdValue) return runningToursValue;
   return runningToursValue.filter((tour) => tour.blockStateId === onlyRunningTourBlockStateIdValue);
 });
 

@@ -197,19 +197,6 @@ const run = (packageName: string) => {
     await expect(page.getByText("Click trigger tour", { exact: true })).toBeVisible();
     await expect(page.getByText("Step 2", { exact: true })).toBeHidden();
   });
-  test(`${packageName} - should show two tours with concurrency enabled`, async ({ page }) => {
-    await mockBlocksEndpoint(
-      page,
-      [
-        getTour({ tourBlocks: [getTourStep({ data: { title: "Hello" } })] }),
-        getTour({ tourBlocks: [getTourStep({ data: { title: "World" } })] }),
-      ],
-      { tour_concurrency: true },
-    );
-    await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("Hello", { exact: true })).toBeVisible();
-    await expect(page.getByText("World", { exact: true })).toBeVisible();
-  });
   test(`${packageName} - click triggered tour should be running after refresh`, async ({
     page,
   }) => {
@@ -237,6 +224,35 @@ const run = (packageName: string) => {
     await page.goto(`/${packageName}.html`);
     await expect(page.getByText("Expected tour", { exact: true })).toBeVisible();
     await expect(page.getByText("Hidden tour", { exact: true })).toBeHidden();
+  });
+  test(`${packageName} - should show two tours with concurrency enabled`, async ({ page }) => {
+    await mockBlocksEndpoint(
+      page,
+      [
+        getTour({ tourBlocks: [getTourStep({ data: { title: "Hello" } })] }),
+        getTour({
+          tour_trigger: [{ type: "click", value: "h1" }],
+          tourBlocks: [getTourStep({ data: { title: "World" } })],
+        }),
+      ],
+      { tour_concurrency: true },
+    );
+    await page.goto(`/${packageName}.html`);
+    await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+    await expect(page.getByText("World", { exact: true })).toBeHidden();
+    let interruptedEventCalled = false;
+    page.on("request", (req) => {
+      const body = req.postDataJSON();
+      return (
+        req.url().includes("/v2/sdk/events") &&
+        body.name === "tour-session-hint" &&
+        body.properties.interrupted === true
+      );
+    });
+    await page.locator("h1").click();
+    await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+    await expect(page.getByText("World", { exact: true })).toBeVisible();
+    expect(interruptedEventCalled).toBe(false);
   });
 };
 

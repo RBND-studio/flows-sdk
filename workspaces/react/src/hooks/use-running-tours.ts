@@ -169,7 +169,7 @@ export const useRunningTours = ({
         return [...prev, blockStateId];
       });
 
-      if (options.overrideOnlyRunning) {
+      if (options.overrideOnlyRunning && !tourConcurrency) {
         const currentOnlyRunningTourBlockId = onlyRunningTourBlockStateIdRef.current;
         setOnlyRunningTourBlockStateId(blockStateId);
 
@@ -180,7 +180,7 @@ export const useRunningTours = ({
         }
       }
     },
-    [sendTourInterruptedEvent],
+    [sendTourInterruptedEvent, tourConcurrency],
   );
 
   const startToursIfNeeded = useCallback(
