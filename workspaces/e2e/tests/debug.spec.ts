@@ -8,7 +8,9 @@ const run = (packageName: string) => {
   test(`${packageName} - should show debug panel`, async ({ page }) => {
     await mockBlocksEndpoint(page, []);
 
-    await page.goto(`/${packageName}.html?organizationId=${organizationId}`);
+    const currentUrl = `/${packageName}.html?organizationId=${organizationId}&language=fr`;
+
+    await page.goto(currentUrl);
 
     await expect(page.locator(".flows-debug-menu")).toBeVisible();
     await page.locator(".flows-debug-menu").click();
@@ -22,6 +24,7 @@ const run = (packageName: string) => {
 
     await expect(page.getByText("User Information", { exact: true })).toBeVisible();
     await expect(page.getByText("testUserId", { exact: true })).toBeVisible();
+    await expect(page.getByText("fr", { exact: true })).toBeVisible();
     await expect(page.getByText("test@flows.sh")).toBeVisible();
     await page.getByLabel("Go back", { exact: true }).click();
 
@@ -51,7 +54,6 @@ const run = (packageName: string) => {
     await page.getByLabel("Go back", { exact: true }).click();
 
     const fourthItem = page.locator(".flows-debug-item").nth(3);
-    const currentUrl = `/${packageName}.html?organizationId=${organizationId}`;
     await expect(fourthItem).toContainText("Pathname");
     await expect(fourthItem).toContainText(currentUrl);
     await fourthItem.click();
