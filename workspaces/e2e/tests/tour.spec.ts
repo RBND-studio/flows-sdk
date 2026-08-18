@@ -160,16 +160,28 @@ const run = (packageName: string) => {
 
     await eventReq;
   });
-  test(`${packageName} - should send tour hint interrupted event on reload`, async ({ page }) => {
-    const interruptedTour = getTour({ tourSessionEndAction: "cancel", tourBlocks: tourSteps });
+  test(`${packageName} - should send tour hint interrupted event on click and replace running tour`, async ({
+    page,
+  }) => {
+    const interruptedTour = getTour({
+      tourSessionEndAction: "cancel",
+      tourBlocks: [
+        getTourStep({ data: { title: "Step 1" } }),
+        getTourStep({ data: { title: "Step 2" } }),
+      ],
+    });
     await mockBlocksEndpoint(page, [
       interruptedTour,
-      getTour({ tourBlocks: tourSteps, tour_trigger: [{ type: "click", value: "h1" }] }),
+      getTour({
+        tourBlocks: [getTourStep({ data: { title: "Click trigger tour" } })],
+        tour_trigger: [{ type: "click", value: "h1" }],
+      }),
     ]);
     await page.goto(`/${packageName}.html`);
-    await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+    await expect(page.getByText("Step 1", { exact: true })).toBeVisible();
     await page.getByText("Continue", { exact: true }).click();
-    await expect(page.getByText("World", { exact: true })).toBeVisible();
+    await expect(page.getByText("Step 2", { exact: true })).toBeVisible();
+    await expect(page.getByText("Step 1", { exact: true })).toBeHidden();
     const eventReq = page.waitForRequest((req) => {
       const body = req.postDataJSON();
       return (
@@ -182,6 +194,8 @@ const run = (packageName: string) => {
     });
     await page.locator("h1").click();
     await eventReq;
+    await expect(page.getByText("Click trigger tour", { exact: true })).toBeVisible();
+    await expect(page.getByText("Step 2", { exact: true })).toBeHidden();
   });
   test(`${packageName} - should show two tours with concurrency enabled`, async ({ page }) => {
     await mockBlocksEndpoint(
@@ -211,6 +225,18 @@ const run = (packageName: string) => {
     await expect(page.getByText("Hello", { exact: true })).toBeVisible();
     await page.reload();
     await expect(page.getByText("Hello", { exact: true })).toBeVisible();
+  });
+  test(`${packageName} - should show higher priority tour`, async ({ page }) => {
+    await mockBlocksEndpoint(page, [
+      getTour({ tourBlocks: [getTourStep({ data: { title: "Hidden tour" } })] }),
+      getTour({
+        tourBlocks: [getTourStep({ data: { title: "Expected tour" } })],
+        tour_trigger: [{ type: "navigation", values: ["/"] }],
+      }),
+    ]);
+    await page.goto(`/${packageName}.html`);
+    await expect(page.getByText("Expected tour", { exact: true })).toBeVisible();
+    await expect(page.getByText("Hidden tour", { exact: true })).toBeHidden();
   });
 };
 

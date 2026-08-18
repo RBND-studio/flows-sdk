@@ -1,4 +1,4 @@
-import type { Block, TourStep, TourTriggerExpression } from "@flows/shared";
+import type { Block, PropertyMeta, TourStep, TourTriggerExpression } from "@flows/shared";
 import type { Page } from "@playwright/test";
 import { randomUUID } from "crypto";
 
@@ -54,10 +54,12 @@ export const getTourStep = ({
   componentType = "BasicsV2Modal",
   key,
   data = {},
+  propertyMeta,
 }: {
   componentType?: string;
   key?: string;
   data?: Record<string, unknown>;
+  propertyMeta?: PropertyMeta[];
 }): TourStep => ({
   id: randomUUID(),
   workflowId: randomUUID(),
@@ -66,4 +68,16 @@ export const getTourStep = ({
   slottable: false,
   type: "tour-component",
   componentType,
+  propertyMeta: propertyMeta ?? [
+    {
+      type: "action",
+      key: "primaryButton",
+      value: { label: "Continue", exitNode: "continue" },
+    },
+    {
+      type: "action",
+      key: "secondaryButton",
+      value: { label: "Previous", exitNode: "previous" },
+    },
+  ],
 });
