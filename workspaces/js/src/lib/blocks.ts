@@ -5,7 +5,15 @@ import {
   log,
   parseWebsocketMessage,
 } from "@flows/shared";
-import { blocks, blocksError, config, freeOrg, pendingMessages, updateBlocks } from "../store";
+import {
+  blocks,
+  blocksError,
+  config,
+  freeOrg,
+  pendingMessages,
+  tourConcurrency,
+  updateBlocks,
+} from "../store";
 import { type Disconnect, websocket } from "./websocket";
 import { api } from "./api";
 
@@ -48,7 +56,8 @@ export const connectToWebsocketAndFetchBlocks = ({ onAfterLoad }: Props): void =
 
         // Disconnect if the user is usage limited
         if (res.meta?.usage_limited) disconnect?.();
-        if (res.meta?.free_org) freeOrg.value = true;
+        freeOrg.value = !!res.meta?.free_org;
+        tourConcurrency.value = !!res.meta?.tour_concurrency;
         onAfterLoad();
       })
       .catch((err: unknown) => {

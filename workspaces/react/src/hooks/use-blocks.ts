@@ -17,6 +17,7 @@ import {
 import { type RemoveBlock, type UpdateBlock } from "../flows-context";
 import { useWebsocket } from "./use-websocket";
 import { api } from "../lib/api";
+import { isValidConfig } from "../lib/store";
 
 interface Props {
   apiUrl: string;
@@ -31,6 +32,7 @@ interface Props {
 interface Return {
   blocks: Block[] | null;
   freeOrg: boolean;
+  tourConcurrency: boolean;
   removeBlock: RemoveBlock;
   updateBlock: UpdateBlock;
   error: boolean;
@@ -50,7 +52,6 @@ export const useBlocks = ({
   const blocksStateRef = useRef(blocksState);
   blocksStateRef.current = blocksState;
   const [error, setError] = useState(false);
-  const wsRef = useRef<WebSocket | undefined>(undefined);
 
   const [closedBlockStateIds, setClosedBlockStateIds] = useState<string[] | null>(null);
   const addClosedBlockStateId = useCallback((blockStateId: string): void => {
@@ -70,6 +71,7 @@ export const useBlocks = ({
 
   const [usageLimited, setUsageLimited] = useState(false);
   const [freeOrg, setFreeOrg] = useState(false);
+  const [tourConcurrency, setTourConcurrency] = useState(false);
   const pendingMessages = useRef<BlockUpdatesMessage[]>([]);
 
   const blocks = useMemo(() => {
@@ -88,8 +90,7 @@ export const useBlocks = ({
   const activeFetchRef = useRef<Promise<void> | null>(null);
   const queuedFetchRef = useRef(false);
   const fetchBlocks = useCallback(() => {
-    const hasOpenConnection = !!wsRef.current;
-    if (!hasOpenConnection) return;
+    if (!isValidConfig()) return;
 
     if (activeFetchRef.current) {
       queuedFetchRef.current = true;
@@ -115,8 +116,9 @@ export const useBlocks = ({
           }
         }, 0);
 
-        if (res.meta?.usage_limited) setUsageLimited(true);
-        if (res.meta?.free_org) setFreeOrg(true);
+        setUsageLimited(!!res.meta?.usage_limited);
+        setFreeOrg(!!res.meta?.free_org);
+        setTourConcurrency(!!res.meta?.tour_concurrency);
         onAfterLoad();
       })
       .catch((err: unknown) => {
@@ -169,12 +171,7 @@ export const useBlocks = ({
       });
     }
   }, []);
-  const { ws, error: wsError } = useWebsocket({
-    url: websocketUrl,
-    onMessage,
-    onOpen: fetchBlocks,
-  });
-  wsRef.current = ws;
+  const { error: wsError } = useWebsocket({ url: websocketUrl, onMessage, onOpen: fetchBlocks });
 
   // Log error about slottable blocks without slotId
   useEffect(() => {
@@ -199,5 +196,5 @@ export const useBlocks = ({
     });
   }, []);
 
-  return { blocks, freeOrg, error, wsError, removeBlock, updateBlock };
+  return { blocks, tourConcurrency, freeOrg, error, wsError, removeBlock, updateBlock };
 };

@@ -9,3 +9,9 @@ interface GlobalConfig {
 }
 
 export const globalConfig: Partial<GlobalConfig> = {};
+
+export const isValidConfig = (): boolean => {
+  const { apiUrl, environment, organizationId, userId } = globalConfig;
+  if (userId && organizationId && environment && apiUrl) return true;
+  return false;
+};

@@ -170,7 +170,7 @@ const FlowsProviderInner: FC<FlowsProviderProps> = ({
   const onAfterLoad = useCallback(() => {
     void sendEvents(globalConfig.customFetch);
   }, []);
-  const { blocks, freeOrg, error, wsError, removeBlock, updateBlock } = useBlocks({
+  const { blocks, freeOrg, tourConcurrency, error, wsError, removeBlock, updateBlock } = useBlocks({
     apiUrl,
     environment,
     organizationId,
@@ -180,7 +180,7 @@ const FlowsProviderInner: FC<FlowsProviderProps> = ({
     onAfterLoad,
   });
 
-  const runningTours = useRunningTours({ blocks, removeBlock, userProperties });
+  const runningTours = useRunningTours({ blocks, tourConcurrency, removeBlock, userProperties });
   const runningSurveyBlockStateIds = useRunningSurveys({ blocks, userProperties });
 
   useEffect(() => {

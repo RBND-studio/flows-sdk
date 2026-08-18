@@ -7,6 +7,7 @@ import {
   getClosedBlockStateIds,
   filterVisibleBlocks,
   logBranding,
+  getRunningToursFromSessionStorage,
 } from "@flows/shared";
 import { computed, effect, signal } from "@preact/signals-core";
 import { type FlowsOptions } from "./types/configuration";
@@ -22,7 +23,8 @@ const blocksState = signal<Block[] | null>(null);
 export const updateBlocks = (value: Block[] | null): void => {
   blocksState.value = value;
 };
-export const freeOrg = signal<boolean>(false);
+export const freeOrg = signal(false);
+export const tourConcurrency = signal(false);
 
 // Log a "Powered by Flows" message in the console for free orgs
 effect(() => {
@@ -83,10 +85,25 @@ export const updateBlock: UpdateBlock = (blockId, updateFn) => {
 };
 
 export interface RunningTour {
-  blockId: string;
+  blockStateId: string;
   currentBlockIndex: number;
 }
 export const tourBlocks = computed(() => (blocks.value ?? []).filter((b) => b.type === "tour"));
+
+export const runningTourBlockStateIds = signal<string[]>(
+  getRunningToursFromSessionStorage().runningTourBlockStateIds,
+);
 export const runningTours = signal<RunningTour[]>([]);
+export const onlyRunningTourBlockStateId = signal<string | undefined>(
+  getRunningToursFromSessionStorage().onlyRunningTourBlockStateId,
+);
+export const onlyRunningTours = computed(() => {
+  const runningToursValue = runningTours.value;
+  const tourConcurrencyValue = tourConcurrency.value;
+  const onlyRunningTourBlockStateIdValue = onlyRunningTourBlockStateId.value;
+
+  if (tourConcurrencyValue || !onlyRunningTourBlockStateId) return runningToursValue;
+  return runningToursValue.filter((tour) => tour.blockStateId === onlyRunningTourBlockStateIdValue);
+});
 
 export const runningSurveyBlockStateIds = signal<string[]>(getSessionStorageRunningSurveys());
