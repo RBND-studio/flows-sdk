@@ -97,5 +97,13 @@ export const runningTours = signal<RunningTour[]>([]);
 export const onlyRunningTourBlockStateId = signal<string | undefined>(
   getRunningToursFromSessionStorage().onlyRunningTourBlockStateId,
 );
+export const onlyRunningTours = computed(() => {
+  const runningToursValue = runningTours.value;
+  const tourConcurrencyValue = tourConcurrency.value;
+  const onlyRunningTourBlockStateIdValue = onlyRunningTourBlockStateId.value;
+
+  if (tourConcurrencyValue || !onlyRunningTourBlockStateId) return runningToursValue;
+  return runningToursValue.filter((tour) => tour.blockStateId === onlyRunningTourBlockStateIdValue);
+});
 
 export const runningSurveyBlockStateIds = signal<string[]>(getSessionStorageRunningSurveys());

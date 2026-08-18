@@ -4,9 +4,9 @@ import {
   blocks,
   config,
   freeOrg,
+  onlyRunningTours,
   pathname,
   runningSurveyBlockStateIds,
-  runningTours,
 } from "./store";
 import { itemToActiveBlock } from "./lib/active-block";
 
@@ -37,7 +37,7 @@ export const visibleBlocks = computed(() => {
 export const visibleTours = computed(() => {
   const blocksValue = blocks.value ?? [];
   const pathnameValue = pathname.value;
-  const runningToursValue = runningTours.value;
+  const runningToursValue = onlyRunningTours.value;
   const configValue = config.value;
 
   const blocksByStateId = new Map(blocksValue.map((b) => [b.blockStateId, b]));
