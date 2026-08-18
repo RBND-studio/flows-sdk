@@ -93,6 +93,12 @@ const run = (packageName: string) => {
               tourVisibleStepIndex: 0,
               freeOrg: false,
             },
+            primaryButton: {
+              label: "Continue",
+            },
+            secondaryButton: {
+              label: "Previous",
+            },
           },
         },
       ]),
