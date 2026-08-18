@@ -175,7 +175,7 @@ const startToursIfNeeded = (tourBlocksValue: Block[], ctx: BlockTriggerContext):
   const sortedTours = sortToursByPriority(matchingTours);
   sortedTours.forEach((block, index) => {
     if (!block.blockStateId) return;
-    // Only highest priority tours is eligible for overrideOnlyRunning
+    // Only the highest priority tour is eligible for overrideOnlyRunning
     if (index === 0 && shouldTourOverrideOnlyRunning(block)) {
       startTour(block.blockStateId, { overrideOnlyRunning: true });
     } else {

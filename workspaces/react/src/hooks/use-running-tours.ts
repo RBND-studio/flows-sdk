@@ -132,7 +132,7 @@ export const useRunningTours = ({
         const isOutsideOfFirstStep = tour.currentBlockIndex > 0;
         if (!isOutsideOfFirstStep) continue;
         const block = blocksRef.current?.find((b) => b.blockStateId === tour.blockStateId);
-        if (!block) return;
+        if (!block) continue;
         // oxlint-disable-next-line typescript/no-deprecated - we're intentionally using send event without event queue to use keepalive request
         void api.sendEventImmediately({
           name: "tour-session-hint",
@@ -200,7 +200,7 @@ export const useRunningTours = ({
       const sortedTours = sortToursByPriority(matchingTours);
       sortedTours.forEach((block, index) => {
         if (!block.blockStateId) return;
-        // Only highest priority tours is eligible for overrideOnlyRunning
+        // Only the highest priority tour is eligible for overrideOnlyRunning
         if (index === 0 && shouldTourOverrideOnlyRunning(block)) {
           startTour(block.blockStateId, { overrideOnlyRunning: true });
         } else {
