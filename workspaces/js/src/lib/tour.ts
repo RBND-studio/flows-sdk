@@ -73,7 +73,7 @@ effect(() => {
     const onlyRunningTourBlockStateIdValue = onlyRunningTourBlockStateId.peek();
     const runningToursValue = runningTours.peek();
 
-    if (onlyRunningTourBlockStateIdValue) {
+    if (!tourConcurrency.peek() && onlyRunningTourBlockStateIdValue) {
       const onlyRunningTourDef = runningToursValue.find(
         (t) => t.blockStateId === onlyRunningTourBlockStateIdValue,
       );

@@ -75,6 +75,8 @@ export const useRunningTours = ({
   const pathname = usePathname();
   const blocksRef = useRef<Block[] | null>(blocks);
   blocksRef.current = blocks;
+  const tourConcurrencyRef = useRef<boolean>(tourConcurrency);
+  tourConcurrencyRef.current = tourConcurrency;
 
   // Stop tours that are no longer running
   useEffect(() => {
@@ -91,7 +93,7 @@ export const useRunningTours = ({
   // Send heartbeat for running tours outside of first step and send tour session hint on pagehide
   useEffect(() => {
     const getRunningTours = () => {
-      if (onlyRunningTourBlockStateIdRef.current) {
+      if (!tourConcurrencyRef.current && onlyRunningTourBlockStateIdRef.current) {
         const onlyRunningTourDef = runningToursRef.current.find(
           (t) => t.blockStateId === onlyRunningTourBlockStateIdRef.current,
         );
