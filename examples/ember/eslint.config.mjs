@@ -12,29 +12,29 @@
  *     npx eslint --inspect-config
  *
  */
-import { dirname } from "node:path";
-import { fileURLToPath } from "node:url";
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-import globals from "globals";
-import js from "@eslint/js";
-import { defineConfig, globalIgnores } from "eslint/config";
+import globals from 'globals';
+import js from '@eslint/js';
+import { defineConfig, globalIgnores } from 'eslint/config';
 
-import ts from "typescript-eslint";
+import ts from 'typescript-eslint';
 
-import ember from "eslint-plugin-ember/recommended";
-import WarpDrive from "eslint-plugin-warp-drive/recommended";
+import ember from 'eslint-plugin-ember/recommended';
+import WarpDrive from 'eslint-plugin-warp-drive/recommended';
 
-import eslintConfigPrettier from "eslint-config-prettier";
-import qunit from "eslint-plugin-qunit";
-import n from "eslint-plugin-n";
+import eslintConfigPrettier from 'eslint-config-prettier';
+import qunit from 'eslint-plugin-qunit';
+import n from 'eslint-plugin-n';
 
-import babelParser from "@babel/eslint-parser/experimental-worker";
+import babelParser from '@babel/eslint-parser/experimental-worker';
 
 const parserOptions = {
   esm: {
     js: {
       ecmaFeatures: { modules: true },
-      ecmaVersion: "latest",
+      ecmaVersion: 'latest',
     },
     ts: {
       projectService: true,
@@ -44,7 +44,7 @@ const parserOptions = {
 };
 
 export default defineConfig([
-  globalIgnores(["dist/", "coverage/", "!**/.*"]),
+  globalIgnores(['dist/', 'coverage/', '!**/.*']),
   js.configs.recommended,
   ember.configs.base,
   ember.configs.gjs,
@@ -56,17 +56,17 @@ export default defineConfig([
    */
   {
     linterOptions: {
-      reportUnusedDisableDirectives: "error",
+      reportUnusedDisableDirectives: 'error',
     },
   },
   {
-    files: ["**/*.js"],
+    files: ['**/*.js'],
     languageOptions: {
       parser: babelParser,
     },
   },
   {
-    files: ["**/*.{js,gjs}"],
+    files: ['**/*.{js,gjs}'],
     languageOptions: {
       parserOptions: parserOptions.esm.js,
       globals: {
@@ -75,7 +75,7 @@ export default defineConfig([
     },
   },
   {
-    files: ["**/*.{ts,gts}"],
+    files: ['**/*.{ts,gts}'],
     languageOptions: {
       parser: ember.parser,
       parserOptions: parserOptions.esm.ts,
@@ -87,7 +87,7 @@ export default defineConfig([
   },
   {
     ...qunit.configs.recommended,
-    files: ["tests/**/*-test.{js,gjs,ts,gts}"],
+    files: ['tests/**/*-test.{js,gjs,ts,gts}'],
     plugins: {
       qunit,
     },
@@ -96,15 +96,15 @@ export default defineConfig([
    * CJS node files
    */
   {
-    ...n.configs["flat/recommended-script"],
-    files: ["**/*.cjs", "config/**/*.js"],
+    ...n.configs['flat/recommended-script'],
+    files: ['**/*.cjs', 'config/**/*.js'],
     plugins: {
       n,
     },
 
     languageOptions: {
-      sourceType: "script",
-      ecmaVersion: "latest",
+      sourceType: 'script',
+      ecmaVersion: 'latest',
       globals: {
         ...globals.node,
       },
@@ -114,15 +114,15 @@ export default defineConfig([
    * ESM node files
    */
   {
-    ...n.configs["flat/recommended-module"],
-    files: ["**/*.mjs"],
+    ...n.configs['flat/recommended-module'],
+    files: ['**/*.mjs'],
     plugins: {
       n,
     },
 
     languageOptions: {
-      sourceType: "module",
-      ecmaVersion: "latest",
+      sourceType: 'module',
+      ecmaVersion: 'latest',
       parserOptions: parserOptions.esm.js,
       globals: {
         ...globals.node,

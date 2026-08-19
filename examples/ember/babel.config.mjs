@@ -2,6 +2,8 @@ import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { babelCompatSupport, templateCompatSupport } from "@embroider/compat/babel";
 
+// cspell:words htmlbars
+
 export default {
   plugins: [
     [
@@ -18,7 +20,6 @@ export default {
         enableLegacyModules: [
           "ember-cli-htmlbars",
           "ember-cli-htmlbars-inline-precompile",
-          // cspell:disable-next-line
           "htmlbars-inline-precompile",
         ],
         transforms: [...templateCompatSupport()],
