@@ -1,4 +1,5 @@
 import { useState, type FC, type ReactNode, useCallback } from "react";
+import type { LanguageOption } from "@flows/shared";
 import {
   booleanToString,
   type DebugPanelPosition,
@@ -34,6 +35,7 @@ export interface DebugPanelProps {
   environment: string;
   userId: string;
   userProperties?: UserProperties;
+  language?: LanguageOption;
 
   blocksError: boolean;
   wsError: boolean;
@@ -47,6 +49,7 @@ const DebugPanel: FC<DebugPanelProps> = ({
   organizationId,
   userId,
   userProperties,
+  language,
 }) => {
   const [open, setOpen] = useState(forceOpen);
   const toggleOpen = (): void => {
@@ -76,7 +79,8 @@ const DebugPanel: FC<DebugPanelProps> = ({
   const sdkSetupValid = statusItems.every((item) => item.valid);
 
   const content = (() => {
-    if (panelPage === "user") return <UserPanel userProperties={userProperties} userId={userId} />;
+    if (panelPage === "user")
+      return <UserPanel userProperties={userProperties} userId={userId} language={language} />;
     if (panelPage === "sdk-setup")
       return (
         <SdkSetupPanel

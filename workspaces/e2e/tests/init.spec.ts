@@ -106,6 +106,21 @@ test("react - should refetch blocks on userProperties change", async ({ page }) 
   await page.getByText("Increment", { exact: true }).click();
   await secondBlocksReq;
 });
+test("react - should refetch blocks on language change", async ({ page }) => {
+  await mockBlocksEndpoint(page, []);
+  const firstBlocksReq = page.waitForRequest((req) => {
+    const body = req.postDataJSON();
+    return req.url() === "https://api.flows-cloud.com/v2/sdk/blocks" && body.language === undefined;
+  });
+  await page.goto(`/react.html`);
+  await firstBlocksReq;
+  const secondBlocksReq = page.waitForRequest((req) => {
+    const body = req.postDataJSON();
+    return req.url() === "https://api.flows-cloud.com/v2/sdk/blocks" && body.language === "en";
+  });
+  await page.getByText("Change language", { exact: true }).click();
+  await secondBlocksReq;
+});
 
 run("js");
 run("react");
