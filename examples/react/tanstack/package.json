@@ -10,8 +10,8 @@
     "start": "node .output/server/index.mjs"
   },
   "dependencies": {
-    "@flows/react": "^1.25.0",
-    "@flows/react-components": "^2.9.0",
+    "@flows/react": "^1.27.0",
+    "@flows/react-components": "^2.9.4",
     "@tanstack/react-router": "^1.170.15",
     "@tanstack/react-router-devtools": "^1.167.0",
     "@tanstack/react-start": "^1.168.25",

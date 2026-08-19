@@ -1,5 +1,7 @@
 "use strict";
 
+// cspell:words autoboot
+
 module.exports = function (environment) {
   const ENV = {
     modulePrefix: "ember-example",
@@ -37,7 +39,6 @@ module.exports = function (environment) {
     ENV.APP.LOG_VIEW_LOOKUPS = false;
 
     ENV.APP.rootElement = "#ember-testing";
-    // cspell:disable-next-line
     ENV.APP.autoboot = false;
   }
 
