@@ -3,6 +3,7 @@ import {
   getApi,
   getUserLanguage,
   log,
+  logSignatureWarning,
   parseWebsocketMessage,
 } from "@flows/shared";
 import { blocks, blocksError, config, freeOrg, pendingMessages, updateBlocks } from "../store";
@@ -52,6 +53,8 @@ export const connectToWebsocketAndFetchBlocks = ({ onAfterLoad }: Props): void =
         // Disconnect if the user is usage limited
         if (res.meta?.usage_limited) disconnect?.();
         if (res.meta?.free_org) freeOrg.value = true;
+        if (res.meta?.signature_error_message)
+          logSignatureWarning(res.meta.signature_error_message);
         onAfterLoad();
       })
       .catch((err: unknown) => {
