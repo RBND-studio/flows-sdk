@@ -49,7 +49,8 @@ const organizationId = new URLSearchParams(window.location.search).get("organiza
 const enableLinkComponent =
   new URLSearchParams(window.location.search).get("customNavigation") === "true";
 const slotLimit = new URLSearchParams(window.location.search).get("slotLimit");
-const signature = new URLSearchParams(window.location.search).get("signature") ?? undefined;
+const signatureValue = new URLSearchParams(window.location.search).get("signature") ?? undefined;
+const signature = signatureValue === "null" ? null : signatureValue;
 
 const Card: FC<ComponentProps<{ text: string }>> = (props) => (
   <div

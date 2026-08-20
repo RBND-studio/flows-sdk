@@ -34,6 +34,30 @@ const run = (packageName: string) => {
 
     await expect(() => expect(reqWasSent).toBe(true)).toPass();
   });
+  test(`${packageName} - shouldn't initialize with signature null`, async ({ page }) => {
+    await page.goto(`/${packageName}.html?signature=null`);
+
+    let reqWasSent = false;
+    page.on("request", (req) => {
+      if (req.url() === "https://api.flows-cloud.com/v2/sdk/blocks") reqWasSent = true;
+    });
+
+    await new Promise((res) => setTimeout(res, 500));
+
+    expect(reqWasSent).toBe(false);
+  });
+  test(`${packageName} - should initialize with signature`, async ({ page }) => {
+    await page.goto(`/${packageName}.html?signature=my-signature`);
+
+    let reqWasSent = false;
+    page.on("request", (req) => {
+      if (req.url() === "https://api.flows-cloud.com/v2/sdk/blocks") reqWasSent = true;
+    });
+
+    await new Promise((res) => setTimeout(res, 500));
+
+    expect(reqWasSent).toBe(true);
+  });
 };
 
 run("react");

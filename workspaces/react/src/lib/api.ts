@@ -13,7 +13,7 @@ type SendEventProps = Omit<EventRequest, "userId" | "environment" | "organizatio
 
 export const sendEvent = async (props: SendEventProps): Promise<void> => {
   const { apiUrl, environment, organizationId, userId, signature, customFetch } = globalConfig;
-  if (!apiUrl || !environment || !organizationId || !userId) return;
+  if (!apiUrl || !environment || !organizationId || !userId || signature === null) return;
 
   return enqueueEvent({
     apiContext: { apiUrl, version: packageAndVersion },
@@ -32,7 +32,7 @@ export const postSurvey = async (
   props: Omit<ApiSurveyAnswer, "userId" | "environment" | "organizationId" | "signature" | "url">,
 ) => {
   const { apiUrl, environment, organizationId, userId, signature, customFetch } = globalConfig;
-  if (!apiUrl || !environment || !organizationId || !userId) return;
+  if (!apiUrl || !environment || !organizationId || !userId || signature === null) return;
 
   await getApi({ apiUrl, version: packageAndVersion, customFetch }).postSurvey({
     ...props,
@@ -58,7 +58,7 @@ export const sendActivate = async (blockId: string): Promise<void> => {
  */
 export const fetchWorkflows = async (): Promise<WorkflowsResponse> => {
   const { apiUrl, environment, organizationId, userId, signature, customFetch } = globalConfig;
-  if (!apiUrl || !environment || !organizationId || !userId) {
+  if (!apiUrl || !environment || !organizationId || !userId || signature === null) {
     log.error("fetchWorkflows() called before rendering <FlowsProvider>");
     return { workflows: [] };
   }

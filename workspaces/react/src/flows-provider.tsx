@@ -31,11 +31,13 @@ export interface FlowsProviderProps {
   /**
    * Unique ID used to identify the user.
    *
-   * If set to `null`, the SDK will be disabled and `children` will render while waiting for the `userId`. This is useful when loading the ID asynchronously.
+   * If set to `null`, the SDK will be disabled while waiting for the `userId`. This is useful when loading the ID asynchronously.
    */
   userId: string | null;
   /**
    * HMAC signature of `userId`, used to verify the user's identity. Learn more about [identity verification](https://flows.sh/docs/sdk/identity-verification).
+   *
+   * If set to `null`, the SDK will be disabled. This is useful when loading the signature asynchronously.
    *
    * Compute it on your backend as a hex encoded HMAC-SHA256 of `userId`, keyed with a secret from Settings > Environments. Never expose the secret to the browser.
    *
@@ -47,7 +49,7 @@ export interface FlowsProviderProps {
    * const signature = crypto.createHmac("sha256", process.env.FLOWS_SECRET).update(userId).digest("hex");
    * ```
    */
-  signature?: string;
+  signature?: string | null;
   /**
    * Object with custom [user properties](https://flows.sh/docs/users/properties). Values can be string, number, boolean, or date.
    *
@@ -161,7 +163,8 @@ export const FlowsProvider: FC<FlowsProviderProps> = (props) => {
 
 type Props = Omit<FlowsProviderProps, "userId"> & { userId: string };
 const isProps = (props: FlowsProviderProps): props is Props => {
-  return typeof props.userId === "string";
+  // TODO: move this to use-blocks when #734 is merged
+  return typeof props.userId === "string" && props.signature !== null;
 };
 
 const FlowsProviderInner: FC<Props> = ({

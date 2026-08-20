@@ -26,7 +26,7 @@ interface Props {
   environment: string;
   organizationId: string;
   userId: string;
-  signature?: string;
+  signature?: string | null;
   userProperties?: UserProperties;
   language?: LanguageOption;
   onAfterLoad: () => void;
