@@ -250,6 +250,7 @@ const FlowsProviderInner: FC<FlowsProviderProps> = ({
         environment={environment}
         organizationId={organizationId}
         userId={userId}
+        signature={signature}
         userProperties={userProperties}
         onDebugKeydown={onDebugShortcut}
         language={language}
