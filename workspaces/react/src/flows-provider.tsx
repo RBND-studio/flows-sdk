@@ -152,8 +152,6 @@ export interface FlowsProviderProps {
 }
 
 export const FlowsProvider: FC<FlowsProviderProps> = (props) => {
-  if (!isProps(props)) return props.children;
-
   return (
     <PathnameProvider>
       <FlowsProviderInner {...props} />
@@ -161,13 +159,7 @@ export const FlowsProvider: FC<FlowsProviderProps> = (props) => {
   );
 };
 
-type Props = Omit<FlowsProviderProps, "userId"> & { userId: string };
-const isProps = (props: FlowsProviderProps): props is Props => {
-  // TODO: move this to use-blocks when #734 is merged
-  return typeof props.userId === "string" && props.signature !== null;
-};
-
-const FlowsProviderInner: FC<Props> = ({
+const FlowsProviderInner: FC<FlowsProviderProps> = ({
   children,
   apiUrl = "https://api.flows-cloud.com",
   customFetch,
@@ -196,7 +188,7 @@ const FlowsProviderInner: FC<Props> = ({
   const onAfterLoad = useCallback(() => {
     void sendEvents(globalConfig.customFetch);
   }, []);
-  const { blocks, freeOrg, error, wsError, removeBlock, updateBlock } = useBlocks({
+  const { blocks, freeOrg, tourConcurrency, error, wsError, removeBlock, updateBlock } = useBlocks({
     apiUrl,
     environment,
     organizationId,
@@ -204,11 +196,10 @@ const FlowsProviderInner: FC<Props> = ({
     signature,
     userProperties,
     language,
-    customFetch,
     onAfterLoad,
   });
 
-  const runningTours = useRunningTours({ blocks, removeBlock, userProperties });
+  const runningTours = useRunningTours({ blocks, tourConcurrency, removeBlock, userProperties });
   const runningSurveyBlockStateIds = useRunningSurveys({ blocks, userProperties });
 
   useEffect(() => {

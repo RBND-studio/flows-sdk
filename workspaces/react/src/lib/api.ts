@@ -1,72 +1,17 @@
-import {
-  getApi,
-  log,
-  type WorkflowsResponse,
-  type EventRequest,
-  enqueueEvent,
-} from "@flows/shared";
-import { globalConfig } from "./store";
+import { createBoundApi } from "@flows/shared";
 import { packageAndVersion } from "./constants";
-import type { ApiSurveyAnswer } from "@flows/shared";
+import { globalConfig } from "./store";
 
-type SendEventProps = Omit<EventRequest, "userId" | "environment" | "organizationId" | "signature">;
-
-export const sendEvent = async (props: SendEventProps): Promise<void> => {
+export const api = createBoundApi(() => {
   const { apiUrl, environment, organizationId, userId, signature, customFetch } = globalConfig;
-  if (!apiUrl || !environment || !organizationId || !userId || signature === null) return;
-
-  return enqueueEvent({
-    apiContext: { apiUrl, version: packageAndVersion },
+  if (!apiUrl || !environment || !organizationId || !userId || signature === null) return null;
+  return {
+    apiUrl,
+    version: packageAndVersion,
     customFetch,
-    event: {
-      ...props,
-      environment,
-      organizationId,
-      userId,
-      signature,
-    },
-  });
-};
-
-export const postSurvey = async (
-  props: Omit<ApiSurveyAnswer, "userId" | "environment" | "organizationId" | "signature" | "url">,
-) => {
-  const { apiUrl, environment, organizationId, userId, signature, customFetch } = globalConfig;
-  if (!apiUrl || !environment || !organizationId || !userId || signature === null) return;
-
-  await getApi({ apiUrl, version: packageAndVersion, customFetch }).postSurvey({
-    ...props,
     environment,
     organizationId,
     userId,
     signature,
-    url: window.location.href,
-  });
-};
-
-const activatedBlockIds = new Set<string>();
-export const sendActivate = async (blockId: string): Promise<void> => {
-  if (activatedBlockIds.has(blockId)) return;
-
-  activatedBlockIds.add(blockId);
-  await sendEvent({ name: "block-activated", blockId });
-};
-
-/**
- * Returns all available workflows for the current user. Before calling this method, the `<FlowsProvider>` component must be rendered.
- * @returns A promise resolving to a {@link WorkflowsResponse} object containing an array of enabled workflows.
- */
-export const fetchWorkflows = async (): Promise<WorkflowsResponse> => {
-  const { apiUrl, environment, organizationId, userId, signature, customFetch } = globalConfig;
-  if (!apiUrl || !environment || !organizationId || !userId || signature === null) {
-    log.error("fetchWorkflows() called before rendering <FlowsProvider>");
-    return { workflows: [] };
-  }
-
-  return getApi({ apiUrl, version: packageAndVersion, customFetch }).getWorkflows({
-    environment,
-    organizationId,
-    userId,
-    signature,
-  });
-};
+  };
+});

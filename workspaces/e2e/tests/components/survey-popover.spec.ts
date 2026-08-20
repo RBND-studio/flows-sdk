@@ -28,10 +28,10 @@ const getBlock = (): Block => ({
 
 const run = (packageName: string) => {
   test(`${packageName} - should show branding with free org`, async ({ page }) => {
-    await mockBlocksEndpoint(page, [getBlock()], true);
+    await mockBlocksEndpoint(page, [getBlock()], { free_org: true });
     await page.goto(`/${packageName}.html`);
     await expect(page.locator(".flows_basicsV2_survey_popover_branding")).toBeVisible();
-    await mockBlocksEndpoint(page, [getBlock()], false);
+    await mockBlocksEndpoint(page, [getBlock()], { free_org: false });
     await page.goto(`/${packageName}.html`);
     await expect(page.locator(".flows_basicsV2_survey_popover_branding")).toBeHidden();
   });

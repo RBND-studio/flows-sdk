@@ -44,14 +44,14 @@
     "@typescript/native": "npm:typescript@^7.0.2",
     "jest": "^30.4.2",
     "jest-environment-jsdom": "^30.4.1",
-    "ts-jest": "^29.4.11",
+    "ts-jest": "^29.4.12",
     "tsup": "^8.5.1",
     "typescript": "npm:@typescript/typescript6@^6.0.2"
   },
   "dependencies": {
     "@floating-ui/react-dom": "^2.1.9",
     "clsx": "^2.1.1",
-    "dompurify": "^3.4.12",
+    "dompurify": "^3.4.13",
     "es-toolkit": "^1.50.0"
   },
   "peerDependencies": {

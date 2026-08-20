@@ -1,14 +1,22 @@
 import {
   applyUpdateMessageToBlocksState,
-  getApi,
+  getBlockUpdatesWebsocketUrl,
   getUserLanguage,
   log,
   logSignatureWarning,
   parseWebsocketMessage,
 } from "@flows/shared";
-import { blocks, blocksError, config, freeOrg, pendingMessages, updateBlocks } from "../store";
+import {
+  blocks,
+  blocksError,
+  config,
+  freeOrg,
+  pendingMessages,
+  tourConcurrency,
+  updateBlocks,
+} from "../store";
 import { type Disconnect, websocket } from "./websocket";
-import { packageAndVersion } from "./constants";
+import { api } from "./api";
 
 let disconnect: Disconnect | null = null;
 
@@ -20,25 +28,23 @@ export const connectToWebsocketAndFetchBlocks = ({ onAfterLoad }: Props): void =
   const configuration = config.value;
   if (!configuration) return;
 
-  const { environment, organizationId, userId, signature, apiUrl, customFetch } = configuration;
-  const params: {
-    environment: string;
-    organizationId: string;
-    userId: string;
-    signature?: string;
-  } = { environment, organizationId, userId };
-  if (signature) params.signature = signature;
-  const wsUrl = (() => {
-    const wsBase = apiUrl.replace("https://", "wss://").replace("http://", "ws://");
-    return `${wsBase}/ws/sdk/block-updates?${new URLSearchParams(params).toString()}`;
-  })();
+  const { environment, organizationId, userId, signature, apiUrl } = configuration;
+  const wsUrl = getBlockUpdatesWebsocketUrl({
+    apiUrl,
+    environment,
+    organizationId,
+    userId,
+    signature,
+  });
+  if (!wsUrl) {
+    // This should never happen, the url will be undefined only if userId is missing, which is a required parameter for the init function
+    throw new Error("Couldn't connect to Flows: Missing userId");
+  }
 
   const fetchBlocks = (): void => {
     blocksError.value = false;
-    void getApi({ apiUrl, version: packageAndVersion, customFetch })
+    void api
       .getBlocks({
-        ...params,
-        signature: params.signature,
         language: getUserLanguage(configuration.language),
         userProperties: configuration.userProperties,
       })
@@ -52,9 +58,10 @@ export const connectToWebsocketAndFetchBlocks = ({ onAfterLoad }: Props): void =
 
         // Disconnect if the user is usage limited
         if (res.meta?.usage_limited) disconnect?.();
-        if (res.meta?.free_org) freeOrg.value = true;
         if (res.meta?.signature_error_message)
           logSignatureWarning(res.meta.signature_error_message);
+        freeOrg.value = !!res.meta?.free_org;
+        tourConcurrency.value = !!res.meta?.tour_concurrency;
         onAfterLoad();
       })
       .catch((err: unknown) => {

@@ -1,6 +1,6 @@
 {
   "name": "@flows/react",
-  "version": "1.27.0",
+  "version": "1.27.1-canary.0",
   "description": "Flows React SDK – Build native product growth experiences, your way",
   "keywords": [
     "react",
@@ -44,7 +44,7 @@
     "@typescript/native": "npm:typescript@^7.0.2",
     "jest": "^30.4.2",
     "jest-environment-jsdom": "^30.4.1",
-    "ts-jest": "^29.4.11",
+    "ts-jest": "^29.4.12",
     "tsup": "^8.5.1",
     "typescript": "npm:@typescript/typescript6@^6.0.2"
   },

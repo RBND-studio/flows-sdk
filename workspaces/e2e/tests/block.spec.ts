@@ -1,7 +1,7 @@
 import type { Block } from "@flows/shared";
 import { expect, test } from "@playwright/test";
 import { randomUUID } from "crypto";
-import { mockBlocksEndpoint } from "./utils";
+import { getTour, getTourStep, mockBlocksEndpoint } from "./utils";
 
 const getWorkflowBlock = (blockStateId = randomUUID()): Block => ({
   id: randomUUID(),
@@ -39,26 +39,7 @@ const getUnknownComponentBlock = (): Block => ({
 const getBlocks = (): Block[] =>
   [
     getWorkflowBlock(),
-    {
-      id: randomUUID(),
-      workflowId: randomUUID(),
-      data: {},
-      exitNodes: [],
-      slottable: false,
-      type: "tour",
-      propertyMeta: [],
-      tourBlocks: [
-        {
-          id: randomUUID(),
-          workflowId: randomUUID(),
-          data: {},
-          key: "tour-block-key",
-          slottable: false,
-          type: "tour-component",
-          componentType: "BasicsV2Modal",
-        },
-      ],
-    },
+    getTour({ tourBlocks: [getTourStep({ key: "tour-block-key" })] }),
   ] satisfies Block[];
 
 test.beforeEach(async ({ page }) => {
@@ -111,6 +92,12 @@ const run = (packageName: string) => {
               tourVisibleStepCount: 1,
               tourVisibleStepIndex: 0,
               freeOrg: false,
+            },
+            primaryButton: {
+              label: "Continue",
+            },
+            secondaryButton: {
+              label: "Previous",
             },
           },
         },
