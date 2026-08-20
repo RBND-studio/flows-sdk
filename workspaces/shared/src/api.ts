@@ -224,12 +224,16 @@ export const createBoundApi = (
       await getApi({
         ...ctx,
         keepalive: true,
-      }).sendEvent({
-        ...props,
-        environment: ctx.environment,
-        organizationId: ctx.organizationId,
-        userId: ctx.userId,
-      });
+      })
+        .sendEvent({
+          ...props,
+          environment: ctx.environment,
+          organizationId: ctx.organizationId,
+          userId: ctx.userId,
+        })
+        .catch((err) => {
+          log.error("Failed to send event", err);
+        });
     },
     postSurvey: async (props: PostSurveyProps): Promise<void> => {
       const ctx = getContext();

@@ -243,11 +243,13 @@ const run = (packageName: string) => {
     let interruptedEventCalled = false;
     page.on("request", (req) => {
       const body = req.postDataJSON();
-      return (
+      if (
         req.url().includes("/v2/sdk/events") &&
         body.name === "tour-session-hint" &&
         body.properties.interrupted === true
-      );
+      ) {
+        interruptedEventCalled = true;
+      }
     });
     await page.locator("h1").click();
     await expect(page.getByText("Hello", { exact: true })).toBeVisible();
