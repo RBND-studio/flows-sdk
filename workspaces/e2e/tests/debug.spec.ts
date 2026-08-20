@@ -8,7 +8,7 @@ const run = (packageName: string) => {
   test(`${packageName} - should show debug panel`, async ({ page }) => {
     await mockBlocksEndpoint(page, []);
 
-    const currentUrl = `/${packageName}.html?organizationId=${organizationId}&language=fr`;
+    const currentUrl = `/${packageName}.html?organizationId=${organizationId}&language=fr&signature=my-signature`;
 
     await page.goto(currentUrl);
 
@@ -24,6 +24,7 @@ const run = (packageName: string) => {
 
     await expect(page.getByText("User Information", { exact: true })).toBeVisible();
     await expect(page.getByText("testUserId", { exact: true })).toBeVisible();
+    await expect(page.getByText("my-signature", { exact: true })).toBeVisible();
     await expect(page.getByText("fr", { exact: true })).toBeVisible();
     await expect(page.getByText("test@flows.sh")).toBeVisible();
     await page.getByLabel("Go back", { exact: true }).click();

@@ -37,6 +37,7 @@ interface GetBlocksRequest {
   userId: string;
   environment: string;
   organizationId: string;
+  signature: string | undefined;
   userProperties?: Record<string, unknown>;
   language?: string;
 }
@@ -44,6 +45,7 @@ interface GetBlocksRequest {
 interface BlockResponseMeta {
   usage_limited?: boolean;
   free_org?: boolean;
+  signature_error_message?: string;
   tour_concurrency?: boolean;
 }
 
@@ -58,6 +60,7 @@ export interface WorkflowsRequest {
   userId: string;
   environment: string;
   organizationId: string;
+  signature: string | undefined;
 }
 
 export type WorkflowStatus = "enabled" | "launchpad-enabled";
@@ -110,6 +113,7 @@ export interface EventRequest {
   userId: string;
   environment: string;
   organizationId: string;
+  signature: string | undefined;
   name:
     | "transition"
     | "tour-update"
@@ -154,13 +158,15 @@ export const getBlockUpdatesWebsocketUrl = ({
   environment,
   organizationId,
   userId,
+  signature,
 }: {
   apiUrl: string;
   environment: string;
   organizationId: string;
   userId: string | null;
+  signature: string | undefined | null;
 }): string | undefined => {
-  if (!userId) return;
+  if (!userId || signature === null) return;
   const baseUrl = apiUrl.replace(/^http(s?):\/\//, "ws$1://");
   return `${baseUrl}/ws/sdk/block-updates?${new URLSearchParams({
     environment: environment,
@@ -169,16 +175,27 @@ export const getBlockUpdatesWebsocketUrl = ({
   }).toString()}`;
 };
 
-export type GetBlocksProps = Omit<GetBlocksRequest, "userId" | "environment" | "organizationId">;
-export type SendEventProps = Omit<EventRequest, "userId" | "environment" | "organizationId">;
+export type GetBlocksProps = Omit<
+  GetBlocksRequest,
+  "userId" | "environment" | "organizationId" | "signature"
+>;
+export type SendEventProps = Omit<
+  EventRequest,
+  "userId" | "environment" | "organizationId" | "signature"
+>;
 export type PostSurveyProps = Omit<
   ApiSurveyAnswer,
-  "userId" | "environment" | "organizationId" | "url"
+  "userId" | "environment" | "organizationId" | "signature" | "url"
 >;
 
 export const createBoundApi = (
   getContext: () =>
-    | (ApiContext & { environment: string; organizationId: string; userId: string })
+    | (ApiContext & {
+        environment: string;
+        organizationId: string;
+        userId: string;
+        signature: string | undefined;
+      })
     | null,
 ) => {
   const activatedBlockIds = new Set<string>();
@@ -197,6 +214,7 @@ export const createBoundApi = (
         environment: ctx.environment,
         organizationId: ctx.organizationId,
         userId: ctx.userId,
+        signature: ctx.signature,
       },
     });
   };
@@ -210,6 +228,7 @@ export const createBoundApi = (
         environment: ctx.environment,
         organizationId: ctx.organizationId,
         userId: ctx.userId,
+        signature: ctx.signature,
       });
     },
     sendEvent,
@@ -230,6 +249,7 @@ export const createBoundApi = (
           environment: ctx.environment,
           organizationId: ctx.organizationId,
           userId: ctx.userId,
+          signature: ctx.signature,
         })
         .catch((err) => {
           log.error("Failed to send event", err);
@@ -243,6 +263,7 @@ export const createBoundApi = (
         environment: ctx.environment,
         organizationId: ctx.organizationId,
         userId: ctx.userId,
+        signature: ctx.signature,
         url: window.location.href,
       });
     },
@@ -261,6 +282,7 @@ export const createBoundApi = (
         environment: ctx.environment,
         organizationId: ctx.organizationId,
         userId: ctx.userId,
+        signature: ctx.signature,
       });
     },
   };

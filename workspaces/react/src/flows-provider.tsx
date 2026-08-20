@@ -31,9 +31,37 @@ export interface FlowsProviderProps {
   /**
    * Unique ID used to identify the user.
    *
-   * If set to `null`, the SDK will be disabled and `children` will render while waiting for the `userId`. This is useful when loading the ID asynchronously.
+   * If set to `null`, the SDK will be disabled while waiting for the `userId`. This is useful when loading the ID asynchronously.
    */
   userId: string | null;
+  /**
+   * HMAC signature of `userId`, used to verify the user's identity. Learn more about [identity verification](https://flows.sh/docs/sdk/identity-verification).
+   *
+   * If set to `null`, the SDK will be disabled. This is useful when loading the signature asynchronously.
+   *
+   * Compute it on your backend as a hex encoded HMAC-SHA256 of `userId`, keyed with a secret from Settings > Environments. Never expose the secret to the browser.
+   *
+   * Required once identity verification is enforced for the environment. While it is not enforced, an incorrect signature is reported as a console warning and requests still succeed.
+   *
+   * @example
+   * ```tsx
+   * // On your frontend
+   * const [signature, setSignature] = useState<string>();
+   *
+   * useEffect(() => {
+   *  fetch("/user").then((user) => setSignature(user.signature))
+   * }, []);
+   *
+   * <FlowsProvider
+   *   // Pass null as a fallback to disable the SDK while waiting for the signature to load
+   *   signature={signature ?? null}
+   * />
+   *
+   * // On your backend
+   * const signature = crypto.createHmac("sha256", FLOWS_SECRET).update(userId).digest("hex");
+   * ```
+   */
+  signature?: string | null;
   /**
    * Object with custom [user properties](https://flows.sh/docs/users/properties). Values can be string, number, boolean, or date.
    *
@@ -150,6 +178,7 @@ const FlowsProviderInner: FC<FlowsProviderProps> = ({
   environment,
   organizationId,
   userId,
+  signature,
   components,
   tourComponents,
   surveyComponents,
@@ -163,6 +192,7 @@ const FlowsProviderInner: FC<FlowsProviderProps> = ({
   globalConfig.environment = environment;
   globalConfig.organizationId = organizationId;
   globalConfig.userId = userId;
+  globalConfig.signature = signature;
   globalConfig.customFetch = customFetch;
 
   const userProperties = useUserProperties(_userProperties);
@@ -175,6 +205,7 @@ const FlowsProviderInner: FC<FlowsProviderProps> = ({
     environment,
     organizationId,
     userId,
+    signature,
     userProperties,
     language,
     onAfterLoad,
@@ -219,6 +250,7 @@ const FlowsProviderInner: FC<FlowsProviderProps> = ({
         environment={environment}
         organizationId={organizationId}
         userId={userId}
+        signature={signature}
         userProperties={userProperties}
         onDebugKeydown={onDebugShortcut}
         language={language}

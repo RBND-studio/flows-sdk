@@ -14,6 +14,20 @@ export interface FlowsOptions {
    */
   userId: string;
   /**
+   * HMAC signature of `userId`, used to verify the user's identity. Learn more about [identity verification](https://flows.sh/docs/sdk/identity-verification).
+   *
+   * Compute it on your backend as a hex encoded HMAC-SHA256 of `userId`, keyed with a secret from Settings > Environments. Never expose the secret to the browser.
+   *
+   * Required once identity verification is enforced for the environment. While it is not enforced, an incorrect signature is reported as a console warning and requests still succeed.
+   *
+   * @example
+   * ```ts
+   * // On your backend
+   * const signature = crypto.createHmac("sha256", process.env.FLOWS_SECRET).update(userId).digest("hex");
+   * ```
+   */
+  signature?: string;
+  /**
    * Object with custom [user properties](https://flows.sh/docs/users/properties). Values can be string, number, boolean, or date.
    */
   userProperties?: UserProperties;

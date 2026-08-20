@@ -41,6 +41,7 @@ const organizationId = new URLSearchParams(window.location.search).get("organiza
 const slotLimit = new URLSearchParams(window.location.search).get("slotLimit");
 const enableOnNavigate =
   new URLSearchParams(window.location.search).get("customNavigation") === "true";
+const signature = new URLSearchParams(window.location.search).get("signature") ?? undefined;
 
 class Card extends LitElement {
   @property({ type: String })
@@ -139,6 +140,7 @@ init({
   environment: "prod",
   organizationId: organizationId ?? "orgId",
   userId: "testUserId",
+  signature,
   language,
   apiUrl,
   customFetch,

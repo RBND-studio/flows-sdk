@@ -12,6 +12,7 @@ import {
   getClosedBlockStateIds,
   updateClosedBlockStateIds,
   filterVisibleBlocks,
+  logSignatureWarning,
   getBlockUpdatesWebsocketUrl,
 } from "@flows/shared";
 import { type RemoveBlock, type UpdateBlock } from "../flows-context";
@@ -24,6 +25,7 @@ interface Props {
   environment: string;
   organizationId: string;
   userId: string | null;
+  signature?: string | null;
   userProperties?: UserProperties;
   language?: LanguageOption;
   onAfterLoad: () => void;
@@ -44,6 +46,7 @@ export const useBlocks = ({
   environment,
   organizationId,
   userId,
+  signature,
   userProperties,
   language,
   onAfterLoad,
@@ -116,6 +119,8 @@ export const useBlocks = ({
           }
         }, 0);
 
+        if (res.meta?.signature_error_message)
+          logSignatureWarning(res.meta.signature_error_message);
         setUsageLimited(!!res.meta?.usage_limited);
         setFreeOrg(!!res.meta?.free_org);
         setTourConcurrency(!!res.meta?.tour_concurrency);
@@ -153,8 +158,9 @@ export const useBlocks = ({
       environment,
       organizationId,
       userId,
+      signature,
     });
-  }, [usageLimited, apiUrl, environment, organizationId, userId]);
+  }, [usageLimited, apiUrl, environment, organizationId, userId, signature]);
 
   const onMessage = useCallback((event: MessageEvent<unknown>) => {
     const data = parseWebsocketMessage(event);

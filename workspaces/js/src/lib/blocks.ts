@@ -3,6 +3,7 @@ import {
   getBlockUpdatesWebsocketUrl,
   getUserLanguage,
   log,
+  logSignatureWarning,
   parseWebsocketMessage,
 } from "@flows/shared";
 import {
@@ -27,12 +28,13 @@ export const connectToWebsocketAndFetchBlocks = ({ onAfterLoad }: Props): void =
   const configuration = config.value;
   if (!configuration) return;
 
-  const { apiUrl, environment, organizationId, userId } = configuration;
+  const { environment, organizationId, userId, signature, apiUrl } = configuration;
   const wsUrl = getBlockUpdatesWebsocketUrl({
     apiUrl,
     environment,
     organizationId,
     userId,
+    signature,
   });
   if (!wsUrl) {
     // This should never happen, the url will be undefined only if userId is missing, which is a required parameter for the init function
@@ -56,6 +58,8 @@ export const connectToWebsocketAndFetchBlocks = ({ onAfterLoad }: Props): void =
 
         // Disconnect if the user is usage limited
         if (res.meta?.usage_limited) disconnect?.();
+        if (res.meta?.signature_error_message)
+          logSignatureWarning(res.meta.signature_error_message);
         freeOrg.value = !!res.meta?.free_org;
         tourConcurrency.value = !!res.meta?.tour_concurrency;
         onAfterLoad();

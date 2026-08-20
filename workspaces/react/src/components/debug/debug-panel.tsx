@@ -34,6 +34,7 @@ export interface DebugPanelProps {
   organizationId: string;
   environment: string;
   userId: string | null;
+  signature: string | null | undefined;
   userProperties?: UserProperties;
   language?: LanguageOption;
 
@@ -48,6 +49,7 @@ const DebugPanel: FC<DebugPanelProps> = ({
   environment,
   organizationId,
   userId,
+  signature,
   userProperties,
   language,
 }) => {
@@ -80,7 +82,14 @@ const DebugPanel: FC<DebugPanelProps> = ({
 
   const content = (() => {
     if (panelPage === "user")
-      return <UserPanel userProperties={userProperties} userId={userId} language={language} />;
+      return (
+        <UserPanel
+          userProperties={userProperties}
+          userId={userId}
+          language={language}
+          signature={signature}
+        />
+      );
     if (panelPage === "sdk-setup")
       return (
         <SdkSetupPanel

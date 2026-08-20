@@ -5,14 +5,21 @@ import { type ReactNode } from "react";
 interface Props {
   userProperties?: UserProperties;
   userId: string | null;
-  language?: LanguageOption;
+  signature: string | null | undefined;
+  language: LanguageOption | undefined;
 }
 
-export const UserPanel = ({ userProperties, userId, language }: Props): ReactNode => {
+export const UserPanel = ({ userProperties, userId, language, signature }: Props): ReactNode => {
   return (
     <>
       <p className="flows-debug-info-line">
-        <strong>User ID:</strong> <code className="flows-debug-inline-code">{userId}</code>
+        <strong>User ID:</strong>{" "}
+        <code className="flows-debug-inline-code">{userId ?? "Not set"}</code>
+      </p>
+
+      <p className="flows-debug-info-line">
+        <strong>Signature:</strong>{" "}
+        <code className="flows-debug-inline-code">{signature ?? "Not set"}</code>
       </p>
 
       <p className="flows-debug-info-line">

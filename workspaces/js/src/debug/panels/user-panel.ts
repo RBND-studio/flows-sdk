@@ -5,13 +5,24 @@ import { html, type TemplateResult } from "lit";
 interface Props {
   userProperties?: UserProperties;
   userId: string;
+  signature: string | undefined;
   language?: LanguageOption;
 }
 
-export const UserPanel = ({ userId, userProperties, language }: Props): TemplateResult => {
+export const UserPanel = ({
+  userId,
+  userProperties,
+  language,
+  signature,
+}: Props): TemplateResult => {
   return html`
     <p class="flows-debug-info-line">
       <strong>User ID:</strong> <code class="flows-debug-inline-code">${userId}</code>
+    </p>
+
+    <p class="flows-debug-info-line">
+      <strong>Signature:</strong>
+      <code class="flows-debug-inline-code">${signature ?? "Not set"}</code>
     </p>
 
     <p class="flows-debug-info-line">

@@ -84,6 +84,7 @@ export class DebugPanel extends SignalWatcher(LitElement) {
           userId: config.value?.userId ?? "",
           userProperties: config.value?.userProperties,
           language: config.value?.language,
+          signature: config.value?.signature,
         });
       if (this._page === "blocks") return BlocksPanel({ blocks: blocksValue });
       if (this._page === "sdk-setup")
