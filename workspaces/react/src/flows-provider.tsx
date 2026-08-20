@@ -44,9 +44,21 @@ export interface FlowsProviderProps {
    * Required once identity verification is enforced for the environment. While it is not enforced, an incorrect signature is reported as a console warning and requests still succeed.
    *
    * @example
-   * ```ts
+   * ```tsx
+   * // On your frontend
+   * const [signature, setSignature] = useState<string>();
+   *
+   * useEffect(() => {
+   *  fetch("/user").then((user) => setSignature(user.signature))
+   * }, []);
+   *
+   * <FlowsProvider
+   *   // Pass null as a fallback to disable the SDK while waiting for the signature to load
+   *   signature={signature ?? null}
+   * />
+   *
    * // On your backend
-   * const signature = crypto.createHmac("sha256", process.env.FLOWS_SECRET).update(userId).digest("hex");
+   * const signature = crypto.createHmac("sha256", FLOWS_SECRET).update(userId).digest("hex");
    * ```
    */
   signature?: string | null;
