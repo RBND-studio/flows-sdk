@@ -33,7 +33,7 @@ export interface DebugPanelProps {
 
   organizationId: string;
   environment: string;
-  userId: string;
+  userId: string | null;
   userProperties?: UserProperties;
   language?: LanguageOption;
 

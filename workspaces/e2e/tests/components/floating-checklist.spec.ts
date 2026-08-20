@@ -332,7 +332,7 @@ const run = (packageName: string) => {
     await expect(checklistPopover).toBeVisible();
   });
   test(`${packageName} - should show branding with free org`, async ({ page }) => {
-    await mockBlocksEndpoint(page, [getBlock({})], true);
+    await mockBlocksEndpoint(page, [getBlock({})], { free_org: true });
     await page.goto(`/${packageName}.html`);
     const checklistWidget = page.getByRole("button", { name: "Widget title" });
     const checklistPopover = page.locator(".flows_basicsV2_floating_checklist_popover");

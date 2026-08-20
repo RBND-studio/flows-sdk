@@ -11,6 +11,7 @@ export * from "./matchers";
 export * from "./pathname";
 export * from "./survey";
 export * from "./template";
+export * from "./tour";
 export * from "./tour-trigger";
 export * from "./tour-wait/tour-wait";
 export * from "./types";

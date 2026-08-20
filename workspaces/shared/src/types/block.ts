@@ -76,6 +76,7 @@ export interface Block {
   tour_trigger?: TourTrigger;
   tourBlocks?: TourStep[];
   currentTourIndex?: number;
+  tourSessionEndAction?: string;
 
   survey?: ApiSurvey;
 }

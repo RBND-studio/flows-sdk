@@ -4,7 +4,7 @@ import { type ReactNode } from "react";
 
 interface Props {
   userProperties?: UserProperties;
-  userId: string;
+  userId: string | null;
   language?: LanguageOption;
 }
 

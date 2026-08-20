@@ -1,36 +1,5 @@
-import type { Block } from "@flows/shared";
 import test, { expect } from "@playwright/test";
-import { randomUUID } from "crypto";
-import { mockBlocksEndpoint } from "./utils";
-
-const getBlock = ({ componentType }: { componentType: string }): Block => ({
-  id: randomUUID(),
-  workflowId: randomUUID(),
-  type: "component",
-  componentType,
-  data: {},
-  exitNodes: [],
-  slottable: false,
-});
-
-const getTour = ({ componentType }: { componentType: string }): Block => ({
-  id: randomUUID(),
-  workflowId: randomUUID(),
-  type: "tour",
-  data: {},
-  exitNodes: [],
-  slottable: false,
-  tourBlocks: [
-    {
-      id: randomUUID(),
-      workflowId: randomUUID(),
-      data: {},
-      slottable: false,
-      type: "tour-component",
-      componentType,
-    },
-  ],
-});
+import { getBlock, getTour, getTourStep, mockBlocksEndpoint } from "./utils";
 
 test.beforeEach(async ({ page }) => {
   await page.routeWebSocket(
@@ -88,7 +57,7 @@ const run = (packageName: string) => {
     await reqPromise;
   });
   test(`${packageName} - should call activate for tour block`, async ({ page }) => {
-    const block = getTour({ componentType: "BasicsV2Modal" });
+    const block = getTour({ tourBlocks: [getTourStep({})] });
     await mockBlocksEndpoint(page, [block]);
     const reqPromise = page.waitForRequest((req) => {
       const body = req.postDataJSON();

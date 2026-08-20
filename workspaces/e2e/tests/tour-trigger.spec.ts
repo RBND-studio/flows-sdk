@@ -18,6 +18,7 @@ const getTour = ({
   currentTourIndex?: number;
 }): Block => ({
   id: randomUUID(),
+  blockStateId: randomUUID(),
   workflowId: randomUUID(),
   type: "tour",
   data: {},

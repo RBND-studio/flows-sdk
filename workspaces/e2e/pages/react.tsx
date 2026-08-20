@@ -159,6 +159,7 @@ const LinkComponent: LinkComponentType = ({ href, children, className, onClick }
 
 const App: FC = () => {
   const [count, setCount] = useState(0);
+  const [userIdCount, setUserIdCount] = useState(0);
   const [languageState, setLanguage] = useState<LanguageOption | undefined>(language);
 
   return (
@@ -166,7 +167,7 @@ const App: FC = () => {
       <FlowsProvider
         organizationId={organizationId ?? "orgId"}
         environment="prod"
-        userId={noUserId ? null : "testUserId"}
+        userId={noUserId ? null : `testUserId${userIdCount ? `-${userIdCount}` : ""}`}
         language={languageState}
         userProperties={{
           email: "test@flows.sh",
@@ -185,6 +186,7 @@ const App: FC = () => {
           <Route path="/another-page" element={<AnotherPage />} />
         </Routes>
         <button onClick={() => setCount((p) => p + 1)}>Increment</button>
+        <button onClick={() => setUserIdCount((p) => p + 1)}>Increment user id</button>
         <button onClick={() => setLanguage((prev) => (prev === "en" ? "fr" : "en"))}>
           Change language
         </button>

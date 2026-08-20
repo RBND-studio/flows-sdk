@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { CustomFetch } from "@flows/shared";
 import {
-  getApi,
   log,
   type UserProperties,
   type Block,
@@ -14,17 +12,18 @@ import {
   getClosedBlockStateIds,
   updateClosedBlockStateIds,
   filterVisibleBlocks,
+  getBlockUpdatesWebsocketUrl,
 } from "@flows/shared";
-import { packageAndVersion } from "../lib/constants";
 import { type RemoveBlock, type UpdateBlock } from "../flows-context";
 import { useWebsocket } from "./use-websocket";
+import { api } from "../lib/api";
+import { isValidConfig } from "../lib/store";
 
 interface Props {
   apiUrl: string;
-  customFetch?: CustomFetch;
   environment: string;
   organizationId: string;
-  userId: string;
+  userId: string | null;
   userProperties?: UserProperties;
   language?: LanguageOption;
   onAfterLoad: () => void;
@@ -33,6 +32,7 @@ interface Props {
 interface Return {
   blocks: Block[] | null;
   freeOrg: boolean;
+  tourConcurrency: boolean;
   removeBlock: RemoveBlock;
   updateBlock: UpdateBlock;
   error: boolean;
@@ -41,7 +41,6 @@ interface Return {
 
 export const useBlocks = ({
   apiUrl,
-  customFetch,
   environment,
   organizationId,
   userId,
@@ -72,6 +71,7 @@ export const useBlocks = ({
 
   const [usageLimited, setUsageLimited] = useState(false);
   const [freeOrg, setFreeOrg] = useState(false);
+  const [tourConcurrency, setTourConcurrency] = useState(false);
   const pendingMessages = useRef<BlockUpdatesMessage[]>([]);
 
   const blocks = useMemo(() => {
@@ -84,26 +84,22 @@ export const useBlocks = ({
     });
   }, [blocksState, closedBlockStateIds, freeOrg]);
 
-  const params = useMemo(
-    () => ({ environment, organizationId, userId }),
-    [environment, organizationId, userId],
-  );
-
   const userPropertiesStateRef = useRef(userProperties);
   userPropertiesStateRef.current = userProperties;
 
   const activeFetchRef = useRef<Promise<void> | null>(null);
   const queuedFetchRef = useRef(false);
   const fetchBlocks = useCallback(() => {
+    if (!isValidConfig()) return;
+
     if (activeFetchRef.current) {
       queuedFetchRef.current = true;
       return;
     }
 
     setError(false);
-    activeFetchRef.current = getApi({ apiUrl, version: packageAndVersion, customFetch })
+    activeFetchRef.current = api
       .getBlocks({
-        ...params,
         language: getUserLanguage(language),
         userProperties: userPropertiesStateRef.current,
       })
@@ -120,8 +116,9 @@ export const useBlocks = ({
           }
         }, 0);
 
-        if (res.meta?.usage_limited) setUsageLimited(true);
-        if (res.meta?.free_org) setFreeOrg(true);
+        setUsageLimited(!!res.meta?.usage_limited);
+        setFreeOrg(!!res.meta?.free_org);
+        setTourConcurrency(!!res.meta?.tour_concurrency);
         onAfterLoad();
       })
       .catch((err: unknown) => {
@@ -134,7 +131,7 @@ export const useBlocks = ({
         queuedFetchRef.current = false;
         fetchBlocks();
       });
-  }, [apiUrl, language, params, customFetch, onAfterLoad]);
+  }, [language, onAfterLoad]);
 
   // Refetch blocks when userProperties or language change
   const fetchBlocksRef = useRef(fetchBlocks);
@@ -150,9 +147,14 @@ export const useBlocks = ({
 
   const websocketUrl = useMemo(() => {
     if (usageLimited) return;
-    const baseUrl = apiUrl.replace("https://", "wss://").replace("http://", "ws://");
-    return `${baseUrl}/ws/sdk/block-updates?${new URLSearchParams(params).toString()}`;
-  }, [apiUrl, params, usageLimited]);
+    // Pass the parameters directly, to reactively reconnect and refetch blocks when any of them change
+    return getBlockUpdatesWebsocketUrl({
+      apiUrl,
+      environment,
+      organizationId,
+      userId,
+    });
+  }, [usageLimited, apiUrl, environment, organizationId, userId]);
 
   const onMessage = useCallback((event: MessageEvent<unknown>) => {
     const data = parseWebsocketMessage(event);
@@ -194,5 +196,5 @@ export const useBlocks = ({
     });
   }, []);
 
-  return { blocks, freeOrg, error, wsError, removeBlock, updateBlock };
+  return { blocks, tourConcurrency, freeOrg, error, wsError, removeBlock, updateBlock };
 };

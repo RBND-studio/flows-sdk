@@ -1,7 +1,7 @@
 import type { CustomFetch } from "@flows/shared";
 
 interface GlobalConfig {
-  userId: string;
+  userId: string | null;
   organizationId: string;
   environment: string;
   apiUrl: string;
@@ -9,3 +9,9 @@ interface GlobalConfig {
 }
 
 export const globalConfig: Partial<GlobalConfig> = {};
+
+export const isValidConfig = (): boolean => {
+  const { apiUrl, environment, organizationId, userId } = globalConfig;
+  if (userId && organizationId && environment && apiUrl) return true;
+  return false;
+};
