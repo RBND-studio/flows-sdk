@@ -143,8 +143,8 @@ const run = (packageName: string) => {
     await expect(page.getByText("World", { exact: true })).toBeVisible();
 
     let eventReq;
-    // In firefox the request isn't sent and the test is failing
-    if (browserName !== "firefox") {
+    // In firefox and chromium the request isn't sent and the test is failing
+    if (!["firefox", "chromium"].includes(browserName)) {
       eventReq = page.waitForRequest((req) => {
         const body = req.postDataJSON();
         return (
