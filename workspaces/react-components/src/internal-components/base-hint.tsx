@@ -71,8 +71,10 @@ export const BaseHint: FC<Props> = (props) => {
   });
   const dotRef = targetFloating.refs.floating;
 
+  // oxlint-disable-next-line react/refs
   const tooltipFloating = useFloating({
     placement: "bottom",
+    // oxlint-disable-next-line react/refs
     elements: { reference: targetFloating.refs.floating.current },
     whileElementsMounted: autoUpdate,
     transform: false,
@@ -100,6 +102,7 @@ export const BaseHint: FC<Props> = (props) => {
     return () => {
       window.removeEventListener("click", handleWindowClick);
     };
+    // oxlint-disable-next-line react/refs
   }, [handleClose, dotRef, tooltipRef]);
 
   useEffect(() => {
@@ -130,9 +133,12 @@ export const BaseHint: FC<Props> = (props) => {
   return (
     <>
       <button
+        // oxlint-disable-next-line react/refs
         ref={targetFloating.refs.setFloating}
         style={{
+          // oxlint-disable-next-line react/refs
           left: targetFloating.x + (props.offsetX ?? 0),
+          // oxlint-disable-next-line react/refs
           top: targetFloating.y + (props.offsetY ?? 0),
         }}
         aria-label="Open hint"
@@ -145,8 +151,11 @@ export const BaseHint: FC<Props> = (props) => {
         <div
           className="flows_basicsV2_tooltip_tooltip flows_basicsV2_hint_tooltip"
           data-open={!tooltipClosing ? "true" : "false"}
+          // oxlint-disable-next-line react/refs
           data-placement={tooltipFloating.placement}
+          // oxlint-disable-next-line react/refs
           ref={tooltipFloating.refs.setFloating}
+          // oxlint-disable-next-line react/refs
           style={{ left: tooltipFloating.x, top: tooltipFloating.y }}
         >
           <Text className="flows_basicsV2_tooltip_title" variant="title">

@@ -69,6 +69,7 @@ export const BaseTooltip: FC<Props> = (props) => {
     middleware: [
       flip({ fallbackPlacements: ["top", "bottom", "left", "right"] }),
       shift({ crossAxis: true, padding: BOUNDARY_PADDING }),
+      // oxlint-disable-next-line react/refs
       arrow({ element: bottomArrowRef, padding: ARROW_EDGE_PADDING }),
       offset(OFFSET_DISTANCE),
     ],
@@ -77,6 +78,7 @@ export const BaseTooltip: FC<Props> = (props) => {
   const [enterAnimationEnded, setEnterAnimationEnded] = useState(false);
   useEffect(() => {
     // Show enter animation in tour after the tooltip was hidden because the target element isn't on page
+    // oxlint-disable-next-line react/set-state-in-effect
     if (!reference) setEnterAnimationEnded(false);
   }, [reference]);
   useEffect(() => {
@@ -85,6 +87,7 @@ export const BaseTooltip: FC<Props> = (props) => {
     if (!el) return;
     const hasAnimation = window.getComputedStyle(el).animationName !== "none";
     if (!hasAnimation) {
+      // oxlint-disable-next-line react/set-state-in-effect
       setEnterAnimationEnded(true);
     }
   }, [enterAnimationEnded, refs.floating]);
@@ -133,12 +136,15 @@ export const BaseTooltip: FC<Props> = (props) => {
   if (blockScrollPosition && !isTargetInView) return null;
 
   if (refs.floating.current) {
+    // oxlint-disable-next-line react/immutability
     refs.floating.current.style.left = `${x}px`;
+    // oxlint-disable-next-line react/immutability
     refs.floating.current.style.top = `${y}px`;
   }
 
   const arrowX = middlewareData.arrow?.x;
   const arrowY = middlewareData.arrow?.y;
+  // oxlint-disable-next-line react/refs
   [bottomArrowRef, topArrowRef].forEach((arrowRef) => {
     if (!arrowRef.current) return;
     // eslint-disable-next-line eqeqeq -- null check is intended here

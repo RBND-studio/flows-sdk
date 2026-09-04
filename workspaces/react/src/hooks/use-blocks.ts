@@ -53,6 +53,7 @@ export const useBlocks = ({
 }: Props): Return => {
   const [blocksState, setBlocksState] = useState<Block[] | null>(null);
   const blocksStateRef = useRef(blocksState);
+  // oxlint-disable-next-line react/refs
   blocksStateRef.current = blocksState;
   const [error, setError] = useState(false);
 
@@ -65,6 +66,7 @@ export const useBlocks = ({
     });
   }, []);
   const closedBlockStateIdsRef = useRef(closedBlockStateIds);
+  // oxlint-disable-next-line react/refs
   closedBlockStateIdsRef.current = closedBlockStateIds;
   // Initialize closedBlockStateIds in browser from sessionStorage value
   useEffect(() => {
@@ -88,6 +90,7 @@ export const useBlocks = ({
   }, [blocksState, closedBlockStateIds, freeOrg]);
 
   const userPropertiesStateRef = useRef(userProperties);
+  // oxlint-disable-next-line react/refs
   userPropertiesStateRef.current = userProperties;
 
   const activeFetchRef = useRef<Promise<void> | null>(null);
@@ -134,12 +137,14 @@ export const useBlocks = ({
         activeFetchRef.current = null;
         if (!queuedFetchRef.current) return;
         queuedFetchRef.current = false;
+        // oxlint-disable-next-line react/immutability
         fetchBlocks();
       });
   }, [language, onAfterLoad]);
 
   // Refetch blocks when userProperties or language change
   const fetchBlocksRef = useRef(fetchBlocks);
+  // oxlint-disable-next-line react/refs
   fetchBlocksRef.current = fetchBlocks;
   const firstRenderRef = useRef(true);
   useEffect(() => {

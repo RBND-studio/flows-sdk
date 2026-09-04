@@ -25,6 +25,7 @@ export const useRunningSurveys = ({ blocks, userProperties }: Props): string[] =
   }, [runningSurveyBlockStateIds]);
 
   const runningSurveyBlockStateIdsRef = useRef(runningSurveyBlockStateIds);
+  // oxlint-disable-next-line react/refs
   runningSurveyBlockStateIdsRef.current = runningSurveyBlockStateIds;
 
   const pathname = usePathname();
@@ -39,6 +40,7 @@ export const useRunningSurveys = ({ blocks, userProperties }: Props): string[] =
         .map((b) => b.blockStateId)
         .filter((id): id is string => !!id),
     );
+    // oxlint-disable-next-line react/set-state-in-effect
     setRunningSurveyBlockStateIds((prev) => prev.filter((id) => surveyBlockStateIds.has(id)));
   }, [blocks]);
 

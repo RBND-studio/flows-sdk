@@ -21,6 +21,7 @@ export function useQuerySelector<T extends Element>(selector?: string | null): T
 
   useEffect(() => {
     if (!selector) {
+      // oxlint-disable-next-line react/set-state-in-effect
       setElement(null);
       return;
     }

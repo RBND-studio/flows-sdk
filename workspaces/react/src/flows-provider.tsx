@@ -188,11 +188,17 @@ const FlowsProviderInner: FC<FlowsProviderProps> = ({
   onDebugShortcut,
   LinkComponent,
 }) => {
+  // oxlint-disable-next-line react/immutability
   globalConfig.apiUrl = apiUrl;
+  // oxlint-disable-next-line react/immutability
   globalConfig.environment = environment;
+  // oxlint-disable-next-line react/immutability
   globalConfig.organizationId = organizationId;
+  // oxlint-disable-next-line react/immutability
   globalConfig.userId = userId;
+  // oxlint-disable-next-line react/immutability
   globalConfig.signature = signature;
+  // oxlint-disable-next-line react/immutability
   globalConfig.customFetch = customFetch;
 
   const userProperties = useUserProperties(_userProperties);
