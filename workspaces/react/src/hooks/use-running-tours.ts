@@ -52,6 +52,7 @@ export const useRunningTours = ({
   // This is only "proxy" state with current tour index
   const [runningTours, setRunningTours] = useState<IRunningTour[]>([]);
   useEffect(() => {
+    // oxlint-disable-next-line react/set-state-in-effect
     if (!blocks) return setRunningTours([]);
 
     const blocksByStateId = new Map(blocks.map((b) => [b.blockStateId, b]));
@@ -69,18 +70,23 @@ export const useRunningTours = ({
     });
   }, [runningTourBlockStateIds, blocks]);
   const runningToursRef = useRef<IRunningTour[]>(runningTours);
+  // oxlint-disable-next-line react/refs
   runningToursRef.current = runningTours;
   const onlyRunningTourBlockStateIdRef = useRef<string | undefined>(onlyRunningTourBlockStateId);
+  // oxlint-disable-next-line react/refs
   onlyRunningTourBlockStateIdRef.current = onlyRunningTourBlockStateId;
   const pathname = usePathname();
   const blocksRef = useRef<Block[] | null>(blocks);
+  // oxlint-disable-next-line react/refs
   blocksRef.current = blocks;
   const tourConcurrencyRef = useRef<boolean>(tourConcurrency);
+  // oxlint-disable-next-line react/refs
   tourConcurrencyRef.current = tourConcurrency;
 
   // Stop tours that are no longer running
   useEffect(() => {
     if (!blocks) return;
+    // oxlint-disable-next-line react/set-state-in-effect
     setRunningTourBlockStateIds((prev) => {
       const tourBlockStateIds = new Set(
         blocks.filter((b) => b.type === "tour").map((b) => b.blockStateId),
@@ -317,6 +323,7 @@ export const useRunningTours = ({
 
     const highestPriorityTour = getHighestPriorityRunningTour(runningToursWithActiveBlock);
     if (highestPriorityTour) {
+      // oxlint-disable-next-line react/set-state-in-effect
       setOnlyRunningTourBlockStateId(highestPriorityTour.blockStateId);
     }
   }, [runningToursWithActiveBlock, tourConcurrency, onlyRunningTourBlockStateId]);
@@ -326,6 +333,7 @@ export const useRunningTours = ({
     const isRunning = runningTours.some(
       (tour) => tour.blockStateId === onlyRunningTourBlockStateId,
     );
+    // oxlint-disable-next-line react/set-state-in-effect
     if (!isRunning) setOnlyRunningTourBlockStateId(undefined);
   }, [runningTours, onlyRunningTourBlockStateId]);
 

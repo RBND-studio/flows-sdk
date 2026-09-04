@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 export const useUserProperties = (userProperties: UserProperties): UserProperties => {
   const [userPropertiesState, setUserPropertiesState] = useState(userProperties);
   const userPropertiesStateRef = useRef(userPropertiesState);
+  // oxlint-disable-next-line react/refs
   userPropertiesStateRef.current = userPropertiesState;
 
   useEffect(() => {

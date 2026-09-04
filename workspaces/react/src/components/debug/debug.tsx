@@ -13,6 +13,7 @@ const DebugPanel = lazy(() => import("./debug-panel"));
 export const Debug: FC<Props> = (props) => {
   const [firstRender, setFirstRender] = useState(true);
   useEffect(() => {
+    // oxlint-disable-next-line react/set-state-in-effect
     setFirstRender(false);
   }, []);
 

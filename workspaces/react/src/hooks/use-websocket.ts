@@ -77,6 +77,7 @@ export const useWebsocket = ({ url, onMessage, onOpen }: Props): Return => {
   }, [handleMessage, url]);
 
   useEffect(() => {
+    // oxlint-disable-next-line react/set-state-in-effect
     const cleanup = connect();
     return () => {
       cleanup?.();

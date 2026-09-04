@@ -35,6 +35,7 @@ const FloatingChecklist: FC<FloatingChecklistProps> = (props) => {
   // Set initial open state from session storage or defaultOpen prop
   useEffect(() => {
     if (!firstRender) return;
+    // oxlint-disable-next-line react/set-state-in-effect
     setFirstRender(false);
 
     const storedValue = window.sessionStorage.getItem(sessionStorageOpenKey);
