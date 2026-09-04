@@ -54,7 +54,15 @@ const run = (packageName: string) => {
         req.url() === "https://api.flows-cloud.com/v2/sdk/blocks" && body.signature === signature
       );
     });
+    const wsReq = page.waitForEvent("websocket", (ws) => {
+      const urlParams = new URLSearchParams(ws.url().split("?")[1]);
+      return (
+        ws.url().startsWith("wss://api.flows-cloud.com/ws/sdk/block-updates") &&
+        urlParams.get("signature") === signature
+      );
+    });
     await page.goto(`/${packageName}.html?signature=${signature}`);
+    await wsReq;
     await blocksReq;
 
     const eventReq = page.waitForRequest((req) => {
