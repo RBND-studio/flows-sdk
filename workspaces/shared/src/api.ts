@@ -168,11 +168,19 @@ export const getBlockUpdatesWebsocketUrl = ({
 }): string | undefined => {
   if (!userId || signature === null) return;
   const baseUrl = apiUrl.replace(/^http(s?):\/\//, "ws$1://");
-  return `${baseUrl}/ws/sdk/block-updates?${new URLSearchParams({
-    environment: environment,
-    organizationId: organizationId,
-    userId: userId,
-  }).toString()}`;
+  const params: {
+    environment: string;
+    organizationId: string;
+    userId: string;
+    signature?: string;
+  } = {
+    environment,
+    organizationId,
+    userId,
+  };
+  if (signature) params.signature = signature;
+
+  return `${baseUrl}/ws/sdk/block-updates?${new URLSearchParams(params).toString()}`;
 };
 
 export type GetBlocksProps = Omit<
