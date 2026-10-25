@@ -15,6 +15,7 @@
   line-height: var(--flows-basicsV2-base-line-height);
 
   width: var(--flows-basicsV2-survey-popover-width);
+  max-width: calc(100% - 2 * var(--flows-basicsV2-size-l));
   animation: flows-basicsV2-scaleIn 160ms ease-out;
   overflow: hidden;
   transition: height 280ms cubic-bezier(0.4, 0, 0.2, 1);
