@@ -64,6 +64,7 @@
   color: var(--flows-debug-fg-default);
 }
 :where(.flows-debug) hr {
+  margin: 0;
   border: none;
   border-top: var(--flows-debug-border);
 }
@@ -204,6 +205,7 @@
 .flows-debug-inline-code {
   font-family: var(--flows-debug-mono-font);
   font-size: 12px;
+  word-break: break-all;
 }
 
 .flows-debug-item {
