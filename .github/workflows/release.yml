@@ -35,7 +35,7 @@ jobs:
       - uses: actions/create-github-app-token@v3
         id: app-token
         with:
-          app-id: 906021
+          client-id: 906021
           private-key: ${{ secrets.FLOWS_BOT_PRIVATE_KEY }}
       - uses: actions/checkout@v7
         with:
