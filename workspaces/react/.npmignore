@@ -1,6 +1,5 @@
 src
 tsconfig*
 tsup.config.ts
-vitest.config.mts
 .oxlintrc.json
 tsconfig.tsbuildinfo
