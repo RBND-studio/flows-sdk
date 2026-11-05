@@ -1,3 +1,4 @@
+import { afterEach, describe, expect, it, vi } from "vitest";
 import type { Block, TourStep, TourStepType } from "../types";
 import { filterVisibleBlocks } from "./blocks";
 import { randomUUID } from "crypto";
@@ -39,7 +40,7 @@ const getBlock = ({
   tourBlocks,
 });
 
-const consoleWarnMock = jest.spyOn(console, "warn").mockImplementation(() => {});
+const consoleWarnMock = vi.spyOn(console, "warn").mockImplementation(() => {});
 
 afterEach(() => {
   consoleWarnMock.mockClear();

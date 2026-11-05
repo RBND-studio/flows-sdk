@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import * as matchers from "./primitive-matchers";
 
 describe("$regex", () => {
@@ -45,12 +46,9 @@ describe("$eq", () => {
     expect(matchers.$eq(false, false)).toBe(true);
     expect(matchers.$eq(null, null)).toBe(true);
   });
-  it("should call itself recursively if expected is an array", () => {
-    const spy = jest.spyOn(matchers, "$eq");
+  it("should return true if value matches any of the expected values", () => {
     expect(matchers.$eq("foo", ["bar", "foo"])).toBe(true);
-    expect(spy).toHaveBeenNthCalledWith(1, "foo", ["bar", "foo"]);
-    expect(spy).toHaveBeenNthCalledWith(2, "foo", "bar");
-    expect(spy).toHaveBeenNthCalledWith(3, "foo", "foo");
+    expect(matchers.$eq("foo", ["bar", "baz"])).toBe(false);
   });
 });
 
@@ -74,12 +72,9 @@ describe("$ne", () => {
     expect(matchers.$ne(false, false)).toBe(false);
     expect(matchers.$ne(null, null)).toBe(false);
   });
-  it("should call itself recursively if expected is an array", () => {
-    const spy = jest.spyOn(matchers, "$ne");
+  it("should return true only if value matches none of the expected values", () => {
     expect(matchers.$ne("foo", ["bar", "foo"])).toBe(false);
-    expect(spy).toHaveBeenNthCalledWith(1, "foo", ["bar", "foo"]);
-    expect(spy).toHaveBeenNthCalledWith(2, "foo", "bar");
-    expect(spy).toHaveBeenNthCalledWith(3, "foo", "foo");
+    expect(matchers.$ne("foo", ["bar", "baz"])).toBe(true);
   });
 });
 
@@ -237,12 +232,9 @@ describe("$contains", () => {
     expect(matchers.$contains("foo", "foo")).toBe(true);
     expect(matchers.$contains("bar foo bar", "foo")).toBe(true);
   });
-  it("should call itself recursively if expected is an array", () => {
-    const spy = jest.spyOn(matchers, "$contains");
+  it("should return true if value matches any of the expected values", () => {
     expect(matchers.$contains("foo bar", ["baz", "foo"])).toBe(true);
-    expect(spy).toHaveBeenNthCalledWith(1, "foo bar", ["baz", "foo"]);
-    expect(spy).toHaveBeenNthCalledWith(2, "foo bar", "baz");
-    expect(spy).toHaveBeenNthCalledWith(3, "foo bar", "foo");
+    expect(matchers.$contains("foo bar", ["baz", "qux"])).toBe(false);
   });
 });
 
@@ -264,12 +256,9 @@ describe("$notContains", () => {
     expect(matchers.$notContains("bar", "foo")).toBe(true);
     expect(matchers.$notContains("bar foo", "barr")).toBe(true);
   });
-  it("should call itself recursively if expected is an array", () => {
-    const spy = jest.spyOn(matchers, "$notContains");
+  it("should return true only if value matches none of the expected values", () => {
     expect(matchers.$notContains("foo bar", ["baz", "foo"])).toBe(false);
-    expect(spy).toHaveBeenNthCalledWith(1, "foo bar", ["baz", "foo"]);
-    expect(spy).toHaveBeenNthCalledWith(2, "foo bar", "baz");
-    expect(spy).toHaveBeenNthCalledWith(3, "foo bar", "foo");
+    expect(matchers.$notContains("foo bar", ["baz", "qux"])).toBe(true);
   });
 });
 
@@ -291,12 +280,9 @@ describe("$startsWith", () => {
     expect(matchers.$startsWith("foo", "foo")).toBe(true);
     expect(matchers.$startsWith("foo bar", "foo")).toBe(true);
   });
-  it("should call itself recursively if expected is an array", () => {
-    const spy = jest.spyOn(matchers, "$startsWith");
+  it("should return true if value matches any of the expected values", () => {
     expect(matchers.$startsWith("foo bar", ["baz", "foo"])).toBe(true);
-    expect(spy).toHaveBeenNthCalledWith(1, "foo bar", ["baz", "foo"]);
-    expect(spy).toHaveBeenNthCalledWith(2, "foo bar", "baz");
-    expect(spy).toHaveBeenNthCalledWith(3, "foo bar", "foo");
+    expect(matchers.$startsWith("foo bar", ["baz", "bar"])).toBe(false);
   });
 });
 
@@ -318,12 +304,9 @@ describe("$endsWith", () => {
     expect(matchers.$endsWith("foo", "foo")).toBe(true);
     expect(matchers.$endsWith("bar foo", "foo")).toBe(true);
   });
-  it("should call itself recursively if expected is an array", () => {
-    const spy = jest.spyOn(matchers, "$endsWith");
+  it("should return true if value matches any of the expected values", () => {
     expect(matchers.$endsWith("foo bar", ["baz", "bar"])).toBe(true);
-    expect(spy).toHaveBeenNthCalledWith(1, "foo bar", ["baz", "bar"]);
-    expect(spy).toHaveBeenNthCalledWith(2, "foo bar", "baz");
-    expect(spy).toHaveBeenNthCalledWith(3, "foo bar", "bar");
+    expect(matchers.$endsWith("foo bar", ["baz", "foo"])).toBe(false);
   });
 });
 
@@ -345,12 +328,9 @@ describe("$notStartsWith", () => {
     expect(matchers.$notStartsWith("foo", "foo")).toBe(false);
     expect(matchers.$notStartsWith("foo bar", "foo")).toBe(false);
   });
-  it("should call itself recursively if expected is an array", () => {
-    const spy = jest.spyOn(matchers, "$notStartsWith");
+  it("should return true only if value matches none of the expected values", () => {
     expect(matchers.$notStartsWith("foo bar", ["baz", "foo"])).toBe(false);
-    expect(spy).toHaveBeenNthCalledWith(1, "foo bar", ["baz", "foo"]);
-    expect(spy).toHaveBeenNthCalledWith(2, "foo bar", "baz");
-    expect(spy).toHaveBeenNthCalledWith(3, "foo bar", "foo");
+    expect(matchers.$notStartsWith("foo bar", ["baz", "bar"])).toBe(true);
   });
 });
 
@@ -372,11 +352,8 @@ describe("$notEndsWith", () => {
     expect(matchers.$notEndsWith("foo", "foo")).toBe(false);
     expect(matchers.$notEndsWith("bar foo", "foo")).toBe(false);
   });
-  it("should call itself recursively if expected is an array", () => {
-    const spy = jest.spyOn(matchers, "$notEndsWith");
+  it("should return true only if value matches none of the expected values", () => {
     expect(matchers.$notEndsWith("foo bar", ["baz", "bar"])).toBe(false);
-    expect(spy).toHaveBeenNthCalledWith(1, "foo bar", ["baz", "bar"]);
-    expect(spy).toHaveBeenNthCalledWith(2, "foo bar", "baz");
-    expect(spy).toHaveBeenNthCalledWith(3, "foo bar", "bar");
+    expect(matchers.$notEndsWith("foo bar", ["baz", "foo"])).toBe(true);
   });
 });

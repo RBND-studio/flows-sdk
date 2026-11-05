@@ -12,6 +12,6 @@
     "jsdoc",
     "jsx-a11y",
     "promise",
-    "jest"
+    "vitest"
   ]
 }

@@ -1,6 +1,6 @@
 src
 tsconfig*
 tsup.config.ts
-jest.config.js
+vitest.config.mts
 .oxlintrc.json
 tsconfig.tsbuildinfo

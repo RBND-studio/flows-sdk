@@ -31,8 +31,8 @@
   "scripts": {
     "dev": "tsup --env.NODE_ENV development",
     "build": "tsup --env.NODE_ENV production && node scripts/rename-global-modules.js",
-    "test": "jest --passWithNoTests",
-    "test:watch": "jest --watch",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest",
     "tsc": "tsc -p tsconfig.json",
     "prepare": "pnpm build"
   },
@@ -47,13 +47,11 @@
     "@flows/js": "workspace:*",
     "@flows/shared": "workspace:*",
     "@flows/styles": "workspace:*",
-    "@types/jest": "^30.0.0",
     "@types/node": "^24.12.0",
     "@typescript/native": "npm:typescript@^7.0.2",
-    "jest": "^30.5.2",
-    "ts-jest": "^29.4.15",
     "tsup": "^9.0.0",
-    "typescript": "npm:@typescript/typescript6@^6.0.2"
+    "typescript": "npm:@typescript/typescript6@^6.0.2",
+    "vitest": "^5.1.0"
   },
   "peerDependencies": {
     "@flows/js": ">=1.18.0"
