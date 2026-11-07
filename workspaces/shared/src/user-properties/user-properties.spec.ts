@@ -1,3 +1,4 @@
+import { expect, it } from "vitest";
 import { isUserPropertiesEqual } from "./user-properties";
 
 it("should be equal for undefined values", () => {

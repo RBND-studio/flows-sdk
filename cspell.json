@@ -30,7 +30,6 @@
     "*.svg",
     "coverage",
     "dist",
-    "jest.config.js",
     "node_modules",
     "out",
     "package.json",
