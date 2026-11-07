@@ -1,3 +1,4 @@
+import { getReconnectDelay } from "@flows/shared";
 import { wsError } from "../store";
 
 interface Props {
@@ -8,10 +9,12 @@ interface Props {
 
 export type Disconnect = () => void;
 
-let reconnectAttempts = 0;
-
 export const websocket = (props: Props): { disconnect: Disconnect } => {
-  const connect = (): { disconnect: Disconnect } => {
+  let reconnectAttempts = 0;
+  let reconnectTimeout: ReturnType<typeof setTimeout> | undefined;
+  let closeSocket: Disconnect | undefined;
+
+  const connect = (): void => {
     const socket = new WebSocket(props.url);
     wsError.value = false;
 
@@ -20,13 +23,10 @@ export const websocket = (props: Props): { disconnect: Disconnect } => {
       reconnectAttempts = 0;
     };
     const handleClose = (): void => {
-      setTimeout(
-        () => {
-          connect();
-        },
-        Math.min(1000 * 4 ** reconnectAttempts, 120_000),
-      );
       reconnectAttempts += 1;
+      reconnectTimeout = setTimeout(() => {
+        connect();
+      }, getReconnectDelay(reconnectAttempts));
     };
     const handleError = (): void => {
       wsError.value = true;
@@ -37,7 +37,7 @@ export const websocket = (props: Props): { disconnect: Disconnect } => {
     socket.addEventListener("close", handleClose);
     socket.addEventListener("error", handleError);
 
-    const disconnect = (): void => {
+    closeSocket = (): void => {
       socket.removeEventListener("message", props.onMessage);
       socket.removeEventListener("open", handleOpen);
       socket.removeEventListener("close", handleClose);
@@ -49,9 +49,14 @@ export const websocket = (props: Props): { disconnect: Disconnect } => {
         });
       } else socket.close();
     };
-
-    return { disconnect };
   };
 
-  return connect();
+  connect();
+
+  const disconnect = (): void => {
+    clearTimeout(reconnectTimeout);
+    closeSocket?.();
+  };
+
+  return { disconnect };
 };
