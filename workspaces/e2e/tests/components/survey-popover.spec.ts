@@ -3,6 +3,13 @@ import test, { expect } from "@playwright/test";
 import { randomUUID } from "crypto";
 import { mockBlocksEndpoint } from "../utils";
 
+test.beforeEach(async ({ page }) => {
+  await page.routeWebSocket(
+    (url) => url.pathname === "/ws/sdk/block-updates",
+    () => {},
+  );
+});
+
 const getBlock = (): Block => ({
   id: randomUUID(),
   blockStateId: randomUUID(),

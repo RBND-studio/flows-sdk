@@ -6,6 +6,7 @@ import { mockBlocksEndpoint } from "./utils";
 
 let ws: WebSocketRoute | null = null;
 test.beforeEach(async ({ page }) => {
+  ws = null;
   await page.routeWebSocket(
     (url) => url.pathname === "/ws/sdk/block-updates",
     (_ws) => {
@@ -75,6 +76,8 @@ const run = (packageName: string) => {
     });
     await page.goto(`/${packageName}.html`);
     await expect(page.locator(".current-blocks")).toHaveText(JSON.stringify([]));
+    // /blocks is requested once the websocket opens, so both routes now belong to this page
+    await expect.poll(() => blocksRoute).not.toBeNull();
     const block = getBlock();
     const payload: BlockUpdatesPayload = {
       exitedBlockIds: [],
