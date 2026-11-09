@@ -2,6 +2,13 @@ import test, { expect } from "@playwright/test";
 import { mockBlocksEndpoint } from "./utils";
 import { randomUUID } from "node:crypto";
 
+test.beforeEach(async ({ page }) => {
+  await page.routeWebSocket(
+    (url) => url.pathname === "/ws/sdk/block-updates",
+    () => {},
+  );
+});
+
 const organizationId = randomUUID();
 
 const run = (packageName: string) => {

@@ -1,3 +1,4 @@
+import { expect, it } from "vitest";
 import type { TourWait, UserProperties } from "../types";
 import { processTourWait } from "./tour-wait";
 

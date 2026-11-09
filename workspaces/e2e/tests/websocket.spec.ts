@@ -19,6 +19,7 @@ const run = (packageName: string) => {
   test.describe(`mocked websocket`, () => {
     let ws: WebSocketRoute | null = null;
     test.beforeEach(async ({ page }) => {
+      ws = null;
       await page.routeWebSocket(
         (url) => url.pathname === "/ws/sdk/block-updates",
         (_ws) => {
@@ -35,6 +36,7 @@ const run = (packageName: string) => {
       await page.goto(`/${packageName}.html`);
       await expect(page.locator("h1")).toBeVisible();
       await expect(page.getByText("Hello world", { exact: true })).toBeHidden();
+      await expect.poll(() => ws).not.toBeNull();
       const payload: BlockUpdatesPayload = {
         exitedBlockIds: [],
         updatedBlocks: [block],
@@ -76,12 +78,12 @@ const run = (packageName: string) => {
     test(`${packageName} - should establish websocket connection`, async ({ page }) => {
       await mockBlocksEndpoint(page, []);
       const wsPromise = page.waitForEvent("websocket");
-      await page.goto(`/${packageName}.html`);
-      await wsPromise;
-
-      await page.waitForRequest((req) => {
+      const blocksReq = page.waitForRequest((req) => {
         return req.url() === "https://api.flows-cloud.com/v2/sdk/blocks";
       });
+      await page.goto(`/${packageName}.html`);
+      await wsPromise;
+      await blocksReq;
     });
   });
 };

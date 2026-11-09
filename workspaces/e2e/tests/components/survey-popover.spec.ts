@@ -3,6 +3,13 @@ import test, { expect } from "@playwright/test";
 import { randomUUID } from "crypto";
 import { mockBlocksEndpoint } from "../utils";
 
+test.beforeEach(async ({ page }) => {
+  await page.routeWebSocket(
+    (url) => url.pathname === "/ws/sdk/block-updates",
+    () => {},
+  );
+});
+
 const getBlock = (): Block => ({
   id: randomUUID(),
   blockStateId: randomUUID(),
@@ -33,6 +40,10 @@ const run = (packageName: string) => {
     await expect(page.locator(".flows_basicsV2_survey_popover_branding")).toBeVisible();
     await mockBlocksEndpoint(page, [getBlock()], { free_org: false });
     await page.goto(`/${packageName}.html`);
+    // Wait for the survey to render, otherwise toBeHidden() passes before it appears
+    await expect(
+      page.getByText("How would you rate your experience?", { exact: true }),
+    ).toBeVisible();
     await expect(page.locator(".flows_basicsV2_survey_popover_branding")).toBeHidden();
   });
 };

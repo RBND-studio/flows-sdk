@@ -1,4 +1,4 @@
-import test from "@playwright/test";
+import test, { expect } from "@playwright/test";
 import { mockBlocksEndpoint } from "./utils";
 import { randomUUID } from "crypto";
 import type { Block } from "@flows/shared";
@@ -46,6 +46,13 @@ const getSurvey = (): Block => ({
 const run = (packageName: string) => {
   test(`${packageName} - it should add signature to requests`, async ({ page }) => {
     await mockBlocksEndpoint(page, [getModal(), getSurvey()]);
+    const wsUrls: string[] = [];
+    await page.routeWebSocket(
+      (url) => url.pathname === "/ws/sdk/block-updates",
+      (ws) => {
+        wsUrls.push(ws.url());
+      },
+    );
 
     const signature = "my-signature";
     const blocksReq = page.waitForRequest((req) => {
@@ -54,15 +61,15 @@ const run = (packageName: string) => {
         req.url() === "https://api.flows-cloud.com/v2/sdk/blocks" && body.signature === signature
       );
     });
-    const wsReq = page.waitForEvent("websocket", (ws) => {
-      const urlParams = new URLSearchParams(ws.url().split("?")[1]);
-      return (
-        ws.url().startsWith("wss://api.flows-cloud.com/ws/sdk/block-updates") &&
-        urlParams.get("signature") === signature
-      );
-    });
     await page.goto(`/${packageName}.html?signature=${signature}`);
-    await wsReq;
+    await expect
+      .poll(() =>
+        wsUrls
+          .map((wsUrl) => new URL(wsUrl))
+          .filter((url) => url.origin === "wss://api.flows-cloud.com")
+          .map((url) => url.searchParams.get("signature")),
+      )
+      .toContain(signature);
     await blocksReq;
 
     const eventReq = page.waitForRequest((req) => {
