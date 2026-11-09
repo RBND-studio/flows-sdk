@@ -78,6 +78,7 @@ const run = (packageName: string) => {
     await expect(page.locator(".current-blocks")).toHaveText(JSON.stringify([]));
     // /blocks is requested once the websocket opens, so both routes now belong to this page
     await expect.poll(() => blocksRoute).not.toBeNull();
+    expect(ws).not.toBeNull();
     const block = getBlock();
     const payload: BlockUpdatesPayload = {
       exitedBlockIds: [],
@@ -143,7 +144,7 @@ test("react - should reconnect ws and refetch blocks on userId change", async ({
   });
   await page.getByText("Increment user id", { exact: true }).click();
   await secondBlocksReq;
-  expect(ws).toBeDefined();
+  expect(ws).not.toBeNull();
   expect(ws).not.toEqual(initialWs);
 });
 

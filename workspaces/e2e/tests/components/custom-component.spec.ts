@@ -54,6 +54,15 @@ const run = (packageName: string) => {
     await page.goto(`/${packageName}.html`);
     await expect(page.locator(".flows_basicsV2_modal_modal")).toBeVisible();
   });
+  test(`${packageName} - should show custom component outside of localhost for paid orgs`, async ({
+    page,
+  }) => {
+    await mockBlocksEndpoint(page, [getBlock({ componentLibraryName: undefined })], {
+      free_org: false,
+    });
+    await page.goto(`http://127.0.0.1:3000/${packageName}.html`);
+    await expect(page.locator(".flows_basicsV2_modal_modal")).toBeVisible();
+  });
 };
 
 run("js");

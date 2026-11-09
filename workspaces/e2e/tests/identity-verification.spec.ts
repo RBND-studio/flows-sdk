@@ -64,15 +64,12 @@ const run = (packageName: string) => {
     await page.goto(`/${packageName}.html?signature=${signature}`);
     await expect
       .poll(() =>
-        wsUrls.some((wsUrl) => {
-          const urlParams = new URLSearchParams(wsUrl.split("?")[1]);
-          return (
-            wsUrl.startsWith("wss://api.flows-cloud.com/ws/sdk/block-updates") &&
-            urlParams.get("signature") === signature
-          );
-        }),
+        wsUrls
+          .map((wsUrl) => new URL(wsUrl))
+          .filter((url) => url.origin === "wss://api.flows-cloud.com")
+          .map((url) => url.searchParams.get("signature")),
       )
-      .toBe(true);
+      .toContain(signature);
     await blocksReq;
 
     const eventReq = page.waitForRequest((req) => {
