@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { getReconnectDelay } from "@flows/shared";
 
 interface Props {
   url?: string;
@@ -87,12 +88,9 @@ export const useWebsocket = ({ url, onMessage, onOpen }: Props): Return => {
   useEffect(() => {
     if (ws) return;
 
-    const timeout = setTimeout(
-      () => {
-        connect();
-      },
-      Math.min(1000 * 4 ** reconnectAttempts, 120_000),
-    );
+    const timeout = setTimeout(() => {
+      connect();
+    }, getReconnectDelay(reconnectAttempts));
 
     return () => {
       clearTimeout(timeout);
