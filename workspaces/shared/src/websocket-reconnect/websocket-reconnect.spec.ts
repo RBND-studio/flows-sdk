@@ -1,18 +1,19 @@
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { getReconnectDelay } from "./websocket-reconnect";
 
 const mockRandom = (value: number): void => {
-  jest.spyOn(Math, "random").mockReturnValue(value);
+  vi.spyOn(Math, "random").mockReturnValue(value);
 };
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  vi.restoreAllMocks();
 });
 
 describe("getReconnectDelay", () => {
-  it("should wait at least 0.5s", () => {
+  it("should wait at least 1s", () => {
     mockRandom(0);
-    expect(getReconnectDelay(1)).toBe(500);
-    expect(getReconnectDelay(5)).toBe(500);
+    expect(getReconnectDelay(1)).toBe(1000);
+    expect(getReconnectDelay(5)).toBe(1000);
   });
   it("should wait at most 10s on the first attempt", () => {
     mockRandom(1);
@@ -20,7 +21,7 @@ describe("getReconnectDelay", () => {
   });
   it("should pick a random delay between the bounds", () => {
     mockRandom(0.5);
-    expect(getReconnectDelay(1)).toBe(5250);
+    expect(getReconnectDelay(1)).toBe(5500);
   });
   it("should double the maximum delay with every attempt", () => {
     mockRandom(1);
@@ -42,7 +43,7 @@ describe("getReconnectDelay", () => {
     const delays = new Set(Array.from({ length: 100 }, () => getReconnectDelay(1)));
     expect(delays.size).toBeGreaterThan(1);
     delays.forEach((delay) => {
-      expect(delay).toBeGreaterThanOrEqual(500);
+      expect(delay).toBeGreaterThanOrEqual(1000);
       expect(delay).toBeLessThanOrEqual(10_000);
     });
   });
