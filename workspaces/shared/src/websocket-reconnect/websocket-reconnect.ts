@@ -1,5 +1,5 @@
 const MIN_RECONNECT_DELAY = 1000;
-const BASE_RECONNECT_DELAY = 10_000;
+const BASE_RECONNECT_DELAY = 5_000;
 const MAX_RECONNECT_DELAY = 120_000;
 
 /**
@@ -11,7 +11,7 @@ const STABLE_CONNECTION_DELAY = 10_000;
 
 /**
  * Exponential backoff with full jitter. The delay is random between 1s and a ceiling that doubles
- * with every failed attempt (10s, 20s, 40s, ...) up to 120s. The randomness spreads out reconnects
+ * with every failed attempt (5s, 10s, 20s, ...) up to 120s. The randomness spreads out reconnects
  * when many clients are disconnected at the same moment (proxy reload, server deploy).
  *
  * @param attempt - number of consecutive closes since the last successful connection, starting at 1
