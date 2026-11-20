@@ -1,5 +1,7 @@
 import {
   applyUpdateMessageToBlocksState,
+  connectWebsocket,
+  type Disconnect,
   getBlockUpdatesWebsocketUrl,
   getUserLanguage,
   log,
@@ -14,8 +16,8 @@ import {
   pendingMessages,
   tourConcurrency,
   updateBlocks,
+  wsError,
 } from "../store";
-import { type Disconnect, websocket } from "./websocket";
 import { api } from "./api";
 
 let disconnect: Disconnect | null = null;
@@ -83,6 +85,13 @@ export const connectToWebsocketAndFetchBlocks = ({ onAfterLoad }: Props): void =
   // Disconnect previous connection if it exists
   disconnect?.();
 
-  const websocketResult = websocket({ url: wsUrl, onMessage, onOpen: fetchBlocks });
+  const websocketResult = connectWebsocket({
+    url: wsUrl,
+    onMessage,
+    onOpen: fetchBlocks,
+    onErrorChange: (error) => {
+      wsError.value = error;
+    },
+  });
   disconnect = websocketResult.disconnect;
 };
