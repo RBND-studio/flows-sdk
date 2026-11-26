@@ -22,15 +22,15 @@
     "@commitlint/cli": "^21.2.4",
     "@commitlint/config-conventional": "^21.2.4",
     "@commitlint/types": "^21.2.3",
-    "concurrently": "^10.0.6",
-    "cspell": "^10.4.0",
+    "concurrently": "^10.0.7",
+    "cspell": "^10.5.2",
     "husky": "^9.1.7",
     "minimist": "^1.2.8",
-    "oxfmt": "^0.76.0",
-    "oxlint": "^1.91.0",
-    "oxlint-tsgolint": "^7.0.2005"
+    "oxfmt": "^0.80.0",
+    "oxlint": "^1.95.0",
+    "oxlint-tsgolint": "^7.0.2008"
   },
-  "packageManager": "pnpm@12.17.0",
+  "packageManager": "pnpm@12.23.0",
   "engines": {
     "node": "^24"
   }
